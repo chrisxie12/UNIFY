@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Unify is the university class communication hub. One link. Zero missed announcements. Total class clarity."
+    />
+    <title>Unify | University Class Communication Hub</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header" aria-label="Main header">
+      <div class="container header-inner">
+        <p class="brand" aria-label="Unify brand">Unify</p>
+        <nav aria-label="Primary navigation">
+          <a href="#solution">Solution</a>
+          <a href="#workflow">How It Works</a>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Progressive Web App for Universities</p>
+            <h1 id="hero-title">One link. Zero missed announcements. Total class clarity.</h1>
+            <p class="subheading">
+              Unify centralizes class announcements, assignments, and schedule updates so class reps and students never miss
+              what matters.
+            </p>
+            <div class="cta-group">
+              <a class="btn btn-primary" href="#pricing" aria-label="Get started with Unify">Get Started</a>
+              <a class="btn btn-secondary" href="#solution" aria-label="Learn more about Unify">Learn More</a>
+            </div>
+          </div>
+          <aside class="hero-card" aria-label="Unify quick summary">
+            <h2>Built for class communication</h2>
+            <ul>
+              <li>Class reps manage posts in one shared feed</li>
+              <li>Students join for free with one secure invite link</li>
+              <li>Works as an installable PWA on iOS, Android, and desktop</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel-section" id="solution" aria-labelledby="problem-title">
+        <div class="container split-grid">
+          <article class="panel">
+            <h2 id="problem-title">The Problem</h2>
+            <p>University communication is fragmented across WhatsApp, email, and word-of-mouth updates.</p>
+            <p>Students miss deadline changes. Class reps cannot confirm who saw urgent announcements.</p>
+          </article>
+          <article class="panel">
+            <h2>The Solution</h2>
+            <p>Unify provides one centralized class hub for announcements, assignments, and schedule updates.</p>
+            <p>Everyone gets one reliable source of truth with audit-friendly updates and reminders.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="workflow" aria-labelledby="workflow-title">
+        <div class="container">
+          <h2 id="workflow-title">How It Works in 8 Steps</h2>
+          <ol class="workflow-grid" aria-label="Eight-step Unify workflow">
+            <li>Create class on Unify</li>
+            <li>Class rep configures access</li>
+            <li>Share one secure invite link</li>
+            <li>Students join instantly for free</li>
+            <li>Post announcements and assignments</li>
+            <li>Students receive notifications</li>
+            <li>Set personal reminders for deadlines</li>
+            <li>Track edits with transparent history</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <h2 id="features-title">Core Features</h2>
+          <div class="features-grid">
+            <article class="panel"><h3>Role-Based Access</h3><p>Super Admin, Class Rep, and Student permissions keep control clear.</p></article>
+            <article class="panel"><h3>Notifications</h3><p>Real-time alerts for new posts, edits, and schedule changes.</p></article>
+            <article class="panel"><h3>Reminders</h3><p>Private deadline reminders help students stay organized.</p></article>
+            <article class="panel"><h3>Edit History</h3><p>Every update is traceable for accountability and trust.</p></article>
+            <article class="panel"><h3>PWA Experience</h3><p>Install and use Unify like an app across mobile and desktop.</p></article>
+            <article class="panel"><h3>Simple Pricing</h3><p>50 GHS per class per semester for class reps; students join free.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing" aria-labelledby="pricing-title">
+        <div class="container panel pricing-card">
+          <h2 id="pricing-title">Pricing</h2>
+          <p class="price">50 GHS <span>per class / semester</span></p>
+          <p>Class representatives pay once. Every student in the class joins for free.</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="market-title">
+        <div class="container panel">
+          <h2 id="market-title">Target Market Expansion</h2>
+          <p><strong>Phase 1:</strong> Ghana Communication Technology University (GCTU)</p>
+          <p><strong>Phase 2:</strong> Universities across Ghana</p>
+          <p><strong>Phase 3:</strong> Expansion across Africa</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" aria-label="Footer">
+      <div class="container">
+        <p>© <span id="year"></span> Unify. University class communication hub.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js").catch((error) => {
+            console.error("Service worker registration failed:", error);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
