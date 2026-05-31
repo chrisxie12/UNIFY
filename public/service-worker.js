@@ -35,7 +35,11 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() =>
+          caches.match(request).then(
+            (cached) => cached || new Response("API unavailable while offline", { status: 503, statusText: "Offline" })
+          )
+        )
     );
     return;
   }
