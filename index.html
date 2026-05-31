@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Unify is a Progressive Web App for clear university class communication." />
+    <meta name="theme-color" content="#0b1220" />
+    <title>Unify | University Class Communication Hub</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        background: #0b1220;
+        color: #e6edf7;
+        font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand" href="#top">Unify</a>
+        <a class="btn btn-ghost" href="#how-it-works">How it works</a>
+      </nav>
+      <div class="container hero-content">
+        <p class="eyebrow">Progressive Web App for university classes</p>
+        <h1>One link. Zero missed announcements. Total class clarity.</h1>
+        <p class="lead">
+          Unify centralizes class communication into one reliable hub so every student sees what matters,
+          when it matters.
+        </p>
+        <div class="cta-row" role="group" aria-label="Call to action">
+          <a class="btn btn-primary" href="#pricing">Activate Class Rep (50 GHS/semester)</a>
+          <a class="btn btn-secondary" href="#features">Explore Features</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section container two-col" aria-labelledby="problem-heading">
+        <article class="card">
+          <h2 id="problem-heading">The Problem</h2>
+          <p>
+            Class communication is fragmented across WhatsApp groups, scattered emails, and word-of-mouth.
+            Important announcements get buried, deadlines are missed, and accountability is low.
+          </p>
+        </article>
+        <article class="card">
+          <h2>The Solution</h2>
+          <p>
+            Unify gives each class one trusted communication channel with role-based control, instant
+            notifications, reminders, and transparent edit history.
+          </p>
+        </article>
+      </section>
+
+      <section class="section container" id="how-it-works" aria-labelledby="workflow-heading">
+        <h2 id="workflow-heading">How It Works</h2>
+        <ol class="workflow-grid">
+          <li>Super Admin registers institution and semester setup.</li>
+          <li>Class Rep account is activated at <strong>50 GHS per semester</strong>.</li>
+          <li>Class Rep generates secure invite link for classmates.</li>
+          <li>Students join instantly from link on phone or desktop.</li>
+          <li>Class Rep posts announcements, schedules, and updates.</li>
+          <li>Students receive timely push-style notifications.</li>
+          <li>Students set private reminders for deadlines and events.</li>
+          <li>Edit history preserves transparency for every update.</li>
+        </ol>
+      </section>
+
+      <section class="section container" id="features" aria-labelledby="features-heading">
+        <h2 id="features-heading">Core Features</h2>
+        <div class="feature-grid">
+          <article class="card"><h3>Role-Based Access</h3><p>Super Admin, Class Rep, and Student permissions built-in.</p></article>
+          <article class="card"><h3>Notifications</h3><p>Fast alerts for new posts and critical updates.</p></article>
+          <article class="card"><h3>Reminders</h3><p>Personal reminder tracking for assignments and exams.</p></article>
+          <article class="card"><h3>Edit History</h3><p>Audit trail of edits for visibility and trust.</p></article>
+          <article class="card"><h3>PWA Ready</h3><p>Installable experience with offline-friendly behavior.</p></article>
+          <article class="card"><h3>Simple Pricing</h3><p>Flat 50 GHS/semester per class rep activation.</p></article>
+        </div>
+      </section>
+
+      <section class="section container" id="target-market" aria-labelledby="market-heading">
+        <article class="card">
+          <h2 id="market-heading">Target Market</h2>
+          <p>
+            Launching at <strong>GCTU</strong>, scaling to universities across <strong>Ghana</strong>, then expanding to
+            institutions across <strong>Africa</strong>.
+          </p>
+        </article>
+      </section>
+
+      <section class="section container" id="pricing" aria-labelledby="pricing-heading">
+        <article class="card pricing-card">
+          <h2 id="pricing-heading">Pricing</h2>
+          <p class="price">50 GHS<span>/semester</span></p>
+          <p>Affordable class-level activation with high communication reliability.</p>
+          <a class="btn btn-primary" href="#top">Get Started with Unify</a>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-wrap">
+        <p><strong>Unify</strong> — university class communication hub.</p>
+        <p>© <span id="year">2026</span> Unify. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/service-worker.js").catch(function () {});
+        });
+      }
+      var yearNode = document.getElementById("year");
+      if (yearNode) yearNode.textContent = String(new Date().getFullYear());
+    </script>
+  </body>
+</html>
