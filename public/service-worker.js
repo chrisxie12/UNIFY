@@ -52,7 +52,15 @@ self.addEventListener("fetch", (event) => {
 
       return fetch(request).catch(() => {
         if (request.mode === "navigate") {
-          return caches.match("/offline.html");
+          return caches.match("/offline.html").then(
+            (offlinePage) =>
+              offlinePage ||
+              new Response("You are offline. Please reconnect.", {
+                status: 503,
+                statusText: "Offline",
+                headers: { "Content-Type": "text/plain; charset=utf-8" }
+              })
+          );
         }
         return new Response("Offline", { status: 503, statusText: "Offline" });
       });
