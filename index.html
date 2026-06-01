@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="UNIFY connects students across schools in Ghana through identity onboarding, unit pages, and messaging." />
+  <title>UNIFY | Connecting Students Across Ghana</title>
+  <style>
+    :root {
+      --green: #006b3f;
+      --gold: #fcd116;
+      --red: #ce1126;
+      --ink: #111827;
+      --muted: #4b5563;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --focus: #1d4ed8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--focus);
+      color: #fff;
+      padding: 0.5rem 0.75rem;
+      z-index: 1000;
+    }
+
+    .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid #e5e7eb;
+      backdrop-filter: blur(6px);
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero {
+      padding: 4rem 0 2.5rem;
+    }
+
+    .hero-card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      box-shadow: 0 16px 32px rgba(17, 24, 39, 0.08);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #ecfdf3;
+      color: var(--green);
+      border: 1px solid #b9ebd2;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.2;
+      margin: 0.75rem 0;
+    }
+
+    h1 { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+    h2 { font-size: clamp(1.35rem, 5vw, 2rem); }
+
+    p { margin: 0.7rem 0; color: var(--muted); }
+
+    .cta-row {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.72rem 1rem;
+      border-radius: 0.65rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--ink);
+      border-color: #d1d5db;
+    }
+
+    section {
+      padding: 1.1rem 0 2rem;
+    }
+
+    .section-title {
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .feature {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-left: 5px solid var(--gold);
+      border-radius: 0.9rem;
+      padding: 1rem;
+    }
+
+    .feature h3 {
+      font-size: 1.1rem;
+      margin-top: 0;
+      color: var(--ink);
+    }
+
+    .vision {
+      background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);
+      border: 1px solid #d1fae5;
+      border-radius: 0.9rem;
+      padding: 1rem;
+    }
+
+    .roadmap {
+      background: var(--ink);
+      color: #f9fafb;
+      border-radius: 1rem;
+      padding: 1.2rem;
+    }
+
+    .roadmap p,
+    .roadmap li { color: #e5e7eb; }
+
+    .roadmap-list {
+      margin: 0.8rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    .roadmap .btn-primary {
+      background: var(--red);
+    }
+
+    .roadmap .btn-secondary {
+      border-color: #6b7280;
+      color: #f9fafb;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid #e5e7eb;
+      background: var(--surface);
+      padding: 1.2rem 0;
+      font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.45rem;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: 0.3rem;
+    }
+
+    @media (min-width: 760px) {
+      .hero-card { padding: 2rem; }
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .vision,
+      .roadmap { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header>
+    <div class="container nav" aria-label="Main navigation">
+      <a class="brand" href="#top">UNIFY 🇬🇭</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#vision">Vision</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#get-started">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" id="top">
+      <div class="container hero-card">
+        <span class="eyebrow">Mobile-first student platform</span>
+        <h1>Connecting students across schools in Ghana.</h1>
+        <p>
+          UNIFY helps students moving from BECE placements to university life discover their community,
+          join school-specific Unit pages, and build trusted connections early.
+        </p>
+        <div class="cta-row" id="get-started">
+          <a class="btn btn-primary" href="https://github.com/chrisxie12/UNIFY" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+          <a class="btn btn-secondary" href="https://github.com/chrisxie12/UNIFY/blob/main/README.md" target="_blank" rel="noopener noreferrer">Read Documentation</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" aria-labelledby="features-title">
+      <div class="container">
+        <h2 class="section-title" id="features-title">Core MVP Features</h2>
+        <div class="grid">
+          <article class="feature">
+            <h3>Identity &amp; Onboarding</h3>
+            <p>Simple sign-up with OTP, email, or Google, plus customizable student profiles and school placement selection.</p>
+          </article>
+          <article class="feature">
+            <h3>Unit Pages</h3>
+            <p>School hubs with central feeds and sub-communities for programs, year groups, and hostel roommate search.</p>
+          </article>
+          <article class="feature">
+            <h3>Connection &amp; Messaging</h3>
+            <p>Student discovery and secure one-on-one messaging to plan meetups, share insights, and support each other.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="vision" aria-labelledby="vision-title">
+      <div class="container vision">
+        <h2 id="vision-title">Our Vision</h2>
+        <p>
+          UNIFY aims to be the central hub for the Ghanaian student experience—from post-BECE placements
+          to navigating university life. We are building a low-bandwidth, accessible, mobile-first platform
+          where every student can find their tribe.
+        </p>
+      </div>
+    </section>
+
+    <section id="roadmap" aria-labelledby="roadmap-title">
+      <div class="container roadmap">
+        <h2 id="roadmap-title">Roadmap &amp; Call to Action</h2>
+        <p>We are actively building UNIFY in phases:</p>
+        <ol class="roadmap-list">
+          <li>Foundation: schemas, authentication, and core platform setup</li>
+          <li>Profiles &amp; Units: school communities and personalization</li>
+          <li>Social Mechanics: posting, comments, and direct messaging</li>
+          <li>Ghana-Specific Features: cohort support and housing connections</li>
+        </ol>
+        <div class="cta-row" aria-label="Project calls to action">
+          <a class="btn btn-primary" href="https://github.com/chrisxie12/UNIFY" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
+          <a class="btn btn-secondary" href="https://github.com/chrisxie12/UNIFY/issues" target="_blank" rel="noopener noreferrer">Join the Discussion</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>UNIFY</strong> — Building the future of student connection in Ghana.
+      <nav class="footer-links" aria-label="Footer links">
+        <a href="https://github.com/chrisxie12/UNIFY" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/chrisxie12/UNIFY/blob/main/README.md" target="_blank" rel="noopener noreferrer">Docs</a>
+        <a href="https://github.com/chrisxie12/UNIFY/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
