@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="UNIFY - The student community app for Ghana. Find friends, roommates, and your people across every school in Ghana.">
-    <meta name="theme-color" content="#7c3aed">
+    <meta name="theme-color" content="#0A2472">
     <title>UNIFY – Find Your Ghana School Community</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,21 +13,21 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --purple: #7c3aed;
-            --purple-dark: #6d28d9;
-            --purple-light: #a78bfa;
-            --pink: #ec4899;
-            --orange: #f97316;
-            --yellow: #fbbf24;
+            --navy: #0A2472;
+            --navy-dark: #061540;
+            --navy-deeper: #040e2a;
+            --navy-light: #1a3a8f;
+            --amber: #FFBA08;
+            --amber-dark: #e0a400;
+            --amber-light: #ffd04d;
             --green: #10b981;
-            --teal: #06b6d4;
-            --dark: #0f0a1e;
-            --dark-2: #1a1033;
-            --muted: #94a3b8;
+            --dark: #050d20;
+            --dark-2: #0a1a3a;
+            --muted: #7a90b8;
             --border: rgba(255,255,255,0.08);
             --white: #ffffff;
             --ghana-red: #ce1126;
-            --ghana-gold: #fcd116;
+            --ghana-gold: #FFBA08;
             --ghana-green: #006b3f;
         }
 
@@ -54,7 +54,7 @@
         }
 
         nav.scrolled {
-            background: rgba(15, 10, 30, 0.92);
+            background: rgba(5,13,32,0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
@@ -63,7 +63,7 @@
             font-size: 1.7rem;
             font-weight: 900;
             text-decoration: none;
-            background: linear-gradient(135deg, #a78bfa, #ec4899);
+            background: linear-gradient(135deg, var(--amber), var(--amber-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -107,13 +107,13 @@
 
         .btn-outline:hover { border-color: rgba(255,255,255,0.5); color: white; }
 
-        .btn-purple {
-            background: linear-gradient(135deg, var(--purple), #9333ea);
-            color: white;
-            box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+        .btn-amber {
+            background: var(--amber);
+            color: var(--navy);
+            box-shadow: 0 4px 20px rgba(255,186,8,0.35);
         }
 
-        .btn-purple:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(124,58,237,0.5); }
+        .btn-amber:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,186,8,0.5); }
 
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
         .hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s; }
@@ -122,7 +122,7 @@
             display: none;
             position: fixed;
             top: 68px; left: 0; right: 0;
-            background: rgba(15,10,30,0.98);
+            background: rgba(5,13,32,0.98);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             padding: 1.5rem 2rem;
@@ -133,7 +133,7 @@
 
         .mobile-menu.open { display: flex; }
         .mobile-menu a { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-        .mobile-menu .btn-purple { text-align: center; justify-content: center; border-radius: 999px; }
+        .mobile-menu .btn-amber { text-align: center; justify-content: center; border-radius: 999px; }
 
         @media (max-width: 768px) {
             nav { padding: 1.25rem 1.5rem; }
@@ -165,7 +165,7 @@
             position: fixed;
             width: 900px; height: 900px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(10,36,114,0.3) 0%, transparent 70%);
             top: -200px; right: -200px;
             pointer-events: none;
             z-index: 0;
@@ -176,7 +176,7 @@
             position: fixed;
             width: 700px; height: 700px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255,186,8,0.08) 0%, transparent 70%);
             bottom: -100px; left: -100px;
             pointer-events: none;
             z-index: 0;
@@ -188,9 +188,9 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(124,58,237,0.15);
-            border: 1px solid rgba(124,58,237,0.35);
-            color: var(--purple-light);
+            background: rgba(10,36,114,0.3);
+            border: 1px solid rgba(255,186,8,0.4);
+            color: var(--amber);
             padding: 0.35rem 0.9rem;
             border-radius: 999px;
             font-size: 0.8rem;
@@ -201,7 +201,7 @@
         .pill-dot {
             width: 7px; height: 7px;
             border-radius: 50%;
-            background: var(--yellow);
+            background: var(--amber);
             animation: blink 2s ease-in-out infinite;
         }
 
@@ -216,7 +216,7 @@
         }
 
         .hero h1 .line-accent {
-            background: linear-gradient(90deg, var(--yellow), var(--pink));
+            background: linear-gradient(90deg, var(--amber), var(--amber));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -295,7 +295,7 @@
 
         .phone {
             width: 220px;
-            background: #1a1033;
+            background: #0a1a3a;
             border-radius: 36px;
             border: 1px solid rgba(255,255,255,0.12);
             overflow: hidden;
@@ -309,7 +309,7 @@
 
         .phone-notch {
             width: 70px; height: 22px;
-            background: #0f0a1e;
+            background: #050d20;
             border-radius: 0 0 16px 16px;
             margin: 0 auto;
         }
@@ -324,7 +324,7 @@
             margin-bottom: 10px;
         }
 
-        .ph-logo { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, #a78bfa, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .ph-logo { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, var(--amber), var(--amber-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
         .ph-icons { display: flex; gap: 6px; font-size: 0.8rem; opacity: 0.6; }
 
@@ -359,10 +359,10 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        .ring-1 { background: linear-gradient(135deg, #fcd116, #ce1126); }
-        .ring-2 { background: linear-gradient(135deg, #7c3aed, #ec4899); }
-        .ring-3 { background: linear-gradient(135deg, #06b6d4, #10b981); }
-        .ring-4 { background: linear-gradient(135deg, #f97316, #fbbf24); }
+        .ring-1 { background: var(--amber); }
+        .ring-2 { background: var(--navy-light); }
+        .ring-3 { background: linear-gradient(135deg, var(--navy), var(--amber)); }
+        .ring-4 { background: var(--amber-dark); }
 
         .ph-story-avatar {
             width: 32px; height: 32px;
@@ -413,9 +413,9 @@
             margin-bottom: 6px;
         }
 
-        .tag-blue { background: rgba(124,58,237,0.25); color: #a78bfa; }
+        .tag-blue { background: rgba(255,186,8,0.25); color: #FFBA08; }
         .tag-green { background: rgba(16,185,129,0.2); color: #34d399; }
-        .tag-pink { background: rgba(236,72,153,0.2); color: #f472b6; }
+        .tag-pink { background: rgba(255,186,8,0.15); color: #ffd04d; }
 
         /* Floating chips around phone */
         .float-chip {
@@ -507,8 +507,9 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--purple-light);
+            color: var(--amber);
             margin-bottom: 0.75rem;
+            display: block;
         }
 
         .section-title {
@@ -556,7 +557,7 @@
             transition: opacity 0.3s;
         }
 
-        .bento-card:hover { transform: translateY(-4px); border-color: rgba(124,58,237,0.3); }
+        .bento-card:hover { transform: translateY(-4px); border-color: rgba(255,186,8,0.3); }
         .bento-card:hover::before { opacity: 1; }
 
         .bento-card.wide { grid-column: span 2; }
@@ -572,11 +573,11 @@
             margin-bottom: 1.25rem;
         }
 
-        .ic-purple { background: rgba(124,58,237,0.2); }
-        .ic-pink { background: rgba(236,72,153,0.2); }
-        .ic-yellow { background: rgba(251,191,36,0.15); }
+        .ic-purple { background: rgba(10,36,114,0.4); }
+        .ic-pink { background: rgba(255,186,8,0.15); }
+        .ic-yellow { background: rgba(255,186,8,0.15); }
         .ic-teal { background: rgba(6,182,212,0.15); }
-        .ic-orange { background: rgba(249,115,22,0.15); }
+        .ic-orange { background: rgba(255,186,8,0.15); }
         .ic-green { background: rgba(16,185,129,0.15); }
 
         .bento-card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem; }
@@ -620,7 +621,7 @@
             position: absolute;
             top: 36px; left: 15%; right: 15%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), rgba(236,72,153,0.5), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,186,8,0.5), rgba(255,186,8,0.4), transparent);
         }
 
         @media (max-width: 768px) { .steps-grid::before { display: none; } }
@@ -642,14 +643,14 @@
             position: absolute;
             inset: -4px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--purple), var(--pink));
+            background: linear-gradient(135deg, var(--navy), var(--amber));
             z-index: -1;
             opacity: 0.3;
         }
 
-        .sn1 { background: linear-gradient(135deg, #7c3aed, #9333ea); }
-        .sn2 { background: linear-gradient(135deg, #ec4899, #f43f5e); }
-        .sn3 { background: linear-gradient(135deg, #f97316, #fbbf24); }
+        .sn1 { background: var(--amber); color: var(--navy) !important; }
+        .sn2 { background: var(--navy-light); }
+        .sn3 { background: linear-gradient(135deg, var(--amber), var(--amber-light)); color: var(--navy) !important; }
 
         .step h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
         .step p { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
@@ -678,9 +679,9 @@
             transition: all 0.3s;
         }
 
-        .tcard:hover { border-color: rgba(124,58,237,0.3); background: rgba(124,58,237,0.05); transform: translateY(-3px); }
+        .tcard:hover { border-color: rgba(255,186,8,0.3); background: rgba(10,36,114,0.15); transform: translateY(-3px); }
 
-        .tcard-stars { color: var(--yellow); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
+        .tcard-stars { color: var(--amber); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
         .tcard-text { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 1.5rem; font-style: italic; }
 
         .tcard-author { display: flex; align-items: center; gap: 0.75rem; }
@@ -722,7 +723,7 @@
             font-size: 3.5rem;
             font-weight: 900;
             letter-spacing: -3px;
-            background: linear-gradient(135deg, #a78bfa, #ec4899);
+            background: linear-gradient(135deg, var(--amber), var(--amber-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -759,14 +760,14 @@
         .rcard:hover { transform: translateY(-4px); }
 
         .rcard.done { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.25); }
-        .rcard.active { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.4); }
-        .rcard.next { background: rgba(251,191,36,0.05); border-color: rgba(251,191,36,0.2); }
+        .rcard.active { background: rgba(10,36,114,0.3); border-color: rgba(255,186,8,0.4); }
+        .rcard.next { background: rgba(255,186,8,0.05); border-color: rgba(255,186,8,0.2); }
         .rcard.future { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.07); }
 
         .rcard-phase { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 0.5rem; }
         .done .rcard-phase { color: var(--green); }
-        .active .rcard-phase { color: var(--purple-light); }
-        .next .rcard-phase { color: var(--yellow); }
+        .active .rcard-phase { color: var(--amber); }
+        .next .rcard-phase { color: var(--amber); }
         .future .rcard-phase { color: rgba(255,255,255,0.3); }
 
         .rcard-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
@@ -782,8 +783,8 @@
         }
 
         .done .rcard-badge { background: rgba(16,185,129,0.15); color: #34d399; }
-        .active .rcard-badge { background: rgba(124,58,237,0.2); color: #a78bfa; }
-        .next .rcard-badge { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .active .rcard-badge { background: rgba(10,36,114,0.4); color: #FFBA08; }
+        .next .rcard-badge { background: rgba(255,186,8,0.15); color: #FFBA08; }
         .future .rcard-badge { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); }
 
         /* ── WAITLIST ── */
@@ -797,8 +798,8 @@
         .waitlist-card {
             max-width: 700px;
             margin: 0 auto;
-            background: rgba(124,58,237,0.08);
-            border: 1px solid rgba(124,58,237,0.25);
+            background: rgba(10,36,114,0.3);
+            border: 1px solid rgba(255,186,8,0.25);
             border-radius: 32px;
             padding: 4rem 3rem;
             position: relative;
@@ -810,7 +811,7 @@
             position: absolute;
             width: 400px; height: 400px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(124,58,237,0.2), transparent 70%);
+            background: radial-gradient(circle, rgba(10,36,114,0.4), transparent 70%);
             top: -150px; right: -100px;
         }
 
@@ -819,7 +820,7 @@
             position: absolute;
             width: 300px; height: 300px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(236,72,153,0.15), transparent 70%);
+            background: radial-gradient(circle, rgba(255,186,8,0.12), transparent 70%);
             bottom: -100px; left: -80px;
         }
 
@@ -862,11 +863,11 @@
         }
 
         .waitlist-form input::placeholder { color: rgba(255,255,255,0.3); }
-        .waitlist-form input:focus { border-color: rgba(124,58,237,0.6); }
+        .waitlist-form input:focus { border-color: rgba(255,186,8,0.6); }
 
         .btn-join {
-            background: linear-gradient(135deg, var(--purple), #9333ea);
-            color: white;
+            background: var(--amber);
+            color: var(--navy);
             border: none;
             padding: 0.85rem 1.5rem;
             border-radius: 12px;
@@ -876,10 +877,10 @@
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
-            box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+            box-shadow: 0 4px 20px rgba(255,186,8,0.4);
         }
 
-        .btn-join:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(124,58,237,0.5); }
+        .btn-join:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,186,8,0.5); }
 
         .waitlist-note { font-size: 0.75rem; color: rgba(255,255,255,0.3); position: relative; z-index: 1; }
 
@@ -961,7 +962,7 @@
             transition: all 0.2s;
         }
 
-        .fsoc:hover { background: var(--purple); border-color: var(--purple); color: white; }
+        .fsoc:hover { background: var(--navy); border-color: var(--navy); color: white; }
 
         /* Ghana stripe footer */
         .ghana-bar {
@@ -1011,7 +1012,7 @@
     </ul>
     <div class="nav-right">
         <a href="#waitlist" class="btn btn-outline">Log in</a>
-        <a href="#waitlist" class="btn btn-purple">Get early access →</a>
+        <a href="#waitlist" class="btn btn-amber">Get early access →</a>
     </div>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
@@ -1021,7 +1022,7 @@
     <a href="#how" onclick="closeMenu()">How it works</a>
     <a href="#roadmap" onclick="closeMenu()">Roadmap</a>
     <a href="https://github.com/chrisxie12/UNIFY" target="_blank">GitHub ↗</a>
-    <a href="#waitlist" class="btn btn-purple" onclick="closeMenu()">Get early access →</a>
+    <a href="#waitlist" class="btn btn-amber" onclick="closeMenu()">Get early access →</a>
 </div>
 
 <!-- HERO -->
@@ -1052,11 +1053,11 @@
             </div>
             <div class="hero-social-proof">
                 <div class="avatar-stack">
-                    <div class="av" style="background:linear-gradient(135deg,#7c3aed,#9333ea)">AK</div>
-                    <div class="av" style="background:linear-gradient(135deg,#ec4899,#ef4444)">KM</div>
-                    <div class="av" style="background:linear-gradient(135deg,#10b981,#059669)">FA</div>
-                    <div class="av" style="background:linear-gradient(135deg,#f97316,#fbbf24)">EO</div>
-                    <div class="av" style="background:linear-gradient(135deg,#06b6d4,#6366f1)">+</div>
+                    <div class="av" style="background:linear-gradient(135deg,var(--navy),var(--navy-light))">AK</div>
+                    <div class="av" style="background:linear-gradient(135deg,var(--amber),var(--amber-dark))">KM</div>
+                    <div class="av" style="background:var(--navy-light)">FA</div>
+                    <div class="av" style="background:var(--navy-light)">EO</div>
+                    <div class="av" style="background:var(--navy-light)">+</div>
                 </div>
                 <p class="proof-text"><strong>12,400+ students</strong> already on the waitlist</p>
             </div>
@@ -1075,7 +1076,7 @@
                         <div class="ph-section-label">Roommate Finder</div>
                         <div class="ph-post" style="margin-bottom:8px">
                             <div class="ph-post-top">
-                                <div class="ph-av" style="background:linear-gradient(135deg,#f97316,#fbbf24)">YA</div>
+                                <div class="ph-av" style="background:var(--navy-light)">YA</div>
                                 <div><div class="ph-post-name">Yaa Asante</div><div class="ph-post-school">UG · Legon</div></div>
                             </div>
                             <span class="ph-tag tag-green">Looking for roommate</span>
@@ -1083,7 +1084,7 @@
                         </div>
                         <div class="ph-post">
                             <div class="ph-post-top">
-                                <div class="ph-av" style="background:linear-gradient(135deg,#06b6d4,#7c3aed)">SK</div>
+                                <div class="ph-av" style="background:var(--navy)">SK</div>
                                 <div><div class="ph-post-name">Samuel K.</div><div class="ph-post-school">UG · Legon</div></div>
                             </div>
                             <span class="ph-tag tag-blue">Study buddy</span>
@@ -1123,7 +1124,7 @@
                         <div class="ph-section-label">For you</div>
                         <div class="ph-post">
                             <div class="ph-post-top">
-                                <div class="ph-av" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">AK</div>
+                                <div class="ph-av" style="background:linear-gradient(135deg,#0A2472,#FFBA08)">AK</div>
                                 <div>
                                     <div class="ph-post-name">Ama Kusi</div>
                                     <div class="ph-post-school">KNUST · Level 200 · CS</div>
@@ -1139,7 +1140,7 @@
                         </div>
                         <div class="ph-post">
                             <div class="ph-post-top">
-                                <div class="ph-av" style="background:linear-gradient(135deg,#10b981,#06b6d4)">KO</div>
+                                <div class="ph-av" style="background:linear-gradient(135deg,var(--navy-light),var(--navy))">KO</div>
                                 <div>
                                     <div class="ph-post-name">Kweku Owusu</div>
                                     <div class="ph-post-school">KNUST · Level 300</div>
@@ -1335,7 +1336,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"UNIFY helped me find seniors at KNUST who walked me through registration before I even arrived. I felt more prepared than anyone in my cohort."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:linear-gradient(135deg,#7c3aed,#9333ea)">AK</div>
+                    <div class="tav" style="background:linear-gradient(135deg,var(--navy),var(--navy-light))">AK</div>
                     <div>
                         <div class="tav-name">Abena Konadu</div>
                         <div class="tav-school">KNUST · Computer Science</div>
@@ -1346,7 +1347,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"After BECE results, I had no idea what to expect at PRESEC. Found a whole community of incoming students on UNIFY. We formed study groups before school started."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:linear-gradient(135deg,#ec4899,#ef4444)">KM</div>
+                    <div class="tav" style="background:linear-gradient(135deg,var(--amber),var(--amber-dark))">KM</div>
                     <div>
                         <div class="tav-name">Kofi Mensah</div>
                         <div class="tav-school">PRESEC Legon · Form 2</div>
@@ -1357,7 +1358,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"Going from Tamale to Accra for school was scary. UNIFY connected me with other northern girls at Achimota before I even packed my bags."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:linear-gradient(135deg,#10b981,#059669)">FA</div>
+                    <div class="tav" style="background:var(--navy-light)">FA</div>
                     <div>
                         <div class="tav-name">Fatima Alhassan</div>
                         <div class="tav-school">Achimota School · Form 3</div>
