@@ -304,7 +304,7 @@
             flex-shrink: 0;
         }
 
-        .phone-main { z-index: 2; }
+        .phone-main { z-index: 2; position: relative; }
         .phone-side { width: 185px; opacity: 0.6; transform: translateX(-20px) scale(0.95); }
 
         .phone-notch {
@@ -997,6 +997,108 @@
         }
 
         .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ── MOBILE STICKY CTA ── */
+        .mobile-sticky-cta {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0A2472;
+            border-top: 1px solid rgba(255,186,8,0.2);
+            padding: 1rem 1.5rem;
+            z-index: 9998;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sticky-proof { font-size: 0.82rem; color: rgba(255,255,255,0.7); }
+
+        .btn-sticky {
+            background: #FFBA08;
+            color: #0A2472;
+            font-weight: 800;
+            padding: 0.6rem 1.3rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* ── FAB ── */
+        .fab {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 1.5rem;
+            background: #FFBA08;
+            color: #0A2472;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 999px;
+            box-shadow: 0 4px 20px rgba(255,186,8,0.4);
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 9997;
+            white-space: nowrap;
+        }
+
+        /* ── TRUST BADGE ── */
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,186,8,0.1);
+            border: 1px solid rgba(255,186,8,0.25);
+            color: rgba(255,255,255,0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── PHONE SOON BADGE ── */
+        .phone-soon-badge {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10,36,114,0.85);
+            border: 1px solid rgba(255,186,8,0.3);
+            color: rgba(255,186,8,0.9);
+            font-size: 0.6rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* ── RCARD DATE ── */
+        .rcard-date {
+            font-size: 0.7rem;
+            color: rgba(255,186,8,0.6);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── TESTER TAG ── */
+        .tester-tag {
+            font-size: 0.68rem;
+            color: var(--amber);
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-sticky-cta { display: flex; }
+            .fab { display: block; }
+        }
+
+        /* ── PH-SEARCH CURSOR ── */
+        .ph-search { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -1031,7 +1133,7 @@
         <div class="hero-text">
             <div class="pill-badge">
                 <span class="pill-dot"></span>
-                Now in beta · Ghana's student network
+                Launching 2026 · Ghana's student network
             </div>
             <h1>Find your people<br>at <span class="line-accent">every school</span><br>in Ghana</h1>
             <p>UNIFY connects SHS and university students across 180+ schools in Ghana. Make friends before you arrive, find your roommate, and never feel alone on campus again.</p>
@@ -1101,7 +1203,7 @@
                             <span class="ph-logo">UNIFY</span>
                             <div class="ph-icons">🔔 ✉️</div>
                         </div>
-                        <div class="ph-search">🔍 Search students, schools...</div>
+                        <div class="ph-search" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">🔍 Search students, schools...</div>
                         <div class="ph-section-label">School stories</div>
                         <div class="ph-story-row">
                             <div class="ph-story">
@@ -1157,6 +1259,7 @@
                     </div>
                 </div>
 
+                <div class="phone-soon-badge">Preview only · Join to interact</div>
                 <!-- Floating chips -->
                 <div class="float-chip chip-1">🏠 Roommate match found!</div>
                 <div class="float-chip chip-2">📚 12 study rooms active</div>
@@ -1208,19 +1311,19 @@
 <section class="stats">
     <div class="stats-grid">
         <div class="reveal">
-            <div class="stat-val" data-target="180">0</div>
+            <div class="stat-val" data-target="180">180+</div>
             <div class="stat-lbl">Schools & universities</div>
         </div>
         <div class="reveal delay-1">
-            <div class="stat-val" data-target="12400">0</div>
+            <div class="stat-val" data-target="12400">12.4K+</div>
             <div class="stat-lbl">Students on waitlist</div>
         </div>
         <div class="reveal delay-2">
-            <div class="stat-val" data-target="10">0</div>
+            <div class="stat-val" data-target="10">10+</div>
             <div class="stat-lbl">Regions of Ghana</div>
         </div>
         <div class="reveal delay-3">
-            <div class="stat-val" data-target="100">0</div>
+            <div class="stat-val" data-target="100">100%</div>
             <div class="stat-lbl">% built for Ghana</div>
         </div>
     </div>
@@ -1378,6 +1481,7 @@
         <div class="rmap">
             <div class="rcard done reveal">
                 <div class="rcard-phase">Phase 1</div>
+                <div class="rcard-date">✓ Completed</div>
                 <div class="rcard-icon">⚙️</div>
                 <h3>Foundation</h3>
                 <p>Repo, database schemas, auth system, and core infrastructure built and tested.</p>
@@ -1385,6 +1489,7 @@
             </div>
             <div class="rcard active reveal delay-1">
                 <div class="rcard-phase">Phase 2</div>
+                <div class="rcard-date">Q2–Q3 2026</div>
                 <div class="rcard-icon">⚡</div>
                 <h3>Profiles & Hubs</h3>
                 <p>User profiles, school hub pages, and activity feeds for all 180+ schools.</p>
@@ -1392,6 +1497,7 @@
             </div>
             <div class="rcard next reveal delay-2">
                 <div class="rcard-phase">Phase 3</div>
+                <div class="rcard-date">Q3 2026</div>
                 <div class="rcard-icon">💬</div>
                 <h3>Social Layer</h3>
                 <p>Posts, comments, reactions, DMs, group chats, and real-time notifications.</p>
@@ -1399,6 +1505,7 @@
             </div>
             <div class="rcard future reveal delay-3">
                 <div class="rcard-phase">Phase 4</div>
+                <div class="rcard-date">Q4 2026</div>
                 <div class="rcard-icon">🇬🇭</div>
                 <h3>Ghana Features</h3>
                 <p>BECE/WASSCE cohorts, placement guides, roommate matching, and hostel reviews.</p>
@@ -1412,13 +1519,17 @@
 <section class="waitlist" id="waitlist">
     <div class="waitlist-card">
         <div class="waitlist-flag">🇬🇭</div>
+        <div class="trust-badge">
+          <span>🎓</span>
+          Join 12,400+ students from KNUST, UG, PRESEC, and 180+ schools
+        </div>
         <h2>Be first when we launch</h2>
         <p>Join 12,400+ Ghanaian students already on the list. We'll notify you the moment your school goes live — no spam, ever.</p>
         <form class="waitlist-form" onsubmit="joinWaitlist(event)">
             <input type="email" placeholder="your@email.com" required>
             <button type="submit" class="btn-join">Join waitlist →</button>
         </form>
-        <p class="waitlist-note">🔒 Your info is safe. Unsubscribe anytime.</p>
+        <p class="waitlist-note">🔒 We never spam. Unsubscribe anytime. Built by students, for students.</p>
     </div>
 </section>
 
@@ -1462,6 +1573,13 @@
     </div>
     <div class="ghana-bar"></div>
 </footer>
+
+<div class="mobile-sticky-cta">
+  <div class="sticky-proof">12,400+ students waiting 🚀</div>
+  <a href="#waitlist" class="btn-sticky">Join Waitlist →</a>
+</div>
+
+<a href="#waitlist" class="fab" id="fab">Join 12,400+ students 🚀</a>
 
 <div class="toast" id="toast">🎉 You're on the list! We'll be in touch.</div>
 
