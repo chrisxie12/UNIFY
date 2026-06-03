@@ -919,77 +919,76 @@
         /* ── FOOTER ── */
         footer {
             border-top: 1px solid var(--border);
-            padding: 4rem 3rem 2rem;
+            padding: 2.5rem 3rem;
             position: relative;
             z-index: 1;
         }
 
-        @media (max-width: 768px) { footer { padding: 3rem 1.5rem 2rem; } }
-
-        .footer-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem;
-            margin-bottom: 3rem;
-            padding-bottom: 3rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; } }
-        @media (max-width: 500px) { .footer-grid { grid-template-columns: 1fr; } }
-
-        .footer-brand .logo { display: inline-block; margin-bottom: 1rem; font-size: 1.5rem; }
-        .footer-brand p { font-size: 0.85rem; color: rgba(255,255,255,0.35); line-height: 1.7; max-width: 250px; }
-
-        .footer-col h5 {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 1.25rem;
-        }
-
-        .footer-col a {
-            display: block;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.45);
-            text-decoration: none;
-            margin-bottom: 0.6rem;
-            transition: color 0.2s;
-        }
-
-        .footer-col a:hover { color: white; }
-
-        .footer-bottom {
+        .footer-inner {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
-        .footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
 
-        .footer-socials { display: flex; gap: 0.6rem; }
+        .footer-left .logo { font-size: 1.2rem; color: white; text-decoration: none; font-weight: 900; letter-spacing: -0.5px; }
+
+        .footer-links {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: white; }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+
+        .footer-socials { display: flex; gap: 0.5rem; }
 
         .fsoc {
-            width: 34px; height: 34px;
+            width: 32px; height: 32px;
             border-radius: 8px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.07);
             display: flex; align-items: center; justify-content: center;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: rgba(255,255,255,0.4);
             transition: all 0.2s;
         }
 
-        .fsoc:hover { background: var(--navy); border-color: var(--navy); color: white; }
+        .fsoc:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        @media (max-width: 768px) {
+            footer { padding: 2rem 1.25rem 5rem; }
+            .footer-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .footer-left { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .footer-right { width: 100%; justify-content: space-between; }
+        }
 
         /* Ghana stripe footer */
         .ghana-bar {
@@ -1473,20 +1472,7 @@
             .btn-join { padding: 0.9rem; font-size: 1rem; }
 
             /* ── FOOTER ── */
-            footer { padding: 3rem 1.25rem 6rem; }
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 1.75rem;
-                margin-bottom: 2rem;
-                padding-bottom: 2rem;
-            }
-            .footer-brand { grid-column: span 2; }
-            .footer-brand p { max-width: 100%; }
-            .footer-bottom {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
+            footer { padding: 2rem 1.25rem 5rem; }
 
             /* ── HERO CAPTURE ── */
             .hero-capture {
@@ -1523,8 +1509,6 @@
             .hero h1 { font-size: clamp(1.75rem, 8.5vw, 2.2rem); }
 
             .rmap { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .footer-brand { grid-column: span 1; }
 
             .campus-grid { grid-template-columns: 1fr; }
             .campus-photo { height: 180px; }
@@ -2131,40 +2115,26 @@
 
 <!-- FOOTER -->
 <footer>
-    <div class="footer-grid">
-        <div class="footer-brand">
+    <div class="footer-inner">
+        <div class="footer-left">
             <a href="#" class="logo">UNIFY</a>
-            <p>Connecting students across every school in Ghana — from BECE placements to university life and beyond.</p>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#how">How it works</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#waitlist">Join waitlist</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
         </div>
-        <div class="footer-col">
-            <h5>Product</h5>
-            <a href="#features">Features</a>
-            <a href="#roadmap">Roadmap</a>
-            <a href="#how">How it works</a>
-            <a href="https://github.com/chrisxie12/UNIFY" target="_blank">GitHub ↗</a>
-        </div>
-        <div class="footer-col">
-            <h5>Community</h5>
-            <a href="#">Discord</a>
-            <a href="#">Twitter / X</a>
-            <a href="#">Instagram</a>
-            <a href="#">WhatsApp</a>
-        </div>
-        <div class="footer-col">
-            <h5>Company</h5>
-            <a href="#">About</a>
-            <a href="#">Blog</a>
-            <a href="#">Privacy</a>
-            <a href="#">Contact</a>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2025 UNIFY · Made with ❤️ in Ghana 🇬🇭</p>
-        <div class="footer-socials">
-            <a href="#" class="fsoc" title="Twitter">𝕏</a>
-            <a href="#" class="fsoc" title="Instagram">📸</a>
-            <a href="https://github.com/chrisxie12/UNIFY" target="_blank" class="fsoc" title="GitHub">⌥</a>
-            <a href="#" class="fsoc" title="Discord">💬</a>
+        <div class="footer-right">
+            <span class="footer-copy">© 2026 UNIFY · Built in 🇬🇭</span>
+            <div class="footer-socials">
+                <a href="#" class="fsoc" title="Twitter/X">𝕏</a>
+                <a href="#" class="fsoc" title="Instagram">📸</a>
+                <a href="#" class="fsoc" title="TikTok">🎵</a>
+                <a href="https://github.com/chrisxie12/UNIFY" target="_blank" class="fsoc" title="GitHub">⌥</a>
+            </div>
         </div>
     </div>
     <div class="ghana-bar"></div>
