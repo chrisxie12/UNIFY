@@ -1223,6 +1223,127 @@
         .hero-text > *:nth-child(5) { animation-delay: 0.7s; }
         .hero-visual { animation: fadeUp 0.9s 0.4s ease forwards; opacity: 0; }
 
+        /* ── HERO SCHOOL SELECTOR ── */
+        .hero-capture {
+            margin-top: 1.5rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,186,8,0.2);
+            border-radius: 16px;
+            padding: 1rem;
+            max-width: 440px;
+        }
+        .hero-capture-top { margin-bottom: 0.6rem; }
+        .hero-capture-bottom { display: flex; gap: 0.5rem; }
+        .school-select {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.75);
+            font-family: inherit;
+            font-size: 0.88rem;
+            padding: 0.7rem 1rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23FFBA08' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.85rem center;
+            padding-right: 2.2rem;
+        }
+        .school-select:focus { border-color: rgba(255,186,8,0.5); }
+        .school-select option, .school-select optgroup { background: #0a1a3a; color: white; }
+        .hero-email {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            min-width: 0;
+        }
+        .hero-email::placeholder { color: rgba(255,255,255,0.3); }
+        .hero-email:focus { border-color: rgba(255,186,8,0.5); }
+        .btn-capture {
+            background: var(--amber);
+            color: var(--navy);
+            border: none;
+            padding: 0.7rem 1.1rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .btn-capture:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,186,8,0.4); }
+
+        /* ── MID-PAGE CTA ── */
+        .midpage-cta {
+            background: rgba(10,36,114,0.25);
+            border-top: 1px solid rgba(255,186,8,0.15);
+            border-bottom: 1px solid rgba(255,186,8,0.15);
+            padding: 2.5rem 3rem;
+            position: relative; z-index: 1;
+        }
+        .midpage-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .midpage-label { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .midpage-sub { font-size: 0.88rem; color: rgba(255,255,255,0.5); }
+        .midpage-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .midpage-form .school-select { width: auto; min-width: 160px; }
+        .midpage-form .hero-email { min-width: 200px; }
+
+        /* ── MODAL ── */
+        .unify-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5,13,32,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .unify-modal.open { display: flex; }
+        .modal-box {
+            background: #0a1a3a;
+            border: 1px solid rgba(255,186,8,0.3);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            text-align: center;
+            animation: fadeUp 0.35s ease;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: rgba(255,255,255,0.07);
+            border: none;
+            color: rgba(255,255,255,0.5);
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.5rem; }
+        .modal-body { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
         /* ══════════════════════════════════════════
            COMPREHENSIVE MOBILE STYLES
            Breakpoints: 768px (tablet), 480px (mobile)
@@ -1377,6 +1498,19 @@
                 gap: 0.75rem;
             }
 
+            /* ── HERO CAPTURE ── */
+            .hero-capture { max-width: 100%; }
+            .hero-capture-bottom { flex-direction: column; }
+            .btn-capture { width: 100%; padding: 0.85rem; }
+
+            /* ── MID-PAGE CTA ── */
+            .midpage-cta { padding: 2rem 1.25rem; }
+            .midpage-inner { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+            .midpage-form { flex-direction: column; width: 100%; }
+            .midpage-form .school-select,
+            .midpage-form .hero-email { width: 100%; }
+            .midpage-form .btn-capture { width: 100%; }
+
             /* ── STICKY CTA ── */
             .mobile-sticky-cta {
                 display: flex;
@@ -1475,7 +1609,45 @@
                 </div>
                 <p class="proof-text"><strong>12,400+ students</strong> already on the waitlist</p>
             </div>
-        </div>
+
+            <!-- HERO SCHOOL SELECTOR — above-fold conversion -->
+            <form class="hero-capture" onsubmit="heroCapture(event)" id="heroCaptureForm">
+                <div class="hero-capture-top">
+                    <select class="school-select" id="heroSchool" onchange="syncSchool(this.value)">
+                        <option value="">Select your school</option>
+                        <optgroup label="Universities">
+                            <option>KNUST</option>
+                            <option>University of Ghana</option>
+                            <option>UCC</option>
+                            <option>UPSA</option>
+                            <option>UDS</option>
+                            <option>GCTU</option>
+                            <option>Takoradi Technical University</option>
+                        </optgroup>
+                        <optgroup label="Senior High Schools">
+                            <option>PRESEC Legon</option>
+                            <option>Achimota School</option>
+                            <option>Wesley Girls</option>
+                            <option>Mfantsipim School</option>
+                            <option>Prempeh College</option>
+                            <option>Adisadel College</option>
+                            <option>Holy Child</option>
+                            <option>Kumasi Girls</option>
+                            <option>Tema SHS</option>
+                            <option>St. Augustine's College</option>
+                            <option>Opoku Ware School</option>
+                            <option>St. Peters SHS</option>
+                            <option>Navrongo SHS</option>
+                        </optgroup>
+                        <option value="Other">Other school</option>
+                    </select>
+                </div>
+                <div class="hero-capture-bottom">
+                    <input type="email" class="hero-email" id="heroEmail" placeholder="your@email.com" required>
+                    <button type="submit" class="btn-capture" id="heroBtn">Get notified →</button>
+                </div>
+                <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.5rem;">🔒 Free for all students · No spam, ever</p>
+            </form>
 
         <div class="hero-visual">
             <div class="phone-wrap">
@@ -1773,6 +1945,26 @@
     </div>
 </section>
 
+<!-- MID-PAGE CTA -->
+<div class="midpage-cta">
+    <div class="midpage-inner">
+        <div>
+            <p class="midpage-label">Ready to find your people?</p>
+            <p class="midpage-sub">Join <strong>12,400+ students</strong> already on the waitlist.</p>
+        </div>
+        <form class="midpage-form" onsubmit="heroCapture(event)">
+            <select class="school-select" onchange="syncSchool(this.value)" id="midSchool">
+                <option value="">Your school</option>
+                <optgroup label="Universities"><option>KNUST</option><option>University of Ghana</option><option>UCC</option><option>UPSA</option><option>UDS</option><option>GCTU</option></optgroup>
+                <optgroup label="SHS"><option>PRESEC Legon</option><option>Achimota School</option><option>Wesley Girls</option><option>Mfantsipim School</option><option>Prempeh College</option><option>Adisadel College</option><option>Holy Child</option><option>Opoku Ware School</option></optgroup>
+                <option value="Other">Other school</option>
+            </select>
+            <input type="email" class="hero-email" placeholder="your@email.com" required>
+            <button type="submit" class="btn-capture">Join →</button>
+        </form>
+    </div>
+</div>
+
 <!-- TESTIMONIALS -->
 <section class="testimonials">
     <div class="testimonials-inner">
@@ -1995,6 +2187,36 @@
 
 <div class="toast" id="toast">🎉 You're on the list! We'll be in touch.</div>
 
+<!-- INTERACTION MODAL -->
+<div class="unify-modal" id="interactModal" onclick="closeModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div style="font-size:2rem;margin-bottom:0.75rem;">🎓</div>
+        <h3 class="modal-title">Join to interact</h3>
+        <p class="modal-body">12,400+ students from <strong id="modalSchool">your school</strong> are already waiting. Get notified the moment your campus hub goes live.</p>
+        <form onsubmit="heroCapture(event)" style="margin-top:1.25rem;display:flex;flex-direction:column;gap:0.6rem;">
+            <input type="email" class="hero-email" placeholder="your@email.com" required style="width:100%;">
+            <button type="submit" class="btn-join" style="width:100%;">Get early access →</button>
+        </form>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.6rem;">🔒 Free forever · No spam · Built in Ghana 🇬🇭</p>
+    </div>
+</div>
+
+<!-- EXIT INTENT MODAL -->
+<div class="unify-modal" id="exitModal" onclick="closeExitModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeExitModal()">✕</button>
+        <div style="font-size:2rem;margin-bottom:0.75rem;">⏳</div>
+        <h3 class="modal-title">Don't miss out</h3>
+        <p class="modal-body">12,400+ students from <strong id="exitModalSchool">your school</strong> are already on the waitlist. Your spot won't wait forever.</p>
+        <form onsubmit="heroCapture(event)" style="margin-top:1.25rem;display:flex;flex-direction:column;gap:0.6rem;">
+            <input type="email" class="hero-email" placeholder="your@email.com" required style="width:100%;">
+            <button type="submit" class="btn-join" style="width:100%;">Secure my spot →</button>
+        </form>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.6rem;">🔒 Free forever · No spam</p>
+    </div>
+</div>
+
 <script>
     // Nav scroll
     const nav = document.getElementById('nav');
@@ -2098,6 +2320,72 @@
     }
 
     document.querySelectorAll('.school-logo[data-school]').forEach(img => loadWikiLogo(img));
+
+    // ── SCHOOL STATE — shared across all forms ──
+    let selectedSchool = '';
+
+    function syncSchool(val) {
+        selectedSchool = val || '';
+        // Sync all school selects
+        document.querySelectorAll('.school-select').forEach(s => { if(val) s.value = val; });
+        // Update hero CTA button text
+        const btn = document.getElementById('heroBtn');
+        if (btn && val && val !== 'Other') btn.textContent = `Notify me for ${val} →`;
+        else if (btn) btn.textContent = 'Get notified →';
+    }
+
+    // ── HERO CAPTURE + all forms ──
+    function heroCapture(e) {
+        e.preventDefault();
+        // Close any open modal
+        document.querySelectorAll('.unify-modal').forEach(m => m.classList.remove('open'));
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        e.target.reset();
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    // ── INTERACTION MODAL (mock post clicks) ──
+    function openModal(school) {
+        const label = school || selectedSchool || 'your school';
+        document.getElementById('modalSchool').textContent = label;
+        document.getElementById('interactModal').classList.add('open');
+    }
+    function closeModal(e) {
+        if (!e || e.target === document.getElementById('interactModal')) {
+            document.getElementById('interactModal').classList.remove('open');
+        }
+    }
+
+    // Wire up all .ph-post and .ph-action elements
+    document.querySelectorAll('.ph-post').forEach(post => {
+        post.style.cursor = 'pointer';
+        const school = post.querySelector('.ph-post-school')?.textContent?.split('·')[0]?.trim() || '';
+        post.addEventListener('click', () => openModal(school));
+    });
+    document.querySelectorAll('.ph-action').forEach(a => {
+        a.style.cursor = 'pointer';
+        a.addEventListener('click', e => { e.stopPropagation(); openModal(selectedSchool); });
+    });
+
+    // ── EXIT INTENT ──
+    let exitShown = false;
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+        const sy = window.scrollY;
+        if (!exitShown && sy < lastScrollY && sy < 300 && lastScrollY > 600) {
+            exitShown = true;
+            const label = selectedSchool || 'your school';
+            document.getElementById('exitModalSchool').textContent = label;
+            document.getElementById('exitModal').classList.add('open');
+        }
+        lastScrollY = sy;
+    });
+    function closeExitModal(e) {
+        if (!e || e.target === document.getElementById('exitModal')) {
+            document.getElementById('exitModal').classList.remove('open');
+        }
+    }
 </script>
 
 <!-- Vercel Analytics -->
