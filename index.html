@@ -154,6 +154,11 @@
         @media (max-width: 900px) {
             .hero { grid-template-columns: 1fr; text-align: center; padding: 8rem 1.5rem 5rem; gap: 3rem; }
             .hero-visual { order: -1; }
+            .hero p { margin: 0 auto 2.25rem; }
+            .hero-actions { justify-content: center; }
+            .hero-social-proof { justify-content: center; }
+            .tgrid { grid-template-columns: 1fr; }
+            .rmap { grid-template-columns: 1fr 1fr; }
         }
 
         /* Background glow */
@@ -230,11 +235,7 @@
             margin-bottom: 2.25rem;
         }
 
-        @media (max-width: 900px) { .hero p { margin: 0 auto 2.25rem; } }
-
         .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
-
-        @media (max-width: 900px) { .hero-actions { justify-content: center; } }
 
         .btn-store {
             display: flex;
@@ -261,8 +262,6 @@
             align-items: center;
             gap: 1rem;
         }
-
-        @media (max-width: 900px) { .hero-social-proof { justify-content: center; } }
 
         .avatar-stack { display: flex; }
 
@@ -692,8 +691,6 @@
             margin-top: 3.5rem;
         }
 
-        @media (max-width: 900px) { .tgrid { grid-template-columns: 1fr; } }
-
         .tcard {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.07);
@@ -769,9 +766,6 @@
             gap: 1rem;
             margin-top: 4rem;
         }
-
-        @media (max-width: 900px) { .rmap { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 500px) { .rmap { grid-template-columns: 1fr; } }
 
         .rcard {
             border-radius: 20px;
@@ -1447,19 +1441,18 @@
             .midpage-form .hero-email,
             .midpage-form .btn-capture { width: 100%; }
 
-            /* ── FOOTER — ZeeMee style: logo left · links center · socials right · copyright bottom ── */
+            /* ── FOOTER — ZeeMee style: logo left · socials right · links below · copyright bottom ── */
             footer { padding: 2rem 1.25rem 5.5rem; }
             .footer-inner {
-                display: grid;
-                grid-template-columns: auto 1fr auto;
-                grid-template-rows: auto auto;
-                align-items: center;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
                 gap: 1rem;
                 padding-bottom: 1.25rem;
                 margin-bottom: 1.25rem;
             }
             .footer-left {
-                grid-column: 1 / -1;
+                width: 100%;
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
@@ -1467,11 +1460,8 @@
                 gap: 0;
             }
             .footer-left .logo { font-size: 1.1rem; }
-            .footer-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-            .footer-right { grid-column: 1 / -1; justify-content: flex-start; width: 100%; }
+            .footer-links { gap: 0.85rem; flex-wrap: wrap; }
+            .footer-right { justify-content: flex-start; width: 100%; }
             .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
 
             /* ── STICKY CTA ── */
@@ -1501,15 +1491,9 @@
             /* ── SECTIONS ── */
             .section-title { font-size: clamp(1.5rem, 7vw, 2rem); }
 
-            /* ── FEATURES ── */
-            .features-bento { grid-template-columns: 1fr; }
-
             /* ── STATS ── */
             .stats-grid { gap: 1rem; }
             .stat-val { font-size: 2rem; }
-
-            /* ── TESTIMONIALS ── */
-            .tgrid { grid-template-columns: 1fr; }
 
             /* ── CAMPUS ── */
             .campus-grid { grid-template-columns: 1fr; }
