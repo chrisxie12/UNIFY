@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="10" fill="#003B6F"/>
-  <text x="32" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#FFD700">MF</text>
+  <rect width="64" height="64" rx="8" fill="#003B6F"/>
+  <line x1="32" y1="8" x2="32" y2="42" stroke="#FFD700" stroke-width="3"/>
+  <line x1="16" y1="20" x2="48" y2="20" stroke="#FFD700" stroke-width="3"/>
+  <text x="32" y="54" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" font-weight="800" fill="#FFD700">MFANTSIPIM</text>
 </svg>

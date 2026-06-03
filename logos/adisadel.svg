@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="10" fill="#8B0000"/>
-  <text x="32" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#FFD700">AD</text>
+  <rect width="64" height="64" rx="8" fill="#8B0000"/>
+  <path d="M32 6 L56 18 L56 46 L32 58 L8 46 L8 18 Z" fill="#7A0000" stroke="#FFD700" stroke-width="1.5"/>
+  <line x1="32" y1="14" x2="32" y2="50" stroke="#FFD700" stroke-width="2.5"/>
+  <line x1="18" y1="26" x2="46" y2="26" stroke="#FFD700" stroke-width="2.5"/>
+  <text x="32" y="47" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" font-weight="800" fill="#FFD700">ADISADEL</text>
 </svg>
