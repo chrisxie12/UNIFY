@@ -19,51 +19,33 @@ import { Shield, Wifi, Building2, CheckCircle, MapPin, Users } from 'lucide-reac
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
 const TICKER_ITEMS = [
-  '🔥 45 freshers just joined from Prempeh College',
-  '🏠 90+ roomie matches in Brunei/Kotei area · KNUST',
-  '📚 120 KNUST CS freshers connected this week',
-  '🎓 UG Legon hub just crossed 2,000 members',
-  '🔥 Wesley Girls \'28 intake group is LIVE',
-  '🏠 Evandy Hostel thread trending in UCC hub',
-  '📚 67 Law freshers linked up at UG Legon',
-  '🎓 UPSA Business hub growing fast — join now',
-  '🔥 Achimota \'28 placement group: 340 members',
-  '🏠 Katanga Hall residents comparing room lists',
-  '📚 KNUST Engineering Study Circle — 88 members',
-  '💧 Unity Hall freshers asking about pipe water situation fr',
+  '🔥 45 freshers from Prempeh College just claimed their handles',
+  '⚡️ 120 roomies matched for KNUST Brunei & Kotei hostels',
+  '🎓 Legon Class of \'30 hubs are officially live',
+  '🔥 32 girls just joined the Volta Hall fresher network',
+  '⚡️ Avoid the portal rush — 210 students linked up early',
+  '🏠 Evandy & TF hostel threads trending in UCC hub',
+  '🎓 KNUST Engineering Circle just hit 88 verified members',
+  '🔥 UPSA Business fresher hub is growing fast — claim your spot',
+  '⚡️ 67 Law freshers linked up at Legon before lectures even start',
+  '🏠 Katanga & Unity Hall residents dropping real hostel intel',
+  '🎓 Achimota Class of \'30 placement group: 340 members and counting',
+  '🔥 Wesley Girls intake crew already planning Legon orientation week',
 ];
 
 const FRESHERS = [
   {
-    initials: 'KA',
-    name: 'Kofi Asante',
-    age: 18,
-    from: 'Prempeh College, Kumasi',
-    school: 'KNUST',
-    program: 'BSc Computer Science',
-    cohort: "Fresher '28",
-    bio: "Tech guy, Afrobeats playlist always running 🎵 Looking for a chill roomie who won't steal my charger or eat my food.",
-    hostelPref: 'Unity Hall or Katanga',
-    lookingFor: 'Roommate',
-    tags: ['Techy', 'Night Owl', 'Afrobeats'],
-    avatarBg: 'from-green-900 to-green-700',
-    online: true,
-    accentColor: 'text-green-400',
-    borderColor: 'border-green-500/20',
-    tagBg: 'bg-green-500/10 text-green-300 border-green-500/20',
-  },
-  {
     initials: 'AA',
-    name: 'Akosua Ama',
-    age: 19,
-    from: 'Wesley Girls, Cape Coast',
+    name: 'Akosua A.',
+    age: 18,
+    from: 'Aburi Girls, Eastern Region',
     school: 'UG Legon',
-    program: 'LLB Law',
-    cohort: "Fresher '28",
-    bio: 'Future lawyer, certified overthinker 📚 Need a serious roomie who also knows when to take a break after exams.',
-    hostelPref: 'Mensah Sarbah Hall',
-    lookingFor: 'Roommate + Study partner',
-    tags: ['Law Nerd', 'Early Riser', 'Bookworm'],
+    program: 'BSc Business Administration',
+    cohort: "Fresher '30",
+    bio: "Looking for a neat roomie for Volta or Limann. I sleep early, so no loud music at night please! Let's link up before orientation week.",
+    hostelPref: 'Volta Hall or Limann Hall',
+    lookingFor: 'Roommate',
+    tags: ['Neat Freak', 'Early Sleeper', 'Business Vibes'],
     avatarBg: 'from-blue-900 to-blue-700',
     online: true,
     accentColor: 'text-blue-400',
@@ -71,17 +53,35 @@ const FRESHERS = [
     tagBg: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
   },
   {
-    initials: 'FA',
-    name: 'Fatima Al-Hassan',
+    initials: 'KB',
+    name: 'Kwaku B.',
+    age: 19,
+    from: 'Prempeh College, Kumasi',
+    school: 'KNUST',
+    program: 'BSc Computer Science',
+    cohort: "Fresher '30",
+    bio: "Staying around Kotei or Brunei. Looking for fellow tech heads to code with and split Uber rides to campus. Hit me up, no cap.",
+    hostelPref: 'Kotei or Brunei area',
+    lookingFor: 'Roommate + Code partner',
+    tags: ['Tech Head', 'Night Coder', 'Uber Splitter'],
+    avatarBg: 'from-green-900 to-green-700',
+    online: true,
+    accentColor: 'text-green-400',
+    borderColor: 'border-green-500/20',
+    tagBg: 'bg-green-500/10 text-green-300 border-green-500/20',
+  },
+  {
+    initials: 'SM',
+    name: 'Selorm M.',
     age: 18,
-    from: 'Tamale Senior High',
+    from: 'Ho Senior High School',
     school: 'UCC',
-    program: 'BSc Business Admin',
-    cohort: "Fresher '28",
-    bio: 'Coming all the way from the North 🇬🇭 First time in Cape Coast. Need someone to navigate campus with and split transport from Accra station.',
-    hostelPref: 'Evandy Hostel',
-    lookingFor: 'Roommate + Travel buddy',
-    tags: ['Business Minded', 'Explorer', 'Northern Pride'],
+    program: 'BSc Nursing',
+    cohort: "Fresher '30",
+    bio: "Admitted to Casford area. Looking for serious study partners and course mates. Let's pass these mid-sems early and actually enjoy campus life.",
+    hostelPref: 'Casford Hall area',
+    lookingFor: 'Study partner + Coursemates',
+    tags: ['Future Nurse', 'Study First', 'Serious Vibes'],
     avatarBg: 'from-purple-900 to-purple-700',
     online: false,
     accentColor: 'text-purple-400',
@@ -93,30 +93,30 @@ const FRESHERS = [
 const PILLARS = [
   {
     Icon: Shield,
-    title: 'Verified Roommate Matching',
-    subtitle: 'No scams. No catfish.',
-    body: 'Every profile is verified with a school admission letter or student ID. Real freshers only — connect with full confidence before you arrive on campus.',
-    tags: ['Student-verified', 'ID-checked', 'Scam-free'],
+    title: 'Vibe-Checked Roommates',
+    subtitle: 'No brokers. No gambling.',
+    body: 'Stop gambling on random hall allocation or paying sketchy middle-men brokers. Filter by habits — neatness, study vibes, and lights-out schedules — and lock down a reliable roommate before you even pack your bags.',
+    tags: ['Habit-matched', 'Broker-free', 'Verified ID'],
     iconColor: 'text-green-400',
     cardBg: 'bg-green-400/[0.04] border-green-400/20',
     tagStyle: 'bg-green-400/10 text-green-300 border-green-400/20',
   },
   {
     Icon: Building2,
-    title: 'Campus & Hall Hubs',
-    subtitle: 'Insider ground truth, always.',
-    body: 'Dedicated hubs for Evandy, Limann, Katanga, Unity Hall and more. Get honest hostel reviews, pipe water warnings, and room tips from current residents — before you commit.',
-    tags: ['Evandy', 'Katanga', 'Unity Hall', 'Limann'],
+    title: 'Real Campus Ground Truth',
+    subtitle: 'Unedited. From current students.',
+    body: 'Get the unedited breakdown on halls and hostels — from Evandy, TF, and Limann to Katanga and Unity. Continuing students drop the real info on water consistency, light issues, and how to navigate freshman year smoothly.',
+    tags: ['Evandy', 'TF Hostel', 'Katanga', 'Unity Hall', 'Limann'],
     iconColor: 'text-amber-400',
     cardBg: 'bg-amber-400/[0.04] border-amber-400/20',
     tagStyle: 'bg-amber-400/10 text-amber-300 border-amber-400/20',
   },
   {
     Icon: Wifi,
-    title: "Built for Ghana's Internet",
-    subtitle: 'Under 5MB. Runs on 2G.',
-    body: 'MTN data low? Campus WiFi misbehaving? UNIFY loads under 3 seconds on 2G, compresses everything, and never autoplays video. Built lean, on purpose.',
-    tags: ['< 5MB', '2G ready', 'Offline mode'],
+    title: 'No Data Anxiety',
+    subtitle: 'Under 5MB. MTN or Telecel.',
+    body: 'We know how fast a video-heavy app eats your data bundle. UNIFY is built from scratch to be ultra-lightweight (under 5MB). It loads instantly even when campus network lines are completely jammed on MTN or Telecel.',
+    tags: ['< 5MB', 'MTN ready', 'Telecel ready', 'Offline mode'],
     iconColor: 'text-sky-400',
     cardBg: 'bg-sky-400/[0.04] border-sky-400/20',
     tagStyle: 'bg-sky-400/10 text-sky-300 border-sky-400/20',
@@ -125,25 +125,25 @@ const PILLARS = [
 
 const PHONE_POSTS = [
   {
-    av: 'KA', avBg: 'bg-green-800',
-    name: 'Kofi A.', school: 'KNUST · Fresher · CS',
-    tag: 'Roommate needed', tagStyle: 'bg-green-500/20 text-green-300',
-    text: "Joining Unity Hall Aug intake. Need a chill roomie — Afrobeats only 🎵",
-    likes: 84, comments: 31,
-  },
-  {
     av: 'AA', avBg: 'bg-blue-800',
-    name: 'Akosua A.', school: 'UG · Fresher · Law',
-    tag: 'Study partner', tagStyle: 'bg-blue-500/20 text-blue-300',
-    text: "LLB fresher at Legon. Anyone else doing this program? Let's start a group 📚",
-    likes: 47, comments: 12,
+    name: 'Akosua A.', school: 'UG Legon · Fresher · Business',
+    tag: 'Roommate needed', tagStyle: 'bg-blue-500/20 text-blue-300',
+    text: "Looking for a neat roomie for Volta or Limann. I sleep early — no loud music please! 🙏",
+    likes: 94, comments: 38,
   },
   {
-    av: 'FA', avBg: 'bg-purple-800',
-    name: 'Fatima A.', school: 'UCC · Fresher',
-    tag: 'Travel buddy', tagStyle: 'bg-purple-500/20 text-purple-300',
-    text: "Coming from Tamale. Anyone sharing taxi from Accra station to UCC? 🙋‍♀️",
-    likes: 61, comments: 22,
+    av: 'KB', avBg: 'bg-green-800',
+    name: 'Kwaku B.', school: 'KNUST · Fresher · CS',
+    tag: 'Tech roomie wanted', tagStyle: 'bg-green-500/20 text-green-300',
+    text: "Kotei or Brunei area. Looking for fellow tech heads to code and split rides with. No cap 🔥",
+    likes: 71, comments: 24,
+  },
+  {
+    av: 'SM', avBg: 'bg-purple-800',
+    name: 'Selorm M.', school: 'UCC · Fresher · Nursing',
+    tag: 'Study partner', tagStyle: 'bg-purple-500/20 text-purple-300',
+    text: "Casford area. Need serious study partners for Nursing. Let's pass these mid-sems early 📚",
+    likes: 55, comments: 19,
   },
 ];
 
@@ -176,7 +176,7 @@ function WaitlistForm({ id }) {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="your@email.com or 024XXXXXXX"
+        placeholder="Enter phone number (e.g., 055...)"
         required
         className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-2xl px-5 py-3.5 text-sm text-white placeholder-white/25 outline-none focus:border-amber-400/50 transition-colors"
       />
@@ -347,13 +347,13 @@ export default function UnifyLanding() {
             </div>
 
             <h1 className="text-5xl md:text-[3.6rem] font-black leading-[1.06] tracking-tight mb-6">
-              Know someone<br />
-              before you even<br />
-              <span className="text-amber-400">reach campus.</span>
+              Don't pull up to<br />
+              campus alone,<br />
+              <span className="text-amber-400">fr.</span>
             </h1>
 
             <p className="text-lg text-white/50 leading-relaxed mb-9 max-w-[440px]">
-              Starting at KNUST, UG, or UCC soon? Find your roommate, link with coursemates, and join your hall hub — before freshers week even begins. Fr, no cap.
+              The ZeeMee for Ghana. Find your roommates, link up with course mates, and tap into your official campus hub before matriculation. Lightweight, clean, and uses under 5MB of data.
             </p>
 
             <WaitlistForm id="hero-form" />
@@ -474,13 +474,12 @@ export default function UnifyLanding() {
           </div>
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-5 leading-tight">
-            Your coursemates are<br />
-            already in here.
-            <span className="text-amber-400"> 👀</span>
+            Stop hunting for broken<br />
+            <span className="text-amber-400">WhatsApp group links.</span>
           </h2>
 
           <p className="text-white/45 text-lg mb-10 max-w-md mx-auto leading-relaxed">
-            Drop your email or number. We notify you 48 hours before your school hub opens — before anyone else gets in.
+            Secure your spot in the official Class of &apos;30 network today. Your campus people are already inside.
           </p>
 
           <WaitlistForm id="footer-form" />
