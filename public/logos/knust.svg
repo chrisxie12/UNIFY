@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="8" fill="#006B3C"/>
+  <polygon points="32,4 56,16 56,40 32,60 8,40 8,16" fill="#005A32" stroke="#FCD116" stroke-width="1.5"/>
+  <text x="32" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#FCD116">KN</text>
+  <text x="32" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" font-weight="700" fill="#FCD116">UST</text>
+</svg>

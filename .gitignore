@@ -42,3 +42,9 @@ Thumbs.db
 *.tmp
 *.temp.claude/worktrees/
 .claude/
+
+# Next.js
+.next/
+
+# Vercel
+.vercel

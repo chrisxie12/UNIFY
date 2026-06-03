@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="8" fill="#003B6F"/>
+  <path d="M32 8 L54 20 L54 44 L32 56 L10 44 L10 20 Z" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+  <text x="32" y="31" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="900" fill="#FFD700">UCC</text>
+  <text x="32" y="44" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="600" fill="#FFD700">CAPE COAST</text>
+</svg>
