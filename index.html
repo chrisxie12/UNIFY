@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -205,7 +206,10 @@
             animation: blink 2s ease-in-out infinite;
         }
 
-        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+        @keyframes blink {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,186,8,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,186,8,0); }
+        }
 
         .hero h1 {
             font-size: clamp(2.6rem, 5.5vw, 4.2rem);
@@ -679,7 +683,7 @@
             transition: all 0.3s;
         }
 
-        .tcard:hover { border-color: rgba(255,186,8,0.3); background: rgba(10,36,114,0.15); transform: translateY(-3px); }
+        .tcard:hover { border-color: rgba(255,186,8,0.3); background: rgba(10,36,114,0.15); transform: translateY(-3px); box-shadow: 0 0 30px rgba(255,186,8,0.08); }
 
         .tcard-stars { color: var(--amber); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
         .tcard-text { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 1.5rem; font-style: italic; }
@@ -1099,6 +1103,103 @@
 
         /* ── PH-SEARCH CURSOR ── */
         .ph-search { cursor: pointer; }
+
+        /* ── LUCIDE ICONS ── */
+        .bento-icon i { width:24px; height:24px; color: var(--amber); }
+
+        /* ── STEP ICON WRAP ── */
+        .step-icon-wrap {
+            width:48px; height:48px;
+            background:rgba(255,186,8,0.1);
+            border:1px solid rgba(255,186,8,0.2);
+            border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 1rem;
+        }
+        .step-icon-wrap i { width:22px; height:22px; color:var(--amber); }
+
+        /* ── ROADMAP LUCIDE ICONS ── */
+        .rcard-icon i { width:28px; height:28px; }
+        .done .rcard-icon i { color: var(--green); }
+        .active .rcard-icon i { color: var(--amber); }
+        .next .rcard-icon i { color: rgba(255,186,8,0.7); }
+        .future .rcard-icon i { color: rgba(255,255,255,0.3); }
+
+        /* ── TESTIMONIAL PHOTO AVATARS ── */
+        .tav-photo {
+            width:44px; height:44px;
+            border-radius:50%;
+            object-fit:cover;
+            flex-shrink:0;
+            border:2px solid rgba(255,186,8,0.3);
+        }
+
+        /* ── HERO AVATAR STACK PHOTOS ── */
+        .av-photo {
+            width:36px; height:36px;
+            border-radius:50%;
+            object-fit:cover;
+            border:2px solid var(--dark);
+            margin-left:-10px;
+            flex-shrink:0;
+        }
+        .av-photo:first-child { margin-left:0; }
+        .av-count {
+            width:36px; height:36px;
+            border-radius:50%;
+            background:var(--amber);
+            color:var(--navy);
+            font-size:0.6rem;
+            font-weight:800;
+            display:flex; align-items:center; justify-content:center;
+            border:2px solid var(--dark);
+            margin-left:-10px;
+        }
+
+        /* ── CAMPUS LIFE ── */
+        .campus { padding: 8rem 3rem; }
+        .campus-inner { max-width: 1200px; margin: 0 auto; }
+        .campus-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto;
+            gap: 1rem;
+            margin-top: 3rem;
+            height: 500px;
+        }
+        .campus-col { display: flex; flex-direction: column; gap: 1rem; }
+        .campus-photo { position: relative; border-radius: 16px; overflow: hidden; flex: 1; }
+        .campus-photo.tall { flex: none; }
+        .campus-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
+        .campus-photo:hover img { transform: scale(1.05); }
+        .campus-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(5,13,32,0.85), transparent);
+            padding: 1.5rem 1rem 1rem;
+        }
+        .campus-overlay span { color: var(--amber); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        @media (max-width: 768px) {
+            .campus { padding: 5rem 1.5rem; }
+            .campus-grid { grid-template-columns: 1fr 1fr; height: auto; }
+            .campus-photo.tall { display: none; }
+            .campus-col { flex-direction: row; }
+        }
+        @media (max-width: 500px) {
+            .campus-grid { grid-template-columns: 1fr; }
+            .campus-col { flex-direction: column; }
+        }
+
+        /* ── HERO LOAD ANIMATIONS ── */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+        .hero-text > * { animation: fadeUp 0.7s ease forwards; opacity: 0; }
+        .hero-text > *:nth-child(1) { animation-delay: 0.1s; }
+        .hero-text > *:nth-child(2) { animation-delay: 0.25s; }
+        .hero-text > *:nth-child(3) { animation-delay: 0.4s; }
+        .hero-text > *:nth-child(4) { animation-delay: 0.55s; }
+        .hero-text > *:nth-child(5) { animation-delay: 0.7s; }
+        .hero-visual { animation: fadeUp 0.9s 0.4s ease forwards; opacity: 0; }
+
     </style>
 </head>
 <body>
@@ -1155,11 +1256,11 @@
             </div>
             <div class="hero-social-proof">
                 <div class="avatar-stack">
-                    <div class="av" style="background:linear-gradient(135deg,var(--navy),var(--navy-light))">AK</div>
-                    <div class="av" style="background:linear-gradient(135deg,var(--amber),var(--amber-dark))">KM</div>
-                    <div class="av" style="background:var(--navy-light)">FA</div>
-                    <div class="av" style="background:var(--navy-light)">EO</div>
-                    <div class="av" style="background:var(--navy-light)">+</div>
+                  <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=40&h=40&fit=crop&crop=face&q=80" class="av-photo" alt="">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face&q=80" class="av-photo" alt="">
+                  <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=40&h=40&fit=crop&crop=face&q=80" class="av-photo" alt="">
+                  <img src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=40&h=40&fit=crop&crop=face&q=80" class="av-photo" alt="">
+                  <div class="av-count">+12K</div>
                 </div>
                 <p class="proof-text"><strong>12,400+ students</strong> already on the waitlist</p>
             </div>
@@ -1349,7 +1450,7 @@
 
     <div class="features-bento">
         <div class="bento-card wide reveal">
-            <div class="bento-icon ic-purple">🏫</div>
+            <div class="bento-icon ic-purple"><i data-lucide="building-2" stroke-width="1.8"></i></div>
             <h3>School Hubs — your campus, online</h3>
             <p>Every school in Ghana gets its own dedicated hub. A living feed for your school's announcements, events, resources, and conversations — filtered by your cohort and interests.</p>
             <div class="bento-tags">
@@ -1361,7 +1462,7 @@
         </div>
 
         <div class="bento-card reveal delay-1">
-            <div class="bento-icon ic-pink">🏠</div>
+            <div class="bento-icon ic-pink"><i data-lucide="home" stroke-width="1.8"></i></div>
             <h3>Roommate Matching</h3>
             <p>Answer a few questions about your lifestyle and we'll connect you with compatible roommates before you arrive on campus.</p>
             <div class="bento-tags">
@@ -1371,7 +1472,7 @@
         </div>
 
         <div class="bento-card reveal">
-            <div class="bento-icon ic-teal">💬</div>
+            <div class="bento-icon ic-teal"><i data-lucide="message-circle" stroke-width="1.8"></i></div>
             <h3>Direct Messaging</h3>
             <p>Secure DMs and group chats. Connect one-on-one or create study rooms with your coursemates.</p>
             <div class="bento-tags">
@@ -1382,7 +1483,7 @@
         </div>
 
         <div class="bento-card reveal delay-1">
-            <div class="bento-icon ic-yellow">📚</div>
+            <div class="bento-icon ic-yellow"><i data-lucide="book-open" stroke-width="1.8"></i></div>
             <h3>Academic Resources</h3>
             <p>Share and discover past questions, notes, and study guides. Ask seniors who've aced the same exams.</p>
             <div class="bento-tags">
@@ -1392,7 +1493,7 @@
         </div>
 
         <div class="bento-card reveal delay-2">
-            <div class="bento-icon ic-orange">🇬🇭</div>
+            <div class="bento-icon ic-orange"><i data-lucide="map-pin" stroke-width="1.8"></i></div>
             <h3>Ghana-First Features</h3>
             <p>Post-BECE placement guides, WASSCE prep communities, and hostel reviews — built for the uniquely Ghanaian student journey.</p>
             <div class="bento-tags">
@@ -1403,7 +1504,7 @@
         </div>
 
         <div class="bento-card reveal">
-            <div class="bento-icon ic-green">📶</div>
+            <div class="bento-icon ic-green"><i data-lucide="wifi" stroke-width="1.8"></i></div>
             <h3>Works on Any Data</h3>
             <p>Optimized for Ghana's networks. Runs on 2G, 3G, or slow WiFi — because great tools shouldn't need great internet.</p>
             <div class="bento-tags">
@@ -1422,16 +1523,19 @@
         <p class="section-sub">No lengthy setup. Join, find your school, and start connecting with your people right away.</p>
         <div class="steps-grid">
             <div class="step reveal">
+                <div class="step-icon-wrap"><i data-lucide="user-plus" stroke-width="1.5"></i></div>
                 <div class="step-num sn1">1</div>
                 <h3>Create your profile</h3>
                 <p>Sign up with your phone number or email. Verify your student status and add your school, year group, and interests.</p>
             </div>
             <div class="step reveal delay-1">
+                <div class="step-icon-wrap"><i data-lucide="school" stroke-width="1.5"></i></div>
                 <div class="step-num sn2">2</div>
                 <h3>Join your school hub</h3>
                 <p>Pick your school from 180+ listings across Ghana — SHS, technical institutes, and universities all included.</p>
             </div>
             <div class="step reveal delay-2">
+                <div class="step-icon-wrap"><i data-lucide="users" stroke-width="1.5"></i></div>
                 <div class="step-num sn3">3</div>
                 <h3>Connect and thrive</h3>
                 <p>Meet students, join communities, find a roommate, swap notes, and make the most of your school years.</p>
@@ -1451,7 +1555,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"UNIFY helped me find seniors at KNUST who walked me through registration before I even arrived. I felt more prepared than anyone in my cohort."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:linear-gradient(135deg,var(--navy),var(--navy-light))">AK</div>
+                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=face&q=80" alt="Abena Konadu" class="tav-photo">
                     <div>
                         <div class="tav-name">Abena Konadu</div>
                         <div class="tav-school">KNUST · Computer Science</div>
@@ -1463,7 +1567,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"After BECE results, I had no idea what to expect at PRESEC. Found a whole community of incoming students on UNIFY. We formed study groups before school started."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:linear-gradient(135deg,var(--amber),var(--amber-dark))">KM</div>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&q=80" alt="Kofi Mensah" class="tav-photo">
                     <div>
                         <div class="tav-name">Kofi Mensah</div>
                         <div class="tav-school">PRESEC Legon · Form 2</div>
@@ -1475,7 +1579,7 @@
                 <div class="tcard-stars">★★★★★</div>
                 <p class="tcard-text">"Going from Tamale to Accra for school was scary. UNIFY connected me with other northern girls at Achimota before I even packed my bags."</p>
                 <div class="tcard-author">
-                    <div class="tav" style="background:var(--navy-light)">FA</div>
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&h=80&fit=crop&crop=face&q=80" alt="Fatima Alhassan" class="tav-photo">
                     <div>
                         <div class="tav-name">Fatima Alhassan</div>
                         <div class="tav-school">Achimota School · Form 3</div>
@@ -1485,6 +1589,35 @@
             </div>
         </div>
     </div>
+</section>
+
+<!-- CAMPUS LIFE -->
+<section class="campus">
+  <div class="campus-inner">
+    <div class="eyebrow">Campus life</div>
+    <h2 class="section-title">Real students.<br>Real campuses.</h2>
+    <p class="section-sub">From Legon to Kumasi, Takoradi to Tamale — Ghanaian student life is vibrant, diverse, and connected.</p>
+    <div class="campus-grid">
+      <div class="campus-photo tall">
+        <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=800&fit=crop&q=80" alt="Students studying">
+        <div class="campus-overlay"><span>KNUST</span></div>
+      </div>
+      <div class="campus-col">
+        <div class="campus-photo">
+          <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&h=400&fit=crop&q=80" alt="Campus life">
+          <div class="campus-overlay"><span>University of Ghana</span></div>
+        </div>
+        <div class="campus-photo">
+          <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&h=400&fit=crop&q=80" alt="Student with laptop">
+          <div class="campus-overlay"><span>UCC</span></div>
+        </div>
+      </div>
+      <div class="campus-photo tall">
+        <img src="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&h=800&fit=crop&q=80" alt="Classroom">
+        <div class="campus-overlay"><span>UPSA</span></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ROADMAP -->
@@ -1497,7 +1630,7 @@
             <div class="rcard done reveal">
                 <div class="rcard-phase">Phase 1</div>
                 <div class="rcard-date">✓ Completed</div>
-                <div class="rcard-icon">⚙️</div>
+                <div class="rcard-icon"><i data-lucide="settings-2" stroke-width="1.5"></i></div>
                 <h3>Foundation</h3>
                 <p>Repo, database schemas, auth system, and core infrastructure built and tested.</p>
                 <span class="rcard-badge">✓ Complete</span>
@@ -1505,7 +1638,7 @@
             <div class="rcard active reveal delay-1">
                 <div class="rcard-phase">Phase 2</div>
                 <div class="rcard-date">Q2–Q3 2026</div>
-                <div class="rcard-icon">⚡</div>
+                <div class="rcard-icon"><i data-lucide="zap" stroke-width="1.5"></i></div>
                 <h3>Profiles & Hubs</h3>
                 <p>User profiles, school hub pages, and activity feeds for all 180+ schools.</p>
                 <span class="rcard-badge">In progress</span>
@@ -1513,7 +1646,7 @@
             <div class="rcard next reveal delay-2">
                 <div class="rcard-phase">Phase 3</div>
                 <div class="rcard-date">Q3 2026</div>
-                <div class="rcard-icon">💬</div>
+                <div class="rcard-icon"><i data-lucide="messages-square" stroke-width="1.5"></i></div>
                 <h3>Social Layer</h3>
                 <p>Posts, comments, reactions, DMs, group chats, and real-time notifications.</p>
                 <span class="rcard-badge">Up next</span>
@@ -1521,7 +1654,7 @@
             <div class="rcard future reveal delay-3">
                 <div class="rcard-phase">Phase 4</div>
                 <div class="rcard-date">Q4 2026</div>
-                <div class="rcard-icon">🇬🇭</div>
+                <div class="rcard-icon"><i data-lucide="flag" stroke-width="1.5"></i></div>
                 <h3>Ghana Features</h3>
                 <p>BECE/WASSCE cohorts, placement guides, roommate matching, and hostel reviews.</p>
                 <span class="rcard-badge">Coming soon</span>
@@ -1657,6 +1790,9 @@
         e.target.reset();
         setTimeout(() => toast.classList.remove('show'), 4000);
     }
+
+    // Init Lucide icons
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 </script>
 </body>
 </html>
