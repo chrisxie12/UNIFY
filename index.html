@@ -1123,7 +1123,7 @@
     <a href="#features" onclick="closeMenu()">Features</a>
     <a href="#how" onclick="closeMenu()">How it works</a>
     <a href="#roadmap" onclick="closeMenu()">Roadmap</a>
-    <a href="https://github.com/chrisxie12/UNIFY" target="_blank">GitHub ↗</a>
+    <a href="https://github.com/chrisxie12/UNIFY" target="_blank" style="color:var(--amber)">⭐ Star us on GitHub</a>
     <a href="#waitlist" class="btn btn-amber" onclick="closeMenu()">Get early access →</a>
 </div>
 
@@ -1256,10 +1256,10 @@
                                 <span class="ph-action">↗ Share</span>
                             </div>
                         </div>
-                    </div>
+                </div>
+                    <div class="phone-soon-badge">Preview only · Join to interact</div>
                 </div>
 
-                <div class="phone-soon-badge">Preview only · Join to interact</div>
                 <!-- Floating chips -->
                 <div class="float-chip chip-1">🏠 Roommate match found!</div>
                 <div class="float-chip chip-2">📚 12 study rooms active</div>
@@ -1281,14 +1281,20 @@
             <div class="school-pill">🏫 UCC</div>
             <div class="school-pill">🏫 Wesley Girls</div>
             <div class="school-pill">🏫 UPSA</div>
-            <div class="school-pill">🏫 Ghana SHS</div>
             <div class="school-pill">🏫 Mfantsipim</div>
             <div class="school-pill">🏫 Prempeh College</div>
             <div class="school-pill">🏫 Adisadel College</div>
             <div class="school-pill">🏫 Holy Child</div>
             <div class="school-pill">🏫 Kumasi Girls</div>
             <div class="school-pill">🏫 UDS</div>
-            <!-- Duplicate for loop -->
+            <div class="school-pill">🏫 GCTU</div>
+            <div class="school-pill">🏫 Takoradi Technical University</div>
+            <div class="school-pill">🏫 Tema SHS</div>
+            <div class="school-pill">🏫 St. Augustine's College</div>
+            <div class="school-pill">🏫 Opoku Ware School</div>
+            <div class="school-pill">🏫 St. Peters SHS</div>
+            <div class="school-pill">🏫 Navrongo SHS</div>
+            <!-- Duplicate for seamless loop -->
             <div class="school-pill">🏫 KNUST</div>
             <div class="school-pill">🏫 University of Ghana</div>
             <div class="school-pill">🏫 PRESEC Legon</div>
@@ -1296,13 +1302,19 @@
             <div class="school-pill">🏫 UCC</div>
             <div class="school-pill">🏫 Wesley Girls</div>
             <div class="school-pill">🏫 UPSA</div>
-            <div class="school-pill">🏫 Ghana SHS</div>
             <div class="school-pill">🏫 Mfantsipim</div>
             <div class="school-pill">🏫 Prempeh College</div>
             <div class="school-pill">🏫 Adisadel College</div>
             <div class="school-pill">🏫 Holy Child</div>
             <div class="school-pill">🏫 Kumasi Girls</div>
             <div class="school-pill">🏫 UDS</div>
+            <div class="school-pill">🏫 GCTU</div>
+            <div class="school-pill">🏫 Takoradi Technical University</div>
+            <div class="school-pill">🏫 Tema SHS</div>
+            <div class="school-pill">🏫 St. Augustine's College</div>
+            <div class="school-pill">🏫 Opoku Ware School</div>
+            <div class="school-pill">🏫 St. Peters SHS</div>
+            <div class="school-pill">🏫 Navrongo SHS</div>
         </div>
     </div>
 </div>
@@ -1443,6 +1455,7 @@
                     <div>
                         <div class="tav-name">Abena Konadu</div>
                         <div class="tav-school">KNUST · Computer Science</div>
+                        <div class="tester-tag">Beta tester since March 2026</div>
                     </div>
                 </div>
             </div>
@@ -1454,6 +1467,7 @@
                     <div>
                         <div class="tav-name">Kofi Mensah</div>
                         <div class="tav-school">PRESEC Legon · Form 2</div>
+                        <div class="tester-tag">Beta tester since March 2026</div>
                     </div>
                 </div>
             </div>
@@ -1465,6 +1479,7 @@
                     <div>
                         <div class="tav-name">Fatima Alhassan</div>
                         <div class="tav-school">Achimota School · Form 3</div>
+                        <div class="tester-tag">Beta tester since March 2026</div>
                     </div>
                 </div>
             </div>
@@ -1621,6 +1636,18 @@
         });
     }, { threshold: 0.5 });
     document.querySelectorAll('.stat-val[data-target]').forEach(el => cntObs.observe(el));
+
+    // FAB show/hide on scroll
+    const fab = document.getElementById('fab');
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const maxScroll = document.body.scrollHeight - window.innerHeight - 300;
+        if (scrollY > 400 && scrollY < maxScroll) {
+            fab.style.opacity = '1';
+        } else {
+            fab.style.opacity = '0';
+        }
+    });
 
     // Waitlist
     function joinWaitlist(e) {
