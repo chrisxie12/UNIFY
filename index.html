@@ -1384,6 +1384,8 @@
                 padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
             }
             .fab { display: block; bottom: 90px; }
+
+            #navJoinBtn { display: inline-flex !important; font-size: 0.78rem; padding: 0.45rem 0.9rem; }
         }
 
         /* ── EXTRA SMALL (≤ 480px) ── */
@@ -1424,6 +1426,7 @@
         <a href="#waitlist" class="btn btn-outline">Log in</a>
         <a href="#waitlist" class="btn btn-amber">Get early access →</a>
     </div>
+    <a href="#waitlist" class="btn btn-amber" style="display:none" id="navJoinBtn">Join →</a>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
 
@@ -1443,8 +1446,9 @@
                 <span class="pill-dot"></span>
                 Launching 2026 · Ghana's student network
             </div>
+            <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:0.3rem 0.85rem;border-radius:999px;font-size:0.75rem;font-weight:700;margin-bottom:0.5rem;">✓ Free for all students · No subscriptions</div>
             <h1>Find your people<br>at <span class="line-accent">every school</span><br>in Ghana</h1>
-            <p>UNIFY connects SHS and university students across 180+ schools in Ghana. Make friends before you arrive, find your roommate, and never feel alone on campus again.</p>
+            <p>The only student network built for Ghana's internet. Find your BECE placement group, your hostel roommate, and your study crew — before you even arrive.</p>
             <div class="hero-actions">
                 <a href="#waitlist" class="btn-store">
                     <span class="store-icon">🤖</span>
@@ -1577,6 +1581,24 @@
     </div>
 </section>
 
+<!-- LIVE ACTIVITY TICKER -->
+<div style="background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);padding:0.6rem 0;overflow:hidden;position:relative;">
+  <div id="activityTicker" style="display:flex;gap:3rem;white-space:nowrap;animation:scroll 30s linear infinite;width:max-content;font-size:0.78rem;color:rgba(255,255,255,0.45);font-weight:500;">
+    <span>🔥 23 students from Prempeh College joined this week</span>
+    <span>📚 5 new study rooms created at UG yesterday</span>
+    <span>🏠 Roommate match found at Commonwealth Hall</span>
+    <span>🎓 KNUST Engineering hub reached 400 members</span>
+    <span>✅ 14 BECE groups formed this month</span>
+    <span>📍 Wesley Girls alumni group now live</span>
+    <span>🔥 23 students from Prempeh College joined this week</span>
+    <span>📚 5 new study rooms created at UG yesterday</span>
+    <span>🏠 Roommate match found at Commonwealth Hall</span>
+    <span>🎓 KNUST Engineering hub reached 400 members</span>
+    <span>✅ 14 BECE groups formed this month</span>
+    <span>📍 Wesley Girls alumni group now live</span>
+  </div>
+</div>
+
 <!-- SCHOOLS STRIP -->
 <div class="schools-strip">
     <div class="schools-strip-label">Covering 180+ schools across Ghana</div>
@@ -1656,7 +1678,48 @@
     <p class="section-sub">Not another copy of a Western app. Every feature on UNIFY was designed around the real Ghanaian student experience.</p>
 
     <div class="features-bento">
-        <div class="bento-card wide reveal">
+        <div class="bento-card reveal">
+            <div class="bento-icon ic-orange"><i data-lucide="map-pin" stroke-width="1.8"></i></div>
+            <h3>Ghana-First Features</h3>
+            <p>Post-BECE placement guides, WASSCE prep communities, and hostel reviews — built for the uniquely Ghanaian student journey.</p>
+            <div class="bento-tags">
+                <span class="btag">BECE guide</span>
+                <span class="btag">WASSCE prep</span>
+                <span class="btag">Placement help</span>
+            </div>
+        </div>
+
+        <div class="bento-card reveal delay-1">
+            <div class="bento-icon ic-green"><i data-lucide="wifi" stroke-width="1.8"></i></div>
+            <h3>Works on Any Data</h3>
+            <p>Optimized for Ghana's networks. Runs on 2G, 3G, or slow WiFi — because great tools shouldn't need great internet.</p>
+            <div class="bento-tags">
+                <span class="btag">Low bandwidth</span>
+                <span class="btag">Offline support</span>
+            </div>
+        </div>
+
+        <div class="bento-card reveal delay-2">
+            <div class="bento-icon ic-pink"><i data-lucide="home" stroke-width="1.8"></i></div>
+            <h3>Roommate Matching</h3>
+            <p>Answer a few questions about your lifestyle and we'll connect you with compatible roommates before you arrive on campus.</p>
+            <div class="bento-tags">
+                <span class="btag">Compatibility quiz</span>
+                <span class="btag">Hostel-specific</span>
+            </div>
+        </div>
+
+        <div class="bento-card reveal">
+            <div class="bento-icon ic-yellow"><i data-lucide="book-open" stroke-width="1.8"></i></div>
+            <h3>Academic Resources</h3>
+            <p>Share and discover past questions, notes, and study guides. Ask seniors who've aced the same exams.</p>
+            <div class="bento-tags">
+                <span class="btag">Past questions</span>
+                <span class="btag">Peer tutoring</span>
+            </div>
+        </div>
+
+        <div class="bento-card wide reveal delay-1">
             <div class="bento-icon ic-purple"><i data-lucide="building-2" stroke-width="1.8"></i></div>
             <h3>School Hubs — your campus, online</h3>
             <p>Every school in Ghana gets its own dedicated hub. A living feed for your school's announcements, events, resources, and conversations — filtered by your cohort and interests.</p>
@@ -1668,17 +1731,7 @@
             </div>
         </div>
 
-        <div class="bento-card reveal delay-1">
-            <div class="bento-icon ic-pink"><i data-lucide="home" stroke-width="1.8"></i></div>
-            <h3>Roommate Matching</h3>
-            <p>Answer a few questions about your lifestyle and we'll connect you with compatible roommates before you arrive on campus.</p>
-            <div class="bento-tags">
-                <span class="btag">Compatibility quiz</span>
-                <span class="btag">Hostel-specific</span>
-            </div>
-        </div>
-
-        <div class="bento-card reveal">
+        <div class="bento-card reveal delay-2">
             <div class="bento-icon ic-teal"><i data-lucide="message-circle" stroke-width="1.8"></i></div>
             <h3>Direct Messaging</h3>
             <p>Secure DMs and group chats. Connect one-on-one or create study rooms with your coursemates.</p>
@@ -1686,37 +1739,6 @@
                 <span class="btag">DMs</span>
                 <span class="btag">Group chats</span>
                 <span class="btag">Study rooms</span>
-            </div>
-        </div>
-
-        <div class="bento-card reveal delay-1">
-            <div class="bento-icon ic-yellow"><i data-lucide="book-open" stroke-width="1.8"></i></div>
-            <h3>Academic Resources</h3>
-            <p>Share and discover past questions, notes, and study guides. Ask seniors who've aced the same exams.</p>
-            <div class="bento-tags">
-                <span class="btag">Past questions</span>
-                <span class="btag">Peer tutoring</span>
-            </div>
-        </div>
-
-        <div class="bento-card reveal delay-2">
-            <div class="bento-icon ic-orange"><i data-lucide="map-pin" stroke-width="1.8"></i></div>
-            <h3>Ghana-First Features</h3>
-            <p>Post-BECE placement guides, WASSCE prep communities, and hostel reviews — built for the uniquely Ghanaian student journey.</p>
-            <div class="bento-tags">
-                <span class="btag">BECE guide</span>
-                <span class="btag">WASSCE prep</span>
-                <span class="btag">Placement help</span>
-            </div>
-        </div>
-
-        <div class="bento-card reveal">
-            <div class="bento-icon ic-green"><i data-lucide="wifi" stroke-width="1.8"></i></div>
-            <h3>Works on Any Data</h3>
-            <p>Optimized for Ghana's networks. Runs on 2G, 3G, or slow WiFi — because great tools shouldn't need great internet.</p>
-            <div class="bento-tags">
-                <span class="btag">Low bandwidth</span>
-                <span class="btag">Offline support</span>
             </div>
         </div>
     </div>
@@ -1760,37 +1782,37 @@
         <div class="tgrid">
             <div class="tcard reveal">
                 <div class="tcard-stars">★★★★★</div>
-                <p class="tcard-text">"UNIFY helped me find seniors at KNUST who walked me through registration before I even arrived. I felt more prepared than anyone in my cohort."</p>
+                <p class="tcard-text">"The seniors in the KNUST hub told me exactly which hostels have pipe water problems. Saved me from renting at Brunei. No cap, this app is the one."</p>
                 <div class="tcard-author">
-                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=face&q=80" alt="Abena Konadu" class="tav-photo">
+                    <div class="tav" style="background:linear-gradient(135deg,#006B3C,#FCD116)">KA</div>
                     <div>
-                        <div class="tav-name">Abena Konadu</div>
-                        <div class="tav-school">KNUST · Computer Science</div>
-                        <div class="tester-tag">Beta tester since March 2026</div>
+                        <div class="tav-name">Kwame Asante</div>
+                        <div class="tav-school">KNUST · Engineering '28</div>
+                        <span class="tester-tag">Beta tester since March 2026</span>
                     </div>
                 </div>
             </div>
             <div class="tcard reveal delay-1">
                 <div class="tcard-stars">★★★★★</div>
-                <p class="tcard-text">"After BECE results, I had no idea what to expect at PRESEC. Found a whole community of incoming students on UNIFY. We formed study groups before school started."</p>
+                <p class="tcard-text">"Found 3 other PRESEC freshmen in the feed. We shared the Elective Maths syllabus 2 weeks before resumption. Scored A1 bcos we started early fr."</p>
                 <div class="tcard-author">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&q=80" alt="Kofi Mensah" class="tav-photo">
+                    <div class="tav" style="background:linear-gradient(135deg,#003B6F,#fff)">AM</div>
                     <div>
-                        <div class="tav-name">Kofi Mensah</div>
-                        <div class="tav-school">PRESEC Legon · Form 2</div>
-                        <div class="tester-tag">Beta tester since March 2026</div>
+                        <div class="tav-name">Abena Mensah</div>
+                        <div class="tav-school">PRESEC · Sciences '27</div>
+                        <span class="tester-tag">Beta tester since March 2026</span>
                     </div>
                 </div>
             </div>
             <div class="tcard reveal delay-2">
                 <div class="tcard-stars">★★★★★</div>
-                <p class="tcard-text">"Going from Tamale to Accra for school was scary. UNIFY connected me with other northern girls at Achimota before I even packed my bags."</p>
+                <p class="tcard-text">"Met Ama from Tamale — also joining UG Legon. We planned to share a taxi from Accra station together. First day on campus wasn't scary anymore."</p>
                 <div class="tcard-author">
-                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&h=80&fit=crop&crop=face&q=80" alt="Fatima Alhassan" class="tav-photo">
+                    <div class="tav" style="background:linear-gradient(135deg,#0A2472,#FFBA08)">FA</div>
                     <div>
-                        <div class="tav-name">Fatima Alhassan</div>
-                        <div class="tav-school">Achimota School · Form 3</div>
-                        <div class="tester-tag">Beta tester since March 2026</div>
+                        <div class="tav-name">Fatima Al-Hassan</div>
+                        <div class="tav-school">University of Ghana · '28</div>
+                        <span class="tester-tag">Beta tester since March 2026</span>
                     </div>
                 </div>
             </div>
@@ -1806,22 +1828,22 @@
     <p class="section-sub">From Legon to Kumasi, Takoradi to Tamale — Ghanaian student life is vibrant, diverse, and connected.</p>
     <div class="campus-grid">
       <div class="campus-photo tall">
-        <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=800&fit=crop&q=80" alt="Students studying">
-        <div class="campus-overlay"><span>KNUST</span></div>
+        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" alt="University lecture hall, African students">
+        <div class="campus-overlay"><span>KNUST Campus Life</span></div>
       </div>
       <div class="campus-col">
         <div class="campus-photo">
-          <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&h=400&fit=crop&q=80" alt="Campus life">
-          <div class="campus-overlay"><span>University of Ghana</span></div>
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&q=80" alt="African students studying together">
+          <div class="campus-overlay"><span>Study Groups</span></div>
         </div>
         <div class="campus-photo">
-          <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&h=400&fit=crop&q=80" alt="Student with laptop">
-          <div class="campus-overlay"><span>UCC</span></div>
+          <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80" alt="African university campus">
+          <div class="campus-overlay"><span>University of Ghana</span></div>
         </div>
       </div>
       <div class="campus-photo tall">
-        <img src="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&h=800&fit=crop&q=80" alt="Classroom">
-        <div class="campus-overlay"><span>UPSA</span></div>
+        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80" alt="African students on campus">
+        <div class="campus-overlay"><span>Campus Community</span></div>
       </div>
     </div>
   </div>
@@ -1870,10 +1892,45 @@
     </div>
 </section>
 
+<!-- FAQ -->
+<section style="padding:5rem 3rem;position:relative;z-index:1;" id="faq">
+  <div style="max-width:760px;margin:0 auto;">
+    <span class="eyebrow">Got questions?</span>
+    <h2 class="section-title">Everything you need to know</h2>
+    <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:0.75rem;" id="faqList">
+      <details class="faq-item">
+        <summary>Is UNIFY free?</summary>
+        <p>Yes — completely free for all students. No subscriptions, no premium tiers. UNIFY is funded through student organisation partnerships, not student wallets.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How do you verify students?</summary>
+        <p>Sign up with your school email or upload your student ID. We verify before your account goes live — keeping the community genuine and scam-free.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is this only for universities?</summary>
+        <p>No. UNIFY covers SHS, technical institutes, teacher training colleges, and JHS students navigating BECE placement. If you're a student in Ghana, there's a hub for you.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Will it work on slow internet?</summary>
+        <p>Yes — that's a core design goal. The app is under 5MB and tested on 2G in Navrongo and Wa. We compress images, cache aggressively, and never autoplay video.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is my data safe?</summary>
+        <p>Your phone number is never public. Chats are encrypted. We never sell your data. You can permanently delete your account and all associated data at any time.</p>
+      </details>
+      <details class="faq-item">
+        <summary>When will my school be available?</summary>
+        <p>We're rolling out school-by-school starting with KNUST, UG, UCC, and PRESEC. Join the waitlist and you'll be notified within 2–4 weeks when your school goes live.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
 <!-- WAITLIST -->
 <section class="waitlist" id="waitlist">
     <div class="waitlist-card">
         <div class="waitlist-flag">🇬🇭</div>
+        <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:0.35rem 1rem;border-radius:999px;font-size:0.8rem;font-weight:700;margin-bottom:1rem;position:relative;z-index:1;">✓ Free forever · No credit card</div>
         <div class="trust-badge">
           <span>🎓</span>
           Join 12,400+ students from KNUST, UG, PRESEC, and 180+ schools
