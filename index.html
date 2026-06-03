@@ -1193,7 +1193,8 @@
         .campus-col { display: flex; flex-direction: column; gap: 1rem; }
         .campus-photo { position: relative; border-radius: 16px; overflow: hidden; flex: 1; }
         .campus-photo.tall { flex: none; }
-        .campus-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; background: linear-gradient(135deg, #0a1a3a 0%, #1a3a6a 100%); }
+        .campus-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease, opacity 0.5s ease; display: block; background: linear-gradient(135deg, #0a1a3a 0%, #1a3a6a 100%); }
+        .campus-img { opacity: 0; }
         .campus-photo:hover img { transform: scale(1.05); }
         .campus-overlay {
             position: absolute;
@@ -2011,21 +2012,21 @@
     <p class="section-sub">From Legon to Kumasi, Takoradi to Tamale — Ghanaian student life is vibrant, diverse, and connected.</p>
     <div class="campus-grid">
       <div class="campus-photo tall">
-        <img class="campus-img" data-campus="Kwame_Nkrumah_University_of_Science_and_Technology" src="" alt="KNUST Campus">
+        <img class="campus-img" data-campus="Kwame_Nkrumah_University_of_Science_and_Technology" alt="KNUST Campus">
         <div class="campus-overlay"><span>KNUST · Kumasi</span></div>
       </div>
       <div class="campus-col">
         <div class="campus-photo">
-          <img class="campus-img" data-campus="University_of_Ghana" src="" alt="University of Ghana">
+          <img class="campus-img" data-campus="University_of_Ghana" alt="University of Ghana">
           <div class="campus-overlay"><span>University of Ghana · Legon</span></div>
         </div>
         <div class="campus-photo">
-          <img class="campus-img" data-campus="Achimota_School" src="" alt="Achimota School">
+          <img class="campus-img" data-campus="Achimota_School" alt="Achimota School">
           <div class="campus-overlay"><span>Achimota School · Accra</span></div>
         </div>
       </div>
       <div class="campus-photo tall">
-        <img class="campus-img" data-campus="University_of_Cape_Coast" src="" alt="University of Cape Coast">
+        <img class="campus-img" data-campus="University_of_Cape_Coast" alt="University of Cape Coast">
         <div class="campus-overlay"><span>University of Cape Coast</span></div>
       </div>
     </div>
@@ -2312,31 +2313,18 @@
 
     document.querySelectorAll('.school-logo[data-school]').forEach(img => loadWikiLogo(img));
 
-    // ── CAMPUS PHOTOS from Wikipedia media-list ──
-    // Returns all images from the article; we skip icons/logos and pick the first real photo
+    // ── CAMPUS PHOTOS from Wikipedia ──
     async function loadCampusPhoto(img) {
       const page = img.dataset.campus;
       if (!page) return;
       try {
-        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/media-list/${page}`);
+        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${page}`);
         if (!r.ok) return;
         const d = await r.json();
-        const items = d.items || [];
-        // Filter: only raster images (jpg/jpeg/png), skip SVG/flags/logos/maps/icons
-        const skip = /flag|logo|map|icon|seal|coat|arms|emblem|location|locator|portrait|coa/i;
-        const photo = items.find(it => {
-          const src = it.srcset?.[0]?.src || it.src || '';
-          return /\.(jpg|jpeg|png)/i.test(src) && !skip.test(src) && (it.width || 0) >= 300;
-        });
-        if (photo) {
-          // Use largest available srcset or base src
-          const srcsets = photo.srcset || [];
-          const best = srcsets[srcsets.length - 1]?.src || photo.src;
-          const url = best.startsWith('//') ? 'https:' + best : best;
-          img.src = url;
-          img.style.objectFit = 'cover';
-          img.style.width = '100%';
-          img.style.height = '100%';
+        const src = d.originalimage?.source || d.thumbnail?.source;
+        if (src) {
+          img.onload = () => { img.style.opacity = '1'; };
+          img.src = src;
         }
       } catch(e) {}
     }
