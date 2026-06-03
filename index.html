@@ -1223,6 +1223,95 @@
         .hero-text > *:nth-child(5) { animation-delay: 0.7s; }
         .hero-visual { animation: fadeUp 0.9s 0.4s ease forwards; opacity: 0; }
 
+        /* ── MOBILE FIXES ── */
+
+        /* 1. Hero h1 letter-spacing at small mobile */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.2rem;
+                letter-spacing: -1px;
+            }
+        }
+
+        /* 2. Hero paragraph padding on small screens */
+        @media (max-width: 480px) {
+            .hero-text p {
+                padding: 0 0.5rem;
+            }
+        }
+
+        /* 3. Phone mockup max-width on small mobile */
+        @media (max-width: 480px) {
+            .phone {
+                max-width: 200px;
+            }
+        }
+
+        /* 4. Campus photo height on mobile */
+        @media (max-width: 768px) {
+            .campus-photo {
+                height: 160px;
+            }
+        }
+
+        /* 5. Stats value font-size on small mobile */
+        @media (max-width: 480px) {
+            .stat-val {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* 6. Waitlist card padding on very small screens */
+        @media (max-width: 400px) {
+            .waitlist-card {
+                padding: 2rem 1.2rem;
+            }
+        }
+
+        /* 7. Footer brand column full width on single-column layout */
+        @media (max-width: 500px) {
+            .footer-brand {
+                max-width: 100%;
+            }
+        }
+
+        /* 8. Mobile sticky CTA safe-area padding */
+        @media (max-width: 900px) {
+            .mobile-sticky-cta {
+                padding-bottom: env(safe-area-inset-bottom, 1rem);
+            }
+        }
+
+        /* 10. Stats section mobile padding */
+        @media (max-width: 768px) {
+            .stats {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        /* 11. Bento card padding on mobile */
+        @media (max-width: 640px) {
+            .bento-card {
+                padding: 1.25rem;
+            }
+        }
+
+        /* 13. Phone-wrap centering on mobile */
+        @media (max-width: 900px) {
+            .phone-wrap {
+                justify-content: center;
+                max-width: 260px;
+                margin: 0 auto;
+            }
+        }
+
+        /* 14. Roadmap card padding on small mobile */
+        @media (max-width: 500px) {
+            .rmap-card {
+                padding: 1.25rem;
+            }
+        }
+
     </style>
 </head>
 <body>
