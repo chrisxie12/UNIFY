@@ -1,7 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Adisadel College - Anglican school, Cape Coast. Three crowns, coconut tree, maroon/gold -->
   <rect width="64" height="64" rx="8" fill="#8B0000"/>
-  <path d="M32 6 L56 18 L56 46 L32 58 L8 46 L8 18 Z" fill="#7A0000" stroke="#FFD700" stroke-width="1.5"/>
-  <line x1="32" y1="14" x2="32" y2="50" stroke="#FFD700" stroke-width="2.5"/>
-  <line x1="18" y1="26" x2="46" y2="26" stroke="#FFD700" stroke-width="2.5"/>
-  <text x="32" y="47" text-anchor="middle" font-family="Arial,sans-serif" font-size="6" font-weight="800" fill="#FFD700">ADISADEL</text>
+  <!-- White shield -->
+  <path d="M10 8 L54 8 L54 40 Q54 56 32 60 Q10 56 10 40 Z" fill="#fff" stroke="#8B0000" stroke-width="1"/>
+  <!-- Three crowns (Adisadel's symbol - from St Nicholas) -->
+  <!-- Crown 1 (left) -->
+  <path d="M14 26 L14 32 L22 32 L22 26 L20 28 L18 25 L16 28 Z" fill="#8B0000"/>
+  <!-- Crown 2 (center) -->
+  <path d="M26 22 L26 32 L38 32 L38 22 L36 25 L32 20 L28 25 Z" fill="#8B0000"/>
+  <!-- Crown 3 (right) -->
+  <path d="M42 26 L42 32 L50 32 L50 26 L48 28 L46 25 L44 28 Z" fill="#8B0000"/>
+  <!-- Coconut tree trunk -->
+  <rect x="30.5" y="33" width="3" height="14" rx="1" fill="#8B6914"/>
+  <!-- Palm fronds -->
+  <path d="M32 33 Q20 28 18 22" stroke="#006B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M32 33 Q44 28 46 22" stroke="#006B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M32 33 Q26 27 24 28" stroke="#006B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M32 33 Q38 27 40 28" stroke="#006B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- School name -->
+  <text x="32" y="57" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="800" fill="#fff">ADISADEL</text>
 </svg>

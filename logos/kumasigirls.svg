@@ -1,6 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Kumasi Girls SHS - green & gold, Ashanti-inspired, shield with kente band -->
   <rect width="64" height="64" rx="8" fill="#006B3C"/>
-  <circle cx="32" cy="28" r="16" fill="none" stroke="#FCD116" stroke-width="1.5"/>
-  <text x="32" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#FCD116">KG</text>
-  <text x="32" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#FCD116">KUMASI GIRLS</text>
+  <!-- Shield -->
+  <path d="M10 8 L54 8 L54 40 Q54 56 32 60 Q10 56 10 40 Z" fill="#fff" stroke="#006B3C" stroke-width="1"/>
+  <!-- Kente stripe at top -->
+  <rect x="10" y="8" width="44" height="4" rx="0" fill="#FFD700" clip-path="url(#shield-clip)"/>
+  <!-- Ashanti stool (Kumasi is Ashanti capital) -->
+  <rect x="22" y="28" width="20" height="3" rx="1" fill="#006B3C"/>
+  <rect x="29" y="18" width="6" height="13" rx="2" fill="#006B3C"/>
+  <rect x="20" y="31" width="24" height="4" rx="2" fill="#006B3C"/>
+  <!-- Stars representing girls -->
+  <text x="20" y="26" font-size="8" fill="#FCD116">★</text>
+  <text x="36" y="26" font-size="8" fill="#FCD116">★</text>
+  <!-- School name -->
+  <text x="32" y="55" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="800" fill="#FFD700">KUMASI GIRLS</text>
 </svg>
