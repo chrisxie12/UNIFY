@@ -1193,7 +1193,7 @@
         .campus-col { display: flex; flex-direction: column; gap: 1rem; }
         .campus-photo { position: relative; border-radius: 16px; overflow: hidden; flex: 1; }
         .campus-photo.tall { flex: none; }
-        .campus-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
+        .campus-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; background: linear-gradient(135deg, #0a1a3a 0%, #1a3a6a 100%); }
         .campus-photo:hover img { transform: scale(1.05); }
         .campus-overlay {
             position: absolute;
@@ -2011,22 +2011,22 @@
     <p class="section-sub">From Legon to Kumasi, Takoradi to Tamale — Ghanaian student life is vibrant, diverse, and connected.</p>
     <div class="campus-grid">
       <div class="campus-photo tall">
-        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" alt="University lecture hall, African students">
-        <div class="campus-overlay"><span>KNUST Campus Life</span></div>
+        <img class="campus-img" data-campus="Kwame_Nkrumah_University_of_Science_and_Technology" src="" alt="KNUST Campus">
+        <div class="campus-overlay"><span>KNUST · Kumasi</span></div>
       </div>
       <div class="campus-col">
         <div class="campus-photo">
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&q=80" alt="African students studying together">
-          <div class="campus-overlay"><span>Study Groups</span></div>
+          <img class="campus-img" data-campus="University_of_Ghana" src="" alt="University of Ghana">
+          <div class="campus-overlay"><span>University of Ghana · Legon</span></div>
         </div>
         <div class="campus-photo">
-          <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&q=80" alt="African university campus">
-          <div class="campus-overlay"><span>University of Ghana</span></div>
+          <img class="campus-img" data-campus="Achimota_School" src="" alt="Achimota School">
+          <div class="campus-overlay"><span>Achimota School · Accra</span></div>
         </div>
       </div>
       <div class="campus-photo tall">
-        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80" alt="African students on campus">
-        <div class="campus-overlay"><span>Campus Community</span></div>
+        <img class="campus-img" data-campus="University_of_Cape_Coast" src="" alt="University of Cape Coast">
+        <div class="campus-overlay"><span>University of Cape Coast</span></div>
       </div>
     </div>
   </div>
@@ -2311,6 +2311,25 @@
     }
 
     document.querySelectorAll('.school-logo[data-school]').forEach(img => loadWikiLogo(img));
+
+    // ── CAMPUS PHOTOS from Wikipedia ──
+    async function loadCampusPhoto(img) {
+      const page = img.dataset.campus;
+      if (!page) return;
+      try {
+        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${page}`);
+        if (!r.ok) return;
+        const d = await r.json();
+        const src = d.originalimage?.source || d.thumbnail?.source;
+        if (src) {
+          img.src = src;
+          img.style.objectFit = 'cover';
+          img.style.width = '100%';
+          img.style.height = '100%';
+        }
+      } catch(e) {}
+    }
+    document.querySelectorAll('.campus-img[data-campus]').forEach(img => loadCampusPhoto(img));
 
     // ── SCHOOL STATE — shared across all forms ──
     let selectedSchool = '';
