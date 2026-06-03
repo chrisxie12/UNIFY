@@ -136,11 +136,7 @@
         .mobile-menu a { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
         .mobile-menu .btn-amber { text-align: center; justify-content: center; border-radius: 999px; }
 
-        @media (max-width: 768px) {
-            nav { padding: 1.25rem 1.5rem; }
-            .nav-links, .nav-right { display: none; }
-            .hamburger { display: flex; }
-        }
+        /* nav 768 — consolidated below */
 
         /* ── HERO ── */
         .hero {
@@ -527,7 +523,7 @@
             z-index: 1;
         }
 
-        @media (max-width: 768px) { .features { padding: 5rem 1.5rem; } }
+        /* features 768 — consolidated below */
 
         .eyebrow {
             font-size: 0.72rem;
@@ -629,7 +625,7 @@
             z-index: 1;
         }
 
-        @media (max-width: 768px) { .how { padding: 5rem 1.5rem; } }
+        /* how 768 — consolidated below */
 
         .how-inner { max-width: 1100px; margin: 0 auto; }
 
@@ -641,7 +637,7 @@
             position: relative;
         }
 
-        @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } }
+        /* steps-grid 768 — consolidated below */
 
         .steps-grid::before {
             content: '';
@@ -651,7 +647,7 @@
             background: linear-gradient(90deg, transparent, rgba(255,186,8,0.5), rgba(255,186,8,0.4), transparent);
         }
 
-        @media (max-width: 768px) { .steps-grid::before { display: none; } }
+        /* steps::before 768 — consolidated below */
 
         .step { text-align: center; padding: 0 1rem; }
 
@@ -685,7 +681,7 @@
         /* ── TESTIMONIALS ── */
         .testimonials { padding: 8rem 3rem; position: relative; z-index: 1; }
 
-        @media (max-width: 768px) { .testimonials { padding: 5rem 1.5rem; } }
+        /* testimonials 768 — consolidated below */
 
         .testimonials-inner { max-width: 1200px; margin: 0 auto; }
 
@@ -744,7 +740,7 @@
             text-align: center;
         }
 
-        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* stats-grid 768 — consolidated below */
 
         .stat-val {
             font-size: 3.5rem;
@@ -763,7 +759,7 @@
         /* ── ROADMAP ── */
         .roadmap { padding: 8rem 3rem; position: relative; z-index: 1; }
 
-        @media (max-width: 768px) { .roadmap { padding: 5rem 1.5rem; } }
+        /* roadmap 768 — consolidated below */
 
         .roadmap-inner { max-width: 1100px; margin: 0 auto; }
 
@@ -911,10 +907,7 @@
 
         .waitlist-note { font-size: 0.75rem; color: rgba(255,255,255,0.3); position: relative; z-index: 1; }
 
-        @media (max-width: 500px) {
-            .waitlist-form { flex-direction: column; }
-            .waitlist-card { padding: 2.5rem 1.5rem; }
-        }
+        /* waitlist 500 — consolidated into 480px block below */
 
         /* ── FOOTER ── */
         footer {
@@ -1020,14 +1013,7 @@
 
         .footer-legal a:hover { color: rgba(255,255,255,0.55); }
 
-        @media (max-width: 768px) {
-            footer { padding: 1.75rem 1.25rem 5.5rem; }
-            .footer-inner { flex-direction: column; align-items: flex-start; gap: 1.25rem; padding-bottom: 1.25rem; margin-bottom: 1.25rem; }
-            .footer-left { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .footer-links { gap: 1rem; }
-            .footer-right { width: 100%; justify-content: space-between; }
-            .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-        }
+        /* footer 768 — consolidated below */
 
         /* Ghana stripe footer */
         .ghana-bar {
@@ -1157,10 +1143,7 @@
             opacity: 0.7;
         }
 
-        @media (max-width: 768px) {
-            .mobile-sticky-cta { display: flex; }
-            .fab { display: block; }
-        }
+        /* sticky/fab 768 — consolidated below */
 
         /* ── PH-SEARCH CURSOR ── */
         .ph-search { cursor: pointer; }
@@ -1241,16 +1224,7 @@
             padding: 1.5rem 1rem 1rem;
         }
         .campus-overlay span { color: var(--amber); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        @media (max-width: 768px) {
-            .campus { padding: 5rem 1.5rem; }
-            .campus-grid { grid-template-columns: 1fr 1fr; height: auto; }
-            .campus-photo.tall { display: none; }
-            .campus-col { flex-direction: row; }
-        }
-        @media (max-width: 500px) {
-            .campus-grid { grid-template-columns: 1fr; }
-            .campus-col { flex-direction: column; }
-        }
+        /* campus 768/500 — consolidated below */
 
         /* ── HERO LOAD ANIMATIONS ── */
         @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
@@ -1384,16 +1358,18 @@
         .modal-body { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.65; }
 
         /* ══════════════════════════════════════════
-           COMPREHENSIVE MOBILE STYLES
-           Breakpoints: 768px (tablet), 480px (mobile)
+           MOBILE STYLES — ONE BLOCK PER BREAKPOINT
+           768px = tablet/mobile  |  480px = small phone
         ══════════════════════════════════════════ */
 
         @media (max-width: 768px) {
 
             /* ── NAV ── */
             nav { padding: 1rem 1.25rem; }
+            .nav-links, .nav-right { display: none; }
+            .hamburger { display: flex; }
 
-            /* ── HERO ── */
+            /* ── HERO — single column, centered, phone hidden ── */
             .hero {
                 grid-template-columns: 1fr;
                 padding: 7rem 1.25rem 3rem;
@@ -1402,133 +1378,101 @@
                 min-height: auto;
             }
             .hero-visual { display: none; }
-            .hero h1 {
-                font-size: clamp(2rem, 8vw, 2.8rem);
-                letter-spacing: -1px;
-                margin-bottom: 1rem;
-            }
-            .hero p {
-                font-size: 0.95rem;
-                margin: 0 auto 1.75rem;
-                max-width: 100%;
-            }
+            .hero p { margin: 0 auto 1.75rem; max-width: 100%; font-size: 0.95rem; }
+            .hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); letter-spacing: -1px; margin-bottom: 1rem; }
+            .hero-actions { justify-content: center; }
             .hero-social-proof { justify-content: center; }
             .pill-badge { font-size: 0.72rem; margin: 0 auto 1rem; }
-
-            /* ── PHONE ── */
             .phone-side, .float-chip { display: none; }
+
+            /* ── HERO CAPTURE ── */
+            .hero-capture { max-width: 100%; margin: 1.25rem auto 1.5rem; text-align: left; }
+            .hero-capture-bottom { flex-direction: column; gap: 0.5rem; }
+            .hero-email { width: 100%; box-sizing: border-box; }
+            .btn-capture { width: 100%; padding: 0.9rem; text-align: center; font-size: 0.95rem; }
 
             /* ── SCHOOLS STRIP ── */
             .schools-strip { padding: 1.5rem 0; }
             .schools-strip-label { font-size: 0.68rem; margin-bottom: 1rem; }
 
-            /* ── SECTION COMMON ── */
-            .features, .how, .testimonials, .campus,
-            .roadmap, .waitlist { padding: 4rem 1.25rem; }
+            /* ── SECTIONS — shared padding ── */
+            .features, .how, .testimonials, .campus, .roadmap { padding: 4rem 1.25rem; }
+            .waitlist { padding: 3.5rem 1.25rem; }
             .stats { padding: 3rem 1.25rem; }
 
-            .section-title {
-                font-size: clamp(1.6rem, 6vw, 2.2rem);
-                letter-spacing: -0.5px;
-            }
-            .section-sub {
-                font-size: 0.9rem;
-                margin-bottom: 2.5rem;
-            }
+            .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem); letter-spacing: -0.5px; }
+            .section-sub { font-size: 0.9rem; margin-bottom: 2.5rem; }
 
             /* ── FEATURES BENTO ── */
-            .features-bento {
-                grid-template-columns: 1fr;
-                gap: 0.85rem;
-            }
+            .features-bento { grid-template-columns: 1fr; gap: 0.85rem; }
             .bento-card { padding: 1.25rem; border-radius: 18px; }
-            .bento-card.wide, .bento-card.tall {
-                grid-column: span 1;
-                grid-row: span 1;
-            }
+            .bento-card.wide, .bento-card.tall { grid-column: span 1; grid-row: span 1; }
 
             /* ── HOW IT WORKS ── */
-            .steps-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                margin-top: 2.5rem;
-            }
+            .steps-grid { grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2.5rem; }
             .steps-grid::before { display: none; }
             .step { padding: 0; }
             .step-num { margin-bottom: 1rem; }
 
             /* ── STATS ── */
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-            .stat-val {
-                font-size: 2.4rem;
-                letter-spacing: -2px;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .stat-val { font-size: 2.4rem; letter-spacing: -2px; }
             .stat-lbl { font-size: 0.78rem; }
 
             /* ── TESTIMONIALS ── */
-            .tgrid {
-                grid-template-columns: 1fr;
-                gap: 0.85rem;
-                margin-top: 2rem;
-            }
+            .tgrid { grid-template-columns: 1fr; gap: 0.85rem; margin-top: 2rem; }
             .tcard { padding: 1.25rem; }
 
             /* ── CAMPUS LIFE ── */
-            .campus-grid {
-                grid-template-columns: 1fr 1fr;
-                height: auto;
-                gap: 0.75rem;
-            }
+            .campus-grid { grid-template-columns: 1fr 1fr; height: auto; gap: 0.75rem; }
             .campus-col { flex-direction: column; }
             .campus-photo { height: 140px; }
             .campus-photo.tall { display: none; }
 
             /* ── ROADMAP ── */
-            .rmap {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.85rem;
-                margin-top: 2.5rem;
-            }
+            .rmap { grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 2.5rem; }
             .rcard { padding: 1.25rem; }
 
             /* ── WAITLIST ── */
-            .waitlist { padding: 3.5rem 1.25rem; }
-            .waitlist-card {
-                padding: 2.5rem 1.5rem;
-                border-radius: 24px;
-            }
-            .waitlist-form {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            .waitlist-form input, .btn-join {
-                width: 100%;
-                border-radius: 12px;
-            }
+            .waitlist-card { padding: 2.5rem 1.5rem; border-radius: 24px; }
+            .waitlist-form { flex-direction: column; gap: 0.75rem; }
+            .waitlist-form input, .btn-join { width: 100%; border-radius: 12px; }
             .btn-join { padding: 0.9rem; font-size: 1rem; }
-
-            /* ── FOOTER handled above ── */
-
-            /* ── HERO CAPTURE ── */
-            .hero-capture {
-                max-width: 100%;
-                margin: 1.25rem auto 1.5rem;
-                text-align: left;
-            }
-            .hero-capture-bottom { flex-direction: column; gap: 0.5rem; }
-            .hero-email { width: 100%; box-sizing: border-box; }
-            .btn-capture { width: 100%; padding: 0.9rem; text-align: center; font-size: 0.95rem; }
 
             /* ── MID-PAGE CTA ── */
             .midpage-cta { padding: 2rem 1.25rem; }
             .midpage-inner { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
             .midpage-form { flex-direction: column; width: 100%; }
             .midpage-form .school-select,
-            .midpage-form .hero-email { width: 100%; }
+            .midpage-form .hero-email,
             .midpage-form .btn-capture { width: 100%; }
+
+            /* ── FOOTER — ZeeMee style: logo left · links center · socials right · copyright bottom ── */
+            footer { padding: 2rem 1.25rem 5.5rem; }
+            .footer-inner {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                grid-template-rows: auto auto;
+                align-items: center;
+                gap: 1rem;
+                padding-bottom: 1.25rem;
+                margin-bottom: 1.25rem;
+            }
+            .footer-left {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                gap: 0;
+            }
+            .footer-left .logo { font-size: 1.1rem; }
+            .footer-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            .footer-right { grid-column: 1 / -1; justify-content: flex-start; width: 100%; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
 
             /* ── STICKY CTA ── */
             .mobile-sticky-cta {
@@ -1543,32 +1487,43 @@
 
         /* ── EXTRA SMALL (≤ 480px) ── */
         @media (max-width: 480px) {
+
+            /* ── HERO ── */
             .hero { padding: 6rem 1rem 2rem; }
             .hero h1 { font-size: clamp(1.75rem, 8.5vw, 2.2rem); }
 
-            .rmap { grid-template-columns: 1fr; }
-
-            .campus-grid { grid-template-columns: 1fr; }
-            .campus-photo { height: 180px; }
-
-            .stats-grid { gap: 1rem; }
-            .stat-val { font-size: 2rem; }
-
-            .waitlist-card { padding: 2rem 1rem; }
-            .waitlist-card h2 { font-size: 1.6rem; }
-
+            /* ── HERO CAPTURE ── */
             .hero-capture-bottom { flex-direction: column; }
             .btn-capture { width: 100%; }
             .hero-email { width: 100%; }
-
             .school-select { font-size: 0.85rem; }
 
+            /* ── SECTIONS ── */
             .section-title { font-size: clamp(1.5rem, 7vw, 2rem); }
+
+            /* ── FEATURES ── */
             .features-bento { grid-template-columns: 1fr; }
+
+            /* ── STATS ── */
+            .stats-grid { gap: 1rem; }
+            .stat-val { font-size: 2rem; }
+
+            /* ── TESTIMONIALS ── */
             .tgrid { grid-template-columns: 1fr; }
 
-            .phone { width: 170px; }
-            .phone-wrap { max-width: 180px; }
+            /* ── CAMPUS ── */
+            .campus-grid { grid-template-columns: 1fr; }
+            .campus-col { flex-direction: column; }
+            .campus-photo { height: 180px; }
+
+            /* ── ROADMAP ── */
+            .rmap { grid-template-columns: 1fr; }
+
+            /* ── WAITLIST ── */
+            .waitlist-card { padding: 2rem 1rem; }
+            .waitlist-card h2 { font-size: 1.6rem; }
+            .waitlist-form { flex-direction: column; gap: 0.75rem; }
+            .waitlist-form input, .btn-join { width: 100%; }
         }
 
     </style>
