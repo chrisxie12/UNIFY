@@ -133,6 +133,7 @@ export default function AdminPage() {
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
+  const logos                       = useWikiLogos();
 
   const CACHE_KEY = 'unify_admin_cache';
 
@@ -173,7 +174,6 @@ export default function AdminPage() {
 
   if (!auth) return <LoginScreen onLogin={() => setAuth(true)} />;
 
-  const logos       = useWikiLogos();
   const entries     = data?.entries || [];
   const total       = data?.count   || 0;
   const recent      = [...entries].reverse().slice(0, 100);
