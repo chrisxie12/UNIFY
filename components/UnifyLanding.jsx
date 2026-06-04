@@ -381,6 +381,69 @@ function FresherCard({ f }) {
   );
 }
 
+const FAQS = [
+  {
+    q: "Is UNIFY free?",
+    a: "100% free. No subscription, no hidden charges, no premium tier. We're building this for Ghana's freshers — not to extract money from students who are already stretched thin.",
+  },
+  {
+    q: "When does my school hub open?",
+    a: "We notify you 48 hours before your school hub goes live. That's your head start — before the general public gets in. KNUST, UG Legon, UCC, and UPSA hubs are launching first in 2026.",
+  },
+  {
+    q: "Is my phone number safe?",
+    a: "Your number is only used to notify you when your hub opens. We don't sell it, share it, or spam you. One message when it's time — that's it.",
+  },
+  {
+    q: "I'm not sure which school I'm going to yet. Can I still join?",
+    a: "Yes. Pick the school you applied to or are most likely attending. You can update it later. Signing up now just reserves your spot in the queue.",
+  },
+  {
+    q: "How is this different from a WhatsApp group?",
+    a: "WhatsApp groups have no verification, no matching, and get chaotic fast. UNIFY is built around verified student profiles, habit-based roommate matching, and structured campus hubs — not 300 unread messages from strangers.",
+  },
+  {
+    q: "Does it work on slow internet?",
+    a: "Yes. UNIFY is built to load in under 5MB and work on 2G. We know how campus network lines get — especially on matriculation day when everyone is online at once.",
+  },
+];
+
+function FAQ() {
+  const [open, setOpen] = useState(null);
+  return (
+    <section className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center mb-10 md:mb-14">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Got questions?</span>
+          <h2 className="text-4xl md:text-5xl font-black mt-3 mb-4 tracking-tight">We got answers.</h2>
+          <p className="text-white/45 text-base leading-relaxed">Everything freshers actually ask before signing up.</p>
+        </div>
+        <div className="flex flex-col gap-3">
+          {FAQS.map((faq, i) => (
+            <div
+              key={i}
+              className={`border rounded-2xl overflow-hidden transition-colors ${open === i ? 'border-amber-400/30 bg-amber-400/[0.03]' : 'border-white/[0.07] bg-white/[0.02]'}`}
+            >
+              <button
+                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
+                onClick={() => setOpen(open === i ? null : i)}
+              >
+                <span className="font-bold text-sm md:text-base text-white">{faq.q}</span>
+                <span className={`text-xl font-black flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-45 text-amber-400' : 'text-white/30'}`}>+</span>
+              </button>
+              {open === i && (
+                <div className="px-6 pb-5">
+                  <p className="text-sm text-white/50 leading-relaxed">{faq.a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 
 export default function UnifyLanding() {
@@ -595,7 +658,10 @@ export default function UnifyLanding() {
         </div>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────────────────────────── */}
+      {/* ── FAQ ─────────────────────────────────────────────────────────── */}
+      <FAQ />
+
+      {/* ── FOOTER ──────────────────────────────────────────────────────────── */}
       <footer className="border-t border-white/[0.05] pt-12 pb-8 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b border-white/[0.05] mb-6">
