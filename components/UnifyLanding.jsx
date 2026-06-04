@@ -536,32 +536,44 @@ function ExitModal() {
     <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div
-        className="relative bg-[#080f22] border border-white/10 rounded-3xl p-10 max-w-md w-full shadow-2xl"
+        className="relative bg-[#080f22] border border-white/10 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* close */}
-        <button
-          onClick={close}
-          className="absolute top-5 right-5 text-white/25 hover:text-white/60 text-2xl leading-none transition-colors"
-          aria-label="Close"
-        >
-          ×
-        </button>
+        {/* top accent bar */}
+        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
 
-        {/* content */}
-        <div className="text-4xl mb-5">👀</div>
-        <h3 className="text-2xl font-black mb-3 leading-tight">
-          Hold on — your spot isn&apos;t saved yet.
-        </h3>
-        <p className="text-white/45 text-sm leading-relaxed mb-7">
-          Freshers who sign up early get 48-hour priority access before their school hub opens to everyone. Takes 10 seconds — just pick your school and drop your number.
-        </p>
+        <div className="p-8">
+          {/* close */}
+          <button
+            onClick={close}
+            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white/40 hover:text-white text-lg transition-all"
+            aria-label="Close"
+          >
+            ×
+          </button>
 
-        <WaitlistForm id="exit-form" />
+          {/* header */}
+          <div className="flex items-start gap-4 mb-6">
+            <span className="text-3xl">👀</span>
+            <div>
+              <h3 className="text-xl font-black leading-tight mb-1">
+                Hold on — your spot isn&apos;t saved yet.
+              </h3>
+              <p className="text-white/45 text-sm leading-relaxed">
+                Freshers who sign up early get 48-hour priority access before their school hub opens to everyone.
+              </p>
+            </div>
+          </div>
 
-        <p className="text-xs text-white/20 mt-4 text-center">
-          🔒 Free forever · No spam · Built by Ghanaians
-        </p>
+          {/* divider */}
+          <div className="border-t border-white/[0.06] mb-6" />
+
+          <WaitlistForm id="exit-form" />
+
+          <p className="text-[11px] text-white/20 mt-4 text-center">
+            🔒 Free forever · No spam · Built by Ghanaians
+          </p>
+        </div>
       </div>
     </div>
   );
