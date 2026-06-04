@@ -6,12 +6,12 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-
 const PASSWORD  = 'unify2026';
 
 const SCHOOLS = [
-  { id: 'knust', label: 'KNUST',    color: 'text-green-400',  bg: 'bg-green-400/10 border-green-400/20',  bar: 'bg-green-400' },
-  { id: 'ug',    label: 'UG Legon', color: 'text-blue-400',   bg: 'bg-blue-400/10 border-blue-400/20',    bar: 'bg-blue-400' },
-  { id: 'ucc',   label: 'UCC',      color: 'text-purple-400', bg: 'bg-purple-400/10 border-purple-400/20',bar: 'bg-purple-400' },
-  { id: 'upsa',  label: 'UPSA',     color: 'text-amber-400',  bg: 'bg-amber-400/10 border-amber-400/20',  bar: 'bg-amber-400' },
-  { id: 'uds',   label: 'UDS',      color: 'text-red-400',    bg: 'bg-red-400/10 border-red-400/20',      bar: 'bg-red-400' },
-  { id: 'gctu',  label: 'GCTU',     color: 'text-sky-400',    bg: 'bg-sky-400/10 border-sky-400/20',      bar: 'bg-sky-400' },
+  { id: 'knust', label: 'KNUST',    color: 'text-emerald-400', ring: 'ring-emerald-400/30', bar: 'bg-emerald-400', glow: 'shadow-emerald-400/20', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20' },
+  { id: 'ug',    label: 'UG Legon', color: 'text-blue-400',    ring: 'ring-blue-400/30',    bar: 'bg-blue-400',    glow: 'shadow-blue-400/20',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20' },
+  { id: 'ucc',   label: 'UCC',      color: 'text-violet-400',  ring: 'ring-violet-400/30',  bar: 'bg-violet-400',  glow: 'shadow-violet-400/20',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20' },
+  { id: 'upsa',  label: 'UPSA',     color: 'text-amber-400',   ring: 'ring-amber-400/30',   bar: 'bg-amber-400',   glow: 'shadow-amber-400/20',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20' },
+  { id: 'uds',   label: 'UDS',      color: 'text-rose-400',    ring: 'ring-rose-400/30',    bar: 'bg-rose-400',    glow: 'shadow-rose-400/20',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20' },
+  { id: 'gctu',  label: 'GCTU',     color: 'text-sky-400',     ring: 'ring-sky-400/30',     bar: 'bg-sky-400',     glow: 'shadow-sky-400/20',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20' },
 ];
 
 function formatDate(ts) {
@@ -28,20 +28,80 @@ function maskPhone(phone) {
   return s.slice(0, 4) + '••••' + s.slice(-3);
 }
 
-export default function AdminPage() {
-  const [auth, setAuth]       = useState(false);
-  const [pw, setPw]           = useState('');
-  const [pwError, setPwError] = useState(false);
-  const [data, setData]       = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
-  const [lastRefresh, setLastRefresh] = useState(null);
+function Skeleton({ className }) {
+  return <div className={`animate-pulse rounded-xl bg-white/[0.05] ${className}`} />;
+}
 
-  const login = (e) => {
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+
+function LoginScreen({ onLogin }) {
+  const [pw, setPw]         = useState('');
+  const [shake, setShake]   = useState(false);
+
+  const submit = (e) => {
     e.preventDefault();
-    if (pw === PASSWORD) { setAuth(true); }
-    else { setPwError(true); setPw(''); setTimeout(() => setPwError(false), 1500); }
+    if (pw === PASSWORD) { onLogin(); }
+    else {
+      setShake(true);
+      setPw('');
+      setTimeout(() => setShake(false), 600);
+    }
   };
+
+  return (
+    <div className="min-h-screen bg-[#030810] flex items-center justify-center px-6 relative overflow-hidden"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+
+      {/* background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/[0.04] rounded-full blur-3xl pointer-events-none" />
+
+      <div className={`w-full max-w-[340px] transition-all duration-150 ${shake ? 'translate-x-2' : ''}`}
+        style={shake ? { animation: 'shake 0.4s ease' } : {}}>
+
+        {/* logo */}
+        <div className="flex flex-col items-center mb-10">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-2xl shadow-amber-400/30 mb-5">
+            <span className="text-2xl font-black text-[#030810]">U</span>
+          </div>
+          <h1 className="text-2xl font-black text-white">UNIFY</h1>
+          <p className="text-white/30 text-xs mt-1 tracking-widest uppercase font-semibold">Admin · Waitlist Dashboard</p>
+        </div>
+
+        <form onSubmit={submit} className="flex flex-col gap-3">
+          <div className={`relative group`}>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-amber-400/60 transition-colors text-sm">🔒</span>
+            <input
+              type="password"
+              value={pw}
+              onChange={(e) => setPw(e.target.value)}
+              placeholder="Enter password"
+              autoFocus
+              className="w-full bg-white/[0.04] border border-white/[0.08] focus:border-amber-400/40 rounded-2xl pl-11 pr-5 py-4 text-sm text-white placeholder-white/20 outline-none transition-all"
+            />
+          </div>
+
+          <button type="submit"
+            className="w-full bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-[#030810] font-black text-sm py-4 rounded-2xl transition-all shadow-lg shadow-amber-400/20 hover:shadow-amber-400/30">
+            Enter Dashboard →
+          </button>
+        </form>
+
+        <p className="text-center text-[11px] text-white/15 mt-8">Private · Admin access only</p>
+      </div>
+
+      <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}`}</style>
+    </div>
+  );
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────────────────
+
+export default function AdminPage() {
+  const [auth, setAuth]             = useState(false);
+  const [data, setData]             = useState(null);
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState('');
+  const [lastRefresh, setLastRefresh] = useState(null);
 
   const loadData = () => {
     setLoading(true);
@@ -58,201 +118,202 @@ export default function AdminPage() {
         setData(d);
         setLastRefresh(new Date());
       })
-      .catch((err) => setError('Failed to load data. ' + err.message))
+      .catch((err) => setError('Could not load data. ' + err.message))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { if (auth) loadData(); }, [auth]);
 
-  // ── LOGIN ─────────────────────────────────────────────────────────────────
-  if (!auth) {
-    return (
-      <div
-        className="min-h-screen bg-[#050d20] text-white flex items-center justify-center px-6"
-        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
-      >
-        <div className="w-full max-w-[360px]">
-          {/* logo */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-400 mb-4">
-              <span className="text-2xl font-black text-[#050d20]">U</span>
-            </div>
-            <h1 className="text-xl font-black">UNIFY Admin</h1>
-            <p className="text-white/30 text-sm mt-1">Waitlist Dashboard</p>
-          </div>
+  if (!auth) return <LoginScreen onLogin={() => setAuth(true)} />;
 
-          <form onSubmit={login} className="flex flex-col gap-3">
-            <div className={`bg-white/[0.04] border rounded-2xl px-5 py-3.5 flex items-center gap-3 transition-colors ${pwError ? 'border-red-400/50' : 'border-white/[0.08] focus-within:border-amber-400/40'}`}>
-              <span className="text-white/25 text-sm">🔒</span>
-              <input
-                type="password"
-                value={pw}
-                onChange={(e) => setPw(e.target.value)}
-                placeholder="Enter password"
-                autoFocus
-                className="flex-1 bg-transparent text-sm text-white placeholder-white/25 outline-none"
-              />
-            </div>
-            {pwError && <p className="text-xs text-red-400 pl-1">Incorrect password</p>}
-            <button
-              type="submit"
-              className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-[#050d20] font-black text-sm py-3.5 rounded-2xl transition-all mt-1"
-            >
-              Enter Dashboard →
-            </button>
-          </form>
-
-          <p className="text-center text-xs text-white/15 mt-8">UNIFY · Admin access only</p>
-        </div>
-      </div>
-    );
-  }
-
-  // ── DASHBOARD ─────────────────────────────────────────────────────────────
-  const entries = data?.entries || [];
-  const total   = data?.count   || 0;
-  const recent  = [...entries].reverse().slice(0, 100);
-
-  const schoolStats = SCHOOLS.map((s) => ({
-    ...s,
-    count: entries.filter((e) => e.school === s.id).length,
-  })).sort((a, b) => b.count - a.count);
-
-  const topSchool = schoolStats[0];
+  const entries     = data?.entries || [];
+  const total       = data?.count   || 0;
+  const recent      = [...entries].reverse().slice(0, 100);
+  const schoolStats = SCHOOLS
+    .map((s) => ({ ...s, count: entries.filter((e) => e.school === s.id).length }))
+    .sort((a, b) => b.count - a.count);
+  const topSchool   = schoolStats[0];
+  const today       = entries.filter((e) => {
+    try { return new Date(e.ts).toDateString() === new Date().toDateString(); } catch { return false; }
+  }).length;
 
   return (
-    <div
-      className="min-h-screen bg-[#050d20] text-white"
-      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
-    >
-      {/* ── TOP BAR ── */}
-      <div className="border-b border-white/[0.06] bg-[#050d20]/90 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div className="min-h-screen bg-[#030810] text-white"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+
+      {/* ── TOPBAR ── */}
+      <div className="sticky top-0 z-20 border-b border-white/[0.05] bg-[#030810]/90 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
-              <span className="text-[11px] font-black text-[#050d20]">U</span>
+            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center flex-shrink-0">
+              <span className="text-[11px] font-black text-[#030810]">U</span>
             </div>
-            <span className="text-sm font-black">UNIFY Admin</span>
-            <span className="hidden md:block text-xs text-white/20 border border-white/[0.08] px-2 py-0.5 rounded-full">Waitlist</span>
+            <span className="font-black text-sm">UNIFY</span>
+            <span className="text-white/20 text-xs">/</span>
+            <span className="text-white/40 text-xs font-medium">Admin</span>
           </div>
           <div className="flex items-center gap-3">
             {lastRefresh && (
-              <span className="hidden md:block text-[11px] text-white/25">
-                Updated {lastRefresh.toLocaleTimeString()}
+              <span className="hidden md:block text-[11px] text-white/20">
+                {lastRefresh.toLocaleTimeString()}
               </span>
             )}
-            <button
-              onClick={loadData}
-              disabled={loading}
-              className="text-xs font-bold text-white/40 hover:text-white border border-white/[0.08] hover:border-white/20 px-3 py-1.5 rounded-xl transition-all disabled:opacity-40"
-            >
-              {loading ? 'Refreshing...' : '↻ Refresh'}
+            <button onClick={loadData} disabled={loading}
+              className="flex items-center gap-1.5 text-xs font-semibold text-white/35 hover:text-white border border-white/[0.07] hover:border-white/20 px-3 py-1.5 rounded-lg transition-all disabled:opacity-30">
+              <span className={loading ? 'animate-spin inline-block' : ''}>↻</span>
+              <span>{loading ? 'Loading' : 'Refresh'}</span>
             </button>
-            <a href="/" className="text-xs text-white/25 hover:text-white transition-colors">← Site</a>
+            <a href="/" className="text-xs text-white/25 hover:text-white/60 transition-colors">← Site</a>
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
 
         {error && (
-          <div className="bg-red-400/10 border border-red-400/20 rounded-2xl px-5 py-4 text-sm text-red-400 mb-6">{error}</div>
-        )}
-
-        {loading && !data && (
-          <div className="flex items-center justify-center py-24">
-            <p className="text-white/30 text-sm">Loading data...</p>
+          <div className="mb-6 bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-4 text-sm text-rose-400 flex items-center gap-3">
+            <span>⚠️</span> {error}
           </div>
         )}
 
-        {data && (
-          <>
-            {/* ── STAT CARDS ── */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="col-span-2 bg-amber-400/[0.08] border border-amber-400/20 rounded-2xl p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-1">Total Signups</p>
-                <p className="text-5xl font-black">{total.toLocaleString()}</p>
-                <p className="text-xs text-white/30 mt-2">across all schools</p>
-              </div>
-              <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-1">Top School</p>
-                <p className={`text-2xl font-black ${topSchool?.color}`}>{topSchool?.label || '—'}</p>
-                <p className="text-xs text-white/30 mt-2">{topSchool?.count || 0} signups</p>
-              </div>
-              <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-1">Latest Signup</p>
-                <p className="text-sm font-black text-white/80 leading-snug">
-                  {recent[0] ? SCHOOLS.find(s => s.id === recent[0].school)?.label || recent[0].school : '—'}
-                </p>
-                <p className="text-xs text-white/30 mt-2">{recent[0] ? formatDate(recent[0].ts) : '—'}</p>
-              </div>
-            </div>
+        {/* ── STAT CARDS ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
-            {/* ── SCHOOL BREAKDOWN ── */}
-            <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-6 mb-6">
-              <p className="text-sm font-black mb-5">Signups by School</p>
-              <div className="flex flex-col gap-3">
-                {schoolStats.map(({ id, label, count, color, bar }) => (
-                  <div key={id} className="flex items-center gap-4">
-                    <span className={`text-xs font-black w-20 flex-shrink-0 ${color}`}>{label}</span>
-                    <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${bar} rounded-full transition-all duration-700`}
-                        style={{ width: total > 0 ? `${(count / total) * 100}%` : '0%' }}
-                      />
-                    </div>
-                    <span className="text-xs font-bold text-white/60 w-8 text-right">{count}</span>
-                    <span className="text-[10px] text-white/25 w-8 text-right">
-                      {total > 0 ? `${Math.round((count / total) * 100)}%` : '0%'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* total — hero card */}
+          <div className="col-span-2 relative overflow-hidden bg-gradient-to-br from-amber-950/80 to-[#030810] border border-amber-500/20 rounded-2xl p-6 shadow-xl shadow-amber-400/5">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/[0.06] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+            {loading && !data ? <Skeleton className="h-12 w-32 mb-2" /> : (
+              <p className="text-5xl font-black tracking-tight">{total.toLocaleString()}</p>
+            )}
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mt-2">Total Signups</p>
+            <p className="text-white/25 text-xs mt-1">across all campuses</p>
+            <div className="absolute bottom-4 right-5 text-4xl opacity-10">🎓</div>
+          </div>
 
-            {/* ── RECENT ENTRIES ── */}
-            <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl overflow-hidden">
-              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-black">Recent Signups</p>
-                  <p className="text-xs text-white/25 mt-0.5">Showing last {recent.length} entries · newest first</p>
-                </div>
-              </div>
+          {/* today */}
+          <div className="relative overflow-hidden bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5">
+            {loading && !data ? <Skeleton className="h-8 w-16 mb-2" /> : (
+              <p className="text-3xl font-black">{today}</p>
+            )}
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mt-2">Today</p>
+            <p className="text-white/20 text-xs mt-0.5">{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+          </div>
 
-              {/* table header */}
-              <div className="px-6 py-2 grid grid-cols-3 border-b border-white/[0.04]">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/25">#</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/25">Phone</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/25">School · Date</span>
-              </div>
+          {/* top school */}
+          <div className={`relative overflow-hidden bg-gradient-to-br border rounded-2xl p-5 ${topSchool?.card || 'from-white/5 to-transparent border-white/10'}`}>
+            {loading && !data ? <Skeleton className="h-8 w-20 mb-2" /> : (
+              <p className={`text-2xl font-black ${topSchool?.color || 'text-white'}`}>{topSchool?.label || '—'}</p>
+            )}
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mt-2">Top School</p>
+            <p className="text-white/20 text-xs mt-0.5">{topSchool?.count || 0} signups</p>
+          </div>
+        </div>
 
-              <div className="divide-y divide-white/[0.04] max-h-[480px] overflow-y-auto">
-                {recent.map((e, i) => {
-                  const sc = SCHOOLS.find(s => s.id === e.school);
+        {/* ── MAIN GRID ── */}
+        <div className="grid md:grid-cols-5 gap-4">
+
+          {/* school breakdown — left */}
+          <div className="md:col-span-2 bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+            <p className="text-sm font-black mb-1">By School</p>
+            <p className="text-xs text-white/25 mb-6">Signup distribution</p>
+
+            {loading && !data ? (
+              <div className="flex flex-col gap-4">
+                {[1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-8" />)}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {schoolStats.map(({ id, label, count, color, bar, card, ring }) => {
+                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                   return (
-                    <div key={i} className="px-6 py-3 grid grid-cols-3 items-center hover:bg-white/[0.02] transition-colors">
-                      <span className="text-xs text-white/20 font-mono">{total - i}</span>
-                      <span className="text-sm text-white/80 font-medium font-mono">{maskPhone(e.phone)}</span>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${sc?.bg || 'bg-white/10 border-white/10'} ${sc?.color || 'text-white/40'}`}>
-                          {sc?.label || e.school}
-                        </span>
-                        <span className="text-[10px] text-white/25 hidden md:block">{formatDate(e.ts)}</span>
+                    <div key={id}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className={`text-xs font-black ${color}`}>{label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-white/60">{count}</span>
+                          <span className="text-[10px] text-white/25 w-7 text-right">{pct}%</span>
+                        </div>
+                      </div>
+                      <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                        <div className={`h-full ${bar} rounded-full transition-all duration-1000`}
+                          style={{ width: `${pct}%` }} />
                       </div>
                     </div>
                   );
                 })}
-                {recent.length === 0 && (
-                  <div className="px-6 py-16 text-center">
-                    <p className="text-white/20 text-sm">No signups yet.</p>
-                    <p className="text-white/15 text-xs mt-1">Share the link to start collecting.</p>
-                  </div>
-                )}
               </div>
+            )}
+
+            {/* school grid badges */}
+            {!loading && data && (
+              <div className="grid grid-cols-3 gap-2 mt-6 pt-5 border-t border-white/[0.05]">
+                {schoolStats.map(({ id, label, count, color, card }) => (
+                  <div key={id} className={`bg-gradient-to-br ${card} border rounded-xl p-3 text-center`}>
+                    <p className={`text-lg font-black ${color}`}>{count}</p>
+                    <p className="text-[9px] text-white/30 font-semibold mt-0.5">{label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* recent entries — right */}
+          <div className="md:col-span-3 bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between flex-shrink-0">
+              <div>
+                <p className="text-sm font-black">Recent Signups</p>
+                <p className="text-xs text-white/25 mt-0.5">Newest first · last {Math.min(recent.length, 100)}</p>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
 
-          </>
-        )}
+            {/* col headers */}
+            <div className="px-6 py-2.5 grid grid-cols-12 border-b border-white/[0.04] bg-white/[0.01] flex-shrink-0">
+              <span className="col-span-1 text-[10px] font-bold uppercase tracking-widest text-white/20">#</span>
+              <span className="col-span-5 text-[10px] font-bold uppercase tracking-widest text-white/20">Phone</span>
+              <span className="col-span-3 text-[10px] font-bold uppercase tracking-widest text-white/20">School</span>
+              <span className="col-span-3 text-[10px] font-bold uppercase tracking-widest text-white/20 hidden md:block">Date</span>
+            </div>
+
+            <div className="overflow-y-auto flex-1" style={{ maxHeight: 460 }}>
+              {loading && !data ? (
+                <div className="flex flex-col gap-px p-4">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <Skeleton key={i} className="h-10" />
+                  ))}
+                </div>
+              ) : recent.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center px-6">
+                  <span className="text-4xl mb-4">📭</span>
+                  <p className="text-white/30 text-sm font-semibold">No signups yet</p>
+                  <p className="text-white/15 text-xs mt-1">Share the link to start collecting</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-white/[0.03]">
+                  {recent.map((e, i) => {
+                    const sc = SCHOOLS.find((s) => s.id === e.school);
+                    return (
+                      <div key={i} className="px-6 py-3 grid grid-cols-12 items-center hover:bg-white/[0.02] transition-colors group">
+                        <span className="col-span-1 text-[11px] text-white/15 font-mono">{total - i}</span>
+                        <span className="col-span-5 text-sm text-white/70 font-mono group-hover:text-white/90 transition-colors">
+                          {maskPhone(e.phone)}
+                        </span>
+                        <span className="col-span-3">
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r border ${sc?.card || 'from-white/5 to-transparent border-white/10'} ${sc?.color || 'text-white/40'}`}>
+                            {sc?.label || e.school}
+                          </span>
+                        </span>
+                        <span className="col-span-3 text-[11px] text-white/20 hidden md:block">{formatDate(e.ts)}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <p className="text-center text-[11px] text-white/10 mt-8">UNIFY Admin · {new Date().getFullYear()} · Ghana 🇬🇭</p>
       </div>
     </div>
   );
