@@ -185,9 +185,13 @@ function WaitlistForm({ id }) {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [noSchool, setNoSchool] = useState(false);
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!school) { setNoSchool(true); return; }
     if (!phone.trim()) return;
+    setNoSchool(false);
     setLoading(true);
     setError('');
     try {
@@ -219,15 +223,6 @@ function WaitlistForm({ id }) {
       </div>
     );
   }
-
-  const [noSchool, setNoSchool] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!school) { setNoSchool(true); return; }
-    setNoSchool(false);
-    await submit(e);
-  };
 
   return (
     <form id={id} onSubmit={handleSubmit} className="flex flex-col gap-2.5">
