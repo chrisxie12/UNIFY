@@ -6,12 +6,12 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-
 const PASSWORD  = 'unify2026';
 
 const SCHOOLS = [
-  { id: 'knust', label: 'KNUST',    logo: '/logos/knust.svg', color: 'text-emerald-400', bar: 'bg-emerald-400', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20' },
-  { id: 'ug',    label: 'UG Legon', logo: '/logos/ug.svg',    color: 'text-blue-400',    bar: 'bg-blue-400',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20' },
-  { id: 'ucc',   label: 'UCC',      logo: '/logos/ucc.svg',   color: 'text-violet-400',  bar: 'bg-violet-400',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20' },
-  { id: 'upsa',  label: 'UPSA',     logo: '/logos/upsa.svg',  color: 'text-amber-400',   bar: 'bg-amber-400',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20' },
-  { id: 'uds',   label: 'UDS',      logo: '/logos/uds.svg',   color: 'text-rose-400',    bar: 'bg-rose-400',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20' },
-  { id: 'gctu',  label: 'GCTU',     logo: '/logos/gctu.svg',  color: 'text-sky-400',     bar: 'bg-sky-400',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20' },
+  { id: 'knust', label: 'KNUST',    wiki: 'Kwame_Nkrumah_University_of_Science_and_Technology', color: 'text-emerald-400', bar: 'bg-emerald-400', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20' },
+  { id: 'ug',    label: 'UG Legon', wiki: 'University_of_Ghana',                                 color: 'text-blue-400',    bar: 'bg-blue-400',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20' },
+  { id: 'ucc',   label: 'UCC',      wiki: 'University_of_Cape_Coast',                            color: 'text-violet-400',  bar: 'bg-violet-400',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20' },
+  { id: 'upsa',  label: 'UPSA',     wiki: 'University_of_Professional_Studies,_Accra',           color: 'text-amber-400',   bar: 'bg-amber-400',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20' },
+  { id: 'uds',   label: 'UDS',      wiki: 'University_for_Development_Studies',                  color: 'text-rose-400',    bar: 'bg-rose-400',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20' },
+  { id: 'gctu',  label: 'GCTU',     wiki: 'Ghana_Communication_Technology_University',           color: 'text-sky-400',     bar: 'bg-sky-400',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20' },
 ];
 
 function formatDate(ts) {
@@ -30,6 +30,37 @@ function maskPhone(phone) {
 
 function Skeleton({ className }) {
   return <div className={`animate-pulse rounded-xl bg-white/[0.05] ${className}`} />;
+}
+
+function useWikiLogos() {
+  const [logos, setLogos] = useState({});
+  useEffect(() => {
+    SCHOOLS.forEach(({ id, wiki }) => {
+      fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${wiki}`)
+        .then((r) => r.json())
+        .then((d) => {
+          const src = d.originalimage?.source || d.thumbnail?.source;
+          if (src) setLogos((prev) => ({ ...prev, [id]: src }));
+        })
+        .catch(() => {});
+    });
+  }, []);
+  return logos;
+}
+
+function SchoolLogo({ src, label, size = 'md' }) {
+  const dim = size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-9 h-9' : 'w-6 h-6';
+  const pad = size === 'sm' ? 'p-0' : 'p-1';
+  if (!src) return (
+    <div className={`${dim} rounded-md bg-white/10 flex items-center justify-center flex-shrink-0`}>
+      <span className="text-[8px] font-black text-white/30">{label.slice(0, 2)}</span>
+    </div>
+  );
+  return (
+    <div className={`${dim} rounded-md bg-white flex items-center justify-center flex-shrink-0 overflow-hidden ${pad}`}>
+      <img src={src} alt={label} className="w-full h-full object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
+    </div>
+  );
 }
 
 // ── LOGIN ────────────────────────────────────────────────────────────────────
@@ -142,6 +173,7 @@ export default function AdminPage() {
 
   if (!auth) return <LoginScreen onLogin={() => setAuth(true)} />;
 
+  const logos       = useWikiLogos();
   const entries     = data?.entries || [];
   const total       = data?.count   || 0;
   const recent      = [...entries].reverse().slice(0, 100);
@@ -239,15 +271,13 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {schoolStats.map(({ id, label, logo, count, color, bar }) => {
+                {schoolStats.map(({ id, label, count, color, bar }) => {
                   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                   return (
                     <div key={id}>
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden p-0.5">
-                            <img src={logo} alt={label} className="w-full h-full object-contain" />
-                          </div>
+                          <SchoolLogo src={logos[id]} label={label} size="md" />
                           <span className={`text-xs font-black ${color}`}>{label}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -268,11 +298,9 @@ export default function AdminPage() {
             {/* school grid badges */}
             {!loading && data && (
               <div className="grid grid-cols-3 gap-2 mt-6 pt-5 border-t border-white/[0.05]">
-                {schoolStats.map(({ id, label, logo, count, color, card }) => (
+                {schoolStats.map(({ id, label, count, color, card }) => (
                   <div key={id} className={`bg-gradient-to-br ${card} border rounded-xl p-3 text-center flex flex-col items-center gap-1.5`}>
-                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden p-1">
-                      <img src={logo} alt={label} className="w-full h-full object-contain" />
-                    </div>
+                    <SchoolLogo src={logos[id]} label={label} size="lg" />
                     <p className={`text-base font-black ${color}`}>{count}</p>
                     <p className="text-[9px] text-white/30 font-semibold leading-tight">{label}</p>
                   </div>
@@ -324,7 +352,7 @@ export default function AdminPage() {
                         </span>
                         <span className="col-span-3">
                           <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r border ${sc?.card || 'from-white/5 to-transparent border-white/10'} ${sc?.color || 'text-white/40'}`}>
-                            {sc?.logo && <img src={sc.logo} alt={sc.label} className="w-3 h-3 object-contain" />}
+                            {sc && <SchoolLogo src={logos[sc.id]} label={sc.label} size="sm" />}
                             {sc?.label || e.school}
                           </span>
                         </span>
