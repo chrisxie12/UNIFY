@@ -181,9 +181,9 @@ const PHONE_POSTS = [
 
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
-function WaitlistForm({ id }) {
+function WaitlistForm({ id, defaultSchool = '' }) {
   const [phone, setPhone] = useState('');
-  const [school, setSchool] = useState('');
+  const [school, setSchool] = useState(defaultSchool);
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -396,6 +396,63 @@ function FresherCard({ f }) {
   );
 }
 
+const SCHOOL_CONFIG = {
+  knust: {
+    id: 'knust',
+    name: 'KNUST',
+    full: 'Kwame Nkrumah University of Science & Technology',
+    badge: 'KNUST Freshers · Class of \'30',
+    headline: "Don't pull up to Kotei alone, fr.",
+    sub: "The fresher network built for KNUST. Find your roommate around Brunei, Kotei, or Unity Hall — link with coursemates in Engineering, CS, and Medicine before lectures even start.",
+    hostels: ['Brunei', 'Kotei', 'Unity Hall', 'Evandy', 'TF Hostel'],
+  },
+  ug: {
+    id: 'ug',
+    name: 'UG Legon',
+    full: 'University of Ghana',
+    badge: 'UG Legon Freshers · Class of \'30',
+    headline: "Don't walk into Legon alone, fr.",
+    sub: "The fresher network built for UG Legon. Find your roommate at Volta, Limann, or Commonwealth — link with coursemates in Business, Law, and Social Sciences before orientation week.",
+    hostels: ['Volta Hall', 'Limann Hall', 'Commonwealth Hall', 'Mensah Sarbah'],
+  },
+  ucc: {
+    id: 'ucc',
+    name: 'UCC',
+    full: 'University of Cape Coast',
+    badge: 'UCC Freshers · Class of \'30',
+    headline: "Don't pull up to Cape Coast alone, fr.",
+    sub: "The fresher network built for UCC. Find your roommate around Casford or Atlantic Hall — link with coursemates in Education, Nursing, and Sciences before matriculation day.",
+    hostels: ['Casford Hall', 'Atlantic Hall', 'Oguaa Hall'],
+  },
+  upsa: {
+    id: 'upsa',
+    name: 'UPSA',
+    full: 'University of Professional Studies',
+    badge: 'UPSA Freshers · Class of \'30',
+    headline: "Don't start UPSA alone, fr.",
+    sub: "The fresher network built for UPSA. Connect with fellow Business, Accounting, and Law freshers — find your people before the semester kicks off.",
+    hostels: ['On-campus hostel', 'Legon area'],
+  },
+  uds: {
+    id: 'uds',
+    name: 'UDS',
+    full: 'University for Development Studies',
+    badge: 'UDS Freshers · Class of \'30',
+    headline: "Don't pull up to Tamale alone, fr.",
+    sub: "The fresher network built for UDS. Connect with Agriculture, Medicine, and Law freshers across the Tamale, Wa, and Navrongo campuses before lectures begin.",
+    hostels: ['Tamale campus', 'Wa campus', 'Navrongo campus'],
+  },
+  gctu: {
+    id: 'gctu',
+    name: 'GCTU',
+    full: 'Ghana Communication Technology University',
+    badge: 'GCTU Freshers · Class of \'30',
+    headline: "Don't start GCTU alone, fr.",
+    sub: "The fresher network built for GCTU. Link up with Tech, Telecom, and Business freshers — find your people and secure your spot before the hub fills up.",
+    hostels: ['On-campus hostel', 'Accra area'],
+  },
+};
+
 const FAQS = [
   {
     q: "Is UNIFY free?",
@@ -560,8 +617,9 @@ function useSignupCount() {
   return count;
 }
 
-export default function UnifyLanding() {
+export default function UnifyLanding({ schoolId } = {}) {
   const count = useSignupCount();
+  const sc = SCHOOL_CONFIG[schoolId] || null;
   return (
     <div
       className="min-h-screen bg-[#050d20] text-white antialiased"
@@ -594,20 +652,21 @@ export default function UnifyLanding() {
           <div>
             <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/25 text-amber-400 text-xs font-bold px-3.5 py-2 rounded-full mb-7">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Built for Ghana's freshers · Launching 2026
+              {sc ? sc.badge : "Built for Ghana's freshers · Launching 2026"}
             </div>
 
             <h1 className="text-[2.2rem] md:text-[3.6rem] font-black leading-[1.1] tracking-tight mb-5">
-              Don't pull up to<br />
-              campus alone,{' '}
-              <span className="text-amber-400">fr.</span>
+              {sc
+                ? sc.headline
+                : <>Don&apos;t pull up to campus alone,{' '}<span className="text-amber-400">fr.</span></>
+              }
             </h1>
 
             <p className="text-base md:text-lg text-white/50 leading-relaxed mb-8 max-w-[440px]">
-              The ZeeMee for Ghana. Find your roommates, link up with course mates, and tap into your official campus hub before matriculation. Lightweight, clean, and uses under 5MB of data.
+              {sc ? sc.sub : 'The ZeeMee for Ghana. Find your roommates, link up with course mates, and tap into your official campus hub before matriculation. Lightweight, clean, and uses under 5MB of data.'}
             </p>
 
-            <WaitlistForm id="hero-form" />
+            <WaitlistForm id="hero-form" defaultSchool={schoolId || ''} />
 
             {/* social proof */}
             <div className="mt-6 flex items-center gap-3">
