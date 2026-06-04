@@ -414,8 +414,8 @@ export default function UnifyLanding() {
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section className="pt-36 pb-24 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      <section className="pt-28 md:pt-36 pb-16 md:pb-24 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
 
           {/* Left */}
           <div>
@@ -424,13 +424,13 @@ export default function UnifyLanding() {
               Built for Ghana's freshers · Launching 2026
             </div>
 
-            <h1 className="text-5xl md:text-[3.6rem] font-black leading-[1.06] tracking-tight mb-6">
+            <h1 className="text-[2.6rem] md:text-[3.6rem] font-black leading-[1.06] tracking-tight mb-5">
               Don't pull up to<br />
               campus alone,<br />
               <span className="text-amber-400">fr.</span>
             </h1>
 
-            <p className="text-lg text-white/50 leading-relaxed mb-9 max-w-[440px]">
+            <p className="text-base md:text-lg text-white/50 leading-relaxed mb-8 max-w-[440px]">
               The ZeeMee for Ghana. Find your roommates, link up with course mates, and tap into your official campus hub before matriculation. Lightweight, clean, and uses under 5MB of data.
             </p>
 
@@ -463,8 +463,8 @@ export default function UnifyLanding() {
             </div>
           </div>
 
-          {/* Right — phone mockup */}
-          <div className="flex justify-center md:justify-end">
+          {/* Right — phone mockup, hidden on mobile */}
+          <div className="hidden md:flex justify-end">
             <PhoneMockup />
           </div>
         </div>
@@ -474,9 +474,9 @@ export default function UnifyLanding() {
       <Ticker />
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <section className="py-28 px-6 border-t border-white/[0.04]">
+      <section className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
               Three steps. Zero stress.
             </span>
@@ -506,9 +506,9 @@ export default function UnifyLanding() {
       </section>
 
       {/* ── MEET THE FRESHERS ───────────────────────────────────────────── */}
-      <section id="freshers" className="py-28 px-6">
+      <section id="freshers" className="py-16 md:py-28 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
               Your new campus fam
             </span>
@@ -537,9 +537,9 @@ export default function UnifyLanding() {
       </section>
 
       {/* ── PILLARS ─────────────────────────────────────────────────────── */}
-      <section id="features" className="py-28 px-6 border-t border-white/[0.04]">
+      <section id="features" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
               Why UNIFY
             </span>
@@ -574,7 +574,7 @@ export default function UnifyLanding() {
       </section>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <section id="waitlist" className="py-28 px-6 border-t border-white/[0.04]">
+      <section id="waitlist" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
         <div className="max-w-2xl mx-auto text-center">
           <span className="text-5xl block mb-6">🇬🇭</span>
 
