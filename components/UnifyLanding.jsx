@@ -546,9 +546,9 @@ export default function UnifyLanding() {
               Built for Ghana's freshers · Launching 2026
             </div>
 
-            <h1 className="text-[2.6rem] md:text-[3.6rem] font-black leading-[1.06] tracking-tight mb-5">
+            <h1 className="text-[2.2rem] md:text-[3.6rem] font-black leading-[1.1] tracking-tight mb-5">
               Don't pull up to<br />
-              campus alone,<br />
+              campus alone,{' '}
               <span className="text-amber-400">fr.</span>
             </h1>
 
