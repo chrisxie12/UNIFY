@@ -187,8 +187,7 @@ function WaitlistForm({ id }) {
   const [error, setError] = useState('');
 
   const submit = async (e) => {
-    e.preventDefault();
-    if (!phone.trim() || !school) return;
+    if (!phone.trim()) return;
     setLoading(true);
     setError('');
     try {
@@ -221,15 +220,25 @@ function WaitlistForm({ id }) {
     );
   }
 
+  const [noSchool, setNoSchool] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!school) { setNoSchool(true); return; }
+    setNoSchool(false);
+    await submit(e);
+  };
+
   return (
-    <form id={id} onSubmit={submit} className="flex flex-col gap-2.5">
+    <form id={id} onSubmit={handleSubmit} className="flex flex-col gap-2.5">
       {/* school selector */}
-      <div className="flex flex-wrap gap-2">
+      <p className="text-[11px] font-bold text-white/35 uppercase tracking-widest mb-0.5">Pick your school</p>
+      <div className={`flex flex-wrap gap-2 p-2 rounded-2xl border transition-colors ${noSchool ? 'border-red-400/50 bg-red-400/[0.04]' : 'border-transparent'}`}>
         {SCHOOLS.map((s) => (
           <button
             key={s.id}
             type="button"
-            onClick={() => setSchool(s.id)}
+            onClick={() => { setSchool(s.id); setNoSchool(false); }}
             className={`text-xs font-black px-3.5 py-2 rounded-xl border transition-all ${
               school === s.id
                 ? 'bg-amber-400 text-[#050d20] border-amber-400'
@@ -240,8 +249,9 @@ function WaitlistForm({ id }) {
           </button>
         ))}
       </div>
+      {noSchool && <p className="text-[11px] text-red-400 pl-1">Please select your school first</p>}
       {/* phone + submit */}
-      <div className="flex flex-col sm:flex-row gap-2.5">
+      <div className="flex flex-col sm:flex-row gap-2.5 mt-1">
         <input
           type="text"
           value={phone}
@@ -252,15 +262,12 @@ function WaitlistForm({ id }) {
         />
         <button
           type="submit"
-          disabled={loading || !school}
-          className="bg-amber-400 hover:bg-amber-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-[#050d20] font-black text-sm px-7 py-3.5 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/20 whitespace-nowrap"
+          disabled={loading}
+          className="bg-amber-400 hover:bg-amber-300 active:scale-95 disabled:opacity-60 text-[#050d20] font-black text-sm px-7 py-3.5 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/20 whitespace-nowrap"
         >
           {loading ? 'Saving...' : 'Claim Your Handle →'}
         </button>
       </div>
-      {!school && (
-        <p className="text-[11px] text-white/30 pl-1">Select your school first ↑</p>
-      )}
       {error && <p className="text-[11px] text-red-400 pl-1">{error}</p>}
     </form>
   );
