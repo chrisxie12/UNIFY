@@ -16,13 +16,16 @@ const SCHOOLS = [
 
 function formatDate(ts) {
   try {
-    return new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-  } catch { return ts; }
+    const d = new Date(ts);
+    if (isNaN(d)) return String(ts);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  } catch { return String(ts); }
 }
 
 function maskPhone(phone) {
-  if (!phone || phone.length < 6) return phone;
-  return phone.slice(0, 4) + '••••' + phone.slice(-3);
+  const s = String(phone || '');
+  if (s.length < 6) return s;
+  return s.slice(0, 4) + '••••' + s.slice(-3);
 }
 
 export default function AdminPage() {
@@ -42,10 +45,20 @@ export default function AdminPage() {
 
   const loadData = () => {
     setLoading(true);
+    setError('');
     fetch(`${SHEET_URL}?action=all&ts=${Date.now()}`)
-      .then((r) => r.json())
-      .then((d) => { setData(d); setLastRefresh(new Date()); })
-      .catch(() => setError('Failed to load. Check your Apps Script deployment.'))
+      .then((r) => r.text())
+      .then((text) => {
+        const d = JSON.parse(text);
+        d.entries = (d.entries || []).map((e) => ({
+          phone:  String(e.phone  || ''),
+          school: String(e.school || ''),
+          ts:     String(e.ts     || ''),
+        }));
+        setData(d);
+        setLastRefresh(new Date());
+      })
+      .catch((err) => setError('Failed to load data. ' + err.message))
       .finally(() => setLoading(false));
   };
 
