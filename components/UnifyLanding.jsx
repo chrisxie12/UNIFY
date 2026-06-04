@@ -16,6 +16,8 @@
 import { useState } from 'react';
 import { Shield, Wifi, Building2, CheckCircle, MapPin, Users, ArrowRight } from 'lucide-react';
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
+
 const SCHOOLS = [
   { id: 'knust', label: 'KNUST', full: 'Kwame Nkrumah University of Science & Technology' },
   { id: 'ug', label: 'UG Legon', full: 'University of Ghana' },
@@ -195,16 +197,9 @@ function WaitlistForm({ id }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: phone.trim(), school }),
-      });
-      if (res.ok) {
-        setDone(true);
-      } else {
-        setError('Something went wrong. Try again.');
-      }
+      const params = new URLSearchParams({ phone: phone.trim(), school, ts: new Date().toISOString() });
+      await fetch(`${SHEET_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
+      setDone(true);
     } catch {
       setError('No connection. Try again.');
     } finally {
