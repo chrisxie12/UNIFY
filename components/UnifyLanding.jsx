@@ -13,7 +13,7 @@
  *   keyframes: { ticker: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } } },
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Wifi, Building2, CheckCircle, MapPin, Users, ArrowRight } from 'lucide-react';
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
@@ -461,7 +461,19 @@ function FAQ() {
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 
+function useSignupCount() {
+  const [count, setCount] = useState(null);
+  useEffect(() => {
+    fetch(`${SHEET_URL}?ts=count`)
+      .then((r) => r.json())
+      .then((d) => { if (d.count > 0) setCount(d.count); })
+      .catch(() => {});
+  }, []);
+  return count;
+}
+
 export default function UnifyLanding() {
+  const count = useSignupCount();
   return (
     <div
       className="min-h-screen bg-[#050d20] text-white antialiased"
@@ -522,7 +534,7 @@ export default function UnifyLanding() {
                 ))}
               </div>
               <p className="text-sm text-white/35">
-                <strong className="text-white font-bold">12,400+</strong> freshers already holding their spot
+                <strong className="text-white font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
               </p>
             </div>
 
