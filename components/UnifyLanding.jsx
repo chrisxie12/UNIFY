@@ -459,6 +459,43 @@ function FAQ() {
   );
 }
 
+function StickyBar() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 500);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  if (dismissed || !visible) return null;
+
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3 bg-gradient-to-t from-[#050d20] to-transparent">
+      <div className="flex items-center gap-2 bg-[#0a1530] border border-white/10 rounded-2xl px-4 py-3 shadow-2xl shadow-black/50">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-black text-white truncate">Secure your spot 🎓</p>
+          <p className="text-[10px] text-white/35 truncate">Join Ghana&apos;s fresher network — free</p>
+        </div>
+        <a
+          href="#waitlist"
+          className="bg-amber-400 hover:bg-amber-300 text-[#050d20] font-black text-xs px-4 py-2.5 rounded-xl whitespace-nowrap flex-shrink-0 active:scale-95 transition-all"
+        >
+          Claim Handle →
+        </a>
+        <button
+          onClick={() => setDismissed(true)}
+          className="text-white/25 hover:text-white/60 text-lg leading-none flex-shrink-0 pl-1"
+          aria-label="Dismiss"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 
 function useSignupCount() {
@@ -716,6 +753,9 @@ export default function UnifyLanding() {
           <div className="mt-8 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
         </div>
       </footer>
+
+      {/* ── STICKY MOBILE CTA ───────────────────────────────────────────── */}
+      <StickyBar />
 
     </div>
   );
