@@ -6,12 +6,12 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-
 const PASSWORD  = 'unify2026';
 
 const SCHOOLS = [
-  { id: 'knust', label: 'KNUST',    color: 'text-emerald-400', ring: 'ring-emerald-400/30', bar: 'bg-emerald-400', glow: 'shadow-emerald-400/20', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20' },
-  { id: 'ug',    label: 'UG Legon', color: 'text-blue-400',    ring: 'ring-blue-400/30',    bar: 'bg-blue-400',    glow: 'shadow-blue-400/20',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20' },
-  { id: 'ucc',   label: 'UCC',      color: 'text-violet-400',  ring: 'ring-violet-400/30',  bar: 'bg-violet-400',  glow: 'shadow-violet-400/20',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20' },
-  { id: 'upsa',  label: 'UPSA',     color: 'text-amber-400',   ring: 'ring-amber-400/30',   bar: 'bg-amber-400',   glow: 'shadow-amber-400/20',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20' },
-  { id: 'uds',   label: 'UDS',      color: 'text-rose-400',    ring: 'ring-rose-400/30',    bar: 'bg-rose-400',    glow: 'shadow-rose-400/20',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20' },
-  { id: 'gctu',  label: 'GCTU',     color: 'text-sky-400',     ring: 'ring-sky-400/30',     bar: 'bg-sky-400',     glow: 'shadow-sky-400/20',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20' },
+  { id: 'knust', label: 'KNUST',    logo: '/logos/knust.svg', color: 'text-emerald-400', bar: 'bg-emerald-400', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20' },
+  { id: 'ug',    label: 'UG Legon', logo: '/logos/ug.svg',    color: 'text-blue-400',    bar: 'bg-blue-400',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20' },
+  { id: 'ucc',   label: 'UCC',      logo: '/logos/ucc.svg',   color: 'text-violet-400',  bar: 'bg-violet-400',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20' },
+  { id: 'upsa',  label: 'UPSA',     logo: '/logos/upsa.svg',  color: 'text-amber-400',   bar: 'bg-amber-400',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20' },
+  { id: 'uds',   label: 'UDS',      logo: '/logos/uds.svg',   color: 'text-rose-400',    bar: 'bg-rose-400',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20' },
+  { id: 'gctu',  label: 'GCTU',     logo: '/logos/gctu.svg',  color: 'text-sky-400',     bar: 'bg-sky-400',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20' },
 ];
 
 function formatDate(ts) {
@@ -239,12 +239,17 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {schoolStats.map(({ id, label, count, color, bar, card, ring }) => {
+                {schoolStats.map(({ id, label, logo, count, color, bar }) => {
                   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                   return (
                     <div key={id}>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className={`text-xs font-black ${color}`}>{label}</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden p-0.5">
+                            <img src={logo} alt={label} className="w-full h-full object-contain" />
+                          </div>
+                          <span className={`text-xs font-black ${color}`}>{label}</span>
+                        </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-white/60">{count}</span>
                           <span className="text-[10px] text-white/25 w-7 text-right">{pct}%</span>
@@ -263,10 +268,13 @@ export default function AdminPage() {
             {/* school grid badges */}
             {!loading && data && (
               <div className="grid grid-cols-3 gap-2 mt-6 pt-5 border-t border-white/[0.05]">
-                {schoolStats.map(({ id, label, count, color, card }) => (
-                  <div key={id} className={`bg-gradient-to-br ${card} border rounded-xl p-3 text-center`}>
-                    <p className={`text-lg font-black ${color}`}>{count}</p>
-                    <p className="text-[9px] text-white/30 font-semibold mt-0.5">{label}</p>
+                {schoolStats.map(({ id, label, logo, count, color, card }) => (
+                  <div key={id} className={`bg-gradient-to-br ${card} border rounded-xl p-3 text-center flex flex-col items-center gap-1.5`}>
+                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden p-1">
+                      <img src={logo} alt={label} className="w-full h-full object-contain" />
+                    </div>
+                    <p className={`text-base font-black ${color}`}>{count}</p>
+                    <p className="text-[9px] text-white/30 font-semibold leading-tight">{label}</p>
                   </div>
                 ))}
               </div>
@@ -315,7 +323,8 @@ export default function AdminPage() {
                           {maskPhone(e.phone)}
                         </span>
                         <span className="col-span-3">
-                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r border ${sc?.card || 'from-white/5 to-transparent border-white/10'} ${sc?.color || 'text-white/40'}`}>
+                          <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r border ${sc?.card || 'from-white/5 to-transparent border-white/10'} ${sc?.color || 'text-white/40'}`}>
+                            {sc?.logo && <img src={sc.logo} alt={sc.label} className="w-3 h-3 object-contain" />}
                             {sc?.label || e.school}
                           </span>
                         </span>
