@@ -14,7 +14,37 @@
  */
 
 import { useState } from 'react';
-import { Shield, Wifi, Building2, CheckCircle, MapPin, Users } from 'lucide-react';
+import { Shield, Wifi, Building2, CheckCircle, MapPin, Users, ArrowRight } from 'lucide-react';
+
+const SCHOOLS = [
+  { id: 'knust', label: 'KNUST', full: 'Kwame Nkrumah University of Science & Technology' },
+  { id: 'ug', label: 'UG Legon', full: 'University of Ghana' },
+  { id: 'ucc', label: 'UCC', full: 'University of Cape Coast' },
+  { id: 'upsa', label: 'UPSA', full: 'University of Professional Studies' },
+  { id: 'uds', label: 'UDS', full: 'University for Development Studies' },
+  { id: 'gctu', label: 'GCTU', full: 'Ghana Communication Technology University' },
+];
+
+const HOW_STEPS = [
+  {
+    step: '01',
+    title: 'Pick your school & claim your handle',
+    body: 'Select your campus — KNUST, Legon, UCC, UPSA, and more. Drop your number. Your handle is reserved before the hub goes live.',
+    color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20',
+  },
+  {
+    step: '02',
+    title: 'Set your profile & match with roommates',
+    body: 'Tell us your hostel pref, sleep schedule, and vibe. We match you with freshers who actually fit — no brokers, no group chat chaos.',
+    color: 'text-blue-400', bg: 'bg-blue-400/10 border-blue-400/20',
+  },
+  {
+    step: '03',
+    title: 'Join your campus hub before day one',
+    body: 'Your school hub drops 48hrs before matriculation. Link with coursemates, get real hostel intel, and walk in knowing people.',
+    color: 'text-green-400', bg: 'bg-green-400/10 border-green-400/20',
+  },
+];
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -150,12 +180,33 @@ const PHONE_POSTS = [
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
 function WaitlistForm({ id }) {
-  const [value, setValue] = useState('');
+  const [phone, setPhone] = useState('');
+  const [school, setSchool] = useState('');
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (value.trim()) { setDone(true); setValue(''); }
+    if (!phone.trim() || !school) return;
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone.trim(), school }),
+      });
+      if (res.ok) {
+        setDone(true);
+      } else {
+        setError('Something went wrong. Try again.');
+      }
+    } catch {
+      setError('No connection. Try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (done) {
@@ -163,29 +214,54 @@ function WaitlistForm({ id }) {
       <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-2xl px-5 py-4">
         <CheckCircle className="text-green-400 w-5 h-5 flex-shrink-0" />
         <div>
-          <p className="text-green-300 font-bold text-sm">You're on the list!</p>
-          <p className="text-green-400/60 text-xs mt-0.5">We'll hit you 48hrs before your school hub opens 🎉</p>
+          <p className="text-green-300 font-bold text-sm">You&apos;re on the list!</p>
+          <p className="text-green-400/60 text-xs mt-0.5">We&apos;ll hit you 48hrs before your school hub opens 🎉</p>
         </div>
       </div>
     );
   }
 
   return (
-    <form id={id} onSubmit={submit} className="flex flex-col sm:flex-row gap-2.5">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter phone number (e.g., 055...)"
-        required
-        className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-2xl px-5 py-3.5 text-sm text-white placeholder-white/25 outline-none focus:border-amber-400/50 transition-colors"
-      />
-      <button
-        type="submit"
-        className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-[#050d20] font-black text-sm px-7 py-3.5 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/20 whitespace-nowrap"
-      >
-        Claim Your Handle →
-      </button>
+    <form id={id} onSubmit={submit} className="flex flex-col gap-2.5">
+      {/* school selector */}
+      <div className="flex flex-wrap gap-2">
+        {SCHOOLS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setSchool(s.id)}
+            className={`text-xs font-black px-3.5 py-2 rounded-xl border transition-all ${
+              school === s.id
+                ? 'bg-amber-400 text-[#050d20] border-amber-400'
+                : 'bg-white/[0.04] text-white/50 border-white/[0.08] hover:border-white/20 hover:text-white/80'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+      {/* phone + submit */}
+      <div className="flex flex-col sm:flex-row gap-2.5">
+        <input
+          type="text"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Enter phone number (e.g., 055...)"
+          required
+          className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-2xl px-5 py-3.5 text-sm text-white placeholder-white/25 outline-none focus:border-amber-400/50 transition-colors"
+        />
+        <button
+          type="submit"
+          disabled={loading || !school}
+          className="bg-amber-400 hover:bg-amber-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-[#050d20] font-black text-sm px-7 py-3.5 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/20 whitespace-nowrap"
+        >
+          {loading ? 'Saving...' : 'Claim Your Handle →'}
+        </button>
+      </div>
+      {!school && (
+        <p className="text-[11px] text-white/30 pl-1">Select your school first ↑</p>
+      )}
+      {error && <p className="text-[11px] text-red-400 pl-1">{error}</p>}
     </form>
   );
 }
@@ -394,6 +470,38 @@ export default function UnifyLanding() {
 
       {/* ── TICKER ──────────────────────────────────────────────────────── */}
       <Ticker />
+
+      {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
+      <section className="py-28 px-6 border-t border-white/[0.04]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+              Three steps. Zero stress.
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black mt-3 mb-4 tracking-tight">
+              How UNIFY works.
+            </h2>
+            <p className="text-white/45 max-w-sm mx-auto text-base leading-relaxed">
+              From fresher anxiety to fully linked up — before you even step on campus.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 relative">
+            {/* connector line on desktop */}
+            <div className="hidden md:block absolute top-10 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-amber-400/20 via-blue-400/20 to-green-400/20" />
+
+            {HOW_STEPS.map(({ step, title, body, color, bg }) => (
+              <div key={step} className={`relative border ${bg} rounded-3xl p-8`}>
+                <div className={`text-5xl font-black ${color} opacity-20 leading-none mb-6 select-none`}>
+                  {step}
+                </div>
+                <h3 className="text-base font-black mb-3 leading-snug">{title}</h3>
+                <p className="text-sm text-white/45 leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── MEET THE FRESHERS ───────────────────────────────────────────── */}
       <section id="freshers" className="py-28 px-6">
