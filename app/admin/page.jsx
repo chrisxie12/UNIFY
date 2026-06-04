@@ -288,8 +288,11 @@ export default function AdminPage() {
           <a href="/admin/verify" title="Verification Queue">
             <NavItem icon={UserCheck} active={activeNav === 1} onClick={() => setActiveNav(1)} tooltip="Verify" />
           </a>
-          <NavItem icon={Building2}  active={activeNav === 2} onClick={() => setActiveNav(2)} tooltip="Campuses" />
-          <NavItem icon={ScrollText} active={activeNav === 3} onClick={() => setActiveNav(3)} tooltip="Logs"     />
+          <NavItem icon={Building2}    active={activeNav === 2} onClick={() => setActiveNav(2)} tooltip="Campuses" />
+          <a href="/admin/sms" title="SMS Launchpad">
+            <NavItem icon={MessageSquare} active={activeNav === 3} onClick={() => setActiveNav(3)} tooltip="SMS" />
+          </a>
+          <NavItem icon={ScrollText}   active={activeNav === 4} onClick={() => setActiveNav(4)} tooltip="Logs"     />
         </div>
 
         {/* Admin avatar */}
