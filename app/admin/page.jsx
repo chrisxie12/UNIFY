@@ -103,26 +103,42 @@ export default function AdminPage() {
   const [error, setError]           = useState('');
   const [lastRefresh, setLastRefresh] = useState(null);
 
-  const loadData = () => {
-    setLoading(true);
+  const CACHE_KEY = 'unify_admin_cache';
+
+  const normalise = (d) => {
+    d.entries = (d.entries || []).map((e) => ({
+      phone:  String(e.phone  || ''),
+      school: String(e.school || ''),
+      ts:     String(e.ts     || ''),
+    }));
+    return d;
+  };
+
+  const loadData = (background = false) => {
+    if (!background) setLoading(true);
     setError('');
     fetch(`${SHEET_URL}?action=all&ts=${Date.now()}`)
       .then((r) => r.text())
       .then((text) => {
-        const d = JSON.parse(text);
-        d.entries = (d.entries || []).map((e) => ({
-          phone:  String(e.phone  || ''),
-          school: String(e.school || ''),
-          ts:     String(e.ts     || ''),
-        }));
+        const d = normalise(JSON.parse(text));
         setData(d);
         setLastRefresh(new Date());
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ d, ts: Date.now() })); } catch {}
       })
-      .catch((err) => setError('Could not load data. ' + err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => { if (!background) setError('Could not load data. ' + err.message); })
+      .finally(() => { if (!background) setLoading(false); });
   };
 
-  useEffect(() => { if (auth) loadData(); }, [auth]);
+  useEffect(() => {
+    if (!auth) return;
+    // show cached data instantly
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      if (cached?.d) { setData(cached.d); setLastRefresh(new Date(cached.ts)); }
+    } catch {}
+    // then refresh in background
+    loadData(!!data);
+  }, [auth]);
 
   if (!auth) return <LoginScreen onLogin={() => setAuth(true)} />;
 
