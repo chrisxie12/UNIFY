@@ -459,6 +459,57 @@ function FAQ() {
   );
 }
 
+function ExitModal() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const onMouseLeave = (e) => {
+      if (e.clientY <= 0 && !dismissed) setVisible(true);
+    };
+    document.addEventListener('mouseleave', onMouseLeave);
+    return () => document.removeEventListener('mouseleave', onMouseLeave);
+  }, [dismissed]);
+
+  const close = () => { setVisible(false); setDismissed(true); };
+
+  if (!visible) return null;
+
+  return (
+    <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div
+        className="relative bg-[#080f22] border border-white/10 rounded-3xl p-10 max-w-md w-full shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* close */}
+        <button
+          onClick={close}
+          className="absolute top-5 right-5 text-white/25 hover:text-white/60 text-2xl leading-none transition-colors"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        {/* content */}
+        <div className="text-4xl mb-5">👀</div>
+        <h3 className="text-2xl font-black mb-3 leading-tight">
+          Hold on — your spot isn&apos;t saved yet.
+        </h3>
+        <p className="text-white/45 text-sm leading-relaxed mb-7">
+          Freshers who sign up early get 48-hour priority access before their school hub opens to everyone. Takes 10 seconds — just pick your school and drop your number.
+        </p>
+
+        <WaitlistForm id="exit-form" />
+
+        <p className="text-xs text-white/20 mt-4 text-center">
+          🔒 Free forever · No spam · Built by Ghanaians
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function StickyBar() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -756,6 +807,9 @@ export default function UnifyLanding() {
 
       {/* ── STICKY MOBILE CTA ───────────────────────────────────────────── */}
       <StickyBar />
+
+      {/* ── EXIT INTENT MODAL ───────────────────────────────────────────── */}
+      <ExitModal />
 
     </div>
   );
