@@ -285,9 +285,11 @@ export default function AdminPage() {
         {/* Nav icons */}
         <div className="flex flex-col items-center gap-1 flex-1">
           <NavItem icon={LayoutDashboard} active={activeNav === 0} onClick={() => setActiveNav(0)} tooltip="Dashboard" />
-          <NavItem icon={UserCheck}       active={activeNav === 1} onClick={() => setActiveNav(1)} tooltip="Signups"   />
-          <NavItem icon={Building2}       active={activeNav === 2} onClick={() => setActiveNav(2)} tooltip="Campuses"  />
-          <NavItem icon={ScrollText}      active={activeNav === 3} onClick={() => setActiveNav(3)} tooltip="Logs"      />
+          <a href="/admin/verify" title="Verification Queue">
+            <NavItem icon={UserCheck} active={activeNav === 1} onClick={() => setActiveNav(1)} tooltip="Verify" />
+          </a>
+          <NavItem icon={Building2}  active={activeNav === 2} onClick={() => setActiveNav(2)} tooltip="Campuses" />
+          <NavItem icon={ScrollText} active={activeNav === 3} onClick={() => setActiveNav(3)} tooltip="Logs"     />
         </div>
 
         {/* Admin avatar */}
