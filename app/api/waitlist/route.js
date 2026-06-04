@@ -1,17 +1,6 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
 
-const DB = path.join(process.cwd(), 'data', 'waitlist.json');
-
-async function readDB() {
-  try {
-    const raw = await fs.readFile(DB, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
 
 export async function POST(req) {
   const { phone, school } = await req.json();
@@ -20,21 +9,15 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Phone and school required' }, { status: 400 });
   }
 
-  const entries = await readDB();
-
-  if (entries.some((e) => e.phone === phone)) {
-    return NextResponse.json({ ok: true, duplicate: true });
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, school, ts: new Date().toISOString() }),
+    });
+  } catch {
+    return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
   }
 
-  entries.push({ phone, school, ts: new Date().toISOString() });
-
-  await fs.mkdir(path.dirname(DB), { recursive: true });
-  await fs.writeFile(DB, JSON.stringify(entries, null, 2));
-
-  return NextResponse.json({ ok: true, count: entries.length });
-}
-
-export async function GET() {
-  const entries = await readDB();
-  return NextResponse.json({ count: entries.length });
+  return NextResponse.json({ ok: true });
 }
