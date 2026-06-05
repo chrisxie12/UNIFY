@@ -154,15 +154,15 @@ function useCountUp(target, duration = 1500, trigger = false) {
   useEffect(() => {
     if (!trigger) return;
     let start = null;
-    const isNum = typeof target === 'number';
-    const numTarget = isNum ? target : parseFloat(target);
+    const numTarget = typeof target === 'number' ? target : parseFloat(target);
+    const isDecimal = numTarget !== Math.floor(numTarget);
     const step = (timestamp) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 4);
-      setValue(isNum ? Math.floor(eased * numTarget) : (eased * numTarget).toFixed(1));
+      setValue(isDecimal ? (eased * numTarget).toFixed(1) : Math.floor(eased * numTarget));
       if (progress < 1) requestAnimationFrame(step);
-      else setValue(target);
+      else setValue(isDecimal ? numTarget.toFixed(1) : numTarget);
     };
     requestAnimationFrame(step);
   }, [trigger, target, duration]);
@@ -1237,7 +1237,13 @@ export default function UnifyLanding({ schoolId } = {}) {
                       <p className="font-bold text-[#111827] text-sm">{t.name}</p>
                       <p className="text-[#9CA3AF] text-xs">{t.role}</p>
                     </div>
-                    <div className="text-[#FF6B35] text-xs">{'⭐'.repeat(t.stars)}</div>
+                    <div className="flex items-center gap-0.5">
+                      {[1,2,3,4,5].map(s => (
+                        <svg key={s} viewBox="0 0 12 12" className="w-3 h-3" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
+                          <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
+                        </svg>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1251,7 +1257,14 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <p className="text-[#6B7280] text-sm leading-relaxed mb-5">{t.quote}</p>
                   <div className="border-t border-white/50 pt-4 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-xs font-black text-[#0066FF]">{t.initials}</div>
-                    <div><p className="font-bold text-[#111827] text-sm">{t.name}</p><p className="text-[#9CA3AF] text-xs">{t.role}</p></div>
+                    <div className="flex-1"><p className="font-bold text-[#111827] text-sm">{t.name}</p><p className="text-[#9CA3AF] text-xs">{t.role}</p></div>
+                    <div className="flex items-center gap-0.5">
+                      {[1,2,3,4,5].map(s => (
+                        <svg key={s} viewBox="0 0 12 12" className="w-3 h-3" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
+                          <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
+                        </svg>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1344,64 +1357,84 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── FOOTER ──────────────────────────────────────────────────── */}
-        <footer className="bg-[#0066FF]/95 backdrop-blur-xl px-6 pt-12 pb-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-10 border-b border-white/20">
+        <footer className="bg-[#0066FF] px-6 pt-14 pb-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-white/20">
+
+              {/* Col 1 — Brand */}
               <div className="col-span-2 md:col-span-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl font-black text-white">UNIFY</span>
-                  <span className="text-3xl">🇬🇭</span>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl font-black text-white tracking-tight">UNIFY</span>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-white/15 border border-white/25 text-white">GH</span>
                 </div>
                 <p className="text-sm text-white/70 leading-relaxed max-w-[200px]">
-                  Ghana&apos;s peer-to-peer university transition network.
+                  We always make our customer happy by providing as many choices as possible.
                 </p>
               </div>
+
+              {/* Col 2 — Company */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Explore</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Company</p>
                 <div className="flex flex-col gap-2.5">
-                  {[
-                    { label: 'Home', href: '#' },
-                    { label: 'Hubs', href: '/hubs' },
-                    { label: 'Match', href: '/match' },
-                    { label: 'Schools', href: '#schools' },
-                  ].map((l) => (
-                    <a key={l.label} href={l.href} className="footer-link text-sm text-white/80 hover:text-white transition-colors">{l.label}</a>
+                  {['About Us', 'Features', 'News', 'FAQ'].map((l) => (
+                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
                   ))}
                 </div>
               </div>
+
+              {/* Col 3 — Resources */}
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Resources</p>
+                <div className="flex flex-col gap-2.5">
+                  {['Events', 'Promo', 'Req Demo'].map((l) => (
+                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Col 4 — Support */}
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Support</p>
                 <div className="flex flex-col gap-2.5">
-                  {['FAQ', 'Contact', 'Privacy', 'Terms'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white transition-colors">{l}</a>
+                  {['Account', 'Support Center', 'Feedback', 'Contact Us', 'Accessibility'].map((l) => (
+                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
                   ))}
                 </div>
               </div>
+
+              {/* Col 5 — Contact */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Connect</p>
-                <div className="flex gap-2 mb-4">
-                  {[
-                    { label: 'WA', href: 'https://wa.me/233000000000' },
-                    { label: 'IG', href: '#' },
-                    { label: 'X', href: '#' },
-                  ].map((s) => (
-                    <a
-                      key={s.label}
-                      href={s.href}
-                      className="social-icon w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[10px] font-black text-white hover:bg-white/20"
-                    >
-                      {s.label}
-                    </a>
-                  ))}
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Contact Info</p>
+                <a href="mailto:unify@email.com" className="footer-link text-sm text-white/80 hover:text-white block mb-5">unify@email.com</a>
+                <div className="flex gap-2">
+                  {/* Instagram */}
+                  <a href="#" className="social-icon w-9 h-9 rounded-full bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                  </a>
+                  {/* Facebook */}
+                  <a href="#" className="social-icon w-9 h-9 rounded-full bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  {/* Twitter/X */}
+                  <a href="#" className="social-icon w-9 h-9 rounded-full bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Twitter">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </a>
                 </div>
-                <a href="mailto:hello@unify.gh" className="text-xs text-white/70 hover:text-white transition-colors">hello@unify.gh</a>
               </div>
+
             </div>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6">
-              <p className="text-xs text-white/60">© 2026 UNIFY · Built for Ghana&apos;s freshers · Free forever</p>
-              <p className="text-xs text-white/60">Connecting students at 180+ schools across Ghana</p>
+
+            {/* Bottom bar */}
+            <div className="pt-6 text-center">
+              <p className="text-xs text-white/60">Copyright © 2026 UNIFY. All right reserved.</p>
             </div>
-            <div className="mt-6 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+            <div className="mt-5 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
           </div>
         </footer>
 
