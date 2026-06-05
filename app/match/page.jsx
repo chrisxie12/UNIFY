@@ -216,7 +216,7 @@ function getLookingForIcon(lookingFor) {
 
 function Nav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] backdrop-blur-md bg-[#050d20]/80">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] backdrop-blur-sm bg-white/[0.05]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-bold tracking-tight text-white">
@@ -245,7 +245,7 @@ function ProfileCard({ profile, onConnect }) {
   const school = getSchoolColor(profile.school);
 
   return (
-    <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 flex flex-col gap-4 hover:bg-white/[0.05] hover:border-white/[0.12] transition-all duration-200 group">
+    <div className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-2xl p-5 flex flex-col gap-4 hover:bg-white/[0.09] hover:border-white/[0.15] transition-all duration-200 group shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -288,7 +288,7 @@ function ProfileCard({ profile, onConnect }) {
         {profile.habits.map(habit => (
           <span
             key={habit}
-            className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-white/60"
+            className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/60"
           >
             {habit}
           </span>
@@ -314,7 +314,7 @@ function ProfileCard({ profile, onConnect }) {
 function Toast({ name, onClose }) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm px-4">
-      <div className="bg-[#0d1a35] border border-white/[0.12] rounded-2xl p-4 shadow-2xl flex items-start gap-3">
+      <div className="bg-white/[0.1] backdrop-blur-md border border-white/[0.15] rounded-2xl p-4 shadow-2xl flex items-start gap-3">
         <span className="text-xl flex-shrink-0">🔗</span>
         <div className="flex-1 min-w-0">
           <p className="text-white font-semibold text-sm">Link sent to {name}!</p>
@@ -356,6 +356,12 @@ export default function MatchPage() {
 
   return (
     <div className="min-h-screen bg-[#050d20] text-white">
+      {/* Background gradient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'600px', height:'600px', background:'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', bottom:'-10%', left:'-10%', width:'500px', height:'500px', background:'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', top:'40%', left:'40%', width:'400px', height:'400px', background:'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius:'50%' }} />
+      </div>
       <Nav />
 
       {/* ── Hero ── */}
@@ -411,7 +417,7 @@ export default function MatchPage() {
                 className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
                   schoolFilter === s
                     ? 'bg-amber-400 text-[#050d20] border-amber-400 font-semibold'
-                    : 'bg-white/[0.04] border-white/[0.08] text-white/60 hover:bg-white/[0.08] hover:text-white'
+                    : 'bg-white/[0.05] backdrop-blur-sm border-white/[0.08] text-white/60 hover:bg-white/[0.09] hover:text-white'
                 }`}
               >
                 {s}
@@ -428,7 +434,7 @@ export default function MatchPage() {
                 className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
                   habitsFilter === h
                     ? 'bg-amber-400 text-[#050d20] border-amber-400 font-semibold'
-                    : 'bg-white/[0.04] border-white/[0.08] text-white/60 hover:bg-white/[0.08] hover:text-white'
+                    : 'bg-white/[0.05] backdrop-blur-sm border-white/[0.08] text-white/60 hover:bg-white/[0.09] hover:text-white'
                 }`}
               >
                 {h}
@@ -466,7 +472,7 @@ export default function MatchPage() {
 
       {/* ── Bottom CTA ── */}
       <section className="px-4 pb-24">
-        <div className="max-w-2xl mx-auto text-center space-y-6 bg-white/[0.03] border border-white/[0.07] rounded-3xl px-8 py-14">
+        <div className="max-w-2xl mx-auto text-center space-y-6 bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-3xl px-8 py-14">
           <div className="flex justify-center">
             <div
               className="h-1 w-16 rounded-full"

@@ -240,7 +240,7 @@ function WaitlistForm({ id, defaultSchool = '' }) {
           </div>
         </div>
         {/* Referral link */}
-        <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl px-4 py-3">
+        <div className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-2xl px-4 py-3">
           <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-2">Your referral link</p>
           <div className="flex items-center gap-2">
             <span className="flex-1 text-xs text-amber-400/80 font-mono truncate">{refLink}</span>
@@ -276,7 +276,7 @@ function WaitlistForm({ id, defaultSchool = '' }) {
             className={`text-xs font-black px-3.5 py-2 rounded-xl border transition-all ${
               school === s.id
                 ? 'bg-amber-400 text-[#050d20] border-amber-400'
-                : 'bg-white/[0.04] text-white/50 border-white/[0.08] hover:border-white/20 hover:text-white/80'
+                : 'bg-white/[0.05] backdrop-blur-sm text-white/50 border-white/[0.08] hover:border-white/20 hover:text-white/80'
             }`}
           >
             {s.label}
@@ -382,7 +382,7 @@ function PhoneMockup() {
 
 function FresherCard({ f }) {
   return (
-    <div className={`bg-white/[0.025] border ${f.borderColor} rounded-3xl overflow-hidden hover:-translate-y-1.5 transition-transform duration-300 flex flex-col`}>
+    <div className={`bg-white/[0.06] backdrop-blur-sm border ${f.borderColor} rounded-3xl overflow-hidden hover:-translate-y-1.5 transition-transform duration-300 flex flex-col shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]`}>
       {/* avatar header */}
       <div className={`bg-gradient-to-br ${f.avatarBg} px-6 pt-6 pb-5`}>
         <div className="flex items-start justify-between mb-4">
@@ -523,7 +523,7 @@ function FAQ() {
           {FAQS.map((faq, i) => (
             <div
               key={i}
-              className={`border rounded-2xl overflow-hidden transition-colors ${open === i ? 'border-amber-400/30 bg-amber-400/[0.03]' : 'border-white/[0.07] bg-white/[0.02]'}`}
+              className={`border rounded-2xl overflow-hidden transition-colors ${open === i ? 'border-amber-400/30 bg-white/[0.08] backdrop-blur-sm' : 'border-white/[0.1] bg-white/[0.06] backdrop-blur-sm'}`}
             >
               <button
                 className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
@@ -565,7 +565,7 @@ function ExitModal() {
     <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div
-        className="relative bg-[#080f22] border border-white/10 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
+        className="relative bg-white/[0.08] backdrop-blur-md border border-white/[0.12] rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* top accent bar */}
@@ -622,7 +622,7 @@ function StickyBar() {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3 bg-gradient-to-t from-[#050d20] to-transparent">
-      <div className="flex items-center gap-2 bg-[#0a1530] border border-white/10 rounded-2xl px-4 py-3 shadow-2xl shadow-black/50">
+      <div className="flex items-center gap-2 bg-white/[0.08] backdrop-blur-md border border-white/[0.12] rounded-2xl px-4 py-3 shadow-2xl shadow-black/50">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-black text-white truncate">Secure your spot 🎓</p>
           <p className="text-[10px] text-white/35 truncate">Join Ghana&apos;s fresher network — free</p>
@@ -666,9 +666,15 @@ export default function UnifyLanding({ schoolId } = {}) {
       className="min-h-screen bg-[#050d20] text-white antialiased"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
+      {/* Background gradient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'600px', height:'600px', background:'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', bottom:'-10%', left:'-10%', width:'500px', height:'500px', background:'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', top:'40%', left:'40%', width:'400px', height:'400px', background:'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius:'50%' }} />
+      </div>
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.05] bg-[#050d20]/80 backdrop-blur-2xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-white/[0.05] backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <span className="text-lg font-black tracking-tight">UNIFY</span>
           <div className="hidden md:flex items-center gap-7 text-sm text-white/40 font-medium">
@@ -730,7 +736,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             {/* trust pills */}
             <div className="mt-6 flex flex-wrap gap-2">
               {['✓ 100% Free', '✓ No subscriptions', '✓ Works on 2G', '✓ Verified students only'].map((t) => (
-                <span key={t} className="text-[11px] font-semibold text-white/35 bg-white/[0.04] border border-white/[0.07] px-3 py-1 rounded-full">
+                <span key={t} className="text-[11px] font-semibold text-white/35 bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] px-3 py-1 rounded-full">
                   {t}
                 </span>
               ))}
@@ -767,7 +773,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             <div className="hidden md:block absolute top-10 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-amber-400/20 via-blue-400/20 to-green-400/20" />
 
             {HOW_STEPS.map(({ step, title, body, color, bg }) => (
-              <div key={step} className={`relative border ${bg} rounded-3xl p-8`}>
+              <div key={step} className="relative border rounded-3xl p-8 bg-white/[0.06] backdrop-blur-sm border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                 <div className={`text-5xl font-black ${color} opacity-20 leading-none mb-6 select-none`}>
                   {step}
                 </div>
@@ -829,7 +835,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             {/* Hostel Hubs card */}
             <a
               href="/hubs"
-              className="group relative overflow-hidden rounded-3xl border border-amber-400/15 bg-amber-400/[0.04] hover:bg-amber-400/[0.07] hover:border-amber-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
+              className="group relative overflow-hidden rounded-3xl border border-amber-400/20 bg-white/[0.06] backdrop-blur-sm hover:bg-white/[0.1] hover:border-amber-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
             >
               <div className="flex items-start justify-between">
                 <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl">
@@ -868,7 +874,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             {/* Roommate Match card */}
             <a
               href="/match"
-              className="group relative overflow-hidden rounded-3xl border border-blue-400/15 bg-blue-400/[0.04] hover:bg-blue-400/[0.07] hover:border-blue-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
+              className="group relative overflow-hidden rounded-3xl border border-blue-400/20 bg-white/[0.06] backdrop-blur-sm hover:bg-white/[0.1] hover:border-blue-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
             >
               <div className="flex items-start justify-between">
                 <div className="w-14 h-14 rounded-2xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-2xl">
@@ -924,8 +930,8 @@ export default function UnifyLanding({ schoolId } = {}) {
 
           <div className="grid md:grid-cols-3 gap-6">
             {PILLARS.map(({ Icon, title, subtitle, body, tags, iconColor, cardBg, tagStyle }) => (
-              <div key={title} className={`border ${cardBg} rounded-3xl p-8`}>
-                <div className={`w-12 h-12 rounded-2xl border ${cardBg} flex items-center justify-center mb-6`}>
+              <div key={title} className="border rounded-3xl p-8 bg-white/[0.06] backdrop-blur-sm border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                <div className="w-12 h-12 rounded-2xl border border-white/[0.1] bg-white/[0.05] flex items-center justify-center mb-6">
                   <Icon className={`w-5 h-5 ${iconColor}`} strokeWidth={1.7} />
                 </div>
                 <h3 className="text-lg font-black mb-1 leading-tight">{title}</h3>

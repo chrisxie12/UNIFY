@@ -1,9 +1,15 @@
 export default function ReferralInfoPage() {
   return (
     <main
-      className="min-h-screen flex items-center justify-center px-4 py-16"
+      className="relative min-h-screen flex items-center justify-center px-4 py-16"
       style={{ backgroundColor: '#050d20', color: '#fff' }}
     >
+      {/* Background gradient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'600px', height:'600px', background:'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', bottom:'-10%', left:'-10%', width:'500px', height:'500px', background:'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', top:'40%', left:'40%', width:'400px', height:'400px', background:'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius:'50%' }} />
+      </div>
       <div className="w-full max-w-lg mx-auto text-center">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-6">
@@ -56,7 +62,7 @@ export default function ReferralInfoPage() {
             <div
               key={title}
               className="flex gap-4 items-start rounded-xl border border-white/10 p-4"
-              style={{ background: 'rgba(255,255,255,0.04)' }}
+              style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(4px)' }}
             >
               <span className="text-2xl shrink-0 mt-0.5">{icon}</span>
               <div>

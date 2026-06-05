@@ -237,7 +237,7 @@ function HubCard({ hub }) {
 
   return (
     <div
-      className={`relative rounded-2xl border ${c.border} ${c.bg} overflow-hidden flex flex-col`}
+      className={`relative rounded-2xl border ${c.border} bg-white/[0.06] backdrop-blur-sm overflow-hidden flex flex-col shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]`}
     >
       {/* Campus photo banner */}
       <div className="relative h-44 overflow-hidden">
@@ -297,7 +297,7 @@ function HubCard({ hub }) {
           {hub.vibe.map((tag) => (
             <span
               key={tag}
-              className={`text-xs font-medium px-2.5 py-1 rounded-full border ${c.pill}`}
+              className={`text-xs font-medium px-2.5 py-1 rounded-full border bg-white/[0.05] border-white/[0.08] ${c.accent}`}
             >
               {tag}
             </span>
@@ -328,8 +328,14 @@ export default function HubsPage() {
       style={{ fontFamily: 'system-ui, Inter, sans-serif', backgroundColor: '#050d20' }}
       className="min-h-screen text-white"
     >
+      {/* Background gradient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'600px', height:'600px', background:'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', bottom:'-10%', left:'-10%', width:'500px', height:'500px', background:'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', top:'40%', left:'40%', width:'400px', height:'400px', background:'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius:'50%' }} />
+      </div>
       {/* ── NAV ─────────────────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.05] bg-[#050d20]/80 backdrop-blur-2xl h-16">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-white/[0.05] backdrop-blur-sm h-16">
         <div className="max-w-6xl mx-auto h-full px-6 flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2 no-underline">
@@ -415,7 +421,7 @@ export default function HubsPage() {
       <div className="flex justify-center gap-2 px-6 flex-wrap">
         <a
           href="#hubs-top"
-          className="px-4 py-2 rounded-full text-sm font-medium border transition-colors bg-amber-400/10 border-amber-400/30 text-amber-400"
+          className="px-4 py-2 rounded-full text-sm font-medium border transition-colors bg-amber-400/15 backdrop-blur-sm border-amber-400/30 text-amber-400"
         >
           All Hubs
         </a>
@@ -423,7 +429,7 @@ export default function HubsPage() {
           <a
             key={school.id}
             href={`#${school.id}`}
-            className="px-4 py-2 rounded-full text-sm font-medium border transition-colors bg-white/[0.04] border-white/[0.07] text-white/50 hover:bg-amber-400/10 hover:border-amber-400/30 hover:text-amber-400"
+            className="px-4 py-2 rounded-full text-sm font-medium border transition-colors bg-white/[0.05] backdrop-blur-sm border-white/[0.08] text-white/50 hover:bg-amber-400/15 hover:border-amber-400/30 hover:text-amber-400"
           >
             {school.label}
           </a>
@@ -467,7 +473,7 @@ export default function HubsPage() {
 
       {/* ── BOTTOM CTA ───────────────────────────────────────────────────────── */}
       <section className="px-6 pb-24">
-        <div className="max-w-2xl mx-auto text-center rounded-2xl border border-white/[0.07] bg-white/[0.03] p-12">
+        <div className="max-w-2xl mx-auto text-center rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-sm p-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
           {/* Icon */}
           <div className="w-16 h-16 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mx-auto mb-6 text-2xl">
             🏠

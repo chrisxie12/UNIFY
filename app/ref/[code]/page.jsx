@@ -58,14 +58,12 @@ export default function RefPage({ params }) {
       className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden"
       style={{ backgroundColor: '#050d20', color: '#fff' }}
     >
-      {/* Ambient glow */}
-      <div
-        className="pointer-events-none absolute -top-32 right-0 w-[500px] h-[500px] rounded-full opacity-20"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(251,191,36,0.45) 0%, transparent 70%)',
-        }}
-      />
+      {/* Background gradient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div style={{ position:'absolute', top:'-20%', right:'-10%', width:'600px', height:'600px', background:'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', bottom:'-10%', left:'-10%', width:'500px', height:'500px', background:'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius:'50%' }} />
+        <div style={{ position:'absolute', top:'40%', left:'40%', width:'400px', height:'400px', background:'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius:'50%' }} />
+      </div>
 
       <div className="relative z-10 w-full max-w-lg mx-auto">
         {/* Logo */}
@@ -124,7 +122,7 @@ export default function RefPage({ params }) {
             <form
               onSubmit={handleSubmit}
               className="rounded-2xl border border-white/10 p-6"
-              style={{ background: 'rgba(255,255,255,0.04)' }}
+              style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(4px)' }}
             >
               <p className="text-sm font-semibold text-slate-300 mb-3">
                 Pick your school
@@ -144,9 +142,9 @@ export default function RefPage({ params }) {
                             borderColor: '#FBBF24',
                           }
                         : {
-                            background: 'transparent',
+                            background: 'rgba(255,255,255,0.05)',
                             color: '#94a3b8',
-                            borderColor: 'rgba(255,255,255,0.15)',
+                            borderColor: 'rgba(255,255,255,0.1)',
                           }
                     }
                   >
@@ -216,7 +214,7 @@ export default function RefPage({ params }) {
             {/* Referral link copy box */}
             <div
               className="rounded-xl border border-white/10 p-4 mb-4"
-              style={{ background: 'rgba(255,255,255,0.04)' }}
+              style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(4px)' }}
             >
               <p className="text-xs text-slate-400 mb-2 font-medium">
                 Your referral link
