@@ -9,6 +9,7 @@ const PROFILES = [
   {
     id: 1,
     name: 'Ama Owusu',
+    photo: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce',
     school: 'KNUST',
     course: 'Computer Science',
     year: 'Fresher 2026',
@@ -20,6 +21,7 @@ const PROFILES = [
   {
     id: 2,
     name: 'Kwame Asante',
+    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
     school: 'KNUST',
     course: 'Mechanical Engineering',
     year: 'Fresher 2026',
@@ -31,6 +33,7 @@ const PROFILES = [
   {
     id: 3,
     name: 'Abena Mensah',
+    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
     school: 'UG Legon',
     course: 'Economics',
     year: 'Fresher 2026',
@@ -42,6 +45,7 @@ const PROFILES = [
   {
     id: 4,
     name: 'Kofi Boateng',
+    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
     school: 'UG Legon',
     course: 'Political Science',
     year: 'Fresher 2026',
@@ -53,6 +57,7 @@ const PROFILES = [
   {
     id: 5,
     name: 'Efua Asiedu',
+    photo: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91',
     school: 'UCC',
     course: 'Nursing',
     year: 'Fresher 2026',
@@ -64,6 +69,7 @@ const PROFILES = [
   {
     id: 6,
     name: 'Yaw Darko',
+    photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7',
     school: 'KNUST',
     course: 'Architecture',
     year: 'Fresher 2026',
@@ -75,6 +81,7 @@ const PROFILES = [
   {
     id: 7,
     name: 'Akosua Tawiah',
+    photo: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df',
     school: 'UG Legon',
     course: 'Psychology',
     year: 'Fresher 2026',
@@ -86,6 +93,7 @@ const PROFILES = [
   {
     id: 8,
     name: 'Nana Osei',
+    photo: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6',
     school: 'KNUST',
     course: 'Civil Engineering',
     year: 'Fresher 2026',
@@ -97,6 +105,7 @@ const PROFILES = [
   {
     id: 9,
     name: 'Adwoa Poku',
+    photo: 'https://images.unsplash.com/photo-1548142813-c348350df52b',
     school: 'UCC',
     course: 'Business Administration',
     year: 'Fresher 2026',
@@ -108,6 +117,7 @@ const PROFILES = [
   {
     id: 10,
     name: 'Fiifi Mensah',
+    photo: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f',
     school: 'KNUST',
     course: 'Electrical Engineering',
     year: 'Fresher 2026',
@@ -119,6 +129,7 @@ const PROFILES = [
   {
     id: 11,
     name: 'Serwa Acheampong',
+    photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
     school: 'UG Legon',
     course: 'Law',
     year: 'Fresher 2026',
@@ -130,6 +141,7 @@ const PROFILES = [
   {
     id: 12,
     name: 'Kwabena Frimpong',
+    photo: 'https://images.unsplash.com/photo-1542178243-bc20204b769f',
     school: 'KNUST',
     course: 'Biochemistry',
     year: 'Fresher 2026',
@@ -141,6 +153,7 @@ const PROFILES = [
   {
     id: 13,
     name: 'Maame Serwah',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
     school: 'UCC',
     course: 'Education',
     year: 'Fresher 2026',
@@ -152,6 +165,7 @@ const PROFILES = [
   {
     id: 14,
     name: 'Ebo Hayford',
+    photo: 'https://images.unsplash.com/photo-1463453091185-61582044d556',
     school: 'UG Legon',
     course: 'Computer Science',
     year: 'Fresher 2026',
@@ -163,6 +177,7 @@ const PROFILES = [
   {
     id: 15,
     name: 'Afia Boampong',
+    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
     school: 'KNUST',
     course: 'Pharmacy',
     year: 'Fresher 2026',
@@ -178,15 +193,11 @@ const HABITS = ['All', 'Early riser', 'Night owl', 'Quiet study', 'Social', 'Gym
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
-function getInitials(name) {
-  return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-}
-
 function getSchoolColor(school) {
-  if (school === 'KNUST') return { bg: 'bg-amber-400/20', text: 'text-amber-400', border: 'border-amber-400/30', avatar: 'bg-amber-500' };
-  if (school === 'UG Legon') return { bg: 'bg-blue-400/20', text: 'text-blue-400', border: 'border-blue-400/30', avatar: 'bg-blue-500' };
-  if (school === 'UCC') return { bg: 'bg-emerald-400/20', text: 'text-emerald-400', border: 'border-emerald-400/30', avatar: 'bg-emerald-500' };
-  return { bg: 'bg-white/10', text: 'text-white/60', border: 'border-white/20', avatar: 'bg-white/20' };
+  if (school === 'KNUST') return { bg: 'bg-amber-400/20', text: 'text-amber-400', border: 'border-amber-400/30', dot: 'bg-amber-400' };
+  if (school === 'UG Legon') return { bg: 'bg-blue-400/20', text: 'text-blue-400', border: 'border-blue-400/30', dot: 'bg-blue-400' };
+  if (school === 'UCC') return { bg: 'bg-emerald-400/20', text: 'text-emerald-400', border: 'border-emerald-400/30', dot: 'bg-emerald-400' };
+  return { bg: 'bg-white/10', text: 'text-white/60', border: 'border-white/20', dot: 'bg-white/20' };
 }
 
 function getLookingForStyle(lookingFor) {
@@ -238,8 +249,15 @@ function ProfileCard({ profile, onConnect }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full ${school.avatar} flex items-center justify-center flex-shrink-0`}>
-            <span className="text-sm font-bold text-white">{getInitials(profile.name)}</span>
+          {/* Avatar — photo */}
+          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/10 flex-shrink-0">
+            <img
+              src={`${profile.photo}?auto=format&fit=crop&w=200&h=200&crop=faces&q=80`}
+              alt={profile.name}
+              className="w-full h-full object-cover"
+            />
+            {/* school color dot */}
+            <div className={`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-[#050d20] ${school.dot}`} />
           </div>
           <div>
             <p className="font-semibold text-white text-sm leading-tight">{profile.name}</p>
@@ -342,7 +360,16 @@ export default function MatchPage() {
 
       {/* ── Hero ── */}
       <section className="pt-32 pb-16 px-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-3xl mx-auto relative space-y-6">
+          {/* Hero photo grid — desktop only */}
+          <div className="hidden md:grid grid-cols-2 gap-2 absolute right-0 top-1/2 -translate-y-1/2 opacity-30">
+            {PROFILES.slice(0, 4).map((p) => (
+              <div key={p.id} className="w-20 h-20 rounded-xl overflow-hidden">
+                <img src={`${p.photo}?auto=format&fit=crop&w=100&h=100&q=60`} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+
           {/* Animated badge */}
           <div className="inline-flex items-center gap-2 bg-white/[0.05] border border-white/[0.08] rounded-full px-4 py-1.5 text-sm text-white/70">
             <span className="relative flex h-2 w-2">

@@ -1,3 +1,5 @@
+import { MapPin, Check, ArrowRight } from 'lucide-react';
+
 export const metadata = {
   title: 'Hostel Hubs — UNIFY Ghana',
   description:
@@ -17,6 +19,7 @@ const HUBS = [
     type: 'Off-campus',
     vibe: ['Tech Heads', 'Night Coders', 'Quiet Block'],
     color: 'emerald',
+    img: 'https://images.unsplash.com/photo-1562774053-701939374585',
     description:
       'The most popular off-campus zone for KNUST CS and Engineering students. Close to Faculty of Computing, walkable to campus gate.',
     perks: ['Fast MTN signal', 'Backup generator', '24hr security', 'Close to Kotei market'],
@@ -30,6 +33,7 @@ const HUBS = [
     type: 'Off-campus',
     vibe: ['Mixed Vibes', 'Social', 'Uber Splitters'],
     color: 'green',
+    img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1',
     description:
       'Broad residential area with dozens of private hostels. Budget-friendly options exist. Popular among all faculties.',
     perks: ['Multiple price tiers', 'Near Kotei Junction', 'Trotro access', 'Shops nearby'],
@@ -43,6 +47,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Social', 'Traditions', 'Katanga Rivals'],
     color: 'blue',
+    img: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f',
     description:
       'One of the oldest and most spirited halls on campus. Brotherhood culture is strong. Close to the Great Hall and SRC.',
     perks: ['On-campus location', 'Hall Week events', 'Close to lecture halls', 'Dining hall access'],
@@ -56,6 +61,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Brotherhood', 'Sporty', 'Loud & Proud'],
     color: 'amber',
+    img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b',
     description:
       'The most legendary hall at KNUST. Famous for hall week, sports dominance, and a culture freshers either love or find intense.',
     perks: ['Strong hall culture', 'Sports facilities', 'Central location', 'Dining hall'],
@@ -70,6 +76,7 @@ const HUBS = [
     type: 'Off-campus',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     color: 'violet',
+    img: 'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b',
     description:
       'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
     perks: ['Good water supply', 'Quiet floors', 'Close to Medical School', 'Female-friendly'],
@@ -83,6 +90,7 @@ const HUBS = [
     type: 'Off-campus',
     vibe: ['Affordable', 'Mixed', 'Social Floor'],
     color: 'sky',
+    img: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5',
     description:
       'Budget-friendly and centrally located. Known for its social atmosphere. A solid first-year option for UCC freshers.',
     perks: ['Affordable rates', 'Central location', 'Social common areas', 'Near campus gate'],
@@ -96,6 +104,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Academic', 'Disciplined', 'Early Risers'],
     color: 'teal',
+    img: 'https://images.unsplash.com/photo-1497366216548-37526070297c',
     description:
       'On-campus hall known for academic focus and discipline. Great for students serious about their first year GPA.',
     perks: ['On-campus location', 'Quiet study environment', 'Close to lecture halls', 'Organized hall structure'],
@@ -110,6 +119,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Sisterhood', 'Scholars', 'Night Library Runs'],
     color: 'rose',
+    img: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc',
     description:
       'The most prestigious female hall at Legon. Strong academic culture, beautiful grounds, and a tight-knit sisterhood community.',
     perks: ['Female-only', 'Library access', 'Stunning grounds', 'Strong alumnae network'],
@@ -123,6 +133,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Mixed', 'Chill', 'Good Wi-Fi'],
     color: 'blue',
+    img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4',
     description:
       'A newer hall at Legon with modern facilities. Popular with Business and Social Sciences students. Good internet infrastructure.',
     perks: ['Modern facilities', 'Better Wi-Fi', 'Mixed gender floors', 'Close to Balme Library'],
@@ -136,6 +147,7 @@ const HUBS = [
     type: 'On-campus',
     vibe: ['Brotherhood', 'Vandal Nation', 'Legendary'],
     color: 'amber',
+    img: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a',
     description:
       'The most famous male hall at Legon. Home of the Vandals. Massive culture, hall week is unmissable. Brotherhood is for life.',
     perks: ['Iconic hall culture', 'Sports dominance', 'Central to campus', 'Strong alumni network'],
@@ -149,56 +161,48 @@ const COLOR_MAP = {
     border: 'border-emerald-500/20',
     bg: 'bg-emerald-500/[0.04]',
     accent: 'text-emerald-400',
-    topBar: 'bg-emerald-500/30',
     pill: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
   },
   green: {
     border: 'border-green-500/20',
     bg: 'bg-green-500/[0.04]',
     accent: 'text-green-400',
-    topBar: 'bg-green-500/30',
     pill: 'bg-green-500/10 text-green-400 border-green-500/20',
   },
   blue: {
     border: 'border-blue-500/20',
     bg: 'bg-blue-500/[0.04]',
     accent: 'text-blue-400',
-    topBar: 'bg-blue-500/30',
     pill: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
   },
   amber: {
     border: 'border-amber-500/20',
     bg: 'bg-amber-500/[0.04]',
     accent: 'text-amber-400',
-    topBar: 'bg-amber-500/30',
     pill: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
   },
   violet: {
     border: 'border-violet-500/20',
     bg: 'bg-violet-500/[0.04]',
     accent: 'text-violet-400',
-    topBar: 'bg-violet-500/30',
     pill: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
   },
   sky: {
     border: 'border-sky-500/20',
     bg: 'bg-sky-500/[0.04]',
     accent: 'text-sky-400',
-    topBar: 'bg-sky-500/30',
     pill: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
   },
   rose: {
     border: 'border-rose-500/20',
     bg: 'bg-rose-500/[0.04]',
     accent: 'text-rose-400',
-    topBar: 'bg-rose-500/30',
     pill: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
   },
   teal: {
     border: 'border-teal-500/20',
     bg: 'bg-teal-500/[0.04]',
     accent: 'text-teal-400',
-    topBar: 'bg-teal-500/30',
     pill: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
   },
 };
@@ -235,34 +239,39 @@ function HubCard({ hub }) {
     <div
       className={`relative rounded-2xl border ${c.border} ${c.bg} overflow-hidden flex flex-col`}
     >
-      {/* Top accent bar */}
-      <div className={`h-1 w-full ${c.topBar}`} />
+      {/* Campus photo banner */}
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={`${hub.img}?auto=format&fit=crop&w=600&h=220&q=80`}
+          alt={hub.name}
+          className="w-full h-full object-cover"
+        />
+        {/* gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050d20] via-[#050d20]/60 to-transparent" />
+        {/* school + type badges float on image */}
+        <div className="absolute bottom-3 left-4 flex gap-2">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 text-white/80">
+            {hub.school}
+          </span>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm border ${
+            hub.type === 'On-campus'
+              ? 'bg-green-500/20 border-green-500/30 text-green-400'
+              : 'bg-orange-500/20 border-orange-500/30 text-orange-400'
+          }`}>
+            {hub.type}
+          </span>
+        </div>
+      </div>
 
       <div className="p-6 flex flex-col flex-1 gap-4">
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <div className="flex items-start justify-between gap-2 flex-wrap">
-            <h3 className="text-xl font-bold text-white leading-tight">{hub.name}</h3>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/[0.07] border border-white/[0.1] text-white/70">
-                {hub.school}
-              </span>
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
-                  hub.type === 'On-campus'
-                    ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                    : 'bg-orange-500/10 border-orange-500/20 text-orange-400'
-                }`}
-              >
-                {hub.type}
-              </span>
-            </div>
-          </div>
+          <h3 className="text-xl font-bold text-white leading-tight">{hub.name}</h3>
 
           {/* Location + residents */}
           <div className="flex items-center gap-4 flex-wrap">
             <span className="text-sm text-white/50 flex items-center gap-1">
-              📍 {hub.location}
+              <MapPin className="w-3.5 h-3.5 inline-block" /> {hub.location}
             </span>
             <span className={`text-sm font-semibold ${c.accent}`}>
               {hub.residents.toLocaleString()}+ freshers
@@ -277,7 +286,7 @@ function HubCard({ hub }) {
         <ul className="grid grid-cols-1 gap-1.5">
           {hub.perks.map((perk) => (
             <li key={perk} className="flex items-center gap-2 text-sm text-white/70">
-              <span className={`font-bold ${c.accent}`}>✓</span>
+              <Check className={`w-3.5 h-3.5 flex-shrink-0 ${c.accent}`} />
               {perk}
             </li>
           ))}
@@ -301,7 +310,7 @@ function HubCard({ hub }) {
             href="/#waitlist"
             className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#050d20] text-sm font-bold transition-colors"
           >
-            Join {hub.name} Hub →
+            Join {hub.name} Hub <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>
@@ -355,10 +364,17 @@ export default function HubsPage() {
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/60 text-sm mb-6">
-            <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-            10 active hubs · Growing
+          {/* Campus photo collage strip */}
+          <div className="flex gap-2 justify-center mb-8">
+            {[
+              'https://images.unsplash.com/photo-1541339907198-e08756dedf3f',
+              'https://images.unsplash.com/photo-1562774053-701939374585',
+              'https://images.unsplash.com/photo-1571260899304-425eee4c7efc',
+            ].map((src, i) => (
+              <div key={i} className="w-24 h-16 rounded-xl overflow-hidden border border-white/10">
+                <img src={`${src}?auto=format&fit=crop&w=200&h=130&q=80`} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
