@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, ArrowRight, X, Users, BookOpen, Home } from 'lucide-react';
+import { MapPin, ArrowRight, X, Users, BookOpen, Home, Heart, Filter, Users2 } from 'lucide-react';
 
 const PROFILES = [
   {
@@ -151,10 +151,10 @@ function getLookingForIcon(lookingFor) {
 function ProfileCard({ profile, onConnect }) {
   const school = getSchoolStyle(profile.school);
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 flex flex-col gap-4 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+    <div className="bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-5 flex flex-col gap-4 hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#E5E7EB] flex-shrink-0">
+          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/60 flex-shrink-0">
             <img
               src={`${profile.photo}?auto=format&fit=crop&w=200&h=200&crop=faces&q=80`}
               alt={profile.name}
@@ -187,7 +187,7 @@ function ProfileCard({ profile, onConnect }) {
 
       <div className="flex flex-wrap gap-1.5">
         {profile.habits.map(habit => (
-          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-full bg-[#F9FAFB] border border-[#E5E7EB] text-[#6B7280]">
+          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-full bg-white/60 backdrop-blur-sm border border-white/70 text-[#6B7280]">
             {habit}
           </span>
         ))}
@@ -197,9 +197,9 @@ function ProfileCard({ profile, onConnect }) {
 
       <button
         onClick={() => onConnect(profile.name)}
-        className="w-full bg-[#1F2937] hover:bg-[#111827] text-white font-semibold text-sm py-2.5 rounded-full transition-all hover:-translate-y-0.5"
+        className="w-full bg-[#1F2937] hover:bg-[#111827] text-white font-semibold text-sm py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)] flex items-center justify-center gap-2"
       >
-        Connect →
+        Connect <Heart size={14} />
       </button>
     </div>
   );
@@ -208,7 +208,7 @@ function ProfileCard({ profile, onConnect }) {
 function Toast({ name, onClose }) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm px-4">
-      <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex items-start gap-3">
+      <div className="bg-white/80 backdrop-blur-2xl border border-white/70 shadow-2xl rounded-2xl p-4 flex items-start gap-3">
         <span className="text-xl flex-shrink-0">🔗</span>
         <div className="flex-1 min-w-0">
           <p className="text-[#111827] font-semibold text-sm">Link sent to {name}!</p>
@@ -244,150 +244,194 @@ export default function MatchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#D1D5DB]" style={{ fontFamily: 'system-ui, Inter, sans-serif' }}>
-      <div className="max-w-7xl mx-auto md:p-6">
-        <div className="md:rounded-[32px] overflow-hidden md:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] bg-white">
+    <div className="relative min-h-screen p-4 md:p-6 antialiased"
+         style={{ background: 'linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%)', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
-          {/* Blue top bar */}
-          <div className="h-1.5 bg-[#0066FF]" />
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideRight {
+          from { opacity: 0; transform: translateX(-20px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.93); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes glowPulse {
+          0%, 100% { box-shadow: 0 0 20px rgba(0,102,255,0.15); }
+          50%       { box-shadow: 0 0 40px rgba(0,102,255,0.30); }
+        }
+        @keyframes floatBadge {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-6px); }
+        }
+        .anim-fade-up    { animation: fadeUp 0.6s ease-out both; }
+        .anim-slide-right { animation: slideRight 0.6s ease-out both; }
+        .anim-scale-in   { animation: scaleIn 0.5s ease-out both; }
+        .anim-glow       { animation: glowPulse 3s ease-in-out infinite; }
+        .anim-float      { animation: floatBadge 4s ease-in-out infinite; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+      `}</style>
 
-          {/* ── NAV ── */}
-          <nav className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white/90 backdrop-blur-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-              <a href="/" className="flex items-center gap-2">
-                <span className="text-lg font-black tracking-tight text-[#111827]">UNIFY</span>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/25 text-[#0066FF]">GH</span>
+      {/* Fixed ambient blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#0066FF]/[0.07] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-indigo-400/[0.06] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-blue-200/[0.05] blur-[80px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto bg-white/75 backdrop-blur-2xl border border-white/60 shadow-[0_40px_100px_rgba(0,66,255,0.10),0_0_0_1px_rgba(255,255,255,0.5)] rounded-[32px] overflow-hidden">
+
+        {/* Blue top bar */}
+        <div className="h-1.5 bg-[#0066FF]" />
+
+        {/* ── NAV ── */}
+        <nav className="sticky top-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-white/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/" className="flex items-center gap-2">
+              <span className="text-lg font-black tracking-tight text-[#111827]">UNIFY</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/25 text-[#0066FF]">GH</span>
+            </a>
+            <div className="hidden md:flex items-center gap-6 text-sm text-[#6B7280] font-medium">
+              <a href="/" className="hover:text-[#111827] transition-colors">Home</a>
+              <a href="/hubs" className="hover:text-[#111827] transition-colors">Hubs</a>
+              <a href="/match" className="relative text-[#111827] font-semibold">
+                Match
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
               </a>
-              <div className="hidden md:flex items-center gap-6 text-sm text-[#6B7280] font-medium">
-                <a href="/" className="hover:text-[#111827] transition-colors">Home</a>
-                <a href="/hubs" className="hover:text-[#111827] transition-colors">Hubs</a>
-                <a href="/match" className="relative text-[#111827] font-semibold">
-                  Match
-                  <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
+            </div>
+            <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-xs px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+              Get Early Access <ArrowRight size={14} />
+            </a>
+          </div>
+        </nav>
+
+        {/* ── HERO ── */}
+        <section className="pt-16 md:pt-24 pb-12 px-6 text-center">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="anim-float inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-4 py-1.5 rounded-full anim-fade-up">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0066FF] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066FF]" />
+              </span>
+              847 freshers matched so far
+            </div>
+
+            <h1 className="anim-fade-up delay-100 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-[#111827]">
+              Find your roommate{' '}
+              <span className="text-[#0066FF]">before</span>{' '}
+              orientation.
+            </h1>
+
+            <p className="anim-fade-up delay-200 text-lg text-[#6B7280] max-w-xl mx-auto leading-relaxed">
+              Browse freshers from your school and course. Connect before campus chaos starts.
+            </p>
+
+            <div className="anim-fade-up delay-300 flex justify-center pt-2">
+              <div className="h-1 w-24 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+            </div>
+          </div>
+        </section>
+
+        {/* ── FILTERS ── */}
+        <section className="px-6 pb-10">
+          <div className="max-w-7xl mx-auto space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-[#9CA3AF] uppercase tracking-wider font-semibold mr-1 flex items-center gap-1">
+                <Filter size={12} /> School
+              </span>
+              {SCHOOLS.map(s => (
+                <button
+                  key={s}
+                  onClick={() => setSchoolFilter(s)}
+                  className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
+                    schoolFilter === s
+                      ? 'bg-[#0066FF] text-white border-[#0066FF] font-semibold'
+                      : 'bg-white/60 backdrop-blur-sm border-white/70 text-[#6B7280] hover:border-[#0066FF] hover:text-[#0066FF] hover:bg-white/80'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-[#9CA3AF] uppercase tracking-wider font-semibold mr-1 flex items-center gap-1">
+                <Users2 size={12} /> Habits
+              </span>
+              {HABITS.map(h => (
+                <button
+                  key={h}
+                  onClick={() => setHabitsFilter(h)}
+                  className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
+                    habitsFilter === h
+                      ? 'bg-[#0066FF] text-white border-[#0066FF] font-semibold'
+                      : 'bg-white/60 backdrop-blur-sm border-white/70 text-[#6B7280] hover:border-[#0066FF] hover:text-[#0066FF] hover:bg-white/80'
+                  }`}
+                >
+                  {h}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── PROFILE GRID ── */}
+        <section className="px-6 pb-20">
+          <div className="max-w-7xl mx-auto">
+            {filtered.length === 0 ? (
+              <div className="text-center py-24 space-y-4">
+                <div className="text-5xl">🤷🏾</div>
+                <p className="text-[#6B7280] text-lg max-w-sm mx-auto leading-relaxed">
+                  No freshers match your filters yet. Be the first to join from your school!
+                </p>
+                <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#1F2937] hover:bg-[#111827] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+                  Join the waitlist <ArrowRight size={14} />
                 </a>
               </div>
-              <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-xs px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5">
-                Get Early Access <ArrowRight size={14} />
-              </a>
-            </div>
-          </nav>
-
-          {/* ── HERO ── */}
-          <section className="pt-16 md:pt-24 pb-12 px-6 text-center">
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div className="inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-4 py-1.5 rounded-full">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0066FF] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066FF]" />
-                </span>
-                847 freshers matched so far
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-[#111827]">
-                Find your roommate{' '}
-                <span className="text-[#0066FF]">before</span>{' '}
-                orientation.
-              </h1>
-
-              <p className="text-lg text-[#6B7280] max-w-xl mx-auto leading-relaxed">
-                Browse freshers from your school and course. Connect before campus chaos starts.
-              </p>
-
-              <div className="flex justify-center pt-2">
-                <div className="h-1 w-24 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
-              </div>
-            </div>
-          </section>
-
-          {/* ── FILTERS ── */}
-          <section className="px-6 pb-10">
-            <div className="max-w-7xl mx-auto space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-[#9CA3AF] uppercase tracking-wider font-semibold mr-1">School</span>
-                {SCHOOLS.map(s => (
-                  <button
-                    key={s}
-                    onClick={() => setSchoolFilter(s)}
-                    className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
-                      schoolFilter === s
-                        ? 'bg-[#0066FF] text-white border-[#0066FF] font-semibold'
-                        : 'bg-white border-[#E5E7EB] text-[#6B7280] hover:border-[#0066FF] hover:text-[#0066FF]'
-                    }`}
-                  >
-                    {s}
-                  </button>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filtered.map(profile => (
+                  <ProfileCard key={profile.id} profile={profile} onConnect={handleConnect} />
                 ))}
               </div>
+            )}
+          </div>
+        </section>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-[#9CA3AF] uppercase tracking-wider font-semibold mr-1">Habits</span>
-                {HABITS.map(h => (
-                  <button
-                    key={h}
-                    onClick={() => setHabitsFilter(h)}
-                    className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
-                      habitsFilter === h
-                        ? 'bg-[#0066FF] text-white border-[#0066FF] font-semibold'
-                        : 'bg-white border-[#E5E7EB] text-[#6B7280] hover:border-[#0066FF] hover:text-[#0066FF]'
-                    }`}
-                  >
-                    {h}
-                  </button>
-                ))}
-              </div>
+        {/* ── BOTTOM CTA ── */}
+        <section className="px-6 pb-20">
+          <div className="max-w-2xl mx-auto text-center bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl px-8 py-14">
+            <div className="flex justify-center mb-6">
+              <div className="h-1 w-16 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
             </div>
-          </section>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#111827] mb-4">
+              Ready to find your match?
+            </h2>
+            <p className="text-[#6B7280] text-base leading-relaxed max-w-md mx-auto mb-8">
+              Join thousands of Ghana freshers already connecting on UNIFY before orientation week.
+            </p>
+            <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+              Join the waitlist <ArrowRight size={16} />
+            </a>
+          </div>
+        </section>
 
-          {/* ── PROFILE GRID ── */}
-          <section className="px-6 pb-20">
-            <div className="max-w-7xl mx-auto">
-              {filtered.length === 0 ? (
-                <div className="text-center py-24 space-y-4">
-                  <div className="text-5xl">🤷🏾</div>
-                  <p className="text-[#6B7280] text-lg max-w-sm mx-auto leading-relaxed">
-                    No freshers match your filters yet. Be the first to join from your school!
-                  </p>
-                  <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#1F2937] hover:bg-[#111827] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5">
-                    Join the waitlist <ArrowRight size={14} />
-                  </a>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {filtered.map(profile => (
-                    <ProfileCard key={profile.id} profile={profile} onConnect={handleConnect} />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
+        {/* ── FOOTER ── */}
+        <footer className="bg-[#0066FF]/95 backdrop-blur-xl px-6 pt-8 pb-6">
+          <div className="max-w-7xl mx-auto text-center text-sm text-white/70">
+            © 2026 UNIFY · Ghana 🇬🇭 · Built for freshers
+          </div>
+          <div className="max-w-6xl mx-auto mt-4 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+        </footer>
 
-          {/* ── BOTTOM CTA ── */}
-          <section className="px-6 pb-20">
-            <div className="max-w-2xl mx-auto text-center bg-[#F9FAFB] border border-[#E5E7EB] rounded-3xl px-8 py-14 shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-              <div className="flex justify-center mb-6">
-                <div className="h-1 w-16 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#111827] mb-4">
-                Ready to find your match?
-              </h2>
-              <p className="text-[#6B7280] text-base leading-relaxed max-w-md mx-auto mb-8">
-                Join thousands of Ghana freshers already connecting on UNIFY before orientation week.
-              </p>
-              <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5">
-                Join the waitlist <ArrowRight size={16} />
-              </a>
-            </div>
-          </section>
-
-          {/* ── FOOTER ── */}
-          <footer className="bg-[#0066FF] px-6 pt-8 pb-6">
-            <div className="max-w-7xl mx-auto text-center text-sm text-white/70">
-              © 2026 UNIFY · Ghana 🇬🇭 · Built for freshers
-            </div>
-            <div className="max-w-6xl mx-auto mt-4 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
-          </footer>
-
-        </div>
       </div>
 
       {toast && <Toast name={toast} onClose={() => setToast(null)} />}
