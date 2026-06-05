@@ -800,11 +800,108 @@ export default function UnifyLanding({ schoolId } = {}) {
 
           <div className="text-center mt-10">
             <a
-              href="#waitlist"
-              className="inline-flex items-center gap-2 text-sm text-white/35 hover:text-amber-400 font-semibold transition-colors"
+              href="/match"
+              className="inline-flex items-center gap-2 text-sm text-amber-400/70 hover:text-amber-400 font-semibold transition-colors"
             >
               <Users className="w-4 h-4" strokeWidth={1.5} />
-              See all freshers in your school hub →
+              Browse all freshers and find your roommate →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── EXPLORE THE APP ─────────────────────────────────────────────── */}
+      <section className="py-16 md:py-24 px-6 border-t border-white/[0.04]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10 md:mb-14">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+              Live now
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black mt-3 mb-4 tracking-tight">
+              Explore the app.
+            </h2>
+            <p className="text-white/45 max-w-sm mx-auto text-base leading-relaxed">
+              Two live tools to get you ready before campus even starts.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Hostel Hubs card */}
+            <a
+              href="/hubs"
+              className="group relative overflow-hidden rounded-3xl border border-amber-400/15 bg-amber-400/[0.04] hover:bg-amber-400/[0.07] hover:border-amber-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl">
+                  🏠
+                </div>
+                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400">
+                  10 hubs live
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-black text-white mb-2">Hostel Hubs</h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  Real intel on KNUST, UG Legon, and UCC hostels — from students already living there. Brunei, Katanga, Volta Hall, Limann, Evandy and more.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {['KNUST', 'UG Legon', 'UCC', '10 hostels'].map((t) => (
+                  <span key={t} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/50">
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2 text-amber-400 text-sm font-black mt-auto">
+                Browse hostel hubs
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
+              </div>
+
+              {/* glow on hover */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse at top right, rgba(251,191,36,0.06) 0%, transparent 60%)' }} />
+            </a>
+
+            {/* Roommate Match card */}
+            <a
+              href="/match"
+              className="group relative overflow-hidden rounded-3xl border border-blue-400/15 bg-blue-400/[0.04] hover:bg-blue-400/[0.07] hover:border-blue-400/30 transition-all duration-300 p-8 flex flex-col gap-5"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-14 h-14 rounded-2xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-2xl">
+                  🤝
+                </div>
+                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-blue-400/10 border border-blue-400/20 text-blue-400">
+                  847 freshers
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-black text-white mb-2">Roommate Match</h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  Browse real freshers from your school. Filter by habits, course, and hostel preference. Connect before orientation chaos starts.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {['KNUST', 'UG Legon', 'UCC', 'Habit filter'].map((t) => (
+                  <span key={t} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/50">
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2 text-blue-400 text-sm font-black mt-auto">
+                Find your roommate
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
+              </div>
+
+              {/* glow on hover */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse at top right, rgba(96,165,250,0.06) 0%, transparent 60%)' }} />
             </a>
           </div>
         </div>
