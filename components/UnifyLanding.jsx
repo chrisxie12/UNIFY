@@ -2,7 +2,7 @@
 
 /**
  * UNIFY — Ghana's peer-to-peer university transition network
- * Camply-inspired redesign with iOS glassmorphism on dark navy.
+ * Full light-mode redesign with Camply color system.
  *
  * Dependencies:
  *   npm install lucide-react
@@ -128,6 +128,56 @@ function useSignupCount() {
   return count;
 }
 
+// ─── DECORATIVE SVGs ──────────────────────────────────────────────────────────
+
+function BlueDoodle() {
+  return (
+    <svg viewBox="0 0 40 40" className="w-8 h-8 text-[#0066FF]" fill="none">
+      <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="6" y1="6" x2="12" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="28" y1="28" x2="34" y2="34" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="34" y1="6" x2="28" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="6" y1="34" x2="12" y2="28" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function OrangeDoodle() {
+  return (
+    <svg viewBox="0 0 40 40" className="w-8 h-8" fill="none">
+      <line x1="20" y1="2" x2="20" y2="10" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="20" y1="30" x2="20" y2="38" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="2" y1="20" x2="10" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="30" y1="20" x2="38" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="6" y1="6" x2="12" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="28" y1="28" x2="34" y2="34" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="34" y1="6" x2="28" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="6" y1="34" x2="12" y2="28" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function SquiggleUnderline() {
+  return (
+    <svg viewBox="0 0 120 10" className="w-24 h-2.5 mt-0.5" fill="none">
+      <path d="M0,5 C10,1 20,9 30,5 C40,1 50,9 60,5 C70,1 80,9 90,5 C100,1 110,9 120,5"
+        stroke="#FF6B35" strokeWidth="3" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function BlueSwirl({ className = '' }) {
+  return (
+    <svg viewBox="0 0 80 200" className={`w-16 h-40 text-[#0066FF] opacity-20 ${className}`} fill="none">
+      <path d="M60,10 C80,40 20,60 40,90 C60,120 80,140 40,170 C20,185 10,190 20,195"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
 function CopyButton({ text }) {
@@ -141,7 +191,7 @@ function CopyButton({ text }) {
   return (
     <button
       onClick={copy}
-      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${copied ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-white/[0.05] border-white/[0.1] text-white/50 hover:text-white/80'}`}
+      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${copied ? 'bg-green-50 border-green-200 text-green-700' : 'bg-[#F9FAFB] border-[#E5E7EB] text-[#6B7280] hover:border-[#111827]'}`}
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>
@@ -181,20 +231,20 @@ function WaitlistForm({ id, defaultSchool = '' }) {
     const waText = encodeURIComponent(`Bro 👀 I just claimed my spot on UNIFY — Ghana's fresher network for ${schoolLabel}. Find roommates, link with coursemates, and join your campus hub before matriculation. It's free fr. Join via my link: ${refLink}`);
     return (
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-2xl px-5 py-4">
-          <CheckCircle className="text-green-400 w-5 h-5 flex-shrink-0" />
+        <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-5 py-4">
+          <CheckCircle className="text-green-600 w-5 h-5 flex-shrink-0" />
           <div>
-            <p className="text-green-300 font-bold text-sm">You&apos;re on the list! 🎉</p>
-            <p className="text-green-400/60 text-xs mt-0.5">We&apos;ll hit you 48hrs before your {schoolLabel} hub opens.</p>
+            <p className="text-green-800 font-bold text-sm">You&apos;re on the list! 🎉</p>
+            <p className="text-green-700/60 text-xs mt-0.5">We&apos;ll hit you 48hrs before your {schoolLabel} hub opens.</p>
           </div>
         </div>
-        <div className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-2xl px-4 py-3">
-          <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-2">Your referral link</p>
+        <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl px-4 py-3">
+          <p className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-widest mb-2">Your referral link</p>
           <div className="flex items-center gap-2">
-            <span className="flex-1 text-xs text-amber-400/80 font-mono truncate">{refLink}</span>
+            <span className="flex-1 text-xs text-[#0066FF] font-mono truncate">{refLink}</span>
             <CopyButton text={refLink} />
           </div>
-          <p className="text-[10px] text-white/30 mt-2">Every friend who joins via your link moves you up the waitlist.</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-2">Every friend who joins via your link moves you up the waitlist.</p>
         </div>
         <a
           href={`https://wa.me/?text=${waText}`}
@@ -213,8 +263,8 @@ function WaitlistForm({ id, defaultSchool = '' }) {
 
   return (
     <form id={id} onSubmit={handleSubmit} className="flex flex-col gap-2.5">
-      <p className="text-[11px] font-bold text-white/35 uppercase tracking-widest mb-0.5">Pick your school</p>
-      <div className={`flex flex-wrap gap-2 p-2 rounded-2xl border transition-colors ${noSchool ? 'border-red-400/50 bg-red-400/[0.04]' : 'border-transparent'}`}>
+      <p className="text-[11px] font-bold text-[#9CA3AF] uppercase tracking-widest mb-0.5">Pick your school</p>
+      <div className={`flex flex-wrap gap-2 p-2 rounded-2xl border transition-colors ${noSchool ? 'border-red-300 bg-red-50' : 'border-transparent'}`}>
         {SCHOOLS.map((s) => (
           <button
             key={s.id}
@@ -222,15 +272,15 @@ function WaitlistForm({ id, defaultSchool = '' }) {
             onClick={() => { setSchool(s.id); setNoSchool(false); }}
             className={`text-xs font-black px-3.5 py-2 rounded-full border transition-all ${
               school === s.id
-                ? 'bg-amber-400 text-[#050d20] border-amber-400'
-                : 'bg-white/[0.05] backdrop-blur-sm text-white/50 border-white/[0.08] hover:border-white/20 hover:text-white/80'
+                ? 'bg-[#0066FF] text-white border-[#0066FF]'
+                : 'bg-white text-[#6B7280] border-[#E5E7EB] hover:border-[#0066FF] hover:text-[#0066FF]'
             }`}
           >
             {s.label}
           </button>
         ))}
       </div>
-      {noSchool && <p className="text-[11px] text-red-400 pl-1">Please select your school first</p>}
+      {noSchool && <p className="text-[11px] text-red-500 pl-1">Please select your school first</p>}
       <div className="flex flex-col sm:flex-row gap-2.5 mt-1">
         <input
           type="text"
@@ -238,17 +288,17 @@ function WaitlistForm({ id, defaultSchool = '' }) {
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Enter phone number (e.g., 055...)"
           required
-          className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-full px-5 py-3.5 text-sm text-white placeholder-white/25 outline-none focus:border-amber-400/50 transition-colors"
+          className="flex-1 bg-white border border-[#E5E7EB] rounded-full px-5 py-3.5 text-sm text-[#111827] placeholder-[#9CA3AF] outline-none focus:border-[#0066FF] transition-colors"
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-amber-400 hover:bg-amber-300 active:scale-95 disabled:opacity-60 text-[#050d20] font-black text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/20 whitespace-nowrap"
+          className="bg-[#1F2937] hover:bg-[#111827] active:scale-95 disabled:opacity-60 text-white font-black text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5 whitespace-nowrap"
         >
           {loading ? 'Saving...' : 'Claim Your Handle →'}
         </button>
       </div>
-      {error && <p className="text-[11px] text-red-400 pl-1">{error}</p>}
+      {error && <p className="text-[11px] text-red-500 pl-1">{error}</p>}
     </form>
   );
 }
@@ -256,12 +306,12 @@ function WaitlistForm({ id, defaultSchool = '' }) {
 function Ticker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
   return (
-    <div className="overflow-hidden border-y border-white/[0.06] bg-white/[0.02] py-3 relative">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-[#050d20] to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-[#050d20] to-transparent" />
+    <div className="overflow-hidden border-y border-[#E5E7EB] bg-[#F9FAFB] py-3 relative">
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-[#F9FAFB] to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-[#F9FAFB] to-transparent" />
       <div className="flex gap-10 whitespace-nowrap w-max animate-[ticker_35s_linear_infinite]">
         {items.map((item, i) => (
-          <span key={i} className="text-[11px] font-semibold text-white/40 tracking-wide">
+          <span key={i} className="text-[11px] font-semibold text-[#6B7280] tracking-wide">
             {item}
           </span>
         ))}
@@ -288,16 +338,16 @@ function ExitModal() {
 
   return (
     <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/20" />
       <div
-        className="relative bg-white/[0.08] backdrop-blur-md border border-white/[0.12] rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
+        className="relative bg-white border border-[#E5E7EB] rounded-3xl max-w-lg w-full shadow-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-[#FF6B35] to-green-600" />
         <div className="p-8">
           <button
             onClick={close}
-            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white/40 hover:text-white text-lg transition-all"
+            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-[#F9FAFB] hover:bg-[#E5E7EB] text-[#9CA3AF] hover:text-[#111827] text-lg transition-all"
             aria-label="Close"
           >
             ×
@@ -305,17 +355,17 @@ function ExitModal() {
           <div className="flex items-start gap-4 mb-6">
             <span className="text-3xl">👀</span>
             <div>
-              <h3 className="text-xl font-black leading-tight mb-1">
+              <h3 className="text-xl font-black text-[#111827] leading-tight mb-1">
                 Hold on — your spot isn&apos;t saved yet.
               </h3>
-              <p className="text-white/45 text-sm leading-relaxed">
+              <p className="text-[#6B7280] text-sm leading-relaxed">
                 Freshers who sign up early get 48-hour priority access before their school hub opens to everyone.
               </p>
             </div>
           </div>
-          <div className="border-t border-white/[0.06] mb-6" />
+          <div className="border-t border-[#E5E7EB] mb-6" />
           <WaitlistForm id="exit-form" />
-          <p className="text-[11px] text-white/20 mt-4 text-center">
+          <p className="text-[11px] text-[#9CA3AF] mt-4 text-center">
             🔒 Free forever · No spam · Built by Ghanaians
           </p>
         </div>
@@ -337,21 +387,21 @@ function StickyBar() {
   if (dismissed || !visible) return null;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3 bg-gradient-to-t from-[#050d20] to-transparent">
-      <div className="flex items-center gap-2 bg-white/[0.08] backdrop-blur-md border border-white/[0.12] rounded-full px-4 py-3 shadow-2xl shadow-black/50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3">
+      <div className="flex items-center gap-2 bg-white border border-[#E5E7EB] rounded-full px-4 py-3 shadow-lg">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-white truncate">Secure your spot 🎓</p>
-          <p className="text-[10px] text-white/35 truncate">Join Ghana&apos;s fresher network — free</p>
+          <p className="text-xs font-black text-[#111827] truncate">Secure your spot 🎓</p>
+          <p className="text-[10px] text-[#6B7280] truncate">Join Ghana&apos;s fresher network — free</p>
         </div>
         <a
           href="#waitlist"
-          className="bg-amber-400 hover:bg-amber-300 text-[#050d20] font-black text-xs px-4 py-2.5 rounded-full whitespace-nowrap flex-shrink-0 active:scale-95 transition-all"
+          className="bg-[#1F2937] hover:bg-[#111827] text-white font-black text-xs px-4 py-2.5 rounded-full whitespace-nowrap flex-shrink-0 active:scale-95 transition-all"
         >
           Claim Handle →
         </a>
         <button
           onClick={() => setDismissed(true)}
-          className="text-white/25 hover:text-white/60 text-lg leading-none flex-shrink-0 pl-1"
+          className="text-[#9CA3AF] hover:text-[#6B7280] text-lg leading-none flex-shrink-0 pl-1"
           aria-label="Dismiss"
         >
           ×
@@ -361,96 +411,79 @@ function StickyBar() {
   );
 }
 
-// ─── DECORATIVE SVGs ──────────────────────────────────────────────────────────
-
-function SquiggleUnderline() {
-  return (
-    <svg viewBox="0 0 200 12" className="w-48 h-3 mt-1">
-      <path
-        d="M0,6 C20,0 40,12 60,6 C80,0 100,12 120,6 C140,0 160,12 180,6 C190,3 195,4 200,6"
-        stroke="#F97316" strokeWidth="3" fill="none" strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function RadiatingDoodle({ className }) {
-  return (
-    <svg viewBox="0 0 60 60" className={`w-10 h-10 ${className || ''}`} fill="none">
-      <circle cx="30" cy="30" r="4" fill="#FBBF24" />
-      <line x1="30" y1="4" x2="30" y2="14" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="30" y1="46" x2="30" y2="56" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="4" y1="30" x2="14" y2="30" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="46" y1="30" x2="56" y2="30" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="11" y1="11" x2="18" y2="18" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="42" y1="42" x2="49" y2="49" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="49" y1="11" x2="42" y2="18" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="18" y1="42" x2="11" y2="49" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function OrangeSwirl({ className }) {
-  return (
-    <svg viewBox="0 0 80 80" className={`w-20 h-20 ${className || ''}`} fill="none">
-      <path
-        d="M40,10 C55,10 65,22 62,36 C59,48 47,54 36,50 C26,46 22,36 26,27 C30,19 38,16 44,20 C50,24 50,32 46,36 C43,39 38,39 36,37"
-        stroke="#F97316" strokeWidth="2.5" fill="none" strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SparksDoodle({ className }) {
-  return (
-    <svg viewBox="0 0 40 40" className={`w-8 h-8 ${className || ''}`} fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="20" y1="30" x2="20" y2="38" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="2" y1="20" x2="10" y2="20" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="30" y1="20" x2="38" y2="20" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="6" y1="6" x2="12" y2="12" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="28" y1="28" x2="34" y2="34" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="34" y1="6" x2="28" y2="12" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-      <line x1="12" y1="28" x2="6" y2="34" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 // ─── PHONE MOCKUP ─────────────────────────────────────────────────────────────
 
 function PhoneMockup() {
   return (
     <div className="relative w-64 h-[520px] mx-auto">
-      <div className="absolute inset-0 rounded-[40px] bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.5)]" />
-      <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-[#080e20] p-4 flex flex-col gap-3">
-        <div className="flex justify-between text-[10px] text-white/40 px-1">
+      <div className="absolute inset-0 rounded-[40px] bg-[#F9FAFB] border border-[#E5E7EB] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.15)]" />
+      <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-white p-4 flex flex-col gap-3">
+        <div className="flex justify-between text-[10px] text-[#9CA3AF] px-1">
           <span>9:41</span><span>●●●</span>
         </div>
-        <div className="text-white text-sm font-bold">Find your campus fam 👋</div>
+        <div className="text-[#111827] text-sm font-bold">Find your campus fam 👋</div>
         {[
           { name: 'Ama O.', school: 'KNUST', tag: 'Roommate' },
           { name: 'Kofi B.', school: 'UG Legon', tag: 'Coursemates' },
         ].map((p) => (
-          <div key={p.name} className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-2xl p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-xs font-bold text-amber-400">
+          <div key={p.name} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-bold text-[#0066FF]">
               {p.name[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold">{p.name}</p>
-              <p className="text-white/40 text-[10px]">{p.school}</p>
+              <p className="text-[#111827] text-xs font-semibold">{p.name}</p>
+              <p className="text-[#9CA3AF] text-[10px]">{p.school}</p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/25 text-amber-400">{p.tag}</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF]">{p.tag}</span>
           </div>
         ))}
-        <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-3">
-          <p className="text-white/40 text-[10px] mb-2">YOUR HUB</p>
-          <p className="text-white text-xs font-bold">KNUST Brunei Hub</p>
-          <p className="text-white/40 text-[10px]">420 freshers · Active</p>
-          <div className="mt-2 w-full bg-amber-400 text-[#050d20] text-[10px] font-black rounded-full py-1 text-center">Join Hub →</div>
+        <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-3">
+          <p className="text-[#9CA3AF] text-[10px] mb-2">YOUR HUB</p>
+          <p className="text-[#111827] text-xs font-bold">KNUST Brunei Hub</p>
+          <p className="text-[#9CA3AF] text-[10px]">420 freshers · Active</p>
+          <div className="mt-2 w-full bg-[#1F2937] text-white text-[10px] font-black rounded-full py-1 text-center">Join Hub →</div>
         </div>
-        <div className="mt-auto bg-amber-400/10 border border-amber-400/20 rounded-2xl p-3 text-center">
-          <p className="text-amber-400 text-xs font-black">#247 on waitlist</p>
-          <p className="text-white/40 text-[10px]">Refer friends to move up</p>
+        <div className="mt-auto bg-[#0066FF]/8 border border-[#0066FF]/15 rounded-2xl p-3 text-center">
+          <p className="text-[#0066FF] text-xs font-black">#247 on waitlist</p>
+          <p className="text-[#9CA3AF] text-[10px]">Refer friends to move up</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── GHANA MAP VIZ ────────────────────────────────────────────────────────────
+
+function GhanaMapViz() {
+  return (
+    <div className="relative w-full h-72 md:h-full min-h-[300px]">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg viewBox="0 0 200 240" className="h-full w-auto opacity-10 fill-[#111827]">
+          <path d="M60,10 L140,10 L160,30 L170,60 L165,90 L170,120 L160,150 L155,180 L140,200 L120,220 L100,230 L80,220 L60,200 L45,180 L40,150 L30,120 L35,90 L30,60 L40,30 Z" />
+        </svg>
+      </div>
+      {/* Pin: UG Legon */}
+      <div className="absolute bottom-8 right-8 bg-white border border-[#E5E7EB] rounded-2xl p-2 flex items-center gap-2 shadow-sm">
+        <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-[#0066FF] font-bold text-xs">U</div>
+        <div>
+          <p className="text-[#111827] text-xs font-bold">UG Legon</p>
+          <p className="text-[#6B7280] text-[10px]">310 freshers</p>
+        </div>
+      </div>
+      {/* Pin: KNUST */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border border-[#E5E7EB] rounded-2xl p-2 flex items-center gap-2 shadow-sm">
+        <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-[#0066FF] font-bold text-xs">K</div>
+        <div>
+          <p className="text-[#111827] text-xs font-bold">KNUST Hub</p>
+          <p className="text-[#6B7280] text-[10px]">420 freshers</p>
+        </div>
+      </div>
+      {/* Pin: UCC */}
+      <div className="absolute bottom-16 left-6 bg-white border border-[#E5E7EB] rounded-2xl p-2 flex items-center gap-2 shadow-sm">
+        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-xs">C</div>
+        <div>
+          <p className="text-[#111827] text-xs font-bold">UCC Hub</p>
+          <p className="text-[#6B7280] text-[10px]">185 freshers</p>
         </div>
       </div>
     </div>
@@ -462,61 +495,23 @@ function PhoneMockup() {
 function FAQAccordion({ items }) {
   const [open, setOpen] = useState(null);
   return (
-    <div className="flex flex-col divide-y divide-white/[0.08]">
+    <div className="flex flex-col divide-y divide-[#E5E7EB]">
       {items.map((faq, i) => (
         <div key={i} className="py-4">
           <button
             className="w-full text-left flex items-center justify-between gap-4"
             onClick={() => setOpen(open === i ? null : i)}
           >
-            <span className="font-bold text-sm text-white">{faq.q}</span>
-            <span className={`flex-shrink-0 w-6 h-6 rounded-full border border-amber-400/40 flex items-center justify-center transition-transform duration-200 ${open === i ? 'rotate-180 bg-amber-400/10' : ''}`}>
-              <ChevronDown className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-semibold text-sm text-[#111827]">{faq.q}</span>
+            <span className={`flex-shrink-0 w-6 h-6 rounded-full border border-[#0066FF]/40 flex items-center justify-center transition-transform duration-200 ${open === i ? 'rotate-180 bg-[#0066FF]/10' : ''}`}>
+              <ChevronDown className="w-3.5 h-3.5 text-[#0066FF]" />
             </span>
           </button>
           {open === i && (
-            <p className="text-sm text-white/50 leading-relaxed mt-3 pr-8">{faq.a}</p>
+            <p className="text-sm text-[#6B7280] leading-relaxed mt-3 pr-8">{faq.a}</p>
           )}
         </div>
       ))}
-    </div>
-  );
-}
-
-// ─── GHANA MAP VIZ ────────────────────────────────────────────────────────────
-
-function GhanaMapViz() {
-  return (
-    <div className="relative w-full h-72 md:h-full min-h-[300px]">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg viewBox="0 0 200 240" className="h-full w-auto opacity-10 fill-white">
-          <path d="M60,10 L140,10 L160,30 L170,60 L165,90 L170,120 L160,150 L155,180 L140,200 L120,220 L100,230 L80,220 L60,200 L45,180 L40,150 L30,120 L35,90 L30,60 L40,30 Z" />
-        </svg>
-      </div>
-      {/* Pin: UG Legon */}
-      <div className="absolute bottom-8 right-8 bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] rounded-2xl p-2 flex items-center gap-2 shadow-lg">
-        <div className="w-8 h-8 rounded-full bg-blue-400/20 flex items-center justify-center text-blue-400 font-bold text-xs">U</div>
-        <div>
-          <p className="text-white text-xs font-bold">UG Legon</p>
-          <p className="text-amber-400 text-[10px]">310 freshers</p>
-        </div>
-      </div>
-      {/* Pin: KNUST */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] rounded-2xl p-2 flex items-center gap-2 shadow-lg">
-        <div className="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-400 font-bold text-xs">K</div>
-        <div>
-          <p className="text-white text-xs font-bold">KNUST Hub</p>
-          <p className="text-amber-400 text-[10px]">420 freshers</p>
-        </div>
-      </div>
-      {/* Pin: UCC */}
-      <div className="absolute bottom-16 left-6 bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] rounded-2xl p-2 flex items-center gap-2 shadow-lg">
-        <div className="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center text-green-400 font-bold text-xs">C</div>
-        <div>
-          <p className="text-white text-xs font-bold">UCC Hub</p>
-          <p className="text-amber-400 text-[10px]">185 freshers</p>
-        </div>
-      </div>
     </div>
   );
 }
@@ -548,44 +543,36 @@ export default function UnifyLanding({ schoolId } = {}) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] p-4 md:p-8 text-white antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-[#D1D5DB] p-4 md:p-8 antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       {/* Browser wrapper */}
       <div
-        className="max-w-7xl mx-auto rounded-[32px] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.6)] border border-white/[0.06]"
-        style={{ background: '#050d20' }}
+        className="max-w-7xl mx-auto bg-white rounded-[32px] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)]"
       >
 
-        {/* Background blobs */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-          <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius: '50%' }} />
-          <div style={{ position: 'absolute', bottom: '-10%', left: '-10%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)', borderRadius: '50%' }} />
-          <div style={{ position: 'absolute', top: '40%', left: '40%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)', borderRadius: '50%' }} />
-        </div>
-
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
-        <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#050d20]/80 backdrop-blur-md">
+        <nav className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white/90 backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/25 text-amber-400">GH</span>
+              <span className="text-lg font-black tracking-tight text-[#111827]">UNIFY</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/25 text-[#0066FF]">GH</span>
             </div>
-            <div className="hidden md:flex items-center gap-6 text-sm text-white/40 font-medium">
-              <a href="#" className="relative text-white font-semibold">
+            <div className="hidden md:flex items-center gap-6 text-sm text-[#111827]/70 font-medium">
+              <a href="#" className="relative text-[#111827] font-semibold">
                 Home
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-amber-400" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
               </a>
-              <a href="/hubs" className="hover:text-white transition-colors">Hubs</a>
-              <a href="/match" className="hover:text-white transition-colors">Match</a>
-              <a href="#schools" className="hover:text-white transition-colors">Schools</a>
-              <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+              <a href="/hubs" className="hover:text-[#111827] transition-colors">Hubs</a>
+              <a href="/match" className="hover:text-[#111827] transition-colors">Match</a>
+              <a href="#schools" className="hover:text-[#111827] transition-colors">Schools</a>
+              <a href="#faq" className="hover:text-[#111827] transition-colors">FAQ</a>
             </div>
             <div className="flex items-center gap-2">
-              <button className="hidden md:inline-flex text-sm font-semibold text-white/70 px-4 py-2 rounded-full border border-white/20 hover:border-white/40 transition-colors">
+              <button className="hidden md:inline-flex text-sm font-semibold text-[#111827] px-4 py-2 rounded-full border border-[#E5E7EB] bg-white hover:border-[#111827] transition-colors">
                 Sign In
               </button>
               <a
                 href="#waitlist"
-                className="bg-amber-400 hover:bg-amber-300 text-[#050d20] text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5"
+                className="bg-[#1F2937] hover:bg-[#111827] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5"
               >
                 Get Early Access →
               </a>
@@ -594,29 +581,32 @@ export default function UnifyLanding({ schoolId } = {}) {
         </nav>
 
         {/* ── HERO — 55/45 asymmetric ─────────────────────────────────── */}
-        <section className="pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+        <section className="bg-white pt-16 md:pt-24 pb-12 md:pb-20 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
             <div>
-              <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/25 text-amber-400 text-xs font-bold px-3.5 py-2 rounded-full mb-7">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <div className="inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] animate-pulse" />
                 {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
               </div>
 
-              <h1 className="text-[2.4rem] md:text-[3.6rem] font-black leading-[1.05] tracking-tight mb-2">
-                {heroHeadline}
-                <br />
-                <span className="text-amber-400">fr.</span>
-              </h1>
+              <div className="flex items-start gap-3 mb-2">
+                <h1 className="text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111827]">
+                  {heroHeadline}
+                  <br />
+                  <span className="text-[#0066FF]">fr.</span>
+                </h1>
+                <BlueDoodle />
+              </div>
               <SquiggleUnderline />
 
-              <p className="text-base md:text-lg text-white/50 leading-relaxed mb-8 max-w-[440px] mt-5">
+              <p className="text-base md:text-lg text-[#6B7280] leading-relaxed mb-8 max-w-[440px] mt-5">
                 {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
               </p>
 
               <a
                 href="#waitlist"
-                className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#050d20] font-black text-base px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-400/25 mb-7"
+                className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1F2937]/20 mb-7"
               >
                 Get Early Access <ArrowRight className="w-4 h-4" />
               </a>
@@ -626,20 +616,20 @@ export default function UnifyLanding({ schoolId } = {}) {
                   {['KA', 'YM', 'FA', 'EB', 'AO'].map((i) => (
                     <div
                       key={i}
-                      className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-700 to-blue-950 border-2 border-[#050d20] flex items-center justify-center text-[8px] font-black text-white"
+                      className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 border-2 border-white flex items-center justify-center text-[8px] font-black text-white"
                     >
                       {i}
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-white/35">
-                  <strong className="text-white font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
+                <p className="text-sm text-[#6B7280]">
+                  <strong className="text-[#111827] font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {['✓ 100% Free', '✓ Works on 2G', '✓ Verified students'].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold text-white/35 bg-white/[0.05] border border-white/[0.08] px-3 py-1 rounded-full">
+                  <span key={t} className="text-[11px] font-semibold text-[#6B7280] bg-[#F9FAFB] border border-[#E5E7EB] px-3 py-1 rounded-full">
                     {t}
                   </span>
                 ))}
@@ -657,8 +647,8 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div className="bg-amber-400/[0.08] backdrop-blur-sm border-y border-amber-400/[0.15] py-8 px-6">
-          <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/[0.08]">
+        <div className="bg-[#0066FF] py-10 px-6">
+          <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             {[
               { num: '180+', label: 'Universities' },
               { num: '12K+', label: 'Freshers Waiting' },
@@ -666,26 +656,26 @@ export default function UnifyLanding({ schoolId } = {}) {
               { num: '4.8',  label: 'Overall Rating' },
             ].map((s) => (
               <div key={s.label} className="px-4">
-                <p className="text-3xl md:text-4xl font-black text-amber-400">{s.num}</p>
-                <p className="text-white/50 text-sm mt-1">{s.label}</p>
+                <p className="text-3xl md:text-4xl font-black text-white">{s.num}</p>
+                <p className="text-white/70 text-sm mt-1">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── FEATURES ────────────────────────────────────────────────── */}
-        <section id="features" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section id="features" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start mb-14">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <RadiatingDoodle />
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Why UNIFY</span>
+                  <BlueDoodle />
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black leading-tight mb-4">
+                <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                   That&apos;s The Way<br />To Fresher.
                 </h2>
-                <p className="text-white/50 text-base leading-relaxed max-w-sm">
+                <p className="text-[#6B7280] text-base leading-relaxed max-w-sm">
                   Not a copy-paste Western social app. Every decision built around the real Ghanaian fresher experience.
                 </p>
               </div>
@@ -696,13 +686,13 @@ export default function UnifyLanding({ schoolId } = {}) {
                   { icon: '🤝', title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.' },
                   { icon: '✅', title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.' },
                 ].map((f) => (
-                  <div key={f.title} className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] rounded-3xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-2xl bg-amber-400/10 border border-amber-400/15 flex items-center justify-center text-xl flex-shrink-0">
+                  <div key={f.title} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-3xl p-6 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.08)] flex items-start gap-4 hover:-translate-y-1 transition-transform">
+                    <div className="w-11 h-11 rounded-2xl bg-[#0066FF]/8 border border-[#0066FF]/15 flex items-center justify-center text-xl flex-shrink-0">
                       {f.icon}
                     </div>
                     <div>
-                      <h3 className="font-black text-white mb-1">{f.title}</h3>
-                      <p className="text-sm text-white/50 leading-relaxed">{f.body}</p>
+                      <h3 className="font-black text-[#111827] mb-1">{f.title}</h3>
+                      <p className="text-sm text-[#6B7280] leading-relaxed">{f.body}</p>
                     </div>
                   </div>
                 ))}
@@ -710,31 +700,32 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             {/* Ghana map visualization */}
-            <div className="relative rounded-3xl overflow-hidden bg-white/[0.03] border border-white/[0.08] p-6 h-72">
+            <div className="relative rounded-3xl overflow-hidden bg-[#F9FAFB] border border-[#E5E7EB] p-6 h-72">
               <GhanaMapViz />
               <div className="absolute top-4 left-6">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/20">Campus Map · Ghana</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">Campus Map · Ghana</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section id="schools" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="hidden md:block h-80 rounded-3xl overflow-hidden bg-white/[0.03] border border-white/[0.08] relative">
+            <div className="hidden md:block h-80 rounded-3xl overflow-hidden bg-[#F9FAFB] border border-[#E5E7EB] relative">
               <GhanaMapViz />
             </div>
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black leading-tight mb-4">
+            <div className="relative">
+              <BlueSwirl className="absolute -right-4 top-0" />
+              <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Find Your Campus,<br />Find Your People.
               </h2>
-              <p className="text-white/50 text-base leading-relaxed mb-7">
+              <p className="text-[#6B7280] text-base leading-relaxed mb-7">
                 Browse 180+ Ghana universities. Pick your school and claim your handle before your classmates do.
               </p>
-              <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border border-white/[0.12] rounded-full p-2 pl-5 mb-5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                <select className="flex-1 bg-transparent text-white/70 text-sm outline-none">
+              <div className="flex items-center gap-2 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm p-2 pl-5 mb-5">
+                <MapPin className="w-4 h-4 text-[#FF6B35] shrink-0" />
+                <select className="flex-1 bg-transparent text-[#111827] text-sm outline-none">
                   <option value="">Choose your school</option>
                   <option>KNUST</option>
                   <option>UG Legon</option>
@@ -745,16 +736,16 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </select>
                 <a
                   href="/hubs"
-                  className="bg-amber-400 text-[#050d20] font-black text-sm px-5 py-2 rounded-full hover:bg-amber-300 transition-colors whitespace-nowrap"
+                  className="bg-[#1F2937] text-white font-black text-sm px-5 py-2 rounded-full hover:bg-[#111827] transition-colors whitespace-nowrap"
                 >
                   Find Hub →
                 </a>
               </div>
               <div className="flex flex-wrap gap-3">
-                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-400/70 hover:text-amber-400 px-4 py-2 rounded-full border border-amber-400/20 hover:border-amber-400/40 transition-all">
+                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-[#E5E7EB] hover:border-[#111827] transition-all">
                   Browse all hubs <ArrowRight className="w-3.5 h-3.5" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/40 hover:text-white px-4 py-2 rounded-full border border-white/[0.1] hover:border-white/25 transition-all">
+                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-[#E5E7EB] hover:border-[#111827] transition-all">
                   Find a roommate <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -763,22 +754,25 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
-        <section className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-black leading-tight mb-4">
+              <div className="flex items-center gap-3 mb-4">
+                <OrangeDoodle />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Your Campus Fam<br />Is Calling.
                 <br />
-                <span className="text-white/40 text-3xl md:text-4xl font-bold">Don&apos;t Miss Orientation.</span>
+                <span className="text-[#6B7280] text-3xl md:text-4xl font-bold">Don&apos;t Miss Orientation.</span>
               </h2>
-              <p className="text-white/50 text-base leading-relaxed mb-8">
+              <p className="text-[#6B7280] text-base leading-relaxed mb-8">
                 Join the official WhatsApp community for your school. Real freshers, real intel, zero spam.
               </p>
               <a
                 href="https://wa.me/233000000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#050d20] font-black text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-400/20"
+                className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5"
               >
                 <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -789,31 +783,33 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             <div className="relative h-72 flex items-center justify-center">
               {[
-                { initials: 'AA', bg: 'bg-blue-800', top: '10%', left: '30%' },
-                { initials: 'KB', bg: 'bg-green-800', top: '10%', left: '55%' },
-                { initials: 'SM', bg: 'bg-purple-800', top: '38%', left: '15%' },
-                { initials: 'EO', bg: 'bg-amber-800', top: '38%', left: '42%' },
-                { initials: 'FA', bg: 'bg-pink-800', top: '38%', left: '68%' },
-                { initials: 'YM', bg: 'bg-cyan-800', top: '65%', left: '30%' },
+                { initials: 'AA', bg: 'bg-blue-100', text: 'text-blue-700', top: '10%', left: '30%' },
+                { initials: 'KB', bg: 'bg-green-100', text: 'text-green-700', top: '10%', left: '55%' },
+                { initials: 'SM', bg: 'bg-purple-100', text: 'text-purple-700', top: '38%', left: '15%' },
+                { initials: 'EO', bg: 'bg-orange-100', text: 'text-orange-700', top: '38%', left: '42%' },
+                { initials: 'FA', bg: 'bg-pink-100', text: 'text-pink-700', top: '38%', left: '68%' },
+                { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%' },
               ].map((a) => (
                 <div
                   key={a.initials}
-                  className={`absolute w-12 h-12 rounded-full ${a.bg} border-2 border-white/10 flex items-center justify-center text-xs font-black text-white shadow-lg`}
+                  className={`absolute w-12 h-12 rounded-full ${a.bg} border-2 border-white flex items-center justify-center text-xs font-black ${a.text} shadow-sm`}
                   style={{ top: a.top, left: a.left }}
-                />
+                >
+                  {a.initials}
+                </div>
               ))}
-              <div className="absolute top-2 right-0 bg-white/[0.08] backdrop-blur-sm border border-white/[0.12] rounded-2xl rounded-tl-sm px-3 py-1.5 text-xs font-semibold text-white/80 shadow-lg">
+              <div className="absolute top-2 right-0 bg-white border border-[#E5E7EB] rounded-2xl rounded-tl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm">
                 Already linked! 🔥
               </div>
-              <div className="absolute bottom-8 right-4 bg-amber-400/10 border border-amber-400/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-amber-400 shadow-lg">
+              <div className="absolute bottom-8 right-4 bg-[#0066FF]/8 border border-[#0066FF]/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-sm">
                 Found my roomie!
               </div>
-              <div className="absolute bottom-2 left-0 bg-white/[0.06] border border-white/[0.1] rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs font-semibold text-white/70 shadow-lg">
+              <div className="absolute bottom-2 left-0 bg-white border border-[#E5E7EB] rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm">
                 Best app fr 🇬🇭
               </div>
               <div className="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
                 {['W', 'IG', 'X'].map((s) => (
-                  <div key={s} className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-[9px] font-black text-white/40">
+                  <div key={s} className="w-8 h-8 rounded-full bg-[#F9FAFB] border border-[#E5E7EB] flex items-center justify-center text-[9px] font-black text-[#6B7280]">
                     {s}
                   </div>
                 ))}
@@ -823,38 +819,41 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
-        <section className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-10">
               <div>
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Reviews</span>
-                <h2 className="text-4xl md:text-5xl font-black mt-2">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Reviews</span>
+                  <BlueDoodle />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black text-[#111827]">
                   Satisfied Freshers Are<br />Our Best Ads.
                 </h2>
               </div>
               <div className="hidden md:flex items-center gap-2">
-                <button className="w-10 h-10 rounded-full border border-white/[0.15] bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-white/50 hover:text-white transition-all">
+                <button className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white hover:border-[#111827] flex items-center justify-center text-[#111827] transition-all">
                   ←
                 </button>
-                <button className="w-10 h-10 rounded-full border border-amber-400/30 bg-amber-400/10 hover:bg-amber-400/20 flex items-center justify-center text-amber-400 transition-all">
+                <button className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white hover:border-[#111827] flex items-center justify-center text-[#111827] transition-all">
                   →
                 </button>
               </div>
             </div>
             <div className="grid md:grid-cols-3 gap-5">
               {TESTIMONIALS.map((t) => (
-                <div key={t.name} className="bg-white/[0.06] backdrop-blur-sm border border-white/[0.12] rounded-3xl p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex flex-col">
-                  <div className="text-6xl font-black text-amber-400 leading-none mb-4">&ldquo;</div>
-                  <p className="text-white/80 text-sm leading-relaxed flex-1 mb-6">{t.quote}</p>
-                  <div className="border-t border-white/[0.06] pt-5 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-xs font-black text-amber-400 flex-shrink-0">
+                <div key={t.name} className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.06)] flex flex-col hover:-translate-y-1 transition-transform">
+                  <div className="text-6xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
+                  <p className="text-[#6B7280] text-sm leading-relaxed flex-1 mb-6">{t.quote}</p>
+                  <div className="border-t border-[#E5E7EB] pt-5 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-black text-[#0066FF] flex-shrink-0">
                       {t.initials}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-white text-sm">{t.name}</p>
-                      <p className="text-white/50 text-xs">{t.role}</p>
+                      <p className="font-bold text-[#111827] text-sm">{t.name}</p>
+                      <p className="text-[#9CA3AF] text-xs">{t.role}</p>
                     </div>
-                    <div className="text-amber-400 text-xs">
+                    <div className="text-[#FF6B35] text-xs">
                       {'⭐'.repeat(t.stars)}
                     </div>
                   </div>
@@ -865,59 +864,59 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── WAITLIST CTA ─────────────────────────────────────────────── */}
-        <section id="waitlist" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section id="waitlist" className="bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-2xl mx-auto text-center">
             <span className="text-5xl block mb-6">🇬🇭</span>
-            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 text-xs font-bold px-4 py-2 rounded-full mb-7">
+            <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-4 py-2 rounded-full mb-7">
               <CheckCircle className="w-3.5 h-3.5" strokeWidth={2} />
               100% free · No subscriptions · Ever
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-5 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-[#111827] tracking-tight mb-5 leading-tight">
               Stop hunting for broken<br />
-              <span className="text-amber-400">WhatsApp group links.</span>
+              <span className="text-[#0066FF]">WhatsApp group links.</span>
             </h2>
-            <p className="text-white/45 text-lg mb-10 max-w-md mx-auto leading-relaxed">
+            <p className="text-[#6B7280] text-lg mb-10 max-w-md mx-auto leading-relaxed">
               Secure your spot in the official Class of &apos;30 network today. Your campus people are already inside.
             </p>
             <WaitlistForm id="cta-form" defaultSchool={schoolId || ''} />
-            <p className="text-xs text-white/20 mt-5">🔒 Free forever · No spam · Built by Ghanaians in Ghana</p>
+            <p className="text-xs text-[#9CA3AF] mt-5">🔒 Free forever · No spam · Built by Ghanaians in Ghana</p>
           </div>
         </section>
 
         {/* ── FAQ + CONTACT ─────────────────────────────────────────────── */}
-        <section id="faq" className="py-16 md:py-28 px-6 border-t border-white/[0.04]">
+        <section id="faq" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-start">
             <div className="relative">
-              <OrangeSwirl className="absolute -left-4 -top-4 opacity-60" />
+              <BlueSwirl className="absolute -left-4 -top-4" />
               <div className="flex items-center gap-3 mb-4">
-                <SparksDoodle />
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Get in touch</span>
+                <OrangeDoodle />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-black leading-tight mb-4">
+              <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Got A Question<br />For UNIFY?
               </h2>
-              <p className="text-white/50 text-base leading-relaxed mb-7">
+              <p className="text-[#6B7280] text-base leading-relaxed mb-7">
                 We&apos;ll answer everything. Drop your number and we&apos;ll reach out.
               </p>
               {faqDone ? (
-                <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-full px-5 py-4">
-                  <CheckCircle className="text-green-400 w-5 h-5 flex-shrink-0" />
-                  <p className="text-green-300 font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
+                <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-full px-5 py-4">
+                  <CheckCircle className="text-green-600 w-5 h-5 flex-shrink-0" />
+                  <p className="text-green-800 font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
                 </div>
               ) : (
-                <form onSubmit={handleFaqSubmit} className="flex items-center bg-white/[0.06] backdrop-blur-sm border border-white/[0.12] rounded-full overflow-hidden pr-1.5">
+                <form onSubmit={handleFaqSubmit} className="flex items-center bg-white border border-[#E5E7EB] rounded-full overflow-hidden pr-1.5">
                   <input
                     type="text"
                     value={faqPhone}
                     onChange={(e) => setFaqPhone(e.target.value)}
                     placeholder="Your phone number..."
                     required
-                    className="flex-1 bg-transparent px-5 py-3.5 text-sm text-white placeholder-white/25 outline-none"
+                    className="flex-1 bg-transparent px-5 py-3.5 text-sm text-[#111827] placeholder-[#9CA3AF] outline-none"
                   />
                   <button
                     type="submit"
                     disabled={faqLoading}
-                    className="bg-amber-400 hover:bg-amber-300 text-[#050d20] font-black text-sm px-5 py-2.5 rounded-full transition-colors disabled:opacity-60 whitespace-nowrap"
+                    className="bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-5 py-2.5 rounded-full transition-colors disabled:opacity-60 whitespace-nowrap"
                   >
                     {faqLoading ? '...' : 'Submit'}
                   </button>
@@ -926,27 +925,27 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             <div>
-              <p className="text-sm text-white/40 mb-4">Check if your question is already answered:</p>
+              <p className="text-sm text-[#6B7280] mb-4">Check if your question is already answered:</p>
               <FAQAccordion items={FAQS_NEW} />
             </div>
           </div>
         </section>
 
         {/* ── FOOTER ──────────────────────────────────────────────────── */}
-        <footer className="bg-amber-400/[0.06] backdrop-blur-sm border-t border-amber-400/[0.1] px-6 pt-12 pb-8">
+        <footer className="bg-[#0066FF] px-6 pt-12 pb-8">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-10 border-b border-white/[0.06]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-10 border-b border-white/20">
               <div className="col-span-2 md:col-span-1">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xl font-black text-white">UNIFY</span>
                   <span className="text-3xl">🇬🇭</span>
                 </div>
-                <p className="text-sm text-white/30 leading-relaxed max-w-[200px]">
+                <p className="text-sm text-white/70 leading-relaxed max-w-[200px]">
                   Ghana&apos;s peer-to-peer university transition network.
                 </p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Explore</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Explore</p>
                 <div className="flex flex-col gap-2.5">
                   {[
                     { label: 'Home', href: '#' },
@@ -954,20 +953,20 @@ export default function UnifyLanding({ schoolId } = {}) {
                     { label: 'Match', href: '/match' },
                     { label: 'Schools', href: '#schools' },
                   ].map((l) => (
-                    <a key={l.label} href={l.href} className="text-sm text-white/40 hover:text-white transition-colors">{l.label}</a>
+                    <a key={l.label} href={l.href} className="text-sm text-white/80 hover:text-white transition-colors">{l.label}</a>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Support</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Support</p>
                 <div className="flex flex-col gap-2.5">
                   {['FAQ', 'Contact', 'Privacy', 'Terms'].map((l) => (
-                    <a key={l} href="#" className="text-sm text-white/40 hover:text-white transition-colors">{l}</a>
+                    <a key={l} href="#" className="text-sm text-white/80 hover:text-white transition-colors">{l}</a>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Connect</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Connect</p>
                 <div className="flex gap-2 mb-4">
                   {[
                     { label: 'WA', href: 'https://wa.me/233000000000' },
@@ -977,18 +976,18 @@ export default function UnifyLanding({ schoolId } = {}) {
                     <a
                       key={s.label}
                       href={s.href}
-                      className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-[10px] font-black text-white/50 hover:text-white hover:border-white/25 transition-all"
+                      className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[10px] font-black text-white hover:bg-white/20 transition-all"
                     >
                       {s.label}
                     </a>
                   ))}
                 </div>
-                <a href="mailto:hello@unify.gh" className="text-xs text-white/30 hover:text-amber-400 transition-colors">hello@unify.gh</a>
+                <a href="mailto:hello@unify.gh" className="text-xs text-white/70 hover:text-white transition-colors">hello@unify.gh</a>
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6">
-              <p className="text-xs text-white/20">© 2026 UNIFY · Built for Ghana&apos;s freshers · Free forever</p>
-              <p className="text-xs text-white/20">Connecting students at 180+ schools across Ghana</p>
+              <p className="text-xs text-white/60">© 2026 UNIFY · Built for Ghana&apos;s freshers · Free forever</p>
+              <p className="text-xs text-white/60">Connecting students at 180+ schools across Ghana</p>
             </div>
             <div className="mt-6 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
           </div>
