@@ -2,18 +2,15 @@
 
 /**
  * UNIFY — Ghana's peer-to-peer university transition network
- * iOS "Clear" glassmorphism redesign with Lucide icons and CSS entrance animations.
+ * Full animation motion spec: hero stagger, scroll reveals, count-up,
+ * carousel, FAQ accordion, SVG draw-on, ticker pause-on-hover.
  *
  * Dependencies:
  *   npm install lucide-react
- *   Tailwind CSS configured with the custom `ticker` animation below.
- *
- * Add to tailwind.config.js → theme.extend:
- *   animation: { ticker: 'ticker 35s linear infinite' },
- *   keyframes: { ticker: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } } },
+ *   Tailwind CSS configured
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MapPin, CheckCircle, ArrowRight, ChevronDown, Users2, GraduationCap, Building2, Sparkles, Star, MessageCircle, Bell } from 'lucide-react';
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
@@ -128,52 +125,118 @@ function useSignupCount() {
   return count;
 }
 
+function useHeroSequence() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+  return visible;
+}
+
+function useScrollReveal(threshold = 0.15) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
+function useCountUp(target, duration = 1500, trigger = false) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!trigger) return;
+    let start = null;
+    const isNum = typeof target === 'number';
+    const numTarget = isNum ? target : parseFloat(target);
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setValue(isNum ? Math.floor(eased * numTarget) : (eased * numTarget).toFixed(1));
+      if (progress < 1) requestAnimationFrame(step);
+      else setValue(target);
+    };
+    requestAnimationFrame(step);
+  }, [trigger, target, duration]);
+  return value;
+}
+
 // ─── DECORATIVE SVGs ──────────────────────────────────────────────────────────
 
-function BlueDoodle() {
+function BlueDoodle({ drawn = true }) {
+  const lineStyle = drawn ? {
+    strokeDasharray: 200,
+    animation: 'drawStroke 400ms var(--ease-out-expo) both',
+  } : { strokeDasharray: 200, strokeDashoffset: 200 };
   return (
     <svg viewBox="0 0 40 40" className="w-8 h-8 text-[#0066FF]" fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="6" y1="6" x2="12" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="28" y1="28" x2="34" y2="34" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="34" y1="6" x2="28" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="6" y1="34" x2="12" y2="28" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="6" x2="12" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="28" y1="28" x2="34" y2="34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="34" y1="6" x2="28" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="34" x2="12" y2="28" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
     </svg>
   );
 }
 
-function OrangeDoodle() {
+function OrangeDoodle({ drawn = true }) {
+  const lineStyle = drawn ? {
+    strokeDasharray: 200,
+    animation: 'drawStroke 400ms var(--ease-out-expo) both',
+  } : { strokeDasharray: 200, strokeDashoffset: 200 };
   return (
     <svg viewBox="0 0 40 40" className="w-8 h-8" fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="20" y1="30" x2="20" y2="38" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="2" y1="20" x2="10" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="6" y1="6" x2="12" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="28" y1="28" x2="34" y2="34" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="34" y1="6" x2="28" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="6" y1="34" x2="12" y2="28" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="20" y1="2" x2="20" y2="10" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="20" y1="30" x2="20" y2="38" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="2" y1="20" x2="10" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="30" y1="20" x2="38" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="6" x2="12" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="28" y1="28" x2="34" y2="34" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="34" y1="6" x2="28" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="34" x2="12" y2="28" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
     </svg>
   );
 }
 
-function SquiggleUnderline() {
+function SquiggleUnderline({ heroVisible }) {
   return (
-    <svg viewBox="0 0 120 10" className="w-24 h-2.5 mt-0.5" fill="none">
+    <svg
+      viewBox="0 0 120 10"
+      className={`w-24 h-2.5 mt-0.5${heroVisible ? ' underline-drawn' : ''}`}
+      fill="none"
+      style={heroVisible ? { transformOrigin: 'left center' } : { opacity: 0 }}
+    >
       <path d="M0,5 C10,1 20,9 30,5 C40,1 50,9 60,5 C70,1 80,9 90,5 C100,1 110,9 120,5"
         stroke="#FF6B35" strokeWidth="3" strokeLinecap="round"/>
     </svg>
   );
 }
 
-function BlueSwirl({ className = '' }) {
+function BlueSwirl({ className = '', drawn = false }) {
   return (
     <svg viewBox="0 0 80 200" className={`w-16 h-40 text-[#0066FF] opacity-20 ${className}`} fill="none">
-      <path d="M60,10 C80,40 20,60 40,90 C60,120 80,140 40,170 C20,185 10,190 20,195"
-        stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path
+        d="M60,10 C80,40 20,60 40,90 C60,120 80,140 40,170 C20,185 10,190 20,195"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        style={drawn ? {
+          strokeDasharray: 400,
+          animation: 'drawStroke 1200ms var(--ease-in-out-smooth) both',
+          '--path-len': 400,
+        } : { strokeDasharray: 400, strokeDashoffset: 400 }}
+      />
     </svg>
   );
 }
@@ -304,16 +367,28 @@ function WaitlistForm({ id, defaultSchool = '' }) {
 }
 
 function Ticker() {
+  const [paused, setPaused] = useState(false);
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  const [ref, visible] = useScrollReveal(0.1);
   return (
-    <div className="overflow-hidden bg-white/50 backdrop-blur-sm border-y border-white/40 py-3 relative">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-white/50 to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-white/50 to-transparent" />
-      <div className="flex gap-10 whitespace-nowrap w-max animate-[ticker_35s_linear_infinite]">
+    <div
+      ref={ref}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 800ms var(--ease-out-expo)',
+        maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+      }}
+      className="overflow-hidden border-y border-white/40 bg-white/50 backdrop-blur-sm py-3 relative"
+    >
+      <div
+        className="flex gap-10 whitespace-nowrap w-max"
+        style={{ animation: 'ticker 40s linear infinite', animationPlayState: paused ? 'paused' : 'running' }}
+      >
         {items.map((item, i) => (
-          <span key={i} className="text-[11px] font-semibold text-[#6B7280] tracking-wide">
-            {item}
-          </span>
+          <span key={i} className="text-[11px] font-semibold text-[#6B7280] tracking-wide">{item}</span>
         ))}
       </div>
     </div>
@@ -415,7 +490,7 @@ function StickyBar() {
 
 function PhoneMockup() {
   return (
-    <div className="relative w-64 h-[520px] mx-auto">
+    <div style={{ animation: 'phoneBob 6s ease-in-out infinite' }} className="relative w-64 h-[520px] mx-auto">
       <div className="absolute inset-0 rounded-[40px] bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_30px_60px_rgba(0,66,255,0.15)]" />
       <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-white/85 backdrop-blur-xl p-4 flex flex-col gap-3">
         <div className="flex justify-between text-[10px] text-[#9CA3AF] px-1">
@@ -454,7 +529,13 @@ function PhoneMockup() {
 
 // ─── GHANA MAP VIZ ────────────────────────────────────────────────────────────
 
-function GhanaMapViz() {
+function GhanaMapViz({ animate = false }) {
+  const pins = [
+    { label: 'UG Legon', count: '310 freshers', initials: 'U', bg: 'bg-[#0066FF]/10', text: 'text-[#0066FF]', top: '62%', right: '16%', left: undefined, bottom: undefined, floatDur: '3.8s' },
+    { label: 'KNUST Hub', count: '420 freshers', initials: 'K', bg: 'bg-[#0066FF]/10', text: 'text-[#0066FF]', top: '46%', left: '44%', right: undefined, bottom: undefined, floatDur: '4.5s' },
+    { label: 'UCC Hub', count: '185 freshers', initials: 'C', bg: 'bg-green-100', text: 'text-green-700', bottom: '22%', left: '18%', top: undefined, right: undefined, floatDur: '5.2s' },
+  ];
+
   return (
     <div className="relative w-full h-72 md:h-full min-h-[300px]">
       <div className="absolute inset-0 flex items-center justify-center">
@@ -462,56 +543,98 @@ function GhanaMapViz() {
           <path d="M60,10 L140,10 L160,30 L170,60 L165,90 L170,120 L160,150 L155,180 L140,200 L120,220 L100,230 L80,220 L60,200 L45,180 L40,150 L30,120 L35,90 L30,60 L40,30 Z" />
         </svg>
       </div>
-      {/* Pin: UG Legon */}
-      <div className="absolute bottom-8 right-8 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl p-2 flex items-center gap-2 shadow-sm">
-        <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-[#0066FF] font-bold text-xs">U</div>
-        <div>
-          <p className="text-[#111827] text-xs font-bold">UG Legon</p>
-          <p className="text-[#6B7280] text-[10px]">310 freshers</p>
+      {pins.map((pin, i) => (
+        <div
+          key={pin.label}
+          className="absolute bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl p-2 flex items-center gap-2 shadow-sm"
+          style={{
+            top: pin.top, right: pin.right, left: pin.left, bottom: pin.bottom,
+            animation: animate
+              ? `pinDrop 500ms var(--ease-spring) ${i * 120}ms both, pinFloat ${pin.floatDur} ease-in-out ${i * 120 + 600}ms infinite`
+              : 'none',
+          }}
+        >
+          <div className={`w-8 h-8 rounded-full ${pin.bg} flex items-center justify-center ${pin.text} font-bold text-xs`}>{pin.initials}</div>
+          <div>
+            <p className="text-[#111827] text-xs font-bold">{pin.label}</p>
+            <p className="text-[#6B7280] text-[10px]">{pin.count}</p>
+          </div>
         </div>
-      </div>
-      {/* Pin: KNUST */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl p-2 flex items-center gap-2 shadow-sm">
-        <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-[#0066FF] font-bold text-xs">K</div>
-        <div>
-          <p className="text-[#111827] text-xs font-bold">KNUST Hub</p>
-          <p className="text-[#6B7280] text-[10px]">420 freshers</p>
-        </div>
-      </div>
-      {/* Pin: UCC */}
-      <div className="absolute bottom-16 left-6 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl p-2 flex items-center gap-2 shadow-sm">
-        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-xs">C</div>
-        <div>
-          <p className="text-[#111827] text-xs font-bold">UCC Hub</p>
-          <p className="text-[#6B7280] text-[10px]">185 freshers</p>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
 
 // ─── FAQ ACCORDION ────────────────────────────────────────────────────────────
 
-function FAQAccordion({ items }) {
+function FAQAccordion({ items, visible }) {
   const [open, setOpen] = useState(null);
   return (
     <div className="flex flex-col divide-y divide-white/30">
       {items.map((faq, i) => (
-        <div key={i} className="py-4">
+        <div
+          key={i}
+          className="py-4"
+          style={visible ? { animation: `revealUp 500ms var(--ease-out-expo) ${i * 80}ms both` } : { opacity: 0 }}
+        >
           <button
-            className="w-full text-left flex items-center justify-between gap-4"
+            className="w-full text-left flex items-center justify-between gap-4 group"
             onClick={() => setOpen(open === i ? null : i)}
           >
-            <span className="font-semibold text-sm text-[#111827]">{faq.q}</span>
-            <span className={`flex-shrink-0 w-6 h-6 rounded-full border border-[#0066FF]/40 flex items-center justify-center transition-transform duration-200 ${open === i ? 'rotate-180 bg-[#0066FF]/10' : ''}`}>
-              <ChevronDown className="w-3.5 h-3.5 text-[#0066FF]" />
+            <span className="font-semibold text-sm text-[#111827] group-hover:text-[#0066FF] transition-colors duration-200">{faq.q}</span>
+            <span
+              className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#0066FF] border-[#0066FF]' : 'border-[#0066FF]/40 bg-white/60'}`}
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#0066FF]'}`} />
             </span>
           </button>
-          {open === i && (
-            <p className="text-sm text-[#6B7280] leading-relaxed mt-3 pr-8">{faq.a}</p>
-          )}
+          {/* Smooth height with grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateRows: open === i ? '1fr' : '0fr',
+              transition: 'grid-template-rows 400ms var(--ease-out-expo)',
+            }}
+          >
+            <div style={{ overflow: 'hidden' }}>
+              <p
+                className="text-sm text-[#6B7280] leading-relaxed mt-3 pr-8"
+                style={{
+                  opacity: open === i ? 1 : 0,
+                  transition: 'opacity 300ms var(--ease-out-expo) 100ms',
+                }}
+              >
+                {faq.a}
+              </p>
+            </div>
+          </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+// ─── STAT ITEM WITH COUNT-UP ──────────────────────────────────────────────────
+
+function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, trigger }) {
+  const rawVal = useCountUp(num, 1500, trigger);
+  let display;
+  if (is12K) {
+    display = `${(Number(rawVal) / 1000).toFixed(0)}K+`;
+  } else if (isDecimal) {
+    display = `${rawVal}`;
+  } else {
+    display = `${rawVal}${suffix}`;
+  }
+  return (
+    <div className="px-4">
+      <p
+        className="text-3xl md:text-4xl font-black text-white"
+        style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : { opacity: 0 }}
+      >
+        {display}
+      </p>
+      <p className="text-white/70 text-sm mt-1">{label}</p>
     </div>
   );
 }
@@ -524,8 +647,50 @@ export default function UnifyLanding({ schoolId } = {}) {
   const [faqDone, setFaqDone] = useState(false);
   const [faqLoading, setFaqLoading] = useState(false);
 
+  const heroVisible = useHeroSequence();
+
+  const [statsRef, statsVisible] = useScrollReveal(0.3);
+  const [featuresRef, featuresVisible] = useScrollReveal();
+  const [communityRef, communityVisible] = useScrollReveal();
+  const [testimonialsRef, testimonialsVisible] = useScrollReveal();
+  const [faqRef, faqVisible] = useScrollReveal();
+  const [ctaRef, ctaVisible] = useScrollReveal();
+
+  // Testimonials carousel state
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  useEffect(() => {
+    if (!testimonialsVisible) return;
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [testimonialsVisible]);
+
+  // Smooth scroll
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => { document.documentElement.style.scrollBehavior = ''; };
+  }, []);
+
   const sc = SCHOOL_CONFIG[schoolId] || null;
   const heroHeadline = sc ? sc.headline : "Don't Pull Up To Campus Alone,";
+
+  // Hero style helper
+  function heroStyle(delay, keyframe = 'heroFadeUp', duration = '800ms') {
+    return heroVisible
+      ? { animation: `${keyframe} ${duration} var(--ease-out-expo) ${delay}ms both` }
+      : { opacity: 0 };
+  }
+
+  // Section reveal helper
+  function sectionRevealStyle(visible, delay = 0) {
+    return {
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(60px)',
+      transition: `opacity 600ms var(--ease-out-expo) ${delay}ms, transform 1000ms var(--ease-out-expo) ${delay}ms`,
+    };
+  }
 
   const handleFaqSubmit = async (e) => {
     e.preventDefault();
@@ -542,41 +707,164 @@ export default function UnifyLanding({ schoolId } = {}) {
     }
   };
 
+  // Community avatars
+  const AVATARS = [
+    { initials: 'EO', bg: 'bg-orange-100', text: 'text-orange-700', top: '38%', left: '42%', order: 0 },
+    { initials: 'AA', bg: 'bg-blue-100', text: 'text-blue-700', top: '10%', left: '30%', order: 1 },
+    { initials: 'KB', bg: 'bg-green-100', text: 'text-green-700', top: '10%', left: '55%', order: 2 },
+    { initials: 'SM', bg: 'bg-purple-100', text: 'text-purple-700', top: '38%', left: '15%', order: 3 },
+    { initials: 'FA', bg: 'bg-pink-100', text: 'text-pink-700', top: '38%', left: '68%', order: 4 },
+    { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%', order: 5 },
+  ];
+
+  function prevTestimonial() {
+    setActiveTestimonial((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+  }
+  function nextTestimonial() {
+    setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
+  }
+
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
          style={{ background: 'linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%)', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
       <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(28px); }
+        :root {
+          --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+          --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+          --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+          --dur-fast: 200ms;
+          --dur-base: 600ms;
+          --dur-slow: 1000ms;
+          --dur-ambient: 4000ms;
+        }
+
+        /* Hero entrance */
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(30px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes slideRight {
-          from { opacity: 0; transform: translateX(-20px); }
-          to   { opacity: 1; transform: translateX(0); }
+        @keyframes heroFadeDown {
+          from { opacity: 0; transform: translateY(-12px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.93); }
+        @keyframes heroScaleIn {
+          from { opacity: 0; transform: scale(0.8); }
           to   { opacity: 1; transform: scale(1); }
         }
-        @keyframes glowPulse {
-          0%, 100% { box-shadow: 0 0 20px rgba(0,102,255,0.15); }
-          50%       { box-shadow: 0 0 40px rgba(0,102,255,0.30); }
+        @keyframes heroDoodle {
+          from { opacity: 0; transform: scale(0) rotate(-10deg); }
+          to   { opacity: 1; transform: scale(1) rotate(0deg); }
         }
-        @keyframes floatBadge {
-          0%, 100% { transform: translateY(0px); }
+
+        /* Underline draw-on */
+        @keyframes underlineDraw {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+        @keyframes underlineWobble {
+          0%, 100% { transform: scaleX(1) skewX(-1deg); }
+          50%       { transform: scaleX(1) skewX(1deg); }
+        }
+        .underline-drawn {
+          animation: underlineDraw 500ms var(--ease-out-expo) 600ms both,
+                     underlineWobble 3s ease-in-out 1100ms infinite;
+          transform-origin: left center;
+        }
+
+        /* Scroll reveal */
+        @keyframes revealUp {
+          from { opacity: 0; transform: translateY(60px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SVG draw-on */
+        @keyframes drawStroke {
+          from { stroke-dashoffset: var(--path-len, 200); }
+          to   { stroke-dashoffset: 0; }
+        }
+
+        /* Map pin */
+        @keyframes pinDrop {
+          0%   { opacity: 0; transform: translateY(-30px) scale(0.5); }
+          70%  { transform: translateY(4px) scale(1.05); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes pinFloat {
+          0%, 100% { transform: translateY(0); }
           50%       { transform: translateY(-6px); }
         }
-        .anim-fade-up    { animation: fadeUp 0.6s ease-out both; }
-        .anim-slide-right { animation: slideRight 0.6s ease-out both; }
-        .anim-scale-in   { animation: scaleIn 0.5s ease-out both; }
-        .anim-glow       { animation: glowPulse 3s ease-in-out infinite; }
-        .anim-float      { animation: floatBadge 4s ease-in-out infinite; }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
+
+        /* Avatar */
+        @keyframes avatarPop {
+          from { opacity: 0; transform: scale(0); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes breathe {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.03); }
+        }
+        @keyframes bubblePop {
+          from { opacity: 0; transform: scale(0.8); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* Stats count-up shimmer */
+        @keyframes statReveal {
+          from { opacity: 0; transform: scale(0.85) translateY(12px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Testimonials */
+        @keyframes cardSlideIn {
+          from { opacity: 0; transform: translateX(60px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Ticker */
+        @keyframes ticker {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        /* Phone bob */
+        @keyframes phoneBob {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          33%       { transform: translateY(-8px) rotate(0.5deg); }
+          66%       { transform: translateY(-4px) rotate(-0.3deg); }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+
+        /* Nav links */
+        .nav-link { position: relative; transition: color 200ms; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #0066FF; border-radius: 999px; transition: width 200ms var(--ease-out-expo); }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Feature cards */
+        .feature-card { transition: transform 300ms var(--ease-out-expo), box-shadow 300ms var(--ease-out-expo), border-color 300ms; }
+        .feature-card:hover { transform: translateY(-6px); border-color: rgba(0,102,255,0.3); box-shadow: 0 16px 48px rgba(0,102,255,0.10), 0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); }
+
+        /* Footer links */
+        .footer-link { transition: opacity 150ms, transform 150ms; }
+        .footer-link:hover { opacity: 1 !important; transform: translateX(2px); }
+
+        /* Social icons */
+        .social-icon { transition: transform 200ms var(--ease-spring), background 200ms; }
+        .social-icon:hover { transform: scale(1.1); }
+
+        /* CTA button glow */
+        .btn-cta-glow { transition: transform 200ms var(--ease-out-expo), box-shadow 200ms var(--ease-out-expo); }
+        .btn-cta-glow:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(31,41,55,0.45); }
+        .btn-cta-glow:active { transform: translateY(0); }
       `}</style>
 
       {/* Fixed ambient blobs */}
@@ -590,7 +878,10 @@ export default function UnifyLanding({ schoolId } = {}) {
       <div className="max-w-7xl mx-auto bg-white/75 backdrop-blur-2xl border border-white/60 shadow-[0_40px_100px_rgba(0,66,255,0.10),0_0_0_1px_rgba(255,255,255,0.5)] rounded-[32px] overflow-hidden">
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
-        <nav className="sticky top-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-white/50">
+        <nav
+          className="sticky top-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-white/50"
+          style={heroStyle(0, 'heroFadeDown', '600ms')}
+        >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-[#111827]">UNIFY</span>
@@ -601,10 +892,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                 Home
                 <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
               </a>
-              <a href="/hubs" className="hover:text-[#111827] transition-colors">Hubs</a>
-              <a href="/match" className="hover:text-[#111827] transition-colors">Match</a>
-              <a href="#schools" className="hover:text-[#111827] transition-colors">Schools</a>
-              <a href="#faq" className="hover:text-[#111827] transition-colors">FAQ</a>
+              <a href="/hubs" className="nav-link hover:text-[#111827] transition-colors">Hubs</a>
+              <a href="/match" className="nav-link hover:text-[#111827] transition-colors">Match</a>
+              <a href="#schools" className="nav-link hover:text-[#111827] transition-colors">Schools</a>
+              <a href="#faq" className="nav-link hover:text-[#111827] transition-colors">FAQ</a>
             </div>
             <div className="flex items-center gap-2">
               <button className="hidden md:inline-flex text-sm font-semibold text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-colors">
@@ -612,7 +903,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </button>
               <a
                 href="#waitlist"
-                className="bg-[#1F2937] hover:bg-[#111827] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                className="btn-cta-glow bg-[#1F2937] hover:bg-[#111827] text-white text-xs font-black px-4 py-2.5 rounded-full shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
               >
                 Get Early Access →
               </a>
@@ -624,34 +915,48 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section className="bg-white pt-16 md:pt-24 pb-12 md:pb-20 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
-            <div className="anim-slide-right">
-              <div className="anim-float inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7">
+            <div>
+              <div
+                className="inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7"
+                style={heroStyle(100)}
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] animate-pulse" />
                 {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
               </div>
 
               <div className="flex items-start gap-3 mb-2">
-                <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111827]">
-                  {heroHeadline}
-                  <br />
-                  <span className="text-[#0066FF]">fr.</span>
+                <h1 className="text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111827]">
+                  <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
+                    {heroHeadline}
+                  </span>
+                  <span className="text-[#0066FF] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>fr.</span>
                 </h1>
-                <BlueDoodle />
+                <div style={heroStyle(800, 'heroDoodle', '400ms')}>
+                  <BlueDoodle drawn={true} />
+                </div>
               </div>
-              <SquiggleUnderline />
 
-              <p className="anim-fade-up delay-200 text-base md:text-lg text-[#6B7280] leading-relaxed mb-8 max-w-[440px] mt-5">
+              <SquiggleUnderline heroVisible={heroVisible} />
+
+              <p
+                className="text-base md:text-lg text-[#6B7280] leading-relaxed mb-8 max-w-[440px] mt-5"
+                style={heroStyle(400, 'heroFadeUp', '700ms')}
+              >
                 {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
               </p>
 
               <a
                 href="#waitlist"
-                className="anim-fade-up delay-300 anim-glow inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#1F2937]/20 mb-7 shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                className="btn-cta-glow inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-4 rounded-full mb-7 shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                style={heroStyle(550, 'heroFadeUp', '700ms')}
               >
                 Get Early Access <ArrowRight className="w-4 h-4" />
               </a>
 
-              <div className="anim-fade-up delay-400 flex items-center gap-3 mb-5">
+              <div
+                className="flex items-center gap-3 mb-5"
+                style={heroStyle(700, 'heroScaleIn', '500ms')}
+              >
                 <div className="flex -space-x-2">
                   {['KA', 'YM', 'FA', 'EB', 'AO'].map((i) => (
                     <div
@@ -677,7 +982,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             {/* Right: phone mockup */}
-            <div className="hidden md:block anim-scale-in delay-300">
+            <div className="hidden md:block" style={heroStyle(300, 'heroScaleIn', '600ms')}>
               <PhoneMockup />
             </div>
           </div>
@@ -687,29 +992,27 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div className="bg-[#0066FF]/90 backdrop-blur-xl py-10 px-6">
+        <div ref={statsRef} className="bg-[#0066FF]/90 backdrop-blur-xl py-10 px-6">
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
-            {[
-              { num: '180+', label: 'Universities' },
-              { num: '12K+', label: 'Freshers Waiting' },
-              { num: '847',  label: 'Roommates Matched' },
-              { num: '4.8',  label: 'Overall Rating' },
-            ].map((s) => (
-              <div key={s.label} className="px-4 anim-scale-in">
-                <p className="text-3xl md:text-4xl font-black text-white">{s.num}</p>
-                <p className="text-white/70 text-sm mt-1">{s.label}</p>
-              </div>
-            ))}
+            <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
+            <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
+            <StatItem num={847} suffix="" label="Roommates Matched" trigger={statsVisible} />
+            <StatItem num={4.8} suffix="" label="Overall Rating" isDecimal={true} trigger={statsVisible} />
           </div>
         </div>
 
         {/* ── FEATURES ────────────────────────────────────────────────── */}
-        <section id="features" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section
+          id="features"
+          ref={featuresRef}
+          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={sectionRevealStyle(featuresVisible)}
+        >
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start mb-14">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <BlueDoodle />
+                  <BlueDoodle drawn={featuresVisible} />
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
@@ -722,11 +1025,15 @@ export default function UnifyLanding({ schoolId } = {}) {
 
               <div className="flex flex-col gap-4">
                 {[
-                  { icon: <Users2 className="w-5 h-5 text-[#0066FF]" />, title: '180+ Campus Hubs', body: 'Official hubs for KNUST, UG Legon, UCC, UPSA and 180+ schools across Ghana.', delay: 'delay-100' },
-                  { icon: <GraduationCap className="w-5 h-5 text-[#0066FF]" />, title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.', delay: 'delay-200' },
-                  { icon: <Building2 className="w-5 h-5 text-[#0066FF]" />, title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.', delay: 'delay-300' },
-                ].map((f) => (
-                  <div key={f.title} className={`anim-fade-up ${f.delay} bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-6 flex items-start gap-4 hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300`}>
+                  { icon: <Users2 className="w-5 h-5 text-[#0066FF]" />, title: '180+ Campus Hubs', body: 'Official hubs for KNUST, UG Legon, UCC, UPSA and 180+ schools across Ghana.' },
+                  { icon: <GraduationCap className="w-5 h-5 text-[#0066FF]" />, title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.' },
+                  { icon: <Building2 className="w-5 h-5 text-[#0066FF]" />, title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.' },
+                ].map((f, i) => (
+                  <div
+                    key={f.title}
+                    className="feature-card bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-6 flex items-start gap-4 hover:bg-white/80"
+                    style={featuresVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 100}ms both` } : { opacity: 0 }}
+                  >
                     <div className="w-11 h-11 rounded-2xl bg-[#0066FF]/8 border border-[#0066FF]/15 flex items-center justify-center flex-shrink-0">
                       {f.icon}
                     </div>
@@ -741,7 +1048,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             {/* Ghana map visualization */}
             <div className="relative rounded-3xl overflow-hidden bg-white/40 backdrop-blur-sm border border-white/30 p-6 h-72">
-              <GhanaMapViz />
+              <GhanaMapViz animate={featuresVisible} />
               <div className="absolute top-4 left-6">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">Campus Map · Ghana</p>
               </div>
@@ -753,10 +1060,10 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section id="schools" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="hidden md:block h-80 rounded-3xl overflow-hidden bg-white/40 backdrop-blur-sm border border-white/30 relative">
-              <GhanaMapViz />
+              <GhanaMapViz animate={featuresVisible} />
             </div>
             <div className="relative">
-              <BlueSwirl className="absolute -right-4 top-0" />
+              <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Find Your Campus,<br />Find Your People.
               </h2>
@@ -776,16 +1083,16 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </select>
                 <a
                   href="/hubs"
-                  className="bg-[#1F2937] text-white font-black text-sm px-5 py-2 rounded-full hover:bg-[#111827] transition-colors whitespace-nowrap shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                  className="btn-cta-glow bg-[#1F2937] text-white font-black text-sm px-5 py-2 rounded-full hover:bg-[#111827] transition-colors whitespace-nowrap shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
                 >
                   Find Hub →
                 </a>
               </div>
               <div className="flex flex-wrap gap-3">
-                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-all">
+                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-all footer-link">
                   Browse all hubs <ArrowRight className="w-3.5 h-3.5" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-all">
+                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-all footer-link">
                   Find a roommate <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -794,11 +1101,15 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
-        <section className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section
+          ref={communityRef}
+          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={sectionRevealStyle(communityVisible)}
+        >
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <OrangeDoodle />
+                <OrangeDoodle drawn={communityVisible} />
                 <Sparkles className="w-5 h-5 text-[#FF6B35]" />
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
@@ -813,7 +1124,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 href="https://wa.me/233000000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                className="btn-cta-glow inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
               >
                 <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -823,34 +1134,49 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             <div className="relative h-72 flex items-center justify-center">
-              {[
-                { initials: 'AA', bg: 'bg-blue-100', text: 'text-blue-700', top: '10%', left: '30%' },
-                { initials: 'KB', bg: 'bg-green-100', text: 'text-green-700', top: '10%', left: '55%' },
-                { initials: 'SM', bg: 'bg-purple-100', text: 'text-purple-700', top: '38%', left: '15%' },
-                { initials: 'EO', bg: 'bg-orange-100', text: 'text-orange-700', top: '38%', left: '42%' },
-                { initials: 'FA', bg: 'bg-pink-100', text: 'text-pink-700', top: '38%', left: '68%' },
-                { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%' },
-              ].map((a) => (
+              {AVATARS.map((a) => (
                 <div
                   key={a.initials}
                   className={`absolute w-12 h-12 rounded-full ${a.bg} border-2 border-white/60 flex items-center justify-center text-xs font-black ${a.text} shadow-sm`}
-                  style={{ top: a.top, left: a.left }}
+                  style={{
+                    top: a.top, left: a.left,
+                    animation: communityVisible
+                      ? `avatarPop 400ms var(--ease-spring) ${a.order * 80}ms both, breathe 4s ease-in-out ${a.order * 300}ms infinite`
+                      : 'none',
+                    opacity: communityVisible ? undefined : 0,
+                  }}
                 >
                   {a.initials}
                 </div>
               ))}
-              <div className="absolute top-2 right-0 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl rounded-tl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm">
+              <div
+                className="absolute top-2 right-0 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl rounded-tl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm"
+                style={{
+                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 400ms both' : 'none',
+                  opacity: communityVisible ? undefined : 0,
+                }}
+              >
                 Already linked! 🔥
               </div>
-              <div className="absolute bottom-8 right-4 bg-[#0066FF]/8 border border-[#0066FF]/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-sm">
+              <div className="absolute bottom-8 right-4 bg-[#0066FF]/8 border border-[#0066FF]/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-sm"
+                style={{
+                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 560ms both' : 'none',
+                  opacity: communityVisible ? undefined : 0,
+                }}
+              >
                 Found my roomie!
               </div>
-              <div className="absolute bottom-2 left-0 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm">
+              <div className="absolute bottom-2 left-0 bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs font-semibold text-[#111827] shadow-sm"
+                style={{
+                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 720ms both' : 'none',
+                  opacity: communityVisible ? undefined : 0,
+                }}
+              >
                 Best app fr 🇬🇭
               </div>
               <div className="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
                 {['W', 'IG', 'X'].map((s) => (
-                  <div key={s} className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm border border-white/70 flex items-center justify-center text-[9px] font-black text-[#6B7280]">
+                  <div key={s} className="social-icon w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm border border-white/70 flex items-center justify-center text-[9px] font-black text-[#6B7280]">
                     {s}
                   </div>
                 ))}
@@ -860,7 +1186,11 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
-        <section className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section
+          ref={testimonialsRef}
+          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={sectionRevealStyle(testimonialsVisible)}
+        >
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-10">
               <div>
@@ -873,39 +1203,74 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </h2>
               </div>
               <div className="hidden md:flex items-center gap-2">
-                <button className="w-10 h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] flex items-center justify-center text-[#111827] transition-all">
-                  ←
-                </button>
-                <button className="w-10 h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] flex items-center justify-center text-[#111827] transition-all">
-                  →
-                </button>
+                <button
+                  onClick={prevTestimonial}
+                  className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white/70 backdrop-blur-sm hover:border-[#0066FF] hover:text-[#0066FF] flex items-center justify-center text-[#111827] transition-all duration-200 hover:scale-110 active:scale-95"
+                >←</button>
+                <button
+                  onClick={nextTestimonial}
+                  className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white/70 backdrop-blur-sm hover:border-[#0066FF] hover:text-[#0066FF] flex items-center justify-center text-[#111827] transition-all duration-200 hover:scale-110 active:scale-95"
+                >→</button>
               </div>
             </div>
-            <div className="grid md:grid-cols-3 gap-5">
-              {TESTIMONIALS.map((t) => (
-                <div key={t.name} className="bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-8 flex flex-col hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
+
+            {/* Desktop: show 3 cards, highlight active */}
+            <div className="hidden md:grid grid-cols-3 gap-5">
+              {TESTIMONIALS.map((t, i) => (
+                <div
+                  key={t.name}
+                  onClick={() => setActiveTestimonial(i)}
+                  style={{
+                    animation: testimonialsVisible ? `cardSlideIn 700ms var(--ease-out-expo) ${i * 100}ms both` : 'none',
+                    opacity: testimonialsVisible ? undefined : 0,
+                    transform: activeTestimonial === i ? 'translateY(-8px)' : 'translateY(0)',
+                    transition: 'transform 400ms var(--ease-out-expo), box-shadow 400ms var(--ease-out-expo)',
+                    cursor: 'pointer',
+                  }}
+                  className={`bg-white/65 backdrop-blur-xl border rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col transition-all duration-300 ${activeTestimonial === i ? 'border-[#0066FF]/30 shadow-[0_16px_48px_rgba(0,102,255,0.12)]' : 'border-white/75 hover:bg-white/80'}`}
+                >
                   <div className="text-6xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
                   <p className="text-[#6B7280] text-sm leading-relaxed flex-1 mb-6">{t.quote}</p>
-                  <div className="border-t border-white/30 pt-5 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-black text-[#0066FF] flex-shrink-0">
-                      {t.initials}
-                    </div>
-                    <div className="flex-1 min-w-0">
+                  <div className="border-t border-white/50 pt-5 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-black text-[#0066FF] flex-shrink-0">{t.initials}</div>
+                    <div className="flex-1">
                       <p className="font-bold text-[#111827] text-sm">{t.name}</p>
                       <p className="text-[#9CA3AF] text-xs">{t.role}</p>
                     </div>
-                    <div className="text-[#FF6B35] text-xs">
-                      {'⭐'.repeat(t.stars)}
-                    </div>
+                    <div className="text-[#FF6B35] text-xs">{'⭐'.repeat(t.stars)}</div>
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Mobile: show one card at a time */}
+            <div className="md:hidden">
+              {TESTIMONIALS.map((t, i) => i === activeTestimonial && (
+                <div key={t.name} style={{ animation: 'cardSlideIn 500ms var(--ease-out-expo) both' }} className="bg-white/65 backdrop-blur-xl border border-white/75 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+                  <div className="text-5xl font-black text-[#0066FF] mb-3">&ldquo;</div>
+                  <p className="text-[#6B7280] text-sm leading-relaxed mb-5">{t.quote}</p>
+                  <div className="border-t border-white/50 pt-4 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-xs font-black text-[#0066FF]">{t.initials}</div>
+                    <div><p className="font-bold text-[#111827] text-sm">{t.name}</p><p className="text-[#9CA3AF] text-xs">{t.role}</p></div>
+                  </div>
+                </div>
+              ))}
+              <div className="flex justify-center gap-2 mt-4">
+                {TESTIMONIALS.map((_, i) => (
+                  <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* ── WAITLIST CTA ─────────────────────────────────────────────── */}
-        <section id="waitlist" className="bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section
+          id="waitlist"
+          ref={ctaRef}
+          className="bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={sectionRevealStyle(ctaVisible)}
+        >
           <div className="max-w-2xl mx-auto text-center">
             <span className="text-5xl block mb-6">🇬🇭</span>
             <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-4 py-2 rounded-full mb-7">
@@ -925,12 +1290,17 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── FAQ + CONTACT ─────────────────────────────────────────────── */}
-        <section id="faq" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section
+          id="faq"
+          ref={faqRef}
+          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={sectionRevealStyle(faqVisible)}
+        >
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-start">
             <div className="relative">
-              <BlueSwirl className="absolute -left-4 -top-4" />
+              <BlueSwirl className="absolute -left-4 -top-4" drawn={faqVisible} />
               <div className="flex items-center gap-3 mb-4">
-                <OrangeDoodle />
+                <OrangeDoodle drawn={faqVisible} />
                 <MessageCircle className="w-5 h-5 text-[#0066FF]" />
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
               </div>
@@ -968,7 +1338,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             <div>
               <p className="text-sm text-[#6B7280] mb-4">Check if your question is already answered:</p>
-              <FAQAccordion items={FAQS_NEW} />
+              <FAQAccordion items={FAQS_NEW} visible={faqVisible} />
             </div>
           </div>
         </section>
@@ -995,7 +1365,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                     { label: 'Match', href: '/match' },
                     { label: 'Schools', href: '#schools' },
                   ].map((l) => (
-                    <a key={l.label} href={l.href} className="text-sm text-white/80 hover:text-white transition-colors">{l.label}</a>
+                    <a key={l.label} href={l.href} className="footer-link text-sm text-white/80 hover:text-white transition-colors">{l.label}</a>
                   ))}
                 </div>
               </div>
@@ -1003,7 +1373,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Support</p>
                 <div className="flex flex-col gap-2.5">
                   {['FAQ', 'Contact', 'Privacy', 'Terms'].map((l) => (
-                    <a key={l} href="#" className="text-sm text-white/80 hover:text-white transition-colors">{l}</a>
+                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white transition-colors">{l}</a>
                   ))}
                 </div>
               </div>
@@ -1018,7 +1388,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                     <a
                       key={s.label}
                       href={s.href}
-                      className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[10px] font-black text-white hover:bg-white/20 transition-all"
+                      className="social-icon w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[10px] font-black text-white hover:bg-white/20"
                     >
                       {s.label}
                     </a>
