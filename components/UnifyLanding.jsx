@@ -616,21 +616,22 @@ function FAQAccordion({ items, visible }) {
 
 // ─── STAT ITEM WITH COUNT-UP ──────────────────────────────────────────────────
 
+function formatStat(n, { is12K, isDecimal, suffix }) {
+  const v = Number(n);
+  if (is12K) return `${Math.round(v / 1000)}K+`;
+  if (isDecimal) return v.toFixed(1);
+  return `${Math.floor(v)}${suffix}`;
+}
+
 function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, trigger }) {
   const rawVal = useCountUp(num, 1500, trigger);
-  let display;
-  if (is12K) {
-    display = `${(Number(rawVal) / 1000).toFixed(0)}K+`;
-  } else if (isDecimal) {
-    display = `${rawVal}`;
-  } else {
-    display = `${rawVal}${suffix}`;
-  }
+  // Always show correct final value; animate when trigger fires
+  const display = trigger ? formatStat(rawVal, { is12K, isDecimal, suffix }) : formatStat(num, { is12K, isDecimal, suffix });
   return (
     <div className="px-4">
       <p
         className="text-3xl md:text-4xl font-black text-white"
-        style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : { opacity: 0 }}
+        style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}
       >
         {display}
       </p>
@@ -649,7 +650,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
   const heroVisible = useHeroSequence();
 
-  const [statsRef, statsVisible] = useScrollReveal(0.3);
+  const [statsRef, statsVisible] = useScrollReveal(0.05);
   const [featuresRef, featuresVisible] = useScrollReveal();
   const [communityRef, communityVisible] = useScrollReveal();
   const [testimonialsRef, testimonialsVisible] = useScrollReveal();
@@ -1221,8 +1222,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   key={t.name}
                   onClick={() => setActiveTestimonial(i)}
                   style={{
-                    animation: testimonialsVisible ? `cardSlideIn 700ms var(--ease-out-expo) ${i * 100}ms both` : 'none',
-                    opacity: testimonialsVisible ? undefined : 0,
+                    animation: testimonialsVisible ? `cardSlideIn 700ms var(--ease-out-expo) ${i * 100}ms both` : undefined,
                     transform: activeTestimonial === i ? 'translateY(-8px)' : 'translateY(0)',
                     transition: 'transform 400ms var(--ease-out-expo), box-shadow 400ms var(--ease-out-expo)',
                     cursor: 'pointer',
