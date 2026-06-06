@@ -843,9 +843,9 @@ function MobileMenu() {
         </nav>
 
         <div className="flex flex-col gap-3 mt-8">
-          <button className="w-full py-3 rounded-full border border-[#E5E7EB] text-sm font-semibold text-[#111827] hover:border-[#0066FF] hover:text-[#0066FF] transition-colors">
+          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-full border border-[#E5E7EB] text-sm font-semibold text-[#111827] hover:border-[#0066FF] hover:text-[#0066FF] transition-colors text-center">
             Sign In
-          </button>
+          </a>
           <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#0066FF] text-white text-sm font-black text-center hover:bg-[#0052cc] transition-colors">
             Get Early Access →
           </a>
@@ -1164,9 +1164,9 @@ export default function UnifyLanding({ schoolId } = {}) {
               <a href="#faq" className="nav-link hover:text-[#111827] transition-colors" onClick={() => track('nav_click', { page: 'faq' })}>FAQ</a>
             </div>
             <div className="flex items-center gap-2">
-              <button className="hidden md:inline-flex text-sm font-semibold text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-colors">
+              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-[#111827] px-4 py-2 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] transition-colors">
                 Sign In
-              </button>
+              </a>
               <a
                 href="#waitlist"
                 className="hidden md:inline-flex btn-cta-glow bg-[#1F2937] hover:bg-[#111827] text-white text-xs font-black px-4 py-2.5 rounded-full shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
