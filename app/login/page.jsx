@@ -40,6 +40,17 @@ function BlueSwirl() {
 
 // ── Campus gradient tiles ───────────────────────────────────────────────────
 
+// Layout: tight organic cluster. All positions/sizes tuned so every frame
+// overlaps at least one neighbour. Think of KNUST as the anchor; others orbit it.
+//
+//  UG ──────┐
+//  (top-left) overlaps KNUST top-left corner
+//            KNUST (center anchor, largest)
+//                      └── Ashesi (top-right, overlaps KNUST top-right)
+//  UPSA (left) overlaps KNUST bottom-left
+//            UDS (bottom-center) overlaps KNUST + UCC
+//                      └── UCC (bottom-right, overlaps KNUST bottom-right)
+
 const FRAMES = [
   {
     id: 'knust',
@@ -48,17 +59,13 @@ const FRAMES = [
     initials: 'KN',
     stripe: '#FFD700',
     bg: 'linear-gradient(150deg, #0a2e0a 0%, #1a4a10 40%, #2d6e1e 70%, #1a3d0a 100%)',
-    orb: 'rgba(255,210,50,0.20)',
-    orbPos: '72% 18%',
-    // exact positioning per spec
-    width: 280, height: 210,
-    top: '15%', left: '20%',
-    rotation: -2,
-    zIndex: 10,
-    entranceAnim: 'entranceMain',
-    floatAnim: 'float0',
-    floatDur: '4s',
-    delay: '0ms',
+    orb: 'rgba(255,210,50,0.20)', orbPos: '72% 18%',
+    width: 270, height: 202,
+    top: '22%', left: '24%',
+    rotation: -2, zIndex: 10,
+    floatAnim: 'float0', floatDur: '4s', delay: '0ms',
+    from: 'scale(0.88) translateY(20px) rotate(-2deg)',
+    to:   'scale(1) translateY(0) rotate(-2deg)',
   },
   {
     id: 'ug',
@@ -67,52 +74,13 @@ const FRAMES = [
     initials: 'UG',
     stripe: '#C0A000',
     bg: 'linear-gradient(150deg, #020b1f 0%, #05194a 40%, #0a2f72 70%, #031232 100%)',
-    orb: 'rgba(192,160,0,0.22)',
-    orbPos: '22% 28%',
-    width: 220, height: 165,
-    top: '5%', left: '5%',
-    rotation: -8,
-    zIndex: 5,
-    entranceAnim: 'entranceTopLeft',
-    floatAnim: 'float1',
-    floatDur: '5s',
-    delay: '150ms',
-  },
-  {
-    id: 'ucc',
-    school: 'UCC',
-    caption: 'Main Campus · Cape Coast',
-    initials: 'UC',
-    stripe: '#FFD700',
-    bg: 'linear-gradient(150deg, #1a0000 0%, #4a0606 38%, #7a0a0a 68%, #3a0303 100%)',
-    orb: 'rgba(255,210,60,0.18)',
-    orbPos: '65% 72%',
-    width: 240, height: 180,
-    top: '45%', left: '35%',
-    rotation: 6,
-    zIndex: 8,
-    entranceAnim: 'entranceBotRight',
-    floatAnim: 'float2',
-    floatDur: '4.5s',
-    delay: '300ms',
-  },
-  {
-    id: 'upsa',
-    school: 'UPSA',
-    caption: 'Modern Campus · Accra',
-    initials: 'UP',
-    stripe: '#CC2222',
-    bg: 'linear-gradient(150deg, #03031a 0%, #0d0d4a 40%, #1a1a72 68%, #06062a 100%)',
-    orb: 'rgba(204,40,40,0.22)',
-    orbPos: '78% 62%',
-    width: 200, height: 150,
-    top: '55%', left: '8%',
-    rotation: -5,
-    zIndex: 4,
-    entranceAnim: 'entranceOffset',
-    floatAnim: 'float3',
-    floatDur: '5.5s',
-    delay: '450ms',
+    orb: 'rgba(192,160,0,0.22)', orbPos: '22% 28%',
+    width: 215, height: 161,
+    top: '6%', left: '6%',
+    rotation: -9, zIndex: 6,
+    floatAnim: 'float1', floatDur: '5.3s', delay: '140ms',
+    from: 'translateX(-24px) rotate(-13deg)',
+    to:   'translateX(0) rotate(-9deg)',
   },
   {
     id: 'ashesi',
@@ -121,16 +89,43 @@ const FRAMES = [
     initials: 'AU',
     stripe: '#C0C0C0',
     bg: 'linear-gradient(150deg, #2a0000 0%, #5a0808 38%, #8B1010 65%, #3d0505 100%)',
-    orb: 'rgba(192,192,192,0.18)',
-    orbPos: '35% 25%',
-    width: 215, height: 162,
-    top: '4%', left: '48%',
-    rotation: 9,
-    zIndex: 9,
-    entranceAnim: 'entranceAshesi',
-    floatAnim: 'float4',
-    floatDur: '6.2s',
-    delay: '600ms',
+    orb: 'rgba(192,192,192,0.18)', orbPos: '35% 25%',
+    width: 210, height: 158,
+    top: '5%', left: '50%',
+    rotation: 8, zIndex: 8,
+    floatAnim: 'float2', floatDur: '6.1s', delay: '280ms',
+    from: 'translateY(-24px) rotate(12deg)',
+    to:   'translateY(0) rotate(8deg)',
+  },
+  {
+    id: 'ucc',
+    school: 'UCC',
+    caption: 'Main Campus · Cape Coast',
+    initials: 'UC',
+    stripe: '#FFD700',
+    bg: 'linear-gradient(150deg, #1a0000 0%, #4a0606 38%, #7a0a0a 68%, #3a0303 100%)',
+    orb: 'rgba(255,210,60,0.18)', orbPos: '65% 72%',
+    width: 235, height: 176,
+    top: '50%', left: '38%',
+    rotation: 6, zIndex: 9,
+    floatAnim: 'float3', floatDur: '4.6s', delay: '420ms',
+    from: 'translateX(24px) rotate(10deg)',
+    to:   'translateX(0) rotate(6deg)',
+  },
+  {
+    id: 'upsa',
+    school: 'UPSA',
+    caption: 'Modern Campus · Accra',
+    initials: 'UP',
+    stripe: '#CC2222',
+    bg: 'linear-gradient(150deg, #03031a 0%, #0d0d4a 40%, #1a1a72 68%, #06062a 100%)',
+    orb: 'rgba(204,40,40,0.22)', orbPos: '78% 62%',
+    width: 198, height: 149,
+    top: '48%', left: '6%',
+    rotation: -7, zIndex: 7,
+    floatAnim: 'float4', floatDur: '5.7s', delay: '560ms',
+    from: 'translateX(-20px) rotate(-11deg)',
+    to:   'translateX(0) rotate(-7deg)',
   },
   {
     id: 'uds',
@@ -139,39 +134,47 @@ const FRAMES = [
     initials: 'UD',
     stripe: '#FF8C00',
     bg: 'linear-gradient(150deg, #001a00 0%, #003d00 38%, #005c00 65%, #002800 100%)',
-    orb: 'rgba(255,140,0,0.22)',
-    orbPos: '60% 40%',
-    width: 195, height: 146,
-    top: '66%', left: '22%',
-    rotation: -6,
-    zIndex: 7,
-    entranceAnim: 'entranceUds',
-    floatAnim: 'float5',
-    floatDur: '4.8s',
-    delay: '750ms',
+    orb: 'rgba(255,140,0,0.22)', orbPos: '60% 40%',
+    width: 192, height: 144,
+    top: '68%', left: '24%',
+    rotation: -4, zIndex: 5,
+    floatAnim: 'float5', floatDur: '4.9s', delay: '700ms',
+    from: 'translateY(24px) rotate(-7deg)',
+    to:   'translateY(0) rotate(-4deg)',
   },
 ];
 
 function CampusFrame({ frame, scrollY }) {
   const parallaxFactors = { knust: 0.04, ug: 0.07, ucc: 0.055, upsa: 0.09, ashesi: 0.06, uds: 0.08 };
   const py = -(scrollY * (parallaxFactors[frame.id] || 0.05));
-  const r = frame.rotation;
+  const entranceKey = `entrance_${frame.id}`;
+  const floatKey = `float_${frame.id}`;
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: frame.top,
-      left: frame.left,
-      width: frame.width,
-      zIndex: frame.zIndex,
-      borderRadius: 16,
-      background: '#fff',
-      padding: 10,
-      boxShadow: '0 20px 40px -10px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)',
-      animation: `${frame.entranceAnim} 600ms cubic-bezier(0.16,1,0.3,1) ${frame.delay} both, ${frame.floatAnim} ${frame.floatDur} ease-in-out ${frame.delay} infinite alternate`,
-      willChange: 'transform',
-      '--r': `${r}deg`,
-    }}>
+    <>
+      <style>{`
+        @keyframes ${entranceKey} {
+          from { opacity: 0; transform: ${frame.from}; }
+          to   { opacity: 1; transform: ${frame.to}; }
+        }
+        @keyframes ${floatKey} {
+          from { transform: ${frame.to}; }
+          to   { transform: ${frame.to.replace('rotate(', 'translateY(-7px) rotate(')}; }
+        }
+      `}</style>
+      <div style={{
+        position: 'absolute',
+        top: frame.top,
+        left: frame.left,
+        width: frame.width,
+        zIndex: frame.zIndex,
+        borderRadius: 16,
+        background: '#fff',
+        padding: 10,
+        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)',
+        animation: `${entranceKey} 650ms cubic-bezier(0.16,1,0.3,1) ${frame.delay} both, ${floatKey} ${frame.floatDur} ease-in-out calc(${frame.delay} + 650ms) infinite alternate`,
+        willChange: 'transform',
+      }}>
       {/* Photo tile */}
       <div style={{
         width: '100%',
@@ -246,6 +249,7 @@ function CampusFrame({ frame, scrollY }) {
         background: frame.stripe, borderRadius: '0 0 4px 4px', opacity: 0.55,
       }} />
     </div>
+    </>
   );
 }
 
@@ -307,58 +311,7 @@ export default function LoginPage() {
           to   { stroke-dashoffset: 0; opacity: 1; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Frame entrance keyframes */
-        @keyframes entranceMain {
-          from { opacity: 0; transform: scale(0.9) translateY(20px) rotate(-2deg); }
-          to   { opacity: 1; transform: scale(1) translateY(0)     rotate(-2deg); }
-        }
-        @keyframes entranceTopLeft {
-          from { opacity: 0; transform: translateX(-20px) rotate(-12deg); }
-          to   { opacity: 1; transform: translateX(0)     rotate(-8deg); }
-        }
-        @keyframes entranceBotRight {
-          from { opacity: 0; transform: translateY(-20px) rotate(10deg); }
-          to   { opacity: 1; transform: translateY(0)     rotate(6deg); }
-        }
-        @keyframes entranceOffset {
-          from { opacity: 0; transform: translateX(20px) rotate(-8deg); }
-          to   { opacity: 1; transform: translateX(0)    rotate(-5deg); }
-        }
-        @keyframes entranceAshesi {
-          from { opacity: 0; transform: translateY(-24px) rotate(11deg); }
-          to   { opacity: 1; transform: translateY(0)     rotate(7deg); }
-        }
-        @keyframes entranceUds {
-          from { opacity: 0; transform: translateX(-20px) rotate(-10deg); }
-          to   { opacity: 1; transform: translateX(0)     rotate(-7deg); }
-        }
-
-        /* Ambient float — each keeps its base rotation via CSS var */
-        @keyframes float0 {
-          0%,100% { transform: translateY(0)   rotate(-2deg); }
-          50%     { transform: translateY(-6px) rotate(-1.5deg); }
-        }
-        @keyframes float1 {
-          0%,100% { transform: translateY(0)   rotate(-8deg); }
-          50%     { transform: translateY(-6px) rotate(-7.5deg); }
-        }
-        @keyframes float2 {
-          0%,100% { transform: translateY(0)   rotate(6deg); }
-          50%     { transform: translateY(-6px) rotate(6.5deg); }
-        }
-        @keyframes float3 {
-          0%,100% { transform: translateY(0)   rotate(-5deg); }
-          50%     { transform: translateY(-6px) rotate(-4.5deg); }
-        }
-        @keyframes float4 {
-          0%,100% { transform: translateY(0)   rotate(7deg); }
-          50%     { transform: translateY(-6px) rotate(7.5deg); }
-        }
-        @keyframes float5 {
-          0%,100% { transform: translateY(0)   rotate(-7deg); }
-          50%     { transform: translateY(-6px) rotate(-6.5deg); }
-        }
+        /* per-frame entrance + float keyframes are injected by CampusFrame */
 
         @keyframes slideInRight {
           from { opacity: 0; transform: translateX(28px); }
