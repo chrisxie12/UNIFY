@@ -222,6 +222,21 @@ function OrangeDoodle({ drawn = true }) {
   );
 }
 
+function SparkDoodle({ color = '#0066FF', size = 28 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <line x1="14" y1="2"  x2="14" y2="8"  stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="14" y1="20" x2="14" y2="26" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="2"  y1="14" x2="8"  y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="20" y1="14" x2="26" y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="5"  y1="5"  x2="9"  y2="9"  stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="19" y1="19" x2="23" y2="23" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="23" y1="5"  x2="19" y2="9"  stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="5"  y1="23" x2="9"  y2="19" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
 function SquiggleUnderline({ heroVisible }) {
   return (
     <svg
@@ -1041,6 +1056,18 @@ export default function UnifyLanding({ schoolId } = {}) {
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* Ambient drift */
+        @keyframes driftY {
+          from { transform: translateY(0); }
+          to   { transform: translateY(-12px); }
+        }
+
+        /* Ambient drift dots */
+        @keyframes driftY {
+          from { transform: translateY(0); }
+          to   { transform: translateY(-12px); }
+        }
+
         /* Fade in for backdrop */
         @keyframes fadeIn {
           from { opacity: 0; }
@@ -1152,7 +1179,22 @@ export default function UnifyLanding({ schoolId } = {}) {
         </nav>
 
         {/* ── HERO — 55/45 asymmetric ─────────────────────────────────── */}
-        <section id="main-content" className="bg-white pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+        <section id="main-content" className="relative bg-white pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+          {/* Hero glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 50%, rgba(0,102,255,0.06) 0%, transparent 70%)' }} />
+          {/* Ambient drift dots */}
+          {[
+            { size: 10, top: '15%', left: '8%',  color: '#0066FF', dur: '5.2s', delay: '0s'    },
+            { size: 8,  top: '70%', left: '5%',  color: '#0066FF', dur: '4.1s', delay: '1.2s'  },
+            { size: 12, top: '30%', left: '92%', color: '#0066FF', dur: '6.0s', delay: '0.5s'  },
+            { size: 6,  top: '80%', left: '88%', color: '#FF6B35', dur: '4.8s', delay: '2.1s'  },
+            { size: 8,  top: '55%', left: '3%',  color: '#FF6B35', dur: '5.5s', delay: '0.8s'  },
+          ].map((d, i) => (
+            <div key={i} className="absolute rounded-full pointer-events-none"
+              style={{ width: d.size, height: d.size, top: d.top, left: d.left,
+                background: d.color, opacity: 0.15,
+                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
+          ))}
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
             <div>
@@ -1185,13 +1227,16 @@ export default function UnifyLanding({ schoolId } = {}) {
                 {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
               </p>
 
-              <a
-                href="#waitlist"
-                className="btn-cta-glow inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-4 rounded-full mb-7 shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
-                style={heroStyle(550, 'heroFadeUp', '700ms')}
-              >
-                Get Early Access <ArrowRight className="w-4 h-4" />
-              </a>
+              <span className="relative inline-block mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
+                <a
+                  href="#waitlist"
+                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base px-8 py-4 rounded-full shadow-[0_4px_14px_rgba(31,41,55,0.35)]"
+                >
+                  Get Early Access <ArrowRight className="w-4 h-4" />
+                </a>
+                <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-[#FF6B35] opacity-60" />
+                <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-[#FF6B35] opacity-40" />
+              </span>
 
               <div
                 className="flex items-center gap-3 mb-5"
@@ -1221,9 +1266,39 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
             </div>
 
-            {/* Right: phone mockup */}
-            <div className="hidden md:block" style={heroStyle(300, 'heroScaleIn', '600ms')}>
-              <PhoneMockup />
+            {/* Right: phone mockup with card stack */}
+            <div className="relative h-[420px] hidden md:flex items-center justify-center" style={heroStyle(300, 'heroScaleIn', '600ms')}>
+              {/* Glow behind stack */}
+              <div className="absolute w-64 h-64 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(0,102,255,0.12) 0%, transparent 70%)', zIndex: -1 }} />
+              {/* Card stack — behind layers */}
+              <div className="absolute" style={{
+                background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)',
+                borderRadius: 24, padding: '20px', width: 240,
+                border: '1px solid rgba(255,255,255,0.6)',
+                boxShadow: '0 8px 32px rgba(0,102,255,0.08)',
+                transform: 'translateX(16px) translateY(8px) rotate(3deg)',
+                zIndex: 0,
+              }}>
+                <div style={{ height: 12, background: 'linear-gradient(90deg,#e5e7eb,#f3f4f6)', borderRadius: 6, marginBottom: 10, width: '60%' }}/>
+                <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, marginBottom: 6, width: '80%' }}/>
+                <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, width: '50%' }}/>
+              </div>
+              <div className="absolute" style={{
+                background: 'rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)',
+                borderRadius: 24, padding: '20px', width: 240,
+                border: '1px solid rgba(255,255,255,0.5)',
+                transform: 'translateX(-14px) translateY(14px) rotate(-2.5deg)',
+                zIndex: 0,
+              }}>
+                <div style={{ height: 12, background: 'linear-gradient(90deg,#dbeafe,#eff6ff)', borderRadius: 6, marginBottom: 10, width: '70%' }}/>
+                <div style={{ height: 8, background: '#eff6ff', borderRadius: 4, marginBottom: 6, width: '55%' }}/>
+                <div style={{ height: 8, background: '#eff6ff', borderRadius: 4, width: '75%' }}/>
+              </div>
+              {/* Main card (zIndex: 1 to sit on top of stack) */}
+              <div style={{ zIndex: 1, position: 'relative' }}>
+                <PhoneMockup />
+              </div>
             </div>
           </div>
         </section>
@@ -1245,8 +1320,8 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="features"
           ref={featuresRef}
-          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
-          style={sectionRevealStyle(featuresVisible)}
+          className="py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={{ ...sectionRevealStyle(featuresVisible), background: 'linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%)' }}
         >
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start mb-14">
@@ -1255,6 +1330,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <BlueDoodle drawn={featuresVisible} />
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
                 </div>
+                <SparkDoodle />
                 <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                   That&apos;s The Way<br />To Fresher.
                 </h2>
@@ -1292,13 +1368,21 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+        <section id="schools" className="relative bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
+          <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
+            <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
+              <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
+                stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"
+                style={{ strokeDasharray: 800, strokeDashoffset: 0 }}/>
+            </svg>
+          </div>
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="hidden md:block h-80 rounded-3xl overflow-hidden">
               <SchoolLocatorViz animate={featuresVisible} />
             </div>
             <div className="relative">
               <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
+              <SparkDoodle />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Find Your Campus,<br />Find Your People.
               </h2>
@@ -1338,8 +1422,8 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
         <section
           ref={communityRef}
-          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
-          style={sectionRevealStyle(communityVisible)}
+          className="py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          style={{ ...sectionRevealStyle(communityVisible), background: '#f0f7ff' }}
         >
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
@@ -1347,6 +1431,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <OrangeDoodle drawn={communityVisible} />
                 <Sparkles className="w-5 h-5 text-[#FF6B35]" />
               </div>
+              <SparkDoodle />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Your Campus Fam<br />Is Calling.
                 <br />
@@ -1434,6 +1519,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Reviews</span>
                   <Star className="w-4 h-4 text-[#0066FF]" />
                 </div>
+                <SparkDoodle />
                 <h2 className="text-4xl md:text-5xl font-black text-[#111827]">
                   Satisfied Freshers Are<br />Our Best Ads.
                 </h2>
@@ -1463,8 +1549,12 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 {TESTIMONIALS.map((t) => (
                   <div key={t.name} className="w-full flex-shrink-0 px-1 md:px-3">
-                    <div className="bg-white/65 backdrop-blur-xl border border-white/75 rounded-3xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col min-h-[220px]">
-                      <div className="text-6xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
+                    <div className="relative overflow-hidden bg-white/65 backdrop-blur-xl border border-white/75 rounded-3xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col min-h-[220px]">
+                      {/* Watermark quote */}
+                      <div className="absolute top-4 right-6 text-[96px] font-black leading-none pointer-events-none select-none"
+                           style={{ color: '#0066FF', opacity: 0.08 }}>&rdquo;</div>
+                      {/* Visible small quote */}
+                      <div className="text-5xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
                       <p className="text-[#6B7280] text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
                       <div className="border-t border-white/50 pt-5 flex items-center gap-3">
                         <div className="w-11 h-11 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-sm font-black text-[#0066FF] flex-shrink-0">{t.initials}</div>
@@ -1531,9 +1621,15 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="faq"
           ref={faqRef}
-          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          className="relative bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
           style={sectionRevealStyle(faqVisible)}
         >
+          <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>
+            <svg viewBox="0 0 80 600" fill="none" className="h-full w-full opacity-20">
+              <path d="M20,0 C80,80 -10,180 60,280 C100,340 10,420 50,520 C70,570 30,590 20,600"
+                stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </div>
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-start">
             <div className="relative">
               <BlueSwirl className="absolute -left-4 -top-4" drawn={faqVisible} />
@@ -1542,6 +1638,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <MessageCircle className="w-5 h-5 text-[#0066FF]" />
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
               </div>
+              <SparkDoodle />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Got A Question<br />For UNIFY?
               </h2>
