@@ -529,38 +529,111 @@ function PhoneMockup() {
 
 // ─── GHANA MAP VIZ ────────────────────────────────────────────────────────────
 
-function GhanaMapViz({ animate = false }) {
-  const pins = [
-    { label: 'UG Legon', count: '310 freshers', initials: 'U', bg: 'bg-[#0066FF]/10', text: 'text-[#0066FF]', top: '62%', right: '16%', left: undefined, bottom: undefined, floatDur: '3.8s' },
-    { label: 'KNUST Hub', count: '420 freshers', initials: 'K', bg: 'bg-[#0066FF]/10', text: 'text-[#0066FF]', top: '46%', left: '44%', right: undefined, bottom: undefined, floatDur: '4.5s' },
-    { label: 'UCC Hub', count: '185 freshers', initials: 'C', bg: 'bg-green-100', text: 'text-green-700', bottom: '22%', left: '18%', top: undefined, right: undefined, floatDur: '5.2s' },
-  ];
+// ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
+const CAMPUS_TILES = [
+  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', delay: 0   },
+  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', delay: 80  },
+  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', delay: 160 },
+  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', delay: 240 },
+];
 
+function CampusCollage({ animate = false }) {
   return (
-    <div className="relative w-full h-72 md:h-full min-h-[300px]">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg viewBox="0 0 200 240" className="h-full w-auto opacity-10 fill-[#111827]">
-          <path d="M60,10 L140,10 L160,30 L170,60 L165,90 L170,120 L160,150 L155,180 L140,200 L120,220 L100,230 L80,220 L60,200 L45,180 L40,150 L30,120 L35,90 L30,60 L40,30 Z" />
-        </svg>
-      </div>
-      {pins.map((pin, i) => (
-        <div
-          key={pin.label}
-          className="absolute bg-white/70 backdrop-blur-sm border border-white/80 rounded-2xl p-2 flex items-center gap-2 shadow-sm"
-          style={{
-            top: pin.top, right: pin.right, left: pin.left, bottom: pin.bottom,
-            animation: animate
-              ? `pinDrop 500ms var(--ease-spring) ${i * 120}ms both, pinFloat ${pin.floatDur} ease-in-out ${i * 120 + 600}ms infinite`
-              : 'none',
-          }}
-        >
-          <div className={`w-8 h-8 rounded-full ${pin.bg} flex items-center justify-center ${pin.text} font-bold text-xs`}>{pin.initials}</div>
-          <div>
-            <p className="text-[#111827] text-xs font-bold">{pin.label}</p>
-            <p className="text-[#6B7280] text-[10px]">{pin.count}</p>
+    <div className="relative rounded-3xl overflow-hidden p-6 md:p-8"
+         style={{ background: 'linear-gradient(135deg,#0a1628 0%,#0d1f3c 60%,#0f2952 100%)' }}>
+      {/* Dot grid */}
+      <div className="absolute inset-0 opacity-[0.07]"
+           style={{ backgroundImage: 'radial-gradient(circle,white 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
+
+      <div className="relative grid grid-cols-2 gap-4">
+        {CAMPUS_TILES.map((t) => (
+          <div
+            key={t.label}
+            className="rounded-2xl p-5 flex flex-col justify-between"
+            style={{
+              background: t.grad,
+              minHeight: 120,
+              animation: animate ? `revealUp 600ms var(--ease-out-expo) ${t.delay}ms both` : 'none',
+              opacity: animate ? undefined : 0,
+            }}
+          >
+            {/* Large faded initials */}
+            <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(255,255,255,0.13)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
+              {t.initials}
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: 'white', lineHeight: 1 }}>{t.sub}</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
+            </div>
           </div>
+        ))}
+      </div>
+
+      {/* Live badge */}
+      <div className="relative mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4FC3F7] opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4FC3F7]" />
+          </span>
+          <span style={{ fontSize: 10, fontWeight: 800, color: '#4FC3F7', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Live · Ghana</span>
         </div>
-      ))}
+        <div style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50, padding: '4px 14px' }}>
+          <span style={{ fontSize: 12, fontWeight: 900, color: 'white' }}>1,074 freshers online</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── SCHOOL LOCATOR (left side of school search section) ─────────────────────
+const LOCATOR_SCHOOLS = [
+  { name: 'KNUST',    location: 'Kumasi',      freshers: 420, color: '#0066FF', initials: 'KN', delay: 0   },
+  { name: 'UG Legon', location: 'Accra',       freshers: 310, color: '#7c3aed', initials: 'UG', delay: 80  },
+  { name: 'UCC',      location: 'Cape Coast',  freshers: 185, color: '#059669', initials: 'UC', delay: 160 },
+  { name: 'UPSA',     location: 'Accra',       freshers: 92,  color: '#dc2626', initials: 'UP', delay: 240 },
+  { name: 'UDS',      location: 'Tamale',      freshers: 67,  color: '#FF6B35', initials: 'UD', delay: 320 },
+  { name: 'GCTU',     location: 'Accra',       freshers: 54,  color: '#0891b2', initials: 'GC', delay: 400 },
+];
+
+function SchoolLocatorViz({ animate = false }) {
+  return (
+    <div className="relative w-full h-full min-h-[300px] flex flex-col p-5"
+         style={{ background: 'linear-gradient(160deg,#f8faff 0%,#eef4ff 100%)', borderRadius: 24 }}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <p style={{ fontSize: 10, fontWeight: 800, color: '#0066FF', letterSpacing: '0.15em', textTransform: 'uppercase' }}>School Directory</p>
+          <p style={{ fontSize: 14, fontWeight: 900, color: '#111827' }}>Ghana Universities</p>
+        </div>
+        <div style={{ background: '#0066FF', color: 'white', fontSize: 10, fontWeight: 900, borderRadius: 50, padding: '4px 10px' }}>180+ schools</div>
+      </div>
+      <div className="flex flex-col gap-2 flex-1">
+        {LOCATOR_SCHOOLS.map((s) => (
+          <div key={s.name} className="flex items-center gap-3 rounded-2xl px-3 py-2"
+               style={{ background: 'white', border: `1px solid ${s.color}22`, boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                        animation: animate ? `schoolCardIn 500ms var(--ease-out-expo) ${s.delay}ms both` : 'none',
+                        opacity: animate ? undefined : 0 }}>
+            <div style={{ width: 30, height: 30, borderRadius: '50%', background: `linear-gradient(135deg,${s.color},${s.color}99)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ color: 'white', fontWeight: 900, fontSize: 8 }}>{s.initials}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p style={{ fontSize: 11, fontWeight: 900, color: '#111827' }}>{s.name}</p>
+              <p style={{ fontSize: 9, color: '#9CA3AF', fontWeight: 600 }}>{s.location}</p>
+            </div>
+            <div style={{ background: `${s.color}12`, border: `1px solid ${s.color}30`, borderRadius: 50, padding: '2px 8px' }}>
+              <span style={{ fontSize: 9, fontWeight: 800, color: s.color }}>{s.freshers}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 flex items-center justify-center gap-1.5">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0066FF] opacity-60" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0066FF]" />
+        </span>
+        <p style={{ fontSize: 9, color: '#6B7280', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
+      </div>
     </div>
   );
 }
@@ -624,17 +697,11 @@ function formatStat(n, { is12K, isDecimal, suffix }) {
 }
 
 function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, trigger }) {
-  const rawVal = useCountUp(num, 1500, trigger);
-  // Always show correct final value; animate when trigger fires
-  const display = trigger ? formatStat(rawVal, { is12K, isDecimal, suffix }) : formatStat(num, { is12K, isDecimal, suffix });
+  // Always display the correct final value — no count-up that can get stuck
+  const display = formatStat(num, { is12K, isDecimal, suffix });
   return (
-    <div className="px-4">
-      <p
-        className="text-3xl md:text-4xl font-black text-white"
-        style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}
-      >
-        {display}
-      </p>
+    <div className="px-4" style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}>
+      <p className="text-3xl md:text-4xl font-black text-white">{display}</p>
       <p className="text-white/70 text-sm mt-1">{label}</p>
     </div>
   );
@@ -687,9 +754,9 @@ export default function UnifyLanding({ schoolId } = {}) {
   // Section reveal helper
   function sectionRevealStyle(visible, delay = 0) {
     return {
-      opacity: visible ? 1 : 0,
-      transform: visible ? 'translateY(0)' : 'translateY(60px)',
-      transition: `opacity 600ms var(--ease-out-expo) ${delay}ms, transform 1000ms var(--ease-out-expo) ${delay}ms`,
+      opacity: 1,
+      transform: visible ? 'translateY(0)' : 'translateY(28px)',
+      transition: `transform 900ms var(--ease-out-expo) ${delay}ms`,
     };
   }
 
@@ -833,6 +900,11 @@ export default function UnifyLanding({ schoolId } = {}) {
           0%, 100% { transform: translateY(0) rotate(0deg); }
           33%       { transform: translateY(-8px) rotate(0.5deg); }
           66%       { transform: translateY(-4px) rotate(-0.3deg); }
+        }
+
+        @keyframes schoolCardIn {
+          from { opacity: 0; transform: translateY(14px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* Reduced motion */
@@ -1047,21 +1119,16 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
             </div>
 
-            {/* Ghana map visualization */}
-            <div className="relative rounded-3xl overflow-hidden bg-white/40 backdrop-blur-sm border border-white/30 p-6 h-72">
-              <GhanaMapViz animate={featuresVisible} />
-              <div className="absolute top-4 left-6">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">Campus Map · Ghana</p>
-              </div>
-            </div>
+            {/* Campus collage */}
+            <CampusCollage animate={featuresVisible} />
           </div>
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
         <section id="schools" className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="hidden md:block h-80 rounded-3xl overflow-hidden bg-white/40 backdrop-blur-sm border border-white/30 relative">
-              <GhanaMapViz animate={featuresVisible} />
+            <div className="hidden md:block h-80 rounded-3xl overflow-hidden">
+              <SchoolLocatorViz animate={featuresVisible} />
             </div>
             <div className="relative">
               <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
