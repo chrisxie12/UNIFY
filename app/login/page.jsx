@@ -201,7 +201,7 @@ export default function LoginPage() {
       {/* Page background */}
       <div style={{
         minHeight: '100vh',
-        background: '#FFFFFF',
+        background: 'linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -211,8 +211,8 @@ export default function LoginPage() {
       }}>
         {/* Back link */}
         <div style={{ width: '100%', maxWidth: 420, marginBottom: 16 }}>
-          <a href="/" style={{ color: '#9CA3AF', fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            ← Back
+          <a href="/" style={{ color: '#6B7280', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            ← Back to home
           </a>
         </div>
 
@@ -220,9 +220,12 @@ export default function LoginPage() {
         <div style={{
           width: '100%',
           maxWidth: 420,
-          background: '#ffffff',
+          background: 'rgba(255,255,255,0.65)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           borderRadius: 24,
-          boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+          border: '1px solid rgba(255,255,255,0.75)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
           padding: '40px 32px 36px',
           position: 'relative',
           overflow: 'hidden',
