@@ -1,26 +1,26 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'UNIFY — Ghana\'s Student Network',
-  description: 'Find your roommate, connect with coursemates, and join your campus hub before freshers week. Built for KNUST, UG, UCC and 180+ schools across Ghana.',
-  keywords: 'KNUST, University of Ghana, UCC, freshers, roommate, Ghana students, campus hub',
+  title: 'UNIFY — Find Your Campus Fam | Built for Ghana Freshers',
+  description: "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation.",
   openGraph: {
-    title: "Don't pull up to campus alone, fr. — UNIFY",
-    description: 'Ghana\'s fresher network. Find your roommate, link with coursemates, and join your campus hub before matriculation. Free forever.',
-    url: 'https://unify-lake.vercel.app',
-    siteName: 'UNIFY',
-    locale: 'en_GH',
     type: 'website',
-    images: [{ url: 'https://unify-lake.vercel.app/og', width: 1200, height: 630, alt: 'UNIFY — Ghana\'s Fresher Network' }],
+    url: 'https://unify-lake.vercel.app/',
+    title: "UNIFY — Don't pull up to campus alone, fr.",
+    description: "Find your roommate, link with coursemates, and join your official campus hub before matriculation. Built for Ghana's Class of '30.",
+    images: [{ url: 'https://unify-lake.vercel.app/og', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Don't pull up to campus alone, fr. — UNIFY",
-    description: 'Ghana\'s fresher network. KNUST, UG Legon, UCC, UPSA & more.',
+    url: 'https://unify-lake.vercel.app/',
+    title: "UNIFY — Don't pull up to campus alone, fr.",
+    description: "Find your roommate, link with coursemates, and join your official campus hub before matriculation.",
     images: ['https://unify-lake.vercel.app/og'],
   },
+  themeColor: '#0066FF',
   icons: {
     icon: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
   },
 };
 

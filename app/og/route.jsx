@@ -7,104 +7,53 @@ export async function GET() {
     (
       <div
         style={{
-          width: '1200px',
-          height: '630px',
-          background: '#050d20',
+          width: 1200,
+          height: 630,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           justifyContent: 'center',
-          padding: '72px 80px',
+          background: 'linear-gradient(135deg, #0066FF 0%, #0052CC 50%, #003d99 100%)',
           fontFamily: 'system-ui, sans-serif',
-          position: 'relative',
-          overflow: 'hidden',
+          padding: 80,
         }}
       >
-        {/* background glow */}
+        {/* Subtle dot pattern */}
         <div style={{
-          position: 'absolute', top: '-100px', right: '-100px',
-          width: '500px', height: '500px',
-          background: 'radial-gradient(circle, rgba(251,191,36,0.12) 0%, transparent 70%)',
-          borderRadius: '50%',
+          position: 'absolute', inset: 0,
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.12) 1.5px, transparent 1.5px)',
+          backgroundSize: '32px 32px',
         }} />
+        {/* GH badge */}
         <div style={{
-          position: 'absolute', bottom: '-80px', left: '-80px',
-          width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)',
-          borderRadius: '50%',
-        }} />
-
-        {/* Ghana flag stripe top */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
-          background: 'linear-gradient(to right, #DC2626, #F59E0B, #16A34A)',
-        }} />
-
-        {/* logo */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px',
+          display: 'flex', alignItems: 'center', gap: 10,
+          background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.3)',
+          borderRadius: 50, padding: '10px 24px', marginBottom: 40,
         }}>
-          <div style={{
-            width: '56px', height: '56px', borderRadius: '16px',
-            background: 'linear-gradient(135deg, #FBBF24, #F59E0B)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: '24px', fontWeight: '900', color: '#050d20' }}>U</span>
-          </div>
-          <span style={{ fontSize: '28px', fontWeight: '900', color: 'white', letterSpacing: '-0.5px' }}>UNIFY</span>
-          <div style={{
-            fontSize: '13px', fontWeight: '700', color: 'rgba(251,191,36,0.9)',
-            background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.25)',
-            borderRadius: '100px', padding: '4px 12px', marginLeft: '4px',
-          }}>
-            🇬🇭 Ghana's Fresher Network
-          </div>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#4FC3F7' }} />
+          <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700, letterSpacing: 2 }}>BUILT FOR GHANA FRESHERS</span>
         </div>
-
-        {/* headline */}
-        <div style={{
-          fontSize: '72px', fontWeight: '900', color: 'white',
-          lineHeight: '1.05', letterSpacing: '-2px', marginBottom: '24px',
-        }}>
-          Don't pull up to<br />
-          campus alone,{' '}
-          <span style={{ color: '#FBBF24' }}>fr.</span>
+        {/* UNIFY wordmark */}
+        <div style={{ color: 'white', fontSize: 120, fontWeight: 900, letterSpacing: -4, lineHeight: 1 }}>
+          UNIFY
         </div>
-
-        {/* subtext */}
-        <div style={{
-          fontSize: '22px', color: 'rgba(255,255,255,0.45)',
-          lineHeight: '1.5', maxWidth: '680px', marginBottom: '48px',
-        }}>
-          Find your roommate, link with coursemates, and tap into your official campus hub — before matriculation day.
+        {/* Tagline */}
+        <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 38, fontWeight: 700, marginTop: 28, textAlign: 'center', maxWidth: 900 }}>
+          Don&apos;t pull up to campus alone, fr.
         </div>
-
-        {/* school pills */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          {['KNUST', 'UG Legon', 'UCC', 'UPSA', 'UDS', 'GCTU'].map((s) => (
-            <div key={s} style={{
-              fontSize: '14px', fontWeight: '800', color: 'rgba(255,255,255,0.6)',
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '100px', padding: '6px 16px',
-            }}>
-              {s}
+        {/* Subtext */}
+        <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: 24, marginTop: 16, textAlign: 'center' }}>
+          Built for Ghana&apos;s Class of &apos;30
+        </div>
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: 48, marginTop: 60 }}>
+          {[['180+', 'Universities'], ['12K+', 'Freshers'], ['847', 'Matched']].map(([n, l]) => (
+            <div key={l} style={{ textAlign: 'center' }}>
+              <div style={{ color: 'white', fontSize: 32, fontWeight: 900 }}>{n}</div>
+              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 16, marginTop: 4 }}>{l}</div>
             </div>
           ))}
         </div>
-
-        {/* bottom right — url */}
-        <div style={{
-          position: 'absolute', bottom: '36px', right: '80px',
-          fontSize: '15px', fontWeight: '700', color: 'rgba(255,255,255,0.2)',
-        }}>
-          unify-lake.vercel.app
-        </div>
-
-        {/* Ghana flag stripe bottom */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '4px',
-          background: 'linear-gradient(to right, #DC2626, #F59E0B, #16A34A)',
-        }} />
       </div>
     ),
     { width: 1200, height: 630 }
