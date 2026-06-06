@@ -697,8 +697,11 @@ function formatStat(n, { is12K, isDecimal, suffix }) {
 }
 
 function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, trigger }) {
-  // Always display the correct final value — no count-up that can get stuck
-  const display = formatStat(num, { is12K, isDecimal, suffix });
+  const rawVal = useCountUp(num, 1400, trigger);
+  // Safety: during animation rawVal counts 0→num. If it hasn't started yet (0), show final value.
+  // This prevents flashing wrong numbers if rAF hasn't fired yet.
+  const animVal = trigger && rawVal > 0 ? rawVal : num;
+  const display = formatStat(animVal, { is12K, isDecimal, suffix });
   return (
     <div className="px-4" style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}>
       <p className="text-3xl md:text-4xl font-black text-white">{display}</p>
@@ -1065,7 +1068,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div ref={statsRef} className="bg-[#0066FF]/90 backdrop-blur-xl py-10 px-6">
+        <div ref={statsRef} className="py-10 px-6" style={{ background: '#0066FF' }}>
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
             <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
@@ -1282,64 +1285,52 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
             </div>
 
-            {/* Desktop: show 3 cards, highlight active */}
-            <div className="hidden md:grid grid-cols-3 gap-5">
-              {TESTIMONIALS.map((t, i) => (
-                <div
-                  key={t.name}
-                  onClick={() => setActiveTestimonial(i)}
-                  style={{
-                    animation: testimonialsVisible ? `cardSlideIn 700ms var(--ease-out-expo) ${i * 100}ms both` : undefined,
-                    transform: activeTestimonial === i ? 'translateY(-8px)' : 'translateY(0)',
-                    transition: 'transform 400ms var(--ease-out-expo), box-shadow 400ms var(--ease-out-expo)',
-                    cursor: 'pointer',
-                  }}
-                  className={`bg-white/65 backdrop-blur-xl border rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col transition-all duration-300 ${activeTestimonial === i ? 'border-[#0066FF]/30 shadow-[0_16px_48px_rgba(0,102,255,0.12)]' : 'border-white/75 hover:bg-white/80'}`}
-                >
-                  <div className="text-6xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
-                  <p className="text-[#6B7280] text-sm leading-relaxed flex-1 mb-6">{t.quote}</p>
-                  <div className="border-t border-white/50 pt-5 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-black text-[#0066FF] flex-shrink-0">{t.initials}</div>
-                    <div className="flex-1">
-                      <p className="font-bold text-[#111827] text-sm">{t.name}</p>
-                      <p className="text-[#9CA3AF] text-xs">{t.role}</p>
-                    </div>
-                    <div className="flex items-center gap-0.5">
-                      {[1,2,3,4,5].map(s => (
-                        <svg key={s} viewBox="0 0 12 12" className="w-3 h-3" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
-                          <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile: show one card at a time */}
-            <div className="md:hidden">
-              {TESTIMONIALS.map((t, i) => i === activeTestimonial && (
-                <div key={t.name} style={{ animation: 'cardSlideIn 500ms var(--ease-out-expo) both' }} className="bg-white/65 backdrop-blur-xl border border-white/75 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-                  <div className="text-5xl font-black text-[#0066FF] mb-3">&ldquo;</div>
-                  <p className="text-[#6B7280] text-sm leading-relaxed mb-5">{t.quote}</p>
-                  <div className="border-t border-white/50 pt-4 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#0066FF]/10 flex items-center justify-center text-xs font-black text-[#0066FF]">{t.initials}</div>
-                    <div className="flex-1"><p className="font-bold text-[#111827] text-sm">{t.name}</p><p className="text-[#9CA3AF] text-xs">{t.role}</p></div>
-                    <div className="flex items-center gap-0.5">
-                      {[1,2,3,4,5].map(s => (
-                        <svg key={s} viewBox="0 0 12 12" className="w-3 h-3" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
-                          <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
-                        </svg>
-                      ))}
+            {/* Sliding carousel — all 3 cards in DOM, translateX to show active */}
+            <div className="relative overflow-hidden rounded-3xl">
+              <div
+                className="flex"
+                style={{
+                  transform: `translateX(-${activeTestimonial * 100}%)`,
+                  transition: 'transform 500ms cubic-bezier(0.16,1,0.3,1)',
+                }}
+              >
+                {TESTIMONIALS.map((t) => (
+                  <div key={t.name} className="w-full flex-shrink-0 px-1 md:px-3">
+                    <div className="bg-white/65 backdrop-blur-xl border border-white/75 rounded-3xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col min-h-[220px]">
+                      <div className="text-6xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
+                      <p className="text-[#6B7280] text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
+                      <div className="border-t border-white/50 pt-5 flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-sm font-black text-[#0066FF] flex-shrink-0">{t.initials}</div>
+                        <div className="flex-1">
+                          <p className="font-bold text-[#111827] text-sm">{t.name}</p>
+                          <p className="text-[#9CA3AF] text-xs">{t.role}</p>
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          {[1,2,3,4,5].map(s => (
+                            <svg key={s} viewBox="0 0 12 12" className="w-3.5 h-3.5" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
+                              <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
+                            </svg>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-              <div className="flex justify-center gap-2 mt-4">
-                {TESTIMONIALS.map((_, i) => (
-                  <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
                 ))}
               </div>
+            </div>
+
+            {/* Dot indicators + mobile arrows */}
+            <div className="md:hidden mt-6 flex items-center justify-center gap-3">
+              <button onClick={prevTestimonial} className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white/70 flex items-center justify-center text-[#111827] hover:border-[#0066FF] hover:text-[#0066FF] transition-all">←</button>
+              {TESTIMONIALS.map((_, i) => (
+                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
+              ))}
+              <button onClick={nextTestimonial} className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white/70 flex items-center justify-center text-[#111827] hover:border-[#0066FF] hover:text-[#0066FF] transition-all">→</button>
+            </div>
+            <div className="hidden md:flex mt-6 items-center justify-center gap-2">
+              {TESTIMONIALS.map((_, i) => (
+                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
+              ))}
             </div>
           </div>
         </section>
