@@ -201,7 +201,7 @@ export default function LoginPage() {
       {/* Page background */}
       <div style={{
         minHeight: '100vh',
-        background: '#F9FAFB',
+        background: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -267,7 +267,8 @@ export default function LoginPage() {
                 display: 'flex',
                 width: '100%',
                 height: 48,
-                background: '#F3F4F6',
+                background: '#FFFFFF',
+                border: '1.5px solid #E5E7EB',
                 borderRadius: 9999,
                 padding: 4,
                 marginBottom: 28,
@@ -355,7 +356,7 @@ export default function LoginPage() {
               {/* Divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '28px 0', animation: mounted ? 'fadeUp 600ms cubic-bezier(0.16,1,0.3,1) 450ms both' : 'none' }}>
                 <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
-                <span style={{ fontSize: '0.72rem', color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
                   {isSignup ? 'or sign up with' : 'or log in with'}
                 </span>
                 <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
