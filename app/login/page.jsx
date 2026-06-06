@@ -114,10 +114,46 @@ const FRAMES = [
     floatDur: '5.5s',
     delay: '450ms',
   },
+  {
+    id: 'ashesi',
+    school: 'Ashesi',
+    caption: 'Berekuso Campus · Eastern Region',
+    initials: 'AU',
+    stripe: '#C0C0C0',
+    bg: 'linear-gradient(150deg, #2a0000 0%, #5a0808 38%, #8B1010 65%, #3d0505 100%)',
+    orb: 'rgba(192,192,192,0.18)',
+    orbPos: '35% 25%',
+    width: 210, height: 158,
+    top: '3%', left: '44%',
+    rotation: 7,
+    zIndex: 3,
+    entranceAnim: 'entranceAshesi',
+    floatAnim: 'float4',
+    floatDur: '6.2s',
+    delay: '600ms',
+  },
+  {
+    id: 'uds',
+    school: 'UDS',
+    caption: 'Tamale Campus · Northern Region',
+    initials: 'UD',
+    stripe: '#FF8C00',
+    bg: 'linear-gradient(150deg, #001a00 0%, #003d00 38%, #005c00 65%, #002800 100%)',
+    orb: 'rgba(255,140,0,0.22)',
+    orbPos: '60% 40%',
+    width: 190, height: 143,
+    top: '68%', left: '40%',
+    rotation: -7,
+    zIndex: 2,
+    entranceAnim: 'entranceUds',
+    floatAnim: 'float5',
+    floatDur: '4.8s',
+    delay: '750ms',
+  },
 ];
 
 function CampusFrame({ frame, scrollY }) {
-  const parallaxFactors = { knust: 0.04, ug: 0.07, ucc: 0.055, upsa: 0.09 };
+  const parallaxFactors = { knust: 0.04, ug: 0.07, ucc: 0.055, upsa: 0.09, ashesi: 0.06, uds: 0.08 };
   const py = -(scrollY * (parallaxFactors[frame.id] || 0.05));
   const r = frame.rotation;
 
@@ -289,6 +325,14 @@ export default function LoginPage() {
           from { opacity: 0; transform: translateX(20px) rotate(-8deg); }
           to   { opacity: 1; transform: translateX(0)    rotate(-5deg); }
         }
+        @keyframes entranceAshesi {
+          from { opacity: 0; transform: translateY(-24px) rotate(11deg); }
+          to   { opacity: 1; transform: translateY(0)     rotate(7deg); }
+        }
+        @keyframes entranceUds {
+          from { opacity: 0; transform: translateX(-20px) rotate(-10deg); }
+          to   { opacity: 1; transform: translateX(0)     rotate(-7deg); }
+        }
 
         /* Ambient float — each keeps its base rotation via CSS var */
         @keyframes float0 {
@@ -306,6 +350,14 @@ export default function LoginPage() {
         @keyframes float3 {
           0%,100% { transform: translateY(0)   rotate(-5deg); }
           50%     { transform: translateY(-6px) rotate(-4.5deg); }
+        }
+        @keyframes float4 {
+          0%,100% { transform: translateY(0)   rotate(7deg); }
+          50%     { transform: translateY(-6px) rotate(7.5deg); }
+        }
+        @keyframes float5 {
+          0%,100% { transform: translateY(0)   rotate(-7deg); }
+          50%     { transform: translateY(-6px) rotate(-6.5deg); }
         }
 
         @keyframes slideInRight {
