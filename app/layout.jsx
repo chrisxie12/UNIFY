@@ -17,17 +17,20 @@ export const metadata = {
     description: "Find your roommate, link with coursemates, and join your official campus hub before matriculation.",
     images: ['https://unify-lake.vercel.app/og'],
   },
-  themeColor: '#0066FF',
   icons: {
     icon: '/favicon.svg',
-    apple: '/apple-touch-icon.png',
+    apple: '/apple-touch-icon.svg',
   },
+};
+
+export const viewport = {
+  themeColor: '#0066FF',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-[#050d20] text-white antialiased font-sans">
+      <body className="antialiased font-sans">
         {children}
       </body>
     </html>
