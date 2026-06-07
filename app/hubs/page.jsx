@@ -9,8 +9,7 @@ const HUBS = [
   {
     id: 'brunei', name: 'Brunei Hostel', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 420, type: 'Off-campus', color: 'emerald',
-    grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'BR',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
     vibe: ['Tech Heads', 'Night Coders', 'Quiet Block'],
     description: 'The most popular off-campus zone for KNUST CS and Engineering students. Close to Faculty of Computing, walkable to campus gate.',
     perks: ['Fast MTN signal', 'Backup generator', '24hr security', 'Close to Kotei market'],
@@ -18,8 +17,7 @@ const HUBS = [
   {
     id: 'kotei', name: 'Kotei Hostels', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 680, type: 'Off-campus', color: 'green',
-    grad: 'linear-gradient(135deg,#16a34a,#059669)', initials: 'KO',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=600',
     vibe: ['Mixed Vibes', 'Social', 'Uber Splitters'],
     description: 'Broad residential area with dozens of private hostels. Budget-friendly options exist. Popular among all faculties.',
     perks: ['Multiple price tiers', 'Near Kotei Junction', 'Trotro access', 'Shops nearby'],
@@ -27,8 +25,7 @@ const HUBS = [
   {
     id: 'unity', name: 'Unity Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 890, type: 'On-campus', color: 'blue',
-    grad: 'linear-gradient(135deg,#0066FF,#6366f1)', initials: 'UN',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=600',
     vibe: ['Social', 'Traditions', 'Katanga Rivals'],
     description: 'One of the oldest and most spirited halls on campus. Brotherhood culture is strong. Close to the Great Hall and SRC.',
     perks: ['On-campus location', 'Hall Week events', 'Close to lecture halls', 'Dining hall access'],
@@ -36,8 +33,7 @@ const HUBS = [
   {
     id: 'katanga', name: 'Katanga Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 760, type: 'On-campus', color: 'orange',
-    grad: 'linear-gradient(135deg,#FF6B35,#dc2626)', initials: 'KA',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
     vibe: ['Brotherhood', 'Sporty', 'Loud & Proud'],
     description: 'The most legendary hall at KNUST. Famous for hall week, sports dominance, and a culture freshers either love or find intense.',
     perks: ['Strong hall culture', 'Sports facilities', 'Central location', 'Dining hall'],
@@ -45,8 +41,7 @@ const HUBS = [
   {
     id: 'evandy', name: 'Evandy Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 340, type: 'Off-campus', color: 'violet',
-    grad: 'linear-gradient(135deg,#7c3aed,#a855f7)', initials: 'EV',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     description: 'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
     perks: ['Good water supply', 'Quiet floors', 'Close to Medical School', 'Female-friendly'],
@@ -54,8 +49,7 @@ const HUBS = [
   {
     id: 'tf', name: 'TF Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 290, type: 'Off-campus', color: 'sky',
-    grad: 'linear-gradient(135deg,#0891b2,#0066FF)', initials: 'TF',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Affordable', 'Mixed', 'Social Floor'],
     description: 'Budget-friendly and centrally located. Known for its social atmosphere. A solid first-year option for UCC freshers.',
     perks: ['Affordable rates', 'Central location', 'Social common areas', 'Near campus gate'],
@@ -63,8 +57,7 @@ const HUBS = [
   {
     id: 'casford', name: 'Casford Hall', school: 'UCC', location: 'Cape Coast Campus',
     residents: 445, type: 'On-campus', color: 'teal',
-    grad: 'linear-gradient(135deg,#0891b2,#059669)', initials: 'CA',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Academic', 'Disciplined', 'Early Risers'],
     description: 'On-campus hall known for academic focus and discipline. Great for students serious about their first year GPA.',
     perks: ['On-campus location', 'Quiet study environment', 'Close to lecture halls', 'Organized hall structure'],
@@ -72,8 +65,7 @@ const HUBS = [
   {
     id: 'volta', name: 'Volta Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 510, type: 'On-campus', color: 'rose',
-    grad: 'linear-gradient(135deg,#be185d,#9333ea)', initials: 'VO',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
     vibe: ['Sisterhood', 'Scholars', 'Night Library Runs'],
     description: 'The most prestigious female hall at Legon. Strong academic culture, beautiful grounds, and a tight-knit sisterhood community.',
     perks: ['Female-only', 'Library access', 'Stunning grounds', 'Strong alumnae network'],
@@ -81,8 +73,7 @@ const HUBS = [
   {
     id: 'limann', name: 'Limann Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 390, type: 'On-campus', color: 'blue',
-    grad: 'linear-gradient(135deg,#0066FF,#0891b2)', initials: 'LI',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_Oval_at_University_of_Ghana,_Legon.jpg?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_Oval_at_University_of_Ghana,_Legon.jpg?width=600',
     vibe: ['Mixed', 'Chill', 'Good Wi-Fi'],
     description: 'A newer hall at Legon with modern facilities. Popular with Business and Social Sciences students. Good internet infrastructure.',
     perks: ['Modern facilities', 'Better Wi-Fi', 'Mixed gender floors', 'Close to Balme Library'],
@@ -90,8 +81,7 @@ const HUBS = [
   {
     id: 'commonwealth', name: 'Commonwealth Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 820, type: 'On-campus', color: 'orange',
-    grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: 'CW',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
+    img: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
     vibe: ['Brotherhood', 'Vandal Nation', 'Legendary'],
     description: 'The most famous male hall at Legon. Home of the Vandals. Massive culture, hall week is unmissable. Brotherhood is for life.',
     perks: ['Iconic hall culture', 'Sports dominance', 'Central to campus', 'Strong alumni network'],
@@ -119,23 +109,13 @@ function HubCard({ hub }) {
   const c = COLOR_MAP[hub.color] || COLOR_MAP.blue;
   return (
     <div className="relative bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl overflow-hidden flex flex-col hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
-      {/* Gradient banner */}
-      <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
-        {/* Campus photo */}
-        {hub.photo && (
-          <img src={hub.photo} alt={hub.name} className="absolute inset-0 w-full h-full object-cover object-center" />
-        )}
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 100%)' }} />
-        {/* Large faded initials watermark */}
-        <span className="absolute right-4 bottom-2 text-[80px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{hub.initials}</span>
-        {/* Centered initials circle */}
-        <div className="relative w-16 h-16 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center">
-          <span className="text-2xl font-black text-white">{hub.initials}</span>
-        </div>
+      {/* Photo banner */}
+      <div className="relative h-48 overflow-hidden">
+        <img src={hub.img} alt={hub.name} className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <div className="absolute bottom-3 left-4 flex gap-2">
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm border border-white/20 text-white">{hub.school}</span>
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm border ${hub.type === 'On-campus' ? 'bg-green-500/25 border-green-400/40 text-white' : 'bg-white/20 border-white/30 text-white'}`}>{hub.type}</span>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white">{hub.school}</span>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm border ${hub.type === 'On-campus' ? 'bg-green-500/20 border-green-400/40 text-white' : 'bg-orange-500/20 border-orange-400/40 text-white'}`}>{hub.type}</span>
         </div>
       </div>
 
@@ -275,19 +255,15 @@ export default function HubsPage() {
             {/* Right — campus photo collage */}
             <div className="hidden md:grid grid-cols-2 gap-3 anim-scale-in delay-200">
               {[
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=500', grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
+                { img: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f', label: 'KNUST' },
+                { img: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc', label: 'UG Legon' },
+                { img: 'https://images.unsplash.com/photo-1562774053-701939374585', label: 'UCC' },
+                { img: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a', label: 'Hostels' },
               ].map((item, i) => (
-                <div key={i} className="relative rounded-2xl overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
-                  <img src={item.photo} alt={item.label} className="absolute inset-0 w-full h-full object-cover object-center" />
-                  <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.28)' }} />
-                  <span className="absolute right-2 bottom-1 text-[52px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{item.initials}</span>
-                  <div className="relative text-center">
-                    <p className="text-white font-black text-lg leading-tight">{item.label}</p>
-                    <p className="text-white/70 text-[11px] font-semibold">{item.sub}</p>
-                  </div>
+                <div key={i} className="relative rounded-2xl overflow-hidden border border-white/60" style={{ height: '140px' }}>
+                  <img src={`${item.img}?auto=format&fit=crop&w=300&h=200&q=80`} alt={item.label} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <span className="absolute bottom-2 left-3 text-[11px] font-bold text-white">{item.label}</span>
                 </div>
               ))}
             </div>
