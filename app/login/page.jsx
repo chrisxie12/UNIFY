@@ -162,7 +162,7 @@ function CampusFrame({ frame, scrollY }) {
           to   { transform: ${frame.to.replace('rotate(', 'translateY(-7px) rotate(')}; }
         }
       `}</style>
-      <div style={{
+      <div className="campus-frame" style={{
         position: 'absolute',
         top: frame.top,
         left: frame.left,
@@ -321,6 +321,31 @@ export default function LoginPage() {
           from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes popIn {
+          from { opacity: 0; transform: scale(0); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes formFadeUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes formFadeDown {
+          from { opacity: 0; transform: translateY(-15px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes formScaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* frame hover lift */
+        .campus-frame {
+          transition: box-shadow 300ms ease, transform 300ms ease;
+        }
+        .campus-frame:hover {
+          box-shadow: 0 32px 56px -8px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12) !important;
+          z-index: 20 !important;
+        }
 
         /* Inputs */
         .login-input {
@@ -405,6 +430,13 @@ export default function LoginPage() {
             position: relative;
             background: #F3F4F6;
             overflow: hidden;
+          }
+          .collage-side::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 50%, rgba(0,102,255,0.04) 0%, transparent 70%);
+            pointer-events: none;
           }
           .form-side {
             flex: 0 0 42%;
@@ -540,7 +572,21 @@ export default function LoginPage() {
                 <BlueSwirl />
 
                 {/* Logo */}
-                <div style={{ textAlign: 'center', marginBottom: 20, position: 'relative' }}>
+                <div style={{
+                  textAlign: 'center', marginBottom: 20, position: 'relative',
+                  animation: mounted ? 'formFadeDown 600ms cubic-bezier(0.16,1,0.3,1) 0ms both' : 'none',
+                }}>
+                  {/* Blue spark doodles — top-right of logo */}
+                  <div style={{
+                    position: 'absolute', top: -6, right: 8,
+                    animation: mounted ? 'popIn 400ms cubic-bezier(0.34,1.56,0.64,1) 400ms both' : 'none',
+                  }}>
+                    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                      <line x1="16" y1="2"  x2="16" y2="10" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
+                      <line x1="24" y1="8"  x2="20" y2="12" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
+                      <line x1="28" y1="16" x2="21" y2="16" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
+                    </svg>
+                  </div>
                   <a href="/" style={{ textDecoration: 'none' }}>
                     <span style={{ fontSize: '2rem', fontWeight: 900, color: '#111827', letterSpacing: '-0.03em', lineHeight: 1 }}>
                       UNIFY
@@ -567,6 +613,7 @@ export default function LoginPage() {
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
                       borderRadius: 9999, border: '1.5px solid #E5E7EB',
                       background: '#fff', padding: 3,
+                      animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (
                         <button key={m} onClick={() => switchMode(m)} style={{
@@ -585,7 +632,20 @@ export default function LoginPage() {
                     </div>
 
                     {/* Email */}
-                    <div style={{ position: 'relative', marginBottom: 0 }}>
+                    <div style={{ position: 'relative', marginBottom: 0, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 180ms both' : 'none' }}>
+                      {/* Orange radiate — left of email field */}
+                      <div style={{
+                        position: 'absolute', left: -18, top: '50%', transform: 'translateY(-50%)',
+                        animation: mounted ? 'popIn 400ms cubic-bezier(0.34,1.56,0.64,1) 500ms both' : 'none',
+                        pointerEvents: 'none',
+                        ...(emailError ? { top: 24, transform: 'none' } : {}),
+                      }}>
+                        <svg width="14" height="14" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                          <line x1="14" y1="1"  x2="14" y2="8"  stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+                          <line x1="25" y1="5"  x2="20" y2="10" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+                          <line x1="3"  y1="5"  x2="8"  y2="10" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                      </div>
                       <Mail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF', width: 16, height: 16, zIndex: 1,
                         ...(emailError ? { top: 24, transform: 'none' } : {}) }} />
                       <input type="email" placeholder="Your email address" value={email}
@@ -595,7 +655,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Password */}
-                    <div style={{ position: 'relative', marginTop: 10 }}>
+                    <div style={{ position: 'relative', marginTop: 10, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 260ms both' : 'none' }}>
                       <Lock style={{ position: 'absolute', left: 14, top: 16, color: '#9CA3AF', width: 16, height: 16, zIndex: 1 }} />
                       <input type={showPassword ? 'text' : 'password'}
                         placeholder={isSignup ? 'Create a password' : 'Your password'}
@@ -619,7 +679,7 @@ export default function LoginPage() {
                     )}
 
                     {/* CTA — 48px height, #1F2937 */}
-                    <div style={{ marginTop: 18 }}>
+                    <div style={{ marginTop: 18, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 300ms both' : 'none' }}>
                       <button onClick={handleSubmit} disabled={loading}
                         style={{
                           width: '100%', height: 48, borderRadius: 9999,
@@ -650,7 +710,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Social — 44px */}
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 16, animation: mounted ? 'formScaleIn 600ms cubic-bezier(0.16,1,0.3,1) 420ms both' : 'none' }}>
                       <button className="social-btn" aria-label="Continue with Apple">
                         <svg viewBox="0 0 24 24" width="17" height="17" fill="#111827">
                           <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
