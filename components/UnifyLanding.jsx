@@ -243,12 +243,12 @@ function SquiggleUnderline({ heroVisible }) {
   return (
     <svg
       viewBox="0 0 120 10"
-      className={`w-24 h-2.5 mt-0.5${heroVisible ? ' underline-drawn' : ''}`}
+      className={`block w-28 h-3 mt-1${heroVisible ? ' underline-drawn' : ''}`}
       fill="none"
       style={heroVisible ? { transformOrigin: 'left center' } : { opacity: 0 }}
     >
       <path d="M0,5 C10,1 20,9 30,5 C40,1 50,9 60,5 C70,1 80,9 90,5 C100,1 110,9 120,5"
-        stroke="#FF6B35" strokeWidth="3" strokeLinecap="round"/>
+        stroke="#FF6B35" strokeWidth="3.5" strokeLinecap="round"/>
     </svg>
   );
 }
@@ -1216,19 +1216,20 @@ export default function UnifyLanding({ schoolId } = {}) {
                 {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
               </div>
 
-              <div className="flex items-start gap-3 mb-2">
+              <div className="flex items-start gap-3 mb-4">
                 <h1 className="text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111827]">
                   <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
                     {heroHeadline}
                   </span>
-                  <span className="text-[#0066FF] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>fr.</span>
+                  <span className="text-[#0066FF] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>
+                    fr.
+                    <SquiggleUnderline heroVisible={heroVisible} />
+                  </span>
                 </h1>
                 <div style={heroStyle(800, 'heroDoodle', '400ms')}>
                   <BlueDoodle drawn={true} />
                 </div>
               </div>
-
-              <SquiggleUnderline heroVisible={heroVisible} />
 
               <p
                 className="text-base md:text-lg text-[#6B7280] leading-relaxed mb-8 max-w-[440px] mt-5"
@@ -1253,12 +1254,19 @@ export default function UnifyLanding({ schoolId } = {}) {
                 style={heroStyle(700, 'heroScaleIn', '500ms')}
               >
                 <div className="flex -space-x-2">
-                  {['KA', 'YM', 'FA', 'EB', 'AO'].map((i) => (
+                  {[
+                    { initials: 'KA', grad: 'linear-gradient(135deg,#0066FF,#6366f1)' },
+                    { initials: 'YM', grad: 'linear-gradient(135deg,#7c3aed,#a855f7)' },
+                    { initials: 'FA', grad: 'linear-gradient(135deg,#FF6B35,#dc2626)' },
+                    { initials: 'EB', grad: 'linear-gradient(135deg,#059669,#0891b2)' },
+                    { initials: 'AO', grad: 'linear-gradient(135deg,#be185d,#9333ea)' },
+                  ].map((a) => (
                     <div
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 border-2 border-white/60 flex items-center justify-center text-[8px] font-black text-white"
+                      key={a.initials}
+                      className="w-8 h-8 rounded-full border-2 border-white/60 flex items-center justify-center text-[8px] font-black text-white"
+                      style={{ background: a.grad }}
                     >
-                      {i}
+                      {a.initials}
                     </div>
                   ))}
                 </div>
@@ -1354,7 +1362,10 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div ref={statsRef} className="py-10 px-6" style={{ background: '#0066FF' }}>
+        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden" style={{ background: '#0066FF' }}>
+          {/* Subtle dot grid overlay */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
+            style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
             <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
