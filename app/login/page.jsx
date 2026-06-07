@@ -58,6 +58,7 @@ const FRAMES = [
     caption: 'Great Hall · Kumasi',
     initials: 'KN',
     stripe: '#FFD700',
+    photo: 'https://images.pexels.com/photos/8406983/pexels-photo-8406983.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #0a2e0a 0%, #1a4a10 40%, #2d6e1e 70%, #1a3d0a 100%)',
     orb: 'rgba(255,210,50,0.20)', orbPos: '72% 18%',
     width: 270, height: 202,
@@ -73,6 +74,7 @@ const FRAMES = [
     caption: 'Balme Library · Accra',
     initials: 'UG',
     stripe: '#C0A000',
+    photo: 'https://images.pexels.com/photos/18346466/pexels-photo-18346466.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #020b1f 0%, #05194a 40%, #0a2f72 70%, #031232 100%)',
     orb: 'rgba(192,160,0,0.22)', orbPos: '22% 28%',
     width: 215, height: 161,
@@ -88,6 +90,7 @@ const FRAMES = [
     caption: 'Berekuso · Eastern Region',
     initials: 'AU',
     stripe: '#C0C0C0',
+    photo: 'https://images.pexels.com/photos/11871404/pexels-photo-11871404.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #2a0000 0%, #5a0808 38%, #8B1010 65%, #3d0505 100%)',
     orb: 'rgba(192,192,192,0.18)', orbPos: '35% 25%',
     width: 210, height: 158,
@@ -103,6 +106,7 @@ const FRAMES = [
     caption: 'Main Campus · Cape Coast',
     initials: 'UC',
     stripe: '#FFD700',
+    photo: 'https://images.pexels.com/photos/3286817/pexels-photo-3286817.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #1a0000 0%, #4a0606 38%, #7a0a0a 68%, #3a0303 100%)',
     orb: 'rgba(255,210,60,0.18)', orbPos: '65% 72%',
     width: 235, height: 176,
@@ -118,6 +122,7 @@ const FRAMES = [
     caption: 'Modern Campus · Accra',
     initials: 'UP',
     stripe: '#CC2222',
+    photo: 'https://images.pexels.com/photos/15577414/pexels-photo-15577414.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #03031a 0%, #0d0d4a 40%, #1a1a72 68%, #06062a 100%)',
     orb: 'rgba(204,40,40,0.22)', orbPos: '78% 62%',
     width: 198, height: 149,
@@ -133,6 +138,7 @@ const FRAMES = [
     caption: 'Tamale · Northern Region',
     initials: 'UD',
     stripe: '#FF8C00',
+    photo: 'https://images.pexels.com/photos/15818283/pexels-photo-15818283.jpeg?auto=compress&cs=tinysrgb&w=600',
     bg: 'linear-gradient(150deg, #001a00 0%, #003d00 38%, #005c00 65%, #002800 100%)',
     orb: 'rgba(255,140,0,0.22)', orbPos: '60% 40%',
     width: 192, height: 144,
@@ -184,6 +190,18 @@ function CampusFrame({ frame, scrollY }) {
         position: 'relative',
         overflow: 'hidden',
       }}>
+        {/* Actual campus photo */}
+        {frame.photo && (
+          <img
+            src={frame.photo}
+            alt={`${frame.school} campus`}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+          />
+        )}
+        {/* Dark overlay so text remains readable */}
+        {frame.photo && (
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.50) 100%)' }} />
+        )}
         {/* Colour orb */}
         <div style={{
           position: 'absolute',

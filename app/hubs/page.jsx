@@ -10,6 +10,7 @@ const HUBS = [
     id: 'brunei', name: 'Brunei Hostel', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 420, type: 'Off-campus', color: 'emerald',
     grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'BR',
+    photo: 'https://images.pexels.com/photos/9647962/pexels-photo-9647962.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Tech Heads', 'Night Coders', 'Quiet Block'],
     description: 'The most popular off-campus zone for KNUST CS and Engineering students. Close to Faculty of Computing, walkable to campus gate.',
     perks: ['Fast MTN signal', 'Backup generator', '24hr security', 'Close to Kotei market'],
@@ -18,6 +19,7 @@ const HUBS = [
     id: 'kotei', name: 'Kotei Hostels', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 680, type: 'Off-campus', color: 'green',
     grad: 'linear-gradient(135deg,#16a34a,#059669)', initials: 'KO',
+    photo: 'https://images.pexels.com/photos/15397806/pexels-photo-15397806.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Mixed Vibes', 'Social', 'Uber Splitters'],
     description: 'Broad residential area with dozens of private hostels. Budget-friendly options exist. Popular among all faculties.',
     perks: ['Multiple price tiers', 'Near Kotei Junction', 'Trotro access', 'Shops nearby'],
@@ -26,6 +28,7 @@ const HUBS = [
     id: 'unity', name: 'Unity Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 890, type: 'On-campus', color: 'blue',
     grad: 'linear-gradient(135deg,#0066FF,#6366f1)', initials: 'UN',
+    photo: 'https://images.pexels.com/photos/8406983/pexels-photo-8406983.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Social', 'Traditions', 'Katanga Rivals'],
     description: 'One of the oldest and most spirited halls on campus. Brotherhood culture is strong. Close to the Great Hall and SRC.',
     perks: ['On-campus location', 'Hall Week events', 'Close to lecture halls', 'Dining hall access'],
@@ -34,6 +37,7 @@ const HUBS = [
     id: 'katanga', name: 'Katanga Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 760, type: 'On-campus', color: 'orange',
     grad: 'linear-gradient(135deg,#FF6B35,#dc2626)', initials: 'KA',
+    photo: 'https://images.pexels.com/photos/15818283/pexels-photo-15818283.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Brotherhood', 'Sporty', 'Loud & Proud'],
     description: 'The most legendary hall at KNUST. Famous for hall week, sports dominance, and a culture freshers either love or find intense.',
     perks: ['Strong hall culture', 'Sports facilities', 'Central location', 'Dining hall'],
@@ -42,6 +46,7 @@ const HUBS = [
     id: 'evandy', name: 'Evandy Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 340, type: 'Off-campus', color: 'violet',
     grad: 'linear-gradient(135deg,#7c3aed,#a855f7)', initials: 'EV',
+    photo: 'https://images.pexels.com/photos/3286817/pexels-photo-3286817.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     description: 'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
     perks: ['Good water supply', 'Quiet floors', 'Close to Medical School', 'Female-friendly'],
@@ -50,6 +55,7 @@ const HUBS = [
     id: 'tf', name: 'TF Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 290, type: 'Off-campus', color: 'sky',
     grad: 'linear-gradient(135deg,#0891b2,#0066FF)', initials: 'TF',
+    photo: 'https://images.pexels.com/photos/15577414/pexels-photo-15577414.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Affordable', 'Mixed', 'Social Floor'],
     description: 'Budget-friendly and centrally located. Known for its social atmosphere. A solid first-year option for UCC freshers.',
     perks: ['Affordable rates', 'Central location', 'Social common areas', 'Near campus gate'],
@@ -58,6 +64,7 @@ const HUBS = [
     id: 'casford', name: 'Casford Hall', school: 'UCC', location: 'Cape Coast Campus',
     residents: 445, type: 'On-campus', color: 'teal',
     grad: 'linear-gradient(135deg,#0891b2,#059669)', initials: 'CA',
+    photo: 'https://images.pexels.com/photos/11871404/pexels-photo-11871404.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Academic', 'Disciplined', 'Early Risers'],
     description: 'On-campus hall known for academic focus and discipline. Great for students serious about their first year GPA.',
     perks: ['On-campus location', 'Quiet study environment', 'Close to lecture halls', 'Organized hall structure'],
@@ -66,6 +73,7 @@ const HUBS = [
     id: 'volta', name: 'Volta Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 510, type: 'On-campus', color: 'rose',
     grad: 'linear-gradient(135deg,#be185d,#9333ea)', initials: 'VO',
+    photo: 'https://images.pexels.com/photos/18346466/pexels-photo-18346466.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Sisterhood', 'Scholars', 'Night Library Runs'],
     description: 'The most prestigious female hall at Legon. Strong academic culture, beautiful grounds, and a tight-knit sisterhood community.',
     perks: ['Female-only', 'Library access', 'Stunning grounds', 'Strong alumnae network'],
@@ -74,6 +82,7 @@ const HUBS = [
     id: 'limann', name: 'Limann Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 390, type: 'On-campus', color: 'blue',
     grad: 'linear-gradient(135deg,#0066FF,#0891b2)', initials: 'LI',
+    photo: 'https://images.pexels.com/photos/18346469/pexels-photo-18346469.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Mixed', 'Chill', 'Good Wi-Fi'],
     description: 'A newer hall at Legon with modern facilities. Popular with Business and Social Sciences students. Good internet infrastructure.',
     perks: ['Modern facilities', 'Better Wi-Fi', 'Mixed gender floors', 'Close to Balme Library'],
@@ -82,6 +91,7 @@ const HUBS = [
     id: 'commonwealth', name: 'Commonwealth Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 820, type: 'On-campus', color: 'orange',
     grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: 'CW',
+    photo: 'https://images.pexels.com/photos/31782030/pexels-photo-31782030.jpeg?auto=compress&cs=tinysrgb&w=600',
     vibe: ['Brotherhood', 'Vandal Nation', 'Legendary'],
     description: 'The most famous male hall at Legon. Home of the Vandals. Massive culture, hall week is unmissable. Brotherhood is for life.',
     perks: ['Iconic hall culture', 'Sports dominance', 'Central to campus', 'Strong alumni network'],
@@ -111,8 +121,12 @@ function HubCard({ hub }) {
     <div className="relative bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl overflow-hidden flex flex-col hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
       {/* Gradient banner */}
       <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
-        {/* Dot grid overlay */}
-        <div className="absolute inset-0 opacity-[0.10]" style={{ backgroundImage: 'radial-gradient(circle,white 1px,transparent 1px)', backgroundSize: '20px 20px' }} />
+        {/* Campus photo */}
+        {hub.photo && (
+          <img src={hub.photo} alt={hub.name} className="absolute inset-0 w-full h-full object-cover object-center" />
+        )}
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.55) 100%)' }} />
         {/* Large faded initials watermark */}
         <span className="absolute right-4 bottom-2 text-[80px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{hub.initials}</span>
         {/* Centered initials circle */}
@@ -258,16 +272,17 @@ export default function HubsPage() {
               </div>
             </div>
 
-            {/* Right — campus gradient collage */}
+            {/* Right — campus photo collage */}
             <div className="hidden md:grid grid-cols-2 gap-3 anim-scale-in delay-200">
               {[
-                { grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
-                { grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
-                { grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
-                { grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
+                { photo: 'https://images.pexels.com/photos/8406983/pexels-photo-8406983.jpeg?auto=compress&cs=tinysrgb&w=500', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
+                { photo: 'https://images.pexels.com/photos/18346466/pexels-photo-18346466.jpeg?auto=compress&cs=tinysrgb&w=500', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
+                { photo: 'https://images.pexels.com/photos/3286817/pexels-photo-3286817.jpeg?auto=compress&cs=tinysrgb&w=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
+                { photo: 'https://images.pexels.com/photos/15577414/pexels-photo-15577414.jpeg?auto=compress&cs=tinysrgb&w=500', grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
               ].map((item, i) => (
                 <div key={i} className="relative rounded-2xl overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
-                  <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle,white 1px,transparent 1px)', backgroundSize: '18px 18px' }} />
+                  <img src={item.photo} alt={item.label} className="absolute inset-0 w-full h-full object-cover object-center" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)' }} />
                   <span className="absolute right-2 bottom-1 text-[52px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{item.initials}</span>
                   <div className="relative text-center">
                     <p className="text-white font-black text-lg leading-tight">{item.label}</p>
