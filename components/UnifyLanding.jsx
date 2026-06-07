@@ -222,9 +222,11 @@ function OrangeDoodle({ drawn = true }) {
   );
 }
 
-function SparkDoodle({ color = '#0066FF', size = 28 }) {
+function SparkDoodle({ color = '#0066FF', size = 28, visible = true, delay = 0 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true"
+      className={visible ? 'spark-visible' : 'spark-hidden'}
+      style={visible ? { animationDelay: `${delay}ms` } : {}}>
       <line x1="14" y1="2"  x2="14" y2="8"  stroke={color} strokeWidth="2" strokeLinecap="round"/>
       <line x1="14" y1="20" x2="14" y2="26" stroke={color} strokeWidth="2" strokeLinecap="round"/>
       <line x1="2"  y1="14" x2="8"  y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
@@ -1062,6 +1064,14 @@ export default function UnifyLanding({ schoolId } = {}) {
           to   { transform: translateY(-12px); }
         }
 
+        /* Spark pop-in on scroll */
+        @keyframes sparkPop {
+          from { opacity: 0; transform: scale(0) rotate(-15deg); }
+          to   { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        .spark-visible { animation: sparkPop 400ms var(--ease-spring) both; }
+        .spark-hidden  { opacity: 0; }
+
         /* Ambient drift dots */
         @keyframes driftY {
           from { transform: translateY(0); }
@@ -1266,39 +1276,76 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
             </div>
 
-            {/* Right: phone mockup with card stack */}
-            <div className="relative h-[420px] hidden md:flex items-center justify-center" style={heroStyle(300, 'heroScaleIn', '600ms')}>
-              {/* Glow behind stack */}
-              <div className="absolute w-64 h-64 rounded-full pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(0,102,255,0.12) 0%, transparent 70%)', zIndex: -1 }} />
-              {/* Card stack — behind layers */}
-              <div className="absolute" style={{
-                background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)',
-                borderRadius: 24, padding: '20px', width: 240,
-                border: '1px solid rgba(255,255,255,0.6)',
-                boxShadow: '0 8px 32px rgba(0,102,255,0.08)',
-                transform: 'translateX(16px) translateY(8px) rotate(3deg)',
-                zIndex: 0,
-              }}>
-                <div style={{ height: 12, background: 'linear-gradient(90deg,#e5e7eb,#f3f4f6)', borderRadius: 6, marginBottom: 10, width: '60%' }}/>
-                <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, marginBottom: 6, width: '80%' }}/>
-                <div style={{ height: 8, background: '#f3f4f6', borderRadius: 4, width: '50%' }}/>
+            {/* Right: floating card stack */}
+            <div className="relative h-[460px] hidden md:flex items-center justify-center" style={heroStyle(300, 'heroScaleIn', '600ms')}>
+              {/* Glow */}
+              <div className="absolute w-72 h-72 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(0,102,255,0.10) 0%, transparent 70%)', zIndex: 0 }} />
+
+              {/* Card 1 — Hub Preview (top-left, -5°) */}
+              <div style={{ position: 'absolute', top: '4%', left: '2%', transform: 'rotate(-5deg)', zIndex: 3 }}>
+                <div style={{ animation: 'driftY 5s ease-in-out 0s infinite alternate',
+                  background: 'white', borderRadius: 16, width: 210,
+                  boxShadow: '0 12px 40px rgba(0,102,255,0.14), 0 2px 8px rgba(0,0,0,0.06)',
+                  border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: '#0066FF', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Your Hub</div>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 900, color: '#111827', marginBottom: 4 }}>KNUST Brunei Hub</div>
+                  <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 12 }}>420 freshers waiting</div>
+                  <div style={{ background: '#1F2937', color: 'white', fontWeight: 900, fontSize: 11, borderRadius: 50, padding: '6px 14px', textAlign: 'center' }}>
+                    Join Hub →
+                  </div>
+                </div>
               </div>
-              <div className="absolute" style={{
-                background: 'rgba(255,255,255,0.35)', backdropFilter: 'blur(4px)',
-                borderRadius: 24, padding: '20px', width: 240,
-                border: '1px solid rgba(255,255,255,0.5)',
-                transform: 'translateX(-14px) translateY(14px) rotate(-2.5deg)',
-                zIndex: 0,
-              }}>
-                <div style={{ height: 12, background: 'linear-gradient(90deg,#dbeafe,#eff6ff)', borderRadius: 6, marginBottom: 10, width: '70%' }}/>
-                <div style={{ height: 8, background: '#eff6ff', borderRadius: 4, marginBottom: 6, width: '55%' }}/>
-                <div style={{ height: 8, background: '#eff6ff', borderRadius: 4, width: '75%' }}/>
+
+              {/* Card 2 — Roommate Match (center-right, +3°) */}
+              <div style={{ position: 'absolute', top: '30%', right: '0%', transform: 'rotate(3deg)', zIndex: 4 }}>
+                <div style={{ animation: 'driftY 5s ease-in-out 1.7s infinite alternate',
+                  background: 'white', borderRadius: 16, width: 220,
+                  boxShadow: '0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                    <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg viewBox="0 0 12 12" width="10" height="10" fill="none"><path d="M2 6l3 3 5-5" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: '#16a34a' }}>Roommate Found!</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#0066FF,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
+                    <div style={{ flex: 1, height: 2, background: 'linear-gradient(90deg,#0066FF,#FF6B35)', borderRadius: 2 }} />
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#FF6B35,#dc2626)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
+                  </div>
+                  <div style={{ fontSize: 11, color: '#6B7280', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
+                </div>
               </div>
-              {/* Main card (zIndex: 1 to sit on top of stack) */}
-              <div style={{ zIndex: 1, position: 'relative' }}>
-                <PhoneMockup />
+
+              {/* Card 3 — Chat Bubble (bottom, -2°) */}
+              <div style={{ position: 'absolute', bottom: '4%', left: '8%', transform: 'rotate(-2deg)', zIndex: 3 }}>
+                <div style={{ animation: 'driftY 5s ease-in-out 0.9s infinite alternate',
+                  background: 'white', borderRadius: 16, width: 230,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04)',
+                  border: '1px solid rgba(229,231,235,0.8)', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>YM</div>
+                    <div style={{ background: '#F3F4F6', borderRadius: '12px 12px 12px 4px', padding: '7px 11px', fontSize: 11, color: '#374151', maxWidth: 160 }}>
+                      Which hall is closer to SRC? 🏠
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 8 }}>
+                    <div style={{ background: '#0066FF', borderRadius: '12px 12px 4px 12px', padding: '7px 11px', fontSize: 11, color: 'white', maxWidth: 160 }}>
+                      Evandy! And cheaper too ✓
+                    </div>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#059669,#0891b2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>KA</div>
+                  </div>
+                  <div style={{ fontSize: 9, color: '#9CA3AF', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
+                </div>
               </div>
+
+              {/* Decorative orange dot accent */}
+              <div style={{ position: 'absolute', top: '22%', left: '42%', width: 10, height: 10, borderRadius: '50%', background: '#FF6B35', opacity: 0.5, zIndex: 2, animation: 'driftY 4s ease-in-out 0.4s infinite alternate' }} />
+              <div style={{ position: 'absolute', bottom: '28%', right: '8%', width: 7, height: 7, borderRadius: '50%', background: '#0066FF', opacity: 0.4, zIndex: 2, animation: 'driftY 3.5s ease-in-out 1.2s infinite alternate' }} />
             </div>
           </div>
         </section>
@@ -1320,9 +1367,20 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="features"
           ref={featuresRef}
-          className="py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          className="relative py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
           style={{ ...sectionRevealStyle(featuresVisible), background: 'linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%)' }}
         >
+          {/* Ambient dots */}
+          {[
+            { size: 9,  top: '12%', right: '4%',  color: '#0066FF', dur: '5s',   delay: '0.3s'  },
+            { size: 6,  top: '60%', right: '2%',  color: '#FF6B35', dur: '4.2s', delay: '1.5s'  },
+            { size: 11, top: '80%', left:  '3%',  color: '#0066FF', dur: '5.8s', delay: '0.7s'  },
+          ].map((d, i) => (
+            <div key={i} className="absolute rounded-full pointer-events-none"
+              style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
+                background: d.color, opacity: 0.12,
+                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
+          ))}
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start mb-14">
               <div>
@@ -1330,7 +1388,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <BlueDoodle drawn={featuresVisible} />
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
                 </div>
-                <SparkDoodle />
+                <SparkDoodle visible={featuresVisible} delay={200} />
                 <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                   That&apos;s The Way<br />To Fresher.
                 </h2>
@@ -1382,7 +1440,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
             <div className="relative">
               <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
-              <SparkDoodle />
+              <SparkDoodle visible={featuresVisible} delay={300} />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Find Your Campus,<br />Find Your People.
               </h2>
@@ -1422,16 +1480,27 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
         <section
           ref={communityRef}
-          className="py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          className="relative py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
           style={{ ...sectionRevealStyle(communityVisible), background: '#f0f7ff' }}
         >
+          {/* Ambient dots */}
+          {[
+            { size: 8,  top: '10%', left:  '5%',  color: '#FF6B35', dur: '4.5s', delay: '0s'   },
+            { size: 10, top: '70%', right: '3%',  color: '#0066FF', dur: '5.2s', delay: '1.1s' },
+            { size: 7,  top: '40%', right: '6%',  color: '#FF6B35', dur: '3.8s', delay: '0.6s' },
+          ].map((d, i) => (
+            <div key={i} className="absolute rounded-full pointer-events-none"
+              style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
+                background: d.color, opacity: 0.12,
+                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
+          ))}
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <OrangeDoodle drawn={communityVisible} />
                 <Sparkles className="w-5 h-5 text-[#FF6B35]" />
               </div>
-              <SparkDoodle />
+              <SparkDoodle visible={communityVisible} delay={200} />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Your Campus Fam<br />Is Calling.
                 <br />
@@ -1519,7 +1588,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Reviews</span>
                   <Star className="w-4 h-4 text-[#0066FF]" />
                 </div>
-                <SparkDoodle />
+                <SparkDoodle visible={testimonialsVisible} delay={200} />
                 <h2 className="text-4xl md:text-5xl font-black text-[#111827]">
                   Satisfied Freshers Are<br />Our Best Ads.
                 </h2>
@@ -1638,7 +1707,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <MessageCircle className="w-5 h-5 text-[#0066FF]" />
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
               </div>
-              <SparkDoodle />
+              <SparkDoodle visible={faqVisible} delay={200} />
               <h2 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">
                 Got A Question<br />For UNIFY?
               </h2>
