@@ -116,6 +116,18 @@ const TESTIMONIALS = [
     quote: "Joined the UCC hub and linked with 3 girls from my faculty. We're sharing a room in Evandy. Couldn't have done it without UNIFY.",
     name: 'Abena M.', role: 'UCC Nursing', initials: 'AM', stars: 4,
   },
+  {
+    quote: "Coming from Tamale, I was worried about finding people in Accra. UNIFY linked me with 2 other northern students before I even left home.",
+    name: 'Kwesi A.', role: 'UDS Engineering Fresher', initials: 'KA', stars: 5,
+  },
+  {
+    quote: "The hostel reviews saved me. I almost booked a place with no water and bad WiFi. The hub gave me the real intel.",
+    name: 'Efua M.', role: 'UPSA Business Fresher', initials: 'EM', stars: 4,
+  },
+  {
+    quote: "Matched with my roommate in June. By September we already knew each other's habits. Zero orientation stress.",
+    name: 'Kofi B.', role: 'KNUST Pharmacy Fresher', initials: 'KB', stars: 5,
+  },
 ];
 
 const FAQS_NEW = [
@@ -1366,11 +1378,13 @@ export default function UnifyLanding({ schoolId } = {}) {
           {/* Subtle dot grid overlay */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
             style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-          <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
+          <div className="max-w-5xl mx-auto grid grid-cols-3 md:grid-cols-6 gap-4 text-center divide-x divide-white/20">
             <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
             <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
             <StatItem num={847} suffix="" label="Roommates Matched" trigger={statsVisible} />
             <StatItem num={4.8} suffix="" label="Overall Rating" isDecimal={true} trigger={statsVisible} />
+            <StatItem num={15000} label="WhatsApp Members" is12K={true} trigger={statsVisible} />
+            <StatItem num={98} suffix="%" label="Would Recommend" trigger={statsVisible} />
           </div>
         </div>
 
@@ -1778,8 +1792,13 @@ export default function UnifyLanding({ schoolId } = {}) {
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Company</p>
                 <div className="flex flex-col gap-2.5">
-                  {['About Us', 'Features', 'News', 'FAQ'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
+                  {[
+                    { label: 'About Us', href: '#' },
+                    { label: 'Features', href: '#features' },
+                    { label: 'Blog', href: '/blog' },
+                    { label: 'FAQ', href: '#faq' },
+                  ].map((l) => (
+                    <a key={l.label} href={l.href} className="footer-link text-sm text-white/80 hover:text-white">{l.label}</a>
                   ))}
                 </div>
               </div>
