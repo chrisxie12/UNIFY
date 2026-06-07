@@ -1632,7 +1632,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           {/* Subtle campus photo strip on the right */}
           <div className="absolute top-0 right-0 bottom-0 w-[280px] hidden xl:block pointer-events-none">
             <img
-              src="https://images.pexels.com/photos/31782030/pexels-photo-31782030.jpeg?auto=compress&cs=tinysrgb&w=400"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=400"
               alt="Accra skyline"
               className="w-full h-full object-cover object-center opacity-[0.12]"
             />
