@@ -5,120 +5,105 @@ import { MapPin, ArrowRight, X, Users, BookOpen, Home, Heart, Filter, Users2 } f
 
 const PROFILES = [
   {
-    id: 1, name: 'Ama Owusu',
-    photo: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce',
+    id: 1, name: 'Ama Owusu', initials: 'AO', grad: 'linear-gradient(135deg,#0066FF,#6366f1)',
     school: 'KNUST', course: 'Computer Science', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Early riser', 'Quiet study', 'Non-smoker'],
     bio: "Into machine learning and Afrobeats. Looking for a quiet roommate who won't judge my 2am debugging sessions.",
     lookingFor: 'Roommate',
   },
   {
-    id: 2, name: 'Kwame Asante',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    id: 2, name: 'Kwame Asante', initials: 'KA', grad: 'linear-gradient(135deg,#059669,#0891b2)',
     school: 'KNUST', course: 'Mechanical Engineering', year: 'Fresher 2026', hometown: 'Kumasi',
     habits: ['Night owl', 'Gym rat', 'Social'],
     bio: 'Gym 6am, then class. Weekend footballing. Need a roommate who can handle my protein shake collection.',
     lookingFor: 'Both',
   },
   {
-    id: 3, name: 'Abena Mensah',
-    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+    id: 3, name: 'Abena Mensah', initials: 'AM', grad: 'linear-gradient(135deg,#FF6B35,#dc2626)',
     school: 'UG Legon', course: 'Economics', year: 'Fresher 2026', hometown: 'Cape Coast',
     habits: ['Early riser', 'Quiet study', 'Non-smoker'],
     bio: 'Love reading, hate noise. Want a roommate who respects study hours and appreciates good jollof.',
     lookingFor: 'Roommate',
   },
   {
-    id: 4, name: 'Kofi Boateng',
-    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    id: 4, name: 'Kofi Boateng', initials: 'KB', grad: 'linear-gradient(135deg,#7c3aed,#a855f7)',
     school: 'UG Legon', course: 'Political Science', year: 'Fresher 2026', hometown: 'Tamale',
     habits: ['Social', 'Night owl'],
     bio: 'Debate club president in SHS. Looking for coursemates to form a study group before lectures start.',
     lookingFor: 'Coursemates',
   },
   {
-    id: 5, name: 'Efua Asiedu',
-    photo: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91',
+    id: 5, name: 'Efua Asiedu', initials: 'EA', grad: 'linear-gradient(135deg,#be185d,#9333ea)',
     school: 'UCC', course: 'Nursing', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Early riser', 'Non-smoker', 'Quiet study'],
     bio: 'Pre-med mindset. Quiet, organized, always studying. Need someone equally serious about their GPA.',
     lookingFor: 'Roommate',
   },
   {
-    id: 6, name: 'Yaw Darko',
-    photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7',
+    id: 6, name: 'Yaw Darko', initials: 'YD', grad: 'linear-gradient(135deg,#0891b2,#0066FF)',
     school: 'KNUST', course: 'Architecture', year: 'Fresher 2026', hometown: 'Sunyani',
     habits: ['Night owl', 'Social', 'Gym rat'],
     bio: 'Studio nights are my life. Looking for a roommate chill enough to deal with blueprints everywhere.',
     lookingFor: 'Roommate',
   },
   {
-    id: 7, name: 'Akosua Tawiah',
-    photo: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df',
+    id: 7, name: 'Akosua Tawiah', initials: 'AT', grad: 'linear-gradient(135deg,#d97706,#FF6B35)',
     school: 'UG Legon', course: 'Psychology', year: 'Fresher 2026', hometown: 'Kumasi',
     habits: ['Quiet study', 'Early riser', 'Non-smoker'],
     bio: 'Mental health advocate and bookworm. Seeking coursemates who take academic integrity seriously.',
     lookingFor: 'Both',
   },
   {
-    id: 8, name: 'Nana Osei',
-    photo: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6',
+    id: 8, name: 'Nana Osei', initials: 'NO', grad: 'linear-gradient(135deg,#16a34a,#059669)',
     school: 'KNUST', course: 'Civil Engineering', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Gym rat', 'Social', 'Night owl'],
     bio: 'Engineering is a team sport. Want to build a solid study group from day one.',
     lookingFor: 'Coursemates',
   },
   {
-    id: 9, name: 'Adwoa Poku',
-    photo: 'https://images.unsplash.com/photo-1548142813-c348350df52b',
+    id: 9, name: 'Adwoa Poku', initials: 'AP', grad: 'linear-gradient(135deg,#dc2626,#be185d)',
     school: 'UCC', course: 'Business Administration', year: 'Fresher 2026', hometown: 'Ho',
     habits: ['Early riser', 'Social', 'Non-smoker'],
     bio: "Entrepreneur at heart. Want a roommate who's motivated and doesn't sleep past 7am.",
     lookingFor: 'Roommate',
   },
   {
-    id: 10, name: 'Fiifi Mensah',
-    photo: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f',
+    id: 10, name: 'Fiifi Mensah', initials: 'FM', grad: 'linear-gradient(135deg,#6366f1,#7c3aed)',
     school: 'KNUST', course: 'Electrical Engineering', year: 'Fresher 2026', hometown: 'Tema',
     habits: ['Night owl', 'Quiet study', 'Non-smoker'],
     bio: "PCB designs and lo-fi beats. I'm clean and quiet, need the same in return.",
     lookingFor: 'Roommate',
   },
   {
-    id: 11, name: 'Serwa Acheampong',
-    photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+    id: 11, name: 'Serwa Acheampong', initials: 'SA', grad: 'linear-gradient(135deg,#0066FF,#0891b2)',
     school: 'UG Legon', course: 'Law', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Night owl', 'Quiet study'],
     bio: 'Books and briefs. Law school prep starts now. Need serious coursemates for case study groups.',
     lookingFor: 'Coursemates',
   },
   {
-    id: 12, name: 'Kwabena Frimpong',
-    photo: 'https://images.unsplash.com/photo-1542178243-bc20204b769f',
+    id: 12, name: 'Kwabena Frimpong', initials: 'KF', grad: 'linear-gradient(135deg,#FF6B35,#d97706)',
     school: 'KNUST', course: 'Biochemistry', year: 'Fresher 2026', hometown: 'Takoradi',
     habits: ['Early riser', 'Gym rat', 'Non-smoker'],
     bio: 'Pre-med track. Wake up at 5am to study before lab. Need someone with the same energy.',
     lookingFor: 'Both',
   },
   {
-    id: 13, name: 'Maame Serwah',
-    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
+    id: 13, name: 'Maame Serwah', initials: 'MS', grad: 'linear-gradient(135deg,#9333ea,#be185d)',
     school: 'UCC', course: 'Education', year: 'Fresher 2026', hometown: 'Wa',
     habits: ['Social', 'Early riser'],
     bio: 'Teaching is a calling. Friendly, organized, and always down for a good conversation after class.',
     lookingFor: 'Both',
   },
   {
-    id: 14, name: 'Ebo Hayford',
-    photo: 'https://images.unsplash.com/photo-1463453091185-61582044d556',
+    id: 14, name: 'Ebo Hayford', initials: 'EH', grad: 'linear-gradient(135deg,#059669,#16a34a)',
     school: 'UG Legon', course: 'Computer Science', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Night owl', 'Social', 'Gym rat'],
     bio: "Full-stack dreams. Hackathons, coding bootcamps, and Legon vibes. Link if you're in CS.",
     lookingFor: 'Coursemates',
   },
   {
-    id: 15, name: 'Afia Boampong',
-    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    id: 15, name: 'Afia Boampong', initials: 'AB', grad: 'linear-gradient(135deg,#0066FF,#6366f1)',
     school: 'KNUST', course: 'Pharmacy', year: 'Fresher 2026', hometown: 'Kumasi',
     habits: ['Quiet study', 'Non-smoker', 'Early riser'],
     bio: 'Pharmacy is intense. Looking for a roommate who understands that and keeps things peaceful.',
@@ -154,12 +139,13 @@ function ProfileCard({ profile, onConnect }) {
     <div className="bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-5 flex flex-col gap-4 hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/60 flex-shrink-0">
-            <img
-              src={`${profile.photo}?auto=format&fit=crop&w=200&h=200&crop=faces&q=80`}
-              alt={profile.name}
-              className="w-full h-full object-cover"
-            />
+          <div className="relative w-16 h-16 rounded-2xl flex-shrink-0">
+            <div
+              className="w-full h-full rounded-2xl flex items-center justify-center text-white font-black text-lg border-2 border-white/60"
+              style={{ background: profile.grad }}
+            >
+              {profile.initials}
+            </div>
             <div className={`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-white ${school.dot}`} />
           </div>
           <div>
