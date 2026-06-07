@@ -597,10 +597,10 @@ function PhoneMockup() {
 
 // ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
 const CAMPUS_TILES = [
-  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', photo: 'https://images.pexels.com/photos/8406983/pexels-photo-8406983.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 0   },
-  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', photo: 'https://images.pexels.com/photos/18346466/pexels-photo-18346466.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 80  },
-  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://images.pexels.com/photos/3286817/pexels-photo-3286817.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 160 },
-  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://images.pexels.com/photos/15577414/pexels-photo-15577414.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 240 },
+  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
+  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
+  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', delay: 160 },
+  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Warren_Library_Ashesi.JPG?width=500', delay: 240 },
 ];
 
 function CampusCollage({ animate = false }) {
@@ -1308,7 +1308,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Campus photo background */}
               <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ zIndex: -1 }}>
                 <img
-                  src="https://images.pexels.com/photos/18346469/pexels-photo-18346469.jpeg?auto=compress&cs=tinysrgb&w=700"
+                  src="https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=700"
                   alt="Ghana university campus aerial"
                   className="w-full h-full object-cover object-center"
                   style={{ filter: 'brightness(0.65)' }}
@@ -1568,7 +1568,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             <div className="relative h-72 flex items-center justify-center rounded-3xl overflow-hidden">
               {/* Campus background photo */}
               <img
-                src="https://images.pexels.com/photos/9647962/pexels-photo-9647962.jpeg?auto=compress&cs=tinysrgb&w=600"
+                src="https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_Oval_at_University_of_Ghana,_Legon.jpg?width=600"
                 alt="campus life"
                 className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
               />
