@@ -362,7 +362,7 @@ export default function LoginPage() {
         /* ── Shell + Layout ── */
         .login-shell {
           min-height: 100vh;
-          background: linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%);
+          background: #FFFFFF;
           font-family: inherit;
         }
 
@@ -403,7 +403,7 @@ export default function LoginPage() {
             display: block;
             flex: 0 0 58%;
             position: relative;
-            background: linear-gradient(135deg, #E4EAF5 0%, #CDD6EC 55%, #D8E2F8 100%);
+            background: #F3F4F6;
             overflow: hidden;
           }
           .form-side {
@@ -413,9 +413,7 @@ export default function LoginPage() {
             align-items: center;
             justify-content: center;
             padding: 40px 36px;
-            background: rgba(255,255,255,0.45);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: #FFFFFF;
             max-width: none;
             overflow-y: auto;
           }
@@ -575,9 +573,9 @@ export default function LoginPage() {
                           flex: 1, borderRadius: 9999, border: 'none', cursor: 'pointer',
                           fontWeight: mode === m ? 700 : 500,
                           fontSize: '0.8rem',
-                          background: mode === m ? '#0066FF' : 'transparent',
+                          background: mode === m ? '#1F2937' : 'transparent',
                           color: mode === m ? '#fff' : '#6B7280',
-                          boxShadow: mode === m ? '0 3px 10px rgba(0,102,255,0.25)' : 'none',
+                          boxShadow: mode === m ? '0 3px 10px rgba(31,41,55,0.18)' : 'none',
                           transition: 'background 280ms cubic-bezier(0.34,1.56,0.64,1), color 280ms, box-shadow 280ms',
                           fontFamily: 'inherit',
                         }}>
@@ -620,15 +618,15 @@ export default function LoginPage() {
                       </div>
                     )}
 
-                    {/* CTA — 48px height, #0066FF */}
+                    {/* CTA — 48px height, #1F2937 */}
                     <div style={{ marginTop: 18 }}>
                       <button onClick={handleSubmit} disabled={loading}
                         style={{
                           width: '100%', height: 48, borderRadius: 9999,
-                          background: '#0066FF', color: 'white',
+                          background: '#1F2937', color: 'white',
                           fontWeight: 800, fontSize: '0.875rem',
                           border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 14px rgba(0,102,255,0.35)',
+                          boxShadow: '0 4px 14px rgba(31,41,55,0.30)',
                           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                           transition: 'transform 200ms, box-shadow 200ms, opacity 200ms',
                           fontFamily: 'inherit',
@@ -637,7 +635,7 @@ export default function LoginPage() {
                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}>
                         {loading
                           ? <div className="spinner" />
-                          : <><span>{isSignup ? 'Create Account' : 'Log In'}</span><ButtonScribble /></>
+                          : <><span>{isSignup ? 'SIGN UP' : 'LOG IN'}</span><ButtonScribble /></>
                         }
                       </button>
                     </div>
