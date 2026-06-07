@@ -597,10 +597,10 @@ function PhoneMockup() {
 
 // ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
 const CAMPUS_TILES = [
-  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', delay: 0   },
-  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', delay: 80  },
-  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', delay: 160 },
-  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', delay: 240 },
+  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', photo: 'https://images.pexels.com/photos/8406983/pexels-photo-8406983.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 0   },
+  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', photo: 'https://images.pexels.com/photos/18346466/pexels-photo-18346466.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 80  },
+  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://images.pexels.com/photos/3286817/pexels-photo-3286817.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 160 },
+  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://images.pexels.com/photos/15577414/pexels-photo-15577414.jpeg?auto=compress&cs=tinysrgb&w=500', delay: 240 },
 ];
 
 function CampusCollage({ animate = false }) {
@@ -615,22 +615,29 @@ function CampusCollage({ animate = false }) {
         {CAMPUS_TILES.map((t) => (
           <div
             key={t.label}
-            className="rounded-2xl p-5 flex flex-col justify-between"
+            className="rounded-2xl p-5 flex flex-col justify-between overflow-hidden"
             style={{
               background: t.grad,
               minHeight: 120,
+              position: 'relative',
               animation: animate ? `revealUp 600ms var(--ease-out-expo) ${t.delay}ms both` : 'none',
               opacity: animate ? undefined : 0,
             }}
           >
+            {/* Campus photo */}
+            {t.photo && (
+              <img src={t.photo} alt={t.label} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+            )}
+            {/* Dark overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%)' }} />
             {/* Large faded initials */}
             <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(255,255,255,0.13)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
               {t.initials}
             </div>
-            <span style={{ fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
-            <div>
+            <span style={{ position: 'relative', fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
+            <div style={{ position: 'relative' }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: 'white', lineHeight: 1 }}>{t.sub}</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
             </div>
           </div>
         ))}
@@ -1298,6 +1305,16 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             {/* Right: floating card stack */}
             <div className="relative h-[460px] hidden md:flex items-center justify-center" style={heroStyle(300, 'heroScaleIn', '600ms')}>
+              {/* Campus photo background */}
+              <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ zIndex: -1 }}>
+                <img
+                  src="https://images.pexels.com/photos/18346469/pexels-photo-18346469.jpeg?auto=compress&cs=tinysrgb&w=700"
+                  alt="Ghana university campus aerial"
+                  className="w-full h-full object-cover object-center"
+                  style={{ filter: 'brightness(0.65)' }}
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(0,102,255,0.20) 0%, rgba(0,0,0,0.08) 100%)' }} />
+              </div>
               {/* Glow */}
               <div className="absolute w-72 h-72 rounded-full pointer-events-none"
                 style={{ background: 'radial-gradient(circle, rgba(0,102,255,0.10) 0%, transparent 70%)', zIndex: 0 }} />
@@ -1548,7 +1565,13 @@ export default function UnifyLanding({ schoolId } = {}) {
               </a>
             </div>
 
-            <div className="relative h-72 flex items-center justify-center">
+            <div className="relative h-72 flex items-center justify-center rounded-3xl overflow-hidden">
+              {/* Campus background photo */}
+              <img
+                src="https://images.pexels.com/photos/9647962/pexels-photo-9647962.jpeg?auto=compress&cs=tinysrgb&w=600"
+                alt="campus life"
+                className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
+              />
               {AVATARS.map((a) => (
                 <div
                   key={a.initials}
@@ -1603,9 +1626,18 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
         <section
           ref={testimonialsRef}
-          className="bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB]"
+          className="relative bg-white py-16 md:py-28 px-6 border-t border-[#E5E7EB] overflow-hidden"
           style={sectionRevealStyle(testimonialsVisible)}
         >
+          {/* Subtle campus photo strip on the right */}
+          <div className="absolute top-0 right-0 bottom-0 w-[280px] hidden xl:block pointer-events-none">
+            <img
+              src="https://images.pexels.com/photos/31782030/pexels-photo-31782030.jpeg?auto=compress&cs=tinysrgb&w=400"
+              alt="Accra skyline"
+              className="w-full h-full object-cover object-center opacity-[0.12]"
+            />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, white 0%, transparent 40%)' }} />
+          </div>
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-10">
               <div>
