@@ -629,7 +629,7 @@ function CampusCollage({ animate = false }) {
               <img src={t.photo} alt={t.label} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
             )}
             {/* Dark overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.38) 100%)' }} />
             {/* Large faded initials */}
             <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(255,255,255,0.13)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
               {t.initials}

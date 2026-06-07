@@ -126,7 +126,7 @@ function HubCard({ hub }) {
           <img src={hub.photo} alt={hub.name} className="absolute inset-0 w-full h-full object-cover object-center" />
         )}
         {/* Dark gradient overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.55) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 100%)' }} />
         {/* Large faded initials watermark */}
         <span className="absolute right-4 bottom-2 text-[80px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{hub.initials}</span>
         {/* Centered initials circle */}
@@ -282,7 +282,7 @@ export default function HubsPage() {
               ].map((item, i) => (
                 <div key={i} className="relative rounded-2xl overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
                   <img src={item.photo} alt={item.label} className="absolute inset-0 w-full h-full object-cover object-center" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)' }} />
+                  <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.28)' }} />
                   <span className="absolute right-2 bottom-1 text-[52px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{item.initials}</span>
                   <div className="relative text-center">
                     <p className="text-white font-black text-lg leading-tight">{item.label}</p>

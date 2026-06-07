@@ -200,7 +200,7 @@ function CampusFrame({ frame, scrollY }) {
         )}
         {/* Dark overlay so text remains readable */}
         {frame.photo && (
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.50) 100%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.30) 100%)' }} />
         )}
         {/* Colour orb */}
         <div style={{
