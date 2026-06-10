@@ -9,14 +9,14 @@ const posts = [
     title: 'KNUST Hostel Ranking 2026: Brunei vs Kotei vs Unity',
     excerpt: "We compared WiFi, water supply, location, and social life across KNUST's top halls. Here's the honest breakdown before you commit.",
     tag: 'KNUST',
-    color: '#0066FF',
+    color: '#7B2FBE',
   },
   {
     slug: 'ug-legon-fresher-guide',
     title: 'UG Legon Fresher Guide: What Nobody Tells You',
     excerpt: 'The packing list, registration hacks, best food joints on campus, and how to avoid the portal queue chaos nobody warned you about.',
     tag: 'UG Legon',
-    color: '#FF6B35',
+    color: '#F4C430',
   },
   {
     slug: 'how-to-find-a-roommate-ghana',
@@ -38,7 +38,7 @@ export default function BlogPage() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#0F0E17', minHeight: '100vh' }}>
       {/* Nav */}
-      <nav style={{ borderBottom: '1px solid #E5E7EB', padding: '0 24px' }}>
+      <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE' }}>UNIFY</a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
@@ -48,7 +48,7 @@ export default function BlogPage() {
             <a
               href="/#waitlist"
               style={{
-                background: '#111827',
+                background: '#7B2FBE',
                 color: '#fff',
                 padding: '8px 20px',
                 borderRadius: 9999,
@@ -80,7 +80,7 @@ export default function BlogPage() {
             <a
               key={post.slug}
               href={`/blog/${post.slug}`}
-              style={{ textDecoration: 'none', display: 'block', borderRadius: 12, border: '1px solid #E5E7EB', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
+              style={{ textDecoration: 'none', display: 'block', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
             >
               {/* Accent bar */}
               <div style={{ height: 6, background: post.color }} />
@@ -114,7 +114,7 @@ export default function BlogPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: '#0066FF', padding: '40px 24px' }}>
+      <footer style={{ background: '#7B2FBE', padding: '40px 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.5px' }}>UNIFY GH</span>
           <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem' }}>© 2026 UNIFY. All rights reserved.</span>
