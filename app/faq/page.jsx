@@ -17,20 +17,20 @@ const FAQS = [
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-[#E5E7EB] last:border-0">
+    <div className="border-b border-white/10 last:border-0">
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         className="w-full text-left flex items-center justify-between gap-4 py-5 group"
       >
-        <span className="font-semibold text-[#111827] group-hover:text-[#0066FF] transition-colors text-sm md:text-base">{faq.q}</span>
-        <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#0066FF] border-[#0066FF]' : 'border-[#0066FF]/40 bg-white'}`}>
-          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-[#0066FF]'}`} />
+        <span className="font-semibold text-white/80 group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
+        <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#7B2FBE] border-[#7B2FBE]' : 'border-[#7B2FBE]/40 bg-white/5'}`}>
+          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-purple-400'}`} />
         </span>
       </button>
       <div style={{ display: 'grid', gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 350ms cubic-bezier(0.16,1,0.3,1)' }}>
         <div style={{ overflow: 'hidden' }}>
-          <p className="text-[#6B7280] text-sm leading-relaxed pb-5">{faq.a}</p>
+          <p className="text-white/60 text-sm leading-relaxed pb-5">{faq.a}</p>
         </div>
       </div>
     </div>
@@ -39,26 +39,26 @@ function FAQItem({ faq }) {
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%)' }}>
-      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
+    <div className="min-h-screen" style={{ background: '#0F0E17' }}>
+      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
         <a href="/" className="flex items-center gap-2">
-          <span className="text-xl font-black text-[#111827] tracking-tight">UNIFY</span>
-          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF]">GH</span>
+          <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
+          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400">GH</span>
         </a>
-        <a href="/" className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] transition-colors">← Back to home</a>
+        <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
       </nav>
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
-        <h1 className="text-4xl md:text-5xl font-black text-[#111827] leading-tight mb-4">Got Questions?<br />We've Got Answers.</h1>
-        <p className="text-[#6B7280] text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
+        <div className="inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
+        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Got Questions?<br />We've Got Answers.</h1>
+        <p className="text-white/60 text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
       </div>
       <div className="max-w-3xl mx-auto px-6 pb-24">
-        <div className="rounded-3xl border border-white/75 px-6 md:px-10" style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(20px)', boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)' }}>
+        <div className="rounded-3xl border border-white/10 px-6 md:px-10 bg-[#1A1827]">
           {FAQS.map((faq, i) => <FAQItem key={i} faq={faq} />)}
         </div>
         <div className="mt-10 text-center">
-          <p className="text-[#6B7280] text-sm mb-4">Still have questions?</p>
-          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(31,41,55,0.35)] transition-colors">Email us →</a>
+          <p className="text-white/50 text-sm mb-4">Still have questions?</p>
+          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Email us →</a>
         </div>
       </div>
     </div>

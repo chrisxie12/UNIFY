@@ -301,7 +301,7 @@ export default function SMSLaunchpadPage() {
                       onClick={() => setStatusKey(s.key)}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${
                         statusKey === s.key
-                          ? 'bg-blue-500 text-white font-bold'
+                          ? 'bg-[#7B2FBE] text-white font-bold'
                           : 'bg-white/[0.06] text-white/50 border border-white/[0.08] hover:text-white/70 hover:border-white/20'
                       }`}
                     >

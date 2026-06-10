@@ -99,14 +99,14 @@ const HUBS = [
 ];
 
 const COLOR_MAP = {
-  emerald: { border: 'border-emerald-200', accent: 'text-emerald-600', pill: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  green:   { border: 'border-green-200',   accent: 'text-green-600',   pill: 'bg-green-50 text-green-700 border-green-200' },
-  blue:    { border: 'border-blue-200',     accent: 'text-[#0066FF]',   pill: 'bg-blue-50 text-[#0066FF] border-blue-200' },
-  orange:  { border: 'border-orange-200',   accent: 'text-orange-600',  pill: 'bg-orange-50 text-orange-700 border-orange-200' },
-  violet:  { border: 'border-violet-200',   accent: 'text-violet-600',  pill: 'bg-violet-50 text-violet-700 border-violet-200' },
-  sky:     { border: 'border-sky-200',      accent: 'text-sky-600',     pill: 'bg-sky-50 text-sky-700 border-sky-200' },
-  rose:    { border: 'border-rose-200',     accent: 'text-rose-600',    pill: 'bg-rose-50 text-rose-700 border-rose-200' },
-  teal:    { border: 'border-teal-200',     accent: 'text-teal-600',    pill: 'bg-teal-50 text-teal-700 border-teal-200' },
+  emerald: { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
+  green:   { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
+  blue:    { border: 'border-[#7B2FBE]/40', accent: 'text-[#7B2FBE]', pill: 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30' },
+  orange:  { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
+  violet:  { border: 'border-[#7B2FBE]/40', accent: 'text-purple-400', pill: 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30' },
+  sky:     { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
+  rose:    { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
+  teal:    { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
 };
 
 const SCHOOL_GROUPS = [
@@ -118,7 +118,7 @@ const SCHOOL_GROUPS = [
 function HubCard({ hub }) {
   const c = COLOR_MAP[hub.color] || COLOR_MAP.blue;
   return (
-    <div className="relative bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl overflow-hidden flex flex-col hover:bg-white/80 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300">
+    <div className="relative bg-[#1A1827] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden flex flex-col hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#7B2FBE]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
       {/* Gradient banner */}
       <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
         {/* Campus photo */}
@@ -141,18 +141,18 @@ function HubCard({ hub }) {
 
       <div className="p-6 flex flex-col flex-1 gap-4">
         <div>
-          <h3 className="text-xl font-black text-[#111827] leading-tight mb-2">{hub.name}</h3>
+          <h3 className="text-xl font-black text-white leading-tight mb-2">{hub.name}</h3>
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-sm text-[#6B7280] flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hub.location}</span>
+            <span className="text-sm text-white/50 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hub.location}</span>
             <span className={`text-sm font-bold ${c.accent}`}><Users className="w-3.5 h-3.5 inline mr-1" />{hub.residents.toLocaleString()}+ freshers</span>
           </div>
         </div>
 
-        <p className="text-sm text-[#6B7280] leading-relaxed">{hub.description}</p>
+        <p className="text-sm text-white/60 leading-relaxed">{hub.description}</p>
 
         <ul className="space-y-1.5">
           {hub.perks.map(perk => (
-            <li key={perk} className="flex items-center gap-2 text-sm text-[#374151]">
+            <li key={perk} className="flex items-center gap-2 text-sm text-white/80">
               <Check className={`w-3.5 h-3.5 flex-shrink-0 ${c.accent}`} />{perk}
             </li>
           ))}
@@ -164,7 +164,7 @@ function HubCard({ hub }) {
           ))}
         </div>
 
-        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-full bg-[#1F2937] hover:bg-[#111827] text-white text-sm font-black transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-full bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white text-sm font-black transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
           Join {hub.name} Hub <ArrowRight className="w-4 h-4" />
         </a>
       </div>
@@ -177,7 +177,7 @@ export default function HubsPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: 'linear-gradient(135deg, #EEF1F8 0%, #D1D5DB 50%, #E8EEFF 100%)', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#0F0E17', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -214,33 +214,33 @@ export default function HubsPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#0066FF]/[0.07] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-indigo-400/[0.06] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-blue-200/[0.05] blur-[80px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto bg-white/75 backdrop-blur-2xl border border-white/60 shadow-[0_40px_100px_rgba(0,66,255,0.10),0_0_0_1px_rgba(255,255,255,0.5)] rounded-[32px] overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#0F0E17] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
 
-        {/* Blue top bar */}
-        <div className="h-1.5 bg-[#0066FF]" />
+        {/* Purple top bar */}
+        <div className="h-1.5 bg-gradient-to-r from-[#7B2FBE] via-amber-400 to-[#00F5D4]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-white/50">
+        <nav className="sticky top-0 z-50 bg-[#0F0E17]/90 backdrop-blur-2xl border-b border-white/10">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight text-[#111827]">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/25 text-[#0066FF]">GH</span>
+              <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
             </a>
-            <div className="hidden md:flex items-center gap-6 text-sm text-[#6B7280] font-medium">
-              <a href="/" className="hover:text-[#111827] transition-colors">Home</a>
-              <a href="/hubs" className="relative text-[#111827] font-semibold">
+            <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
+              <a href="/" className="hover:text-white transition-colors">Home</a>
+              <a href="/hubs" className="relative text-white font-semibold">
                 Hubs
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#7B2FBE]" />
               </a>
-              <a href="/match" className="hover:text-[#111827] transition-colors">Match</a>
-              <a href="/#faq" className="hover:text-[#111827] transition-colors">FAQ</a>
+              <a href="/match" className="hover:text-white transition-colors">Match</a>
+              <a href="/#faq" className="hover:text-white transition-colors">FAQ</a>
             </div>
-            <a href="/#waitlist" className="bg-[#1F2937] hover:bg-[#111827] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+            <a href="/#waitlist" className="bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Get Early Access →
             </a>
           </div>
@@ -251,22 +251,22 @@ export default function HubsPage() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
             <div className="anim-slide-right">
-              <div className="anim-float inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] animate-pulse" />
+              <div className="anim-float inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/30 text-purple-300 text-xs font-bold px-3.5 py-2 rounded-full mb-7">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7B2FBE] animate-pulse" />
                 10 active hubs · KNUST · UG Legon · UCC
               </div>
-              <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111827] mb-5">
+              <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-white mb-5">
                 Find your people<br />before you find<br />
-                <span className="text-[#0066FF]">your room.</span>
+                <span className="text-amber-400">your room.</span>
               </h1>
-              <p className="anim-fade-up delay-200 text-base md:text-lg text-[#6B7280] leading-relaxed mb-8 max-w-md">
+              <p className="anim-fade-up delay-200 text-base md:text-lg text-white/60 leading-relaxed mb-8 max-w-md">
                 Real intel on hostels and halls from students already living there. No sugarcoating, no guessing.
               </p>
               <div className="anim-fade-up delay-300 flex flex-wrap gap-3">
-                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#111827] text-white font-black text-sm px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)] anim-glow">
+                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-sm px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] anim-glow">
                   Browse Hubs <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-[#6B7280] px-6 py-3 rounded-full border border-white/60 bg-white/60 backdrop-blur-sm hover:border-[#111827] hover:text-[#111827] transition-all">
+                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-all">
                   Find Roommate
                 </a>
               </div>
@@ -295,7 +295,7 @@ export default function HubsPage() {
         </section>
 
         {/* ── STATS BAND ── */}
-        <div className="bg-[#0066FF]/90 backdrop-blur-xl py-8 px-6">
+        <div className="bg-[#7B2FBE]/80 backdrop-blur-xl py-8 px-6">
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             {[
               { num: HUBS.length,                    label: 'Active Hubs' },
@@ -313,11 +313,11 @@ export default function HubsPage() {
 
         {/* ── FILTER PILLS ── */}
         <div className="flex justify-center gap-2 px-6 pt-12 flex-wrap">
-          <a href="#hubs-top" className="px-5 py-2 rounded-full text-sm font-semibold border bg-[#0066FF]/10 border-[#0066FF]/25 text-[#0066FF]">
+          <a href="#hubs-top" className="px-5 py-2 rounded-full text-sm font-semibold border bg-[#7B2FBE]/20 border-[#7B2FBE]/40 text-purple-300">
             All Hubs
           </a>
           {SCHOOL_GROUPS.map(school => (
-            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-full text-sm font-semibold border bg-white/60 backdrop-blur-sm border-white/70 text-[#6B7280] hover:bg-[#0066FF]/10 hover:border-[#0066FF]/25 hover:text-[#0066FF] transition-all">
+            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-full text-sm font-semibold border bg-white/5 border-white/10 text-white/60 hover:bg-[#7B2FBE]/20 hover:border-[#7B2FBE]/40 hover:text-purple-300 transition-all">
               {school.label}
             </a>
           ))}
@@ -329,17 +329,17 @@ export default function HubsPage() {
             const schoolResidents = school.hubs.reduce((sum, h) => sum + h.residents, 0);
             return (
               <section key={school.id} id={school.id}>
-                <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-8 pb-4 border-b border-white/30">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-8 pb-4 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <Building2 className="w-5 h-5 text-[#0066FF]" />
+                    <Building2 className="w-5 h-5 text-[#7B2FBE]" />
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-black text-[#111827]">{school.label} Hubs</h2>
-                      <p className="text-sm text-[#9CA3AF] mt-1">{school.full}</p>
+                      <h2 className="text-2xl md:text-3xl font-black text-white">{school.label} Hubs</h2>
+                      <p className="text-sm text-white/40 mt-1">{school.full}</p>
                     </div>
                   </div>
                   <div className="sm:ml-auto">
-                    <span className="text-sm text-[#9CA3AF]">{school.hubs.length} hubs · </span>
-                    <span className="text-sm font-bold text-[#0066FF]">{schoolResidents.toLocaleString()}+ residents</span>
+                    <span className="text-sm text-white/40">{school.hubs.length} hubs · </span>
+                    <span className="text-sm font-bold text-[#00F5D4]">{schoolResidents.toLocaleString()}+ residents</span>
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -352,21 +352,21 @@ export default function HubsPage() {
 
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
-          <div className="max-w-2xl mx-auto text-center bg-white/65 backdrop-blur-xl border border-white/75 shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-3xl p-12">
-            <div className="w-16 h-16 rounded-2xl bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
-            <h2 className="text-3xl md:text-4xl font-black text-[#111827] mb-4">Your hostel hub is waiting.</h2>
-            <p className="text-[#6B7280] text-lg mb-8 leading-relaxed">
-              Sign up to get notified <span className="text-[#0066FF] font-semibold">48hrs before your hub goes live.</span> Be first in. Link early. Walk into orientation knowing people.
+          <div className="max-w-2xl mx-auto text-center bg-[#1A1827] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl p-12">
+            <div className="w-16 h-16 rounded-2xl bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Your hostel hub is waiting.</h2>
+            <p className="text-white/60 text-lg mb-8 leading-relaxed">
+              Sign up to get notified <span className="text-amber-400 font-semibold">48hrs before your hub goes live.</span> Be first in. Link early. Walk into orientation knowing people.
             </p>
-            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#1F2937] hover:bg-[#111827] text-white font-black text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(31,41,55,0.35)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Claim Your Handle →
             </a>
-            <p className="text-[#9CA3AF] text-xs mt-5">Free · No spam · Ghana university freshers only</p>
+            <p className="text-white/30 text-xs mt-5">Free · No spam · Ghana university freshers only</p>
           </div>
         </section>
 
         {/* ── FOOTER ── */}
-        <footer className="bg-[#0066FF]/95 backdrop-blur-xl px-6 pt-10 pb-8">
+        <footer className="bg-[#1A1827] border-t border-white/10 px-6 pt-10 pb-8">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="text-lg font-black text-white">UNIFY</span>
