@@ -65,7 +65,7 @@ export default function BlogPage() {
 
       {/* Hero */}
       <section style={{ textAlign: 'center', padding: '80px 24px 60px' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 800, , margin: '0 0 16px', letterSpacing: '-1px' }}>
+        <h1 style={{ fontSize: '3rem', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-1px' }}>
           The Freshers&apos; Blog
         </h1>
         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
@@ -100,7 +100,7 @@ export default function BlogPage() {
                 >
                   {post.tag}
                 </span>
-                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, , margin: '0 0 12px', lineHeight: 1.4 }}>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 12px', lineHeight: 1.4 }}>
                   {post.title}
                 </h2>
                 <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)', margin: '0 0 20px', lineHeight: 1.7 }}>

@@ -11,8 +11,8 @@ const s = {
   article: { maxWidth: 720, margin: '0 auto', padding: '40px 24px 80px' },
   tag: { display: 'inline-block', background: '#F5F3FF', border: '1px solid #DDD6FE', color: '#7c3aed', fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 },
   meta: { fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 32, display: 'flex', gap: 16 },
-  h1: { fontSize: '2.2rem', fontWeight: 900, , lineHeight: 1.15, marginBottom: 12 },
-  h2: { fontSize: '1.3rem', fontWeight: 800, , marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid #F3F4F6' },
+  h1: { fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.15, marginBottom: 12 },
+  h2: { fontSize: '1.3rem', fontWeight: 800, marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid #F3F4F6' },
   p: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 20 },
   li: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 8 },
   callout: { background: '#F0F7FF', borderLeft: '4px solid #0066FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '24px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
@@ -92,7 +92,7 @@ export default function UCCvsKNUSTvsLegon() {
         <p style={s.p}>What all three have in common: you will spend the first few weeks figuring out where everything is, who your people are, and how the system works. Start that process before you arrive.</p>
 
         <div style={s.cta}>
-          <p style={{ fontSize: 18, fontWeight: 900, , marginBottom: 8 }}>Already know your campus? Find your people now.</p>
+          <p style={{ fontSize: 18, fontWeight: 900, marginBottom: 8 }}>Already know your campus? Find your people now.</p>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 0 }}>Join your school hub on UNIFY, find your roommate, and arrive ready.</p>
           <a href="/#waitlist" style={s.ctaBtn}>Claim Your Spot →</a>
         </div>

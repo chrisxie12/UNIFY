@@ -11,8 +11,8 @@ const s = {
   article: { maxWidth: 720, margin: '0 auto', padding: '40px 24px 80px' },
   tag: { display: 'inline-block', background: '#F0FDF4', border: '1px solid #BBF7D0', color: '#16a34a', fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 },
   meta: { fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 32, display: 'flex', gap: 16 },
-  h1: { fontSize: '2.2rem', fontWeight: 900, , lineHeight: 1.15, marginBottom: 12 },
-  h2: { fontSize: '1.3rem', fontWeight: 800, , marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid #F3F4F6' },
+  h1: { fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.15, marginBottom: 12 },
+  h2: { fontSize: '1.3rem', fontWeight: 800, marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid #F3F4F6' },
   p: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 20 },
   li: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 10 },
   callout: { background: '#F0F7FF', borderLeft: '4px solid #0066FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '24px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
@@ -76,7 +76,7 @@ export default function FindRoommateGhana() {
         <p style={s.p}>The earlier you join, the better your options. Hostel spots and compatible matches both run out as matriculation gets closer.</p>
 
         <div style={s.cta}>
-          <p style={{ fontSize: 18, fontWeight: 900, , marginBottom: 8 }}>Find your roommate on UNIFY — free</p>
+          <p style={{ fontSize: 18, fontWeight: 900, marginBottom: 8 }}>Find your roommate on UNIFY — free</p>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 0 }}>Fill your profile, get matched, and secure your person before orientation chaos starts.</p>
           <a href="/#waitlist" style={s.ctaBtn}>Claim Your Spot →</a>
         </div>
