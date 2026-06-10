@@ -29,27 +29,14 @@ function BlueSwirl() {
     <svg width="90" height="115" viewBox="0 0 120 160" fill="none" aria-hidden="true"
       style={{ position: 'absolute', bottom: 0, right: 0, opacity: 0.25, pointerEvents: 'none' }}>
       <path d="M100,10 C140,40 60,70 90,100 C120,130 40,145 70,155"
-        stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round" fill="none"
+        stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round" fill="none"
         style={{ strokeDasharray: 300, strokeDashoffset: 0, animation: 'swirlDraw 900ms ease-out 700ms both' }} />
       <path d="M80,20 C110,50 50,75 80,100 C105,120 55,140 75,155"
-        stroke="#0066FF" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.5"
+        stroke="#7B2FBE" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.5"
         style={{ strokeDasharray: 260, strokeDashoffset: 0, animation: 'swirlDraw 900ms ease-out 900ms both' }} />
     </svg>
   );
 }
-
-// ── Campus gradient tiles ───────────────────────────────────────────────────
-
-// Layout: tight organic cluster. All positions/sizes tuned so every frame
-// overlaps at least one neighbour. Think of KNUST as the anchor; others orbit it.
-//
-//  UG ──────┐
-//  (top-left) overlaps KNUST top-left corner
-//            KNUST (center anchor, largest)
-//                      └── Ashesi (top-right, overlaps KNUST top-right)
-//  UPSA (left) overlaps KNUST bottom-left
-//            UDS (bottom-center) overlaps KNUST + UCC
-//                      └── UCC (bottom-right, overlaps KNUST bottom-right)
 
 const FRAMES = [
   {
@@ -175,22 +162,21 @@ function CampusFrame({ frame, scrollY }) {
         width: frame.width,
         zIndex: frame.zIndex,
         borderRadius: 16,
-        background: '#fff',
+        background: '#1A1827',
         padding: 10,
-        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)',
+        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.40), 0 4px 16px rgba(0,0,0,0.20)',
         animation: `${entranceKey} 650ms cubic-bezier(0.16,1,0.3,1) ${frame.delay} both, ${floatKey} ${frame.floatDur} ease-in-out calc(${frame.delay} + 650ms) infinite alternate`,
         willChange: 'transform',
       }}>
       {/* Photo tile */}
       <div style={{
         width: '100%',
-        height: frame.height - 20, /* subtract top+bottom padding */
+        height: frame.height - 20,
         borderRadius: 8,
         background: frame.bg,
         position: 'relative',
         overflow: 'hidden',
       }}>
-        {/* Actual campus photo */}
         {frame.photo && (
           <img
             src={frame.photo}
@@ -198,11 +184,9 @@ function CampusFrame({ frame, scrollY }) {
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
         )}
-        {/* Dark overlay so text remains readable */}
         {frame.photo && (
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.30) 100%)' }} />
         )}
-        {/* Colour orb */}
         <div style={{
           position: 'absolute',
           width: 180, height: 180,
@@ -213,7 +197,6 @@ function CampusFrame({ frame, scrollY }) {
           transform: 'translate(-50%,-50%)',
           pointerEvents: 'none',
         }} />
-        {/* Architectural grid */}
         <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.07 }} preserveAspectRatio="none">
           {[0.18, 0.36, 0.54, 0.72, 0.90].map(x => (
             <line key={x} x1={`${x*100}%`} y1="0" x2={`${x*100}%`} y2="100%" stroke="white" strokeWidth="1" />
@@ -222,7 +205,6 @@ function CampusFrame({ frame, scrollY }) {
             <line key={y} x1="0" y1={`${y*100}%`} x2="100%" y2={`${y*100}%`} stroke="white" strokeWidth="0.8" />
           ))}
         </svg>
-        {/* School badge */}
         <div style={{
           position: 'absolute', top: 10, left: 10,
           background: 'rgba(255,255,255,0.14)',
@@ -233,7 +215,6 @@ function CampusFrame({ frame, scrollY }) {
             {frame.school}
           </span>
         </div>
-        {/* Large initials watermark */}
         <span style={{
           position: 'absolute', bottom: -14, right: 6,
           fontSize: 88, fontWeight: 900,
@@ -242,7 +223,6 @@ function CampusFrame({ frame, scrollY }) {
           userSelect: 'none',
           fontFamily: 'system-ui, sans-serif',
         }}>{frame.initials}</span>
-        {/* Bottom fade + city */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, height: 56,
           background: 'linear-gradient(to top, rgba(0,0,0,0.50) 0%, transparent 100%)',
@@ -258,10 +238,9 @@ function CampusFrame({ frame, scrollY }) {
       </div>
       {/* Polaroid caption strip */}
       <div style={{ paddingTop: 7, paddingBottom: 2, textAlign: 'center' }}>
-        <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#111827', fontFamily: 'system-ui, sans-serif' }}>{frame.school}</p>
-        <p style={{ margin: '1px 0 0', fontSize: 9, color: '#9CA3AF', fontFamily: 'system-ui, sans-serif' }}>{frame.caption}</p>
+        <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#FFFFFE', fontFamily: 'system-ui, sans-serif' }}>{frame.school}</p>
+        <p style={{ margin: '1px 0 0', fontSize: 9, color: 'rgba(255,255,255,0.60)', fontFamily: 'system-ui, sans-serif' }}>{frame.caption}</p>
       </div>
-      {/* Colour accent base line */}
       <div style={{
         position: 'absolute', bottom: 0, left: '12%', right: '12%', height: 3,
         background: frame.stripe, borderRadius: '0 0 4px 4px', opacity: 0.55,
@@ -270,8 +249,6 @@ function CampusFrame({ frame, scrollY }) {
     </>
   );
 }
-
-// ── Main ────────────────────────────────────────────────────────────────────
 
 export default function LoginPage() {
   const [mode, setMode] = useState('signup');
@@ -329,7 +306,6 @@ export default function LoginPage() {
           to   { stroke-dashoffset: 0; opacity: 1; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* per-frame entrance + float keyframes are injected by CampusFrame */
 
         @keyframes slideInRight {
           from { opacity: 0; transform: translateX(28px); }
@@ -356,43 +332,41 @@ export default function LoginPage() {
           to   { opacity: 1; transform: scale(1); }
         }
 
-        /* frame hover lift */
         .campus-frame {
           transition: box-shadow 300ms ease, transform 300ms ease;
         }
         .campus-frame:hover {
-          box-shadow: 0 32px 56px -8px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12) !important;
+          box-shadow: 0 32px 56px -8px rgba(0,0,0,0.40), 0 8px 24px rgba(0,0,0,0.20) !important;
           z-index: 20 !important;
         }
 
-        /* Inputs */
         .login-input {
           width: 100%; height: 48px;
           border-radius: 9999px;
-          border: 1.5px solid #E5E7EB;
-          background: rgba(255,255,255,0.85);
-          font-size: 0.9rem; color: #111827;
+          border: 1.5px solid rgba(255,255,255,0.10);
+          background: rgba(26,24,39,0.85);
+          font-size: 0.9rem; color: #FFFFFE;
           outline: none;
           transition: border-color 200ms, box-shadow 200ms, background 200ms;
           padding: 0 16px 0 40px;
           box-sizing: border-box;
           font-family: inherit;
         }
-        .login-input::placeholder { color: #9CA3AF; }
+        .login-input::placeholder { color: rgba(255,255,255,0.40); }
         .login-input:focus {
-          border-color: #0066FF;
-          box-shadow: 0 0 0 3px rgba(0,102,255,0.10);
-          background: #fff;
+          border-color: #7B2FBE;
+          box-shadow: 0 0 0 3px rgba(123,47,190,0.15);
+          background: rgba(26,24,39,1);
         }
         .login-input.error { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
 
         .social-btn {
           width: 44px; height: 44px; border-radius: 50%;
-          border: 1.5px solid #E5E7EB; background: rgba(255,255,255,0.85);
+          border: 1.5px solid rgba(255,255,255,0.10); background: rgba(26,24,39,0.85);
           display: flex; align-items: center; justify-content: center;
           cursor: pointer; transition: transform 200ms, box-shadow 200ms, background 200ms;
         }
-        .social-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.10); background: #fff; }
+        .social-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.30); background: rgba(26,24,39,1); }
         .social-btn:active { transform: scale(0.95); }
 
         .spinner {
@@ -402,14 +376,12 @@ export default function LoginPage() {
           animation: spin 700ms linear infinite;
         }
 
-        /* ── Shell + Layout ── */
         .login-shell {
           min-height: 100vh;
-          background: #FFFFFF;
+          background: #0F0E17;
           font-family: inherit;
         }
 
-        /* Mobile: single column */
         .login-body {
           display: flex;
           flex-direction: column;
@@ -423,17 +395,16 @@ export default function LoginPage() {
         }
         .form-card {
           border-radius: 28px;
-          border: 1px solid rgba(255,255,255,0.75);
-          background: rgba(255,255,255,0.65);
+          border: 1px solid rgba(255,255,255,0.10);
+          background: rgba(26,24,39,0.80);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.08);
           padding: 36px 28px 32px;
           position: relative;
           overflow: hidden;
         }
 
-        /* Desktop: two-column */
         @media (min-width: 1024px) {
           .login-body {
             flex-direction: row;
@@ -446,14 +417,14 @@ export default function LoginPage() {
             display: block;
             flex: 0 0 58%;
             position: relative;
-            background: #F3F4F6;
+            background: #1A1827;
             overflow: hidden;
           }
           .collage-side::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 60% 50%, rgba(0,102,255,0.04) 0%, transparent 70%);
+            background: radial-gradient(ellipse at 60% 50%, rgba(123,47,190,0.06) 0%, transparent 70%);
             pointer-events: none;
           }
           .form-side {
@@ -463,7 +434,7 @@ export default function LoginPage() {
             align-items: center;
             justify-content: center;
             padding: 40px 36px;
-            background: #FFFFFF;
+            background: #0F0E17;
             max-width: none;
             overflow-y: auto;
           }
@@ -477,58 +448,55 @@ export default function LoginPage() {
 
       <div className="login-shell antialiased font-sans">
 
-        {/* Nav — identical to landing/schools/faq */}
+        {/* Nav */}
         <nav style={{
-          background: 'rgba(255,255,255,0.55)',
+          background: 'rgba(15,14,23,0.80)',
           backdropFilter: 'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
-          borderBottom: '1px solid rgba(255,255,255,0.5)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
-            <span className="text-xl font-black text-[#111827] tracking-tight">UNIFY</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF]">GH</span>
+            <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 text-[#00F5D4]">GH</span>
           </a>
           <div className="hidden md:flex items-center gap-6">
-            <a href="/schools" className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] transition-colors">Schools</a>
-            <a href="/hubs"    className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] transition-colors">Hubs</a>
-            <a href="/match"   className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] transition-colors">Match</a>
+            <a href="/schools" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Schools</a>
+            <a href="/hubs"    className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Hubs</a>
+            <a href="/match"   className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Match</a>
           </div>
         </nav>
 
         <div className="login-body">
 
-          {/* ── Left collage (desktop only) ── */}
+          {/* Left collage (desktop only) */}
           <div className="collage-side">
-            {/* Background swirl */}
             <svg width="100%" height="100%" viewBox="0 0 600 700" fill="none" aria-hidden="true"
               style={{ position: 'absolute', inset: 0, opacity: 0.10, pointerEvents: 'none' }}>
               <path d="M480,40 C560,160 320,300 440,420 C560,540 280,600 380,680"
-                stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round" fill="none"
+                stroke="#7B2FBE" strokeWidth="2.5" strokeLinecap="round" fill="none"
                 style={{ strokeDasharray: 1100, strokeDashoffset: 0, animation: 'swirlDraw 1400ms ease-out 200ms both' }} />
               <path d="M420,60 C500,170 280,300 400,410 C510,510 260,580 360,670"
-                stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"
+                stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"
                 style={{ strokeDasharray: 1000, strokeDashoffset: 0, animation: 'swirlDraw 1400ms ease-out 400ms both' }} />
             </svg>
 
-            {/* Blue spark — top left */}
             <div style={{ position: 'absolute', top: '8%', left: '7%', opacity: 0.8, animation: 'fadeUp 500ms ease 600ms both' }}>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <line x1="16" y1="2"  x2="16" y2="10" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
-                <line x1="24" y1="8"  x2="20" y2="12" stroke="#0066FF" strokeWidth="2"   strokeLinecap="round"/>
-                <line x1="28" y1="16" x2="22" y2="16" stroke="#0066FF" strokeWidth="2"   strokeLinecap="round"/>
-                <line x1="8"  y1="8"  x2="12" y2="12" stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
-                <line x1="4"  y1="16" x2="10" y2="16" stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="16" y1="2"  x2="16" y2="10" stroke="#7B2FBE" strokeWidth="2.5" strokeLinecap="round"/>
+                <line x1="24" y1="8"  x2="20" y2="12" stroke="#7B2FBE" strokeWidth="2"   strokeLinecap="round"/>
+                <line x1="28" y1="16" x2="22" y2="16" stroke="#7B2FBE" strokeWidth="2"   strokeLinecap="round"/>
+                <line x1="8"  y1="8"  x2="12" y2="12" stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="4"  y1="16" x2="10" y2="16" stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             </div>
             <div style={{ position: 'absolute', top: '16%', left: '14%', opacity: 0.6, animation: 'fadeUp 500ms ease 800ms both' }}>
               <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
-                <line x1="16" y1="4"  x2="16" y2="11" stroke="#0066FF" strokeWidth="2" strokeLinecap="round"/>
-                <line x1="23" y1="9"  x2="20" y2="13" stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
-                <line x1="26" y1="16" x2="21" y2="16" stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="16" y1="4"  x2="16" y2="11" stroke="#7B2FBE" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="23" y1="9"  x2="20" y2="13" stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="26" y1="16" x2="21" y2="16" stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             </div>
 
-            {/* Orange radiate — bottom right */}
             <div style={{ position: 'absolute', bottom: '12%', right: '8%', opacity: 0.8, animation: 'fadeUp 500ms ease 900ms both' }}>
               <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
                 <line x1="14" y1="1"  x2="14" y2="8"  stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
@@ -548,12 +516,10 @@ export default function LoginPage() {
               </svg>
             </div>
 
-            {/* Campus frames — rendered when mounted */}
             {mounted && FRAMES.map(frame => (
               <CampusFrame key={frame.id} frame={frame} scrollY={scrollY} />
             ))}
 
-            {/* Ghana pill — top center */}
             <div style={{
               position: 'absolute', top: 28, left: '50%', transform: 'translateX(-50%)',
               animation: 'fadeUp 600ms ease 700ms both',
@@ -561,57 +527,54 @@ export default function LoginPage() {
             }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
-                background: 'rgba(255,255,255,0.60)',
+                background: 'rgba(26,24,39,0.80)',
                 backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.75)',
+                border: '1px solid rgba(255,255,255,0.10)',
                 borderRadius: 9999, padding: '6px 16px',
-                fontSize: 12, fontWeight: 700, color: '#374151',
+                fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.80)',
                 fontFamily: 'system-ui, sans-serif',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.20)',
               }}>
                 🇬🇭 Ghana University Network
               </span>
             </div>
           </div>
 
-          {/* ── Right: login form ── */}
+          {/* Right: login form */}
           <div className="form-side">
             <div style={{
               width: '100%',
               maxWidth: 340,
               animation: mounted ? 'slideInRight 700ms cubic-bezier(0.16,1,0.3,1) 200ms both' : 'none',
             }}>
-              {/* Mobile-only back link */}
               <div className="mb-4 lg:hidden">
-                <a href="/" className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] transition-colors">← Back to home</a>
+                <a href="/" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">← Back to home</a>
               </div>
 
               <div className="form-card">
                 <BlueSwirl />
 
-                {/* Logo */}
                 <div style={{
                   textAlign: 'center', marginBottom: 20, position: 'relative',
                   animation: mounted ? 'formFadeDown 600ms cubic-bezier(0.16,1,0.3,1) 0ms both' : 'none',
                 }}>
-                  {/* Blue spark doodles — top-right of logo */}
                   <div style={{
                     position: 'absolute', top: -6, right: 8,
                     animation: mounted ? 'popIn 400ms cubic-bezier(0.34,1.56,0.64,1) 400ms both' : 'none',
                   }}>
                     <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                      <line x1="16" y1="2"  x2="16" y2="10" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
-                      <line x1="24" y1="8"  x2="20" y2="12" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
-                      <line x1="28" y1="16" x2="21" y2="16" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round"/>
+                      <line x1="16" y1="2"  x2="16" y2="10" stroke="#7B2FBE" strokeWidth="2.5" strokeLinecap="round"/>
+                      <line x1="24" y1="8"  x2="20" y2="12" stroke="#7B2FBE" strokeWidth="2.5" strokeLinecap="round"/>
+                      <line x1="28" y1="16" x2="21" y2="16" stroke="#7B2FBE" strokeWidth="2.5" strokeLinecap="round"/>
                     </svg>
                   </div>
                   <a href="/" style={{ textDecoration: 'none' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#111827', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFE', letterSpacing: '-0.03em', lineHeight: 1 }}>
                       UNIFY
                     </span>
                   </a>
                   <OrangeScribble width={72} />
-                  <p style={{ marginTop: 8, color: '#6B7280', fontSize: '0.85rem', fontFamily: 'inherit' }}>
+                  <p style={{ marginTop: 8, color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', fontFamily: 'inherit' }}>
                     {isSignup ? "Join Ghana's campus network" : 'Welcome back'}
                   </p>
                 </div>
@@ -619,18 +582,17 @@ export default function LoginPage() {
                 {done ? (
                   <div style={{ textAlign: 'center', padding: '16px 0' }}>
                     <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
-                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#111827', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
-                    <p style={{ color: '#6B7280', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#FFFFFE', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
+                    <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
                       {isSignup ? 'Check your email to verify your account.' : 'Welcome back. Redirecting…'}
                     </p>
                   </div>
                 ) : (
                   <>
-                    {/* Toggle — 240px wide, 44px tall */}
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
-                      borderRadius: 9999, border: '1.5px solid #E5E7EB',
-                      background: '#fff', padding: 3,
+                      borderRadius: 9999, border: '1.5px solid rgba(255,255,255,0.10)',
+                      background: '#1A1827', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (
@@ -638,9 +600,9 @@ export default function LoginPage() {
                           flex: 1, borderRadius: 9999, border: 'none', cursor: 'pointer',
                           fontWeight: mode === m ? 700 : 500,
                           fontSize: '0.8rem',
-                          background: mode === m ? '#1F2937' : 'transparent',
-                          color: mode === m ? '#fff' : '#6B7280',
-                          boxShadow: mode === m ? '0 3px 10px rgba(31,41,55,0.18)' : 'none',
+                          background: mode === m ? '#7B2FBE' : 'transparent',
+                          color: mode === m ? '#fff' : 'rgba(255,255,255,0.60)',
+                          boxShadow: mode === m ? '0 3px 10px rgba(123,47,190,0.30)' : 'none',
                           transition: 'background 280ms cubic-bezier(0.34,1.56,0.64,1), color 280ms, box-shadow 280ms',
                           fontFamily: 'inherit',
                         }}>
@@ -649,9 +611,7 @@ export default function LoginPage() {
                       ))}
                     </div>
 
-                    {/* Email */}
                     <div style={{ position: 'relative', marginBottom: 0, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 180ms both' : 'none' }}>
-                      {/* Orange radiate — left of email field */}
                       <div style={{
                         position: 'absolute', left: -18, top: '50%', transform: 'translateY(-50%)',
                         animation: mounted ? 'popIn 400ms cubic-bezier(0.34,1.56,0.64,1) 500ms both' : 'none',
@@ -664,7 +624,7 @@ export default function LoginPage() {
                           <line x1="3"  y1="5"  x2="8"  y2="10" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                       </div>
-                      <Mail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF', width: 16, height: 16, zIndex: 1,
+                      <Mail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.40)', width: 16, height: 16, zIndex: 1,
                         ...(emailError ? { top: 24, transform: 'none' } : {}) }} />
                       <input type="email" placeholder="Your email address" value={email}
                         onChange={e => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
@@ -672,9 +632,8 @@ export default function LoginPage() {
                       {emailError && <p style={{ color: '#EF4444', fontSize: '0.75rem', margin: '4px 0 0 14px', fontFamily: 'inherit' }}>{emailError}</p>}
                     </div>
 
-                    {/* Password */}
                     <div style={{ position: 'relative', marginTop: 10, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 260ms both' : 'none' }}>
-                      <Lock style={{ position: 'absolute', left: 14, top: 16, color: '#9CA3AF', width: 16, height: 16, zIndex: 1 }} />
+                      <Lock style={{ position: 'absolute', left: 14, top: 16, color: 'rgba(255,255,255,0.40)', width: 16, height: 16, zIndex: 1 }} />
                       <input type={showPassword ? 'text' : 'password'}
                         placeholder={isSignup ? 'Create a password' : 'Your password'}
                         value={password}
@@ -683,7 +642,7 @@ export default function LoginPage() {
                         className={`login-input${passwordError ? ' error' : ''}`}
                         style={{ paddingRight: 42 }} />
                       <button type="button" onClick={() => setShowPassword(v => !v)}
-                        style={{ position: 'absolute', right: 14, top: 15, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#9CA3AF' }}
+                        style={{ position: 'absolute', right: 14, top: 15, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(255,255,255,0.40)' }}
                         aria-label={showPassword ? 'Hide password' : 'Show password'}>
                         {showPassword ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
                       </button>
@@ -692,25 +651,24 @@ export default function LoginPage() {
 
                     {!isSignup && (
                       <div style={{ textAlign: 'right', marginTop: 6 }}>
-                        <a href="#" style={{ fontSize: '0.75rem', color: '#0066FF', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
+                        <a href="#" style={{ fontSize: '0.75rem', color: '#00F5D4', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
                       </div>
                     )}
 
-                    {/* CTA — 48px height, #1F2937 */}
                     <div style={{ marginTop: 18, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 300ms both' : 'none' }}>
                       <button onClick={handleSubmit} disabled={loading}
                         style={{
                           width: '100%', height: 48, borderRadius: 9999,
-                          background: '#1F2937', color: 'white',
+                          background: '#7B2FBE', color: 'white',
                           fontWeight: 800, fontSize: '0.875rem',
                           border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 14px rgba(31,41,55,0.30)',
+                          boxShadow: '0 4px 14px rgba(123,47,190,0.35)',
                           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                           transition: 'transform 200ms, box-shadow 200ms, opacity 200ms',
                           fontFamily: 'inherit',
                         }}
-                        onMouseEnter={e => { if (!loading) e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}>
+                        onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#6A1FA8'; } }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#7B2FBE'; }}>
                         {loading
                           ? <div className="spinner" />
                           : <><span>{isSignup ? 'SIGN UP' : 'LOG IN'}</span><ButtonScribble /></>
@@ -718,19 +676,17 @@ export default function LoginPage() {
                       </button>
                     </div>
 
-                    {/* Divider */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0' }}>
-                      <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
-                      <span style={{ fontSize: '0.68rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
+                      <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.10)' }} />
+                      <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.40)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
                         {isSignup ? 'or sign up with' : 'or log in with'}
                       </span>
-                      <div style={{ flex: 1, height: 1, background: '#E5E7EB' }} />
+                      <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.10)' }} />
                     </div>
 
-                    {/* Social — 44px */}
                     <div style={{ display: 'flex', justifyContent: 'center', gap: 16, animation: mounted ? 'formScaleIn 600ms cubic-bezier(0.16,1,0.3,1) 420ms both' : 'none' }}>
                       <button className="social-btn" aria-label="Continue with Apple">
-                        <svg viewBox="0 0 24 24" width="17" height="17" fill="#111827">
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="#FFFFFE">
                           <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                         </svg>
                       </button>
@@ -754,12 +710,12 @@ export default function LoginPage() {
               </div>
 
               {/* Footer */}
-              <div style={{ marginTop: 18, textAlign: 'center', fontSize: '0.72rem', color: '#9CA3AF', fontFamily: 'inherit' }}>
-                <a href="#" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Terms of use</a>
+              <div style={{ marginTop: 18, textAlign: 'center', fontSize: '0.72rem', color: 'rgba(255,255,255,0.40)', fontFamily: 'inherit' }}>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Terms of use</a>
                 <span style={{ padding: '0 6px' }}>·</span>
-                <a href="#" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Privacy policy</a>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Privacy policy</a>
                 <span style={{ padding: '0 6px' }}>·</span>
-                <a href="#" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Copyrights</a>
+                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Copyrights</a>
               </div>
             </div>
           </div>
