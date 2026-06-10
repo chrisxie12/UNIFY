@@ -8,8 +8,26 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        navy: '#0A2472',
-        amber: { DEFAULT: '#FFBA08', 300: '#ffd04d', 400: '#FFBA08' },
+        navy: '#0F0E17',
+        amber: {
+          DEFAULT: '#F4C430',
+          300: '#FFE082',
+          400: '#F4C430',
+          500: '#D4A820',
+          800: '#7B5800',
+          900: '#4A3500',
+          950: '#2A1E00',
+        },
+        purple: {
+          DEFAULT: '#7B2FBE',
+          400: '#9B4DCA',
+          600: '#6A1FA8',
+        },
+        cyan: {
+          DEFAULT: '#00F5D4',
+          400: '#00F5D4',
+          500: '#00D4B8',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

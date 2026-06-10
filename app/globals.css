@@ -6,6 +6,8 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #0F0E17;
+  color: #FFFFFE;
 }
 
 * {
