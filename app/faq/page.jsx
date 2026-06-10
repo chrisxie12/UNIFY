@@ -25,7 +25,7 @@ function FAQItem({ faq }) {
       >
         <span className="font-semibold text-white/80 group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
         <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}>
-          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-purple-400'}`} />
+          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-[#FF6B35]'}`} />
         </span>
       </button>
       <div style={{ display: 'grid', gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 350ms cubic-bezier(0.16,1,0.3,1)' }}>
@@ -48,7 +48,7 @@ export default function FAQPage() {
         <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
       </nav>
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
+        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
         <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Got Questions?<br />We've Got Answers.</h1>
         <p className="text-white/60 text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
       </div>
