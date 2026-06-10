@@ -20,7 +20,7 @@ const SCHOOLS = [
 
 function SchoolCard({ school }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#1A1827] hover:border-[#7B2FBE]/40 hover:shadow-[0_8px_32px_rgba(123,47,190,0.2)] transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
+    <div className="rounded-2xl border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:shadow-[0_8px_32px_rgba(123,47,190,0.2)] transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
       {/* Gradient banner */}
       <div className="h-20 relative flex items-center px-5" style={{ background: `linear-gradient(135deg, ${school.colors[0]}, ${school.colors[1]})` }}>
         <span className="absolute right-4 top-2 text-[56px] font-black pointer-events-none select-none leading-none" style={{ color: 'rgba(255,255,255,0.13)' }}>{school.initials}</span>
@@ -37,23 +37,23 @@ function SchoolCard({ school }) {
           <MapPin className="w-3 h-3 text-amber-400 shrink-0" />{school.location}
         </div>
         <div className="flex items-center gap-1.5 text-white/40 text-xs mb-4">
-          <GraduationCap className="w-3 h-3 text-[#00F5D4] shrink-0" />Est. {school.founded}
+          <GraduationCap className="w-3 h-3 text-[#A8C4FF] shrink-0" />Est. {school.founded}
         </div>
         <div className="flex flex-wrap gap-1.5 mb-4 flex-1">
           {school.faculties.slice(0, 3).map(f => (
-            <span key={f} className="text-[10px] font-semibold bg-[#7B2FBE]/10 text-purple-300 px-2 py-0.5 rounded-full">{f}</span>
+            <span key={f} className="text-[10px] font-semibold bg-[#FF6B35]/10 text-purple-300 px-2 py-0.5 rounded-full">{f}</span>
           ))}
           {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-white/5 text-white/40 px-2 py-0.5 rounded-full">+{school.faculties.length - 3} more</span>}
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/10">
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00F5D4] opacity-40" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00F5D4]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A8C4FF] opacity-40" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#A8C4FF]" />
             </span>
             <span className="text-[11px] font-semibold text-white/50">{school.freshers}</span>
           </div>
-          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#00F5D4] hover:text-white transition-colors">
+          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-white transition-colors">
             Join Hub <ArrowRight className="w-3 h-3" />
           </a>
         </div>
@@ -73,7 +73,7 @@ export default function SchoolsPage() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#0F0E17' }}>
+    <div className="min-h-screen" style={{ background: '#0D1B3E' }}>
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
@@ -86,10 +86,10 @@ export default function SchoolsPage() {
         </div>
       </nav>
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">🇬🇭 Ghana University Directory</div>
+        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">🇬🇭 Ghana University Directory</div>
         <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Find Your School.<br />Claim Your Spot.</h1>
         <p className="text-white/60 text-base max-w-xl mx-auto mb-8">Browse {SCHOOLS.length} Ghanaian universities. Join your campus hub before orientation week.</p>
-        <div className="flex items-center gap-2 bg-[#1A1827] border border-white/10 rounded-2xl px-4 py-3 max-w-lg mx-auto">
+        <div className="flex items-center gap-2 bg-[#162347] border border-white/10 rounded-2xl px-4 py-3 max-w-lg mx-auto">
           <Search className="w-4 h-4 text-white/30 shrink-0" />
           <input type="text" placeholder="Search school, city, or programme…" value={query} onChange={e => setQuery(e.target.value)} className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-white/30" />
         </div>
@@ -97,7 +97,7 @@ export default function SchoolsPage() {
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <div className="flex gap-2 flex-wrap">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-full border transition-all ${filter === t ? 'bg-[#7B2FBE] border-[#7B2FBE] text-white shadow-[0_4px_14px_rgba(123,47,190,0.3)]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#7B2FBE]/40 hover:text-purple-300'}`}>{t}</button>
+            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-full border transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[0_4px_14px_rgba(123,47,190,0.3)]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'}`}>{t}</button>
           ))}
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function SchoolsPage() {
         )}
         <div className="mt-14 text-center">
           <p className="text-white/50 text-sm mb-5">Your school not listed? We're adding more before the 2026 intake.</p>
-          <a href="/" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
+          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
         </div>
       </div>
     </div>

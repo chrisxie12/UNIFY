@@ -115,15 +115,15 @@ const SCHOOLS = ['All', 'KNUST', 'UG Legon', 'UCC'];
 const HABITS = ['All', 'Early riser', 'Night owl', 'Quiet study', 'Social', 'Gym rat', 'Non-smoker'];
 
 function getSchoolStyle(school) {
-  if (school === 'KNUST')    return { pill: 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30', dot: 'bg-[#7B2FBE]' };
-  if (school === 'UG Legon') return { pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30', dot: 'bg-[#00F5D4]' };
+  if (school === 'KNUST')    return { pill: 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30', dot: 'bg-[#FF6B35]' };
+  if (school === 'UG Legon') return { pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30', dot: 'bg-[#A8C4FF]' };
   if (school === 'UCC')      return { pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30', dot: 'bg-amber-400' };
   return { pill: 'bg-white/5 text-white/60 border-white/10', dot: 'bg-white/40' };
 }
 
 function getLookingForStyle(lookingFor) {
-  if (lookingFor === 'Roommate')   return 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30';
-  if (lookingFor === 'Coursemates') return 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30';
+  if (lookingFor === 'Roommate')   return 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30';
+  if (lookingFor === 'Coursemates') return 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30';
   return 'bg-amber-400/10 text-amber-300 border-amber-400/20';
 }
 
@@ -136,7 +136,7 @@ function getLookingForIcon(lookingFor) {
 function ProfileCard({ profile, onConnect }) {
   const school = getSchoolStyle(profile.school);
   return (
-    <div className="bg-[#1A1827] border border-white/10 rounded-3xl p-5 flex flex-col gap-4 hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#7B2FBE]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
+    <div className="bg-[#162347] border border-white/10 rounded-3xl p-5 flex flex-col gap-4 hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#FF6B35]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="relative w-16 h-16 rounded-2xl flex-shrink-0">
@@ -183,7 +183,7 @@ function ProfileCard({ profile, onConnect }) {
 
       <button
         onClick={() => onConnect(profile.name)}
-        className="w-full bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-semibold text-sm py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] flex items-center justify-center gap-2"
+        className="w-full bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] flex items-center justify-center gap-2"
       >
         Connect <Heart size={14} />
       </button>
@@ -194,14 +194,14 @@ function ProfileCard({ profile, onConnect }) {
 function Toast({ name, onClose }) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm px-4">
-      <div className="bg-[#1A1827] border border-[#7B2FBE]/30 shadow-2xl rounded-2xl p-4 flex items-start gap-3">
+      <div className="bg-[#162347] border border-[#FF6B35]/30 shadow-2xl rounded-2xl p-4 flex items-start gap-3">
         <span className="text-xl flex-shrink-0">🔗</span>
         <div className="flex-1 min-w-0">
           <p className="text-white font-semibold text-sm">Link sent to {name}!</p>
           <p className="text-white/60 text-xs mt-0.5 leading-relaxed">
             Join the waitlist to unlock full messaging when UNIFY launches.
           </p>
-          <a href="/#waitlist" className="inline-block mt-2 text-xs text-[#00F5D4] hover:underline font-medium transition-colors">
+          <a href="/#waitlist" className="inline-block mt-2 text-xs text-[#A8C4FF] hover:underline font-medium transition-colors">
             Join waitlist →
           </a>
         </div>
@@ -231,7 +231,7 @@ export default function MatchPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-6 antialiased"
-         style={{ background: '#0F0E17', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#0D1B3E', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -268,18 +268,18 @@ export default function MatchPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#0F0E17] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
 
         {/* Gradient top bar */}
-        <div className="h-1.5 bg-gradient-to-r from-[#7B2FBE] via-amber-400 to-[#00F5D4]" />
+        <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0F0E17]/90 backdrop-blur-2xl border-b border-white/10">
+        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
@@ -290,10 +290,10 @@ export default function MatchPage() {
               <a href="/hubs" className="hover:text-white transition-colors">Hubs</a>
               <a href="/match" className="relative text-white font-semibold">
                 Match
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#7B2FBE]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#FF6B35]" />
               </a>
             </div>
-            <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-xs px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-xs px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Get Early Access <ArrowRight size={14} />
             </a>
           </div>
@@ -302,10 +302,10 @@ export default function MatchPage() {
         {/* ── HERO ── */}
         <section className="pt-16 md:pt-24 pb-12 px-6 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="anim-float inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/30 text-purple-300 text-xs font-bold px-4 py-1.5 rounded-full anim-fade-up">
+            <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-purple-300 text-xs font-bold px-4 py-1.5 rounded-full anim-fade-up">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7B2FBE] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#7B2FBE]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B35]" />
               </span>
               847 freshers matched so far
             </div>
@@ -339,8 +339,8 @@ export default function MatchPage() {
                   onClick={() => setSchoolFilter(s)}
                   className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
                     schoolFilter === s
-                      ? 'bg-[#7B2FBE] text-white border-[#7B2FBE] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#7B2FBE]/40 hover:text-purple-300'
+                      ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
+                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
                   }`}
                 >
                   {s}
@@ -358,8 +358,8 @@ export default function MatchPage() {
                   onClick={() => setHabitsFilter(h)}
                   className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
                     habitsFilter === h
-                      ? 'bg-[#7B2FBE] text-white border-[#7B2FBE] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#7B2FBE]/40 hover:text-purple-300'
+                      ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
+                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
                   }`}
                 >
                   {h}
@@ -378,7 +378,7 @@ export default function MatchPage() {
                 <p className="text-[#6B7280] text-lg max-w-sm mx-auto leading-relaxed">
                   No freshers match your filters yet. Be the first to join from your school!
                 </p>
-                <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+                <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
                   Join the waitlist <ArrowRight size={14} />
                 </a>
               </div>
@@ -394,7 +394,7 @@ export default function MatchPage() {
 
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
-          <div className="max-w-2xl mx-auto text-center bg-[#1A1827] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl px-8 py-14">
+          <div className="max-w-2xl mx-auto text-center bg-[#162347] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl px-8 py-14">
             <div className="flex justify-center mb-6">
               <div className="h-1 w-16 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
             </div>
@@ -404,14 +404,14 @@ export default function MatchPage() {
             <p className="text-white/60 text-base leading-relaxed max-w-md mx-auto mb-8">
               Join thousands of Ghana freshers already connecting on UNIFY before orientation week.
             </p>
-            <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-base px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Join the waitlist <ArrowRight size={16} />
             </a>
           </div>
         </section>
 
         {/* ── FOOTER ── */}
-        <footer className="bg-[#1A1827] border-t border-white/10 px-6 pt-8 pb-6">
+        <footer className="bg-[#162347] border-t border-white/10 px-6 pt-8 pb-6">
           <div className="max-w-7xl mx-auto text-center text-sm text-white/70">
             © 2026 UNIFY · Ghana 🇬🇭 · Built for freshers
           </div>

@@ -99,14 +99,14 @@ const HUBS = [
 ];
 
 const COLOR_MAP = {
-  emerald: { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
-  green:   { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
-  blue:    { border: 'border-[#7B2FBE]/40', accent: 'text-[#7B2FBE]', pill: 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30' },
+  emerald: { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
+  green:   { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
+  blue:    { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30' },
   orange:  { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
-  violet:  { border: 'border-[#7B2FBE]/40', accent: 'text-purple-400', pill: 'bg-[#7B2FBE]/10 text-purple-300 border-[#7B2FBE]/30' },
-  sky:     { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
+  violet:  { border: 'border-[#FF6B35]/40', accent: 'text-purple-400', pill: 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30' },
+  sky:     { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
   rose:    { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
-  teal:    { border: 'border-[#00F5D4]/30', accent: 'text-[#00F5D4]', pill: 'bg-[#00F5D4]/10 text-[#00F5D4] border-[#00F5D4]/30' },
+  teal:    { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
 };
 
 const SCHOOL_GROUPS = [
@@ -118,7 +118,7 @@ const SCHOOL_GROUPS = [
 function HubCard({ hub }) {
   const c = COLOR_MAP[hub.color] || COLOR_MAP.blue;
   return (
-    <div className="relative bg-[#1A1827] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden flex flex-col hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#7B2FBE]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
+    <div className="relative bg-[#162347] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden flex flex-col hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#FF6B35]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
       {/* Gradient banner */}
       <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
         {/* Campus photo */}
@@ -164,7 +164,7 @@ function HubCard({ hub }) {
           ))}
         </div>
 
-        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-full bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white text-sm font-black transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-full bg-[#FF6B35] hover:bg-[#E55A22] text-white text-sm font-black transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
           Join {hub.name} Hub <ArrowRight className="w-4 h-4" />
         </a>
       </div>
@@ -177,7 +177,7 @@ export default function HubsPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: '#0F0E17', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#0D1B3E', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -214,18 +214,18 @@ export default function HubsPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#0F0E17] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
 
         {/* Purple top bar */}
-        <div className="h-1.5 bg-gradient-to-r from-[#7B2FBE] via-amber-400 to-[#00F5D4]" />
+        <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0F0E17]/90 backdrop-blur-2xl border-b border-white/10">
+        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b border-white/10">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
@@ -235,12 +235,12 @@ export default function HubsPage() {
               <a href="/" className="hover:text-white transition-colors">Home</a>
               <a href="/hubs" className="relative text-white font-semibold">
                 Hubs
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#7B2FBE]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#FF6B35]" />
               </a>
               <a href="/match" className="hover:text-white transition-colors">Match</a>
               <a href="/#faq" className="hover:text-white transition-colors">FAQ</a>
             </div>
-            <a href="/#waitlist" className="bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="bg-[#FF6B35] hover:bg-[#E55A22] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Get Early Access →
             </a>
           </div>
@@ -251,8 +251,8 @@ export default function HubsPage() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
             <div className="anim-slide-right">
-              <div className="anim-float inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/30 text-purple-300 text-xs font-bold px-3.5 py-2 rounded-full mb-7">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7B2FBE] animate-pulse" />
+              <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-purple-300 text-xs font-bold px-3.5 py-2 rounded-full mb-7">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
                 10 active hubs · KNUST · UG Legon · UCC
               </div>
               <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-white mb-5">
@@ -263,7 +263,7 @@ export default function HubsPage() {
                 Real intel on hostels and halls from students already living there. No sugarcoating, no guessing.
               </p>
               <div className="anim-fade-up delay-300 flex flex-wrap gap-3">
-                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-sm px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] anim-glow">
+                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] anim-glow">
                   Browse Hubs <ArrowRight className="w-4 h-4" />
                 </a>
                 <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-all">
@@ -295,7 +295,7 @@ export default function HubsPage() {
         </section>
 
         {/* ── STATS BAND ── */}
-        <div className="bg-[#7B2FBE]/80 backdrop-blur-xl py-8 px-6">
+        <div className="bg-[#FF6B35]/80 backdrop-blur-xl py-8 px-6">
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             {[
               { num: HUBS.length,                    label: 'Active Hubs' },
@@ -313,11 +313,11 @@ export default function HubsPage() {
 
         {/* ── FILTER PILLS ── */}
         <div className="flex justify-center gap-2 px-6 pt-12 flex-wrap">
-          <a href="#hubs-top" className="px-5 py-2 rounded-full text-sm font-semibold border bg-[#7B2FBE]/20 border-[#7B2FBE]/40 text-purple-300">
+          <a href="#hubs-top" className="px-5 py-2 rounded-full text-sm font-semibold border bg-[#FF6B35]/20 border-[#FF6B35]/40 text-purple-300">
             All Hubs
           </a>
           {SCHOOL_GROUPS.map(school => (
-            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-full text-sm font-semibold border bg-white/5 border-white/10 text-white/60 hover:bg-[#7B2FBE]/20 hover:border-[#7B2FBE]/40 hover:text-purple-300 transition-all">
+            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-full text-sm font-semibold border bg-white/5 border-white/10 text-white/60 hover:bg-[#FF6B35]/20 hover:border-[#FF6B35]/40 hover:text-purple-300 transition-all">
               {school.label}
             </a>
           ))}
@@ -331,7 +331,7 @@ export default function HubsPage() {
               <section key={school.id} id={school.id}>
                 <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-8 pb-4 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <Building2 className="w-5 h-5 text-[#7B2FBE]" />
+                    <Building2 className="w-5 h-5 text-[#FF6B35]" />
                     <div>
                       <h2 className="text-2xl md:text-3xl font-black text-white">{school.label} Hubs</h2>
                       <p className="text-sm text-white/40 mt-1">{school.full}</p>
@@ -339,7 +339,7 @@ export default function HubsPage() {
                   </div>
                   <div className="sm:ml-auto">
                     <span className="text-sm text-white/40">{school.hubs.length} hubs · </span>
-                    <span className="text-sm font-bold text-[#00F5D4]">{schoolResidents.toLocaleString()}+ residents</span>
+                    <span className="text-sm font-bold text-[#A8C4FF]">{schoolResidents.toLocaleString()}+ residents</span>
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -352,13 +352,13 @@ export default function HubsPage() {
 
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
-          <div className="max-w-2xl mx-auto text-center bg-[#1A1827] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl p-12">
-            <div className="w-16 h-16 rounded-2xl bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
+          <div className="max-w-2xl mx-auto text-center bg-[#162347] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl p-12">
+            <div className="w-16 h-16 rounded-2xl bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Your hostel hub is waiting.</h2>
             <p className="text-white/60 text-lg mb-8 leading-relaxed">
               Sign up to get notified <span className="text-amber-400 font-semibold">48hrs before your hub goes live.</span> Be first in. Link early. Walk into orientation knowing people.
             </p>
-            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
               Claim Your Handle →
             </a>
             <p className="text-white/30 text-xs mt-5">Free · No spam · Ghana university freshers only</p>
@@ -366,7 +366,7 @@ export default function HubsPage() {
         </section>
 
         {/* ── FOOTER ── */}
-        <footer className="bg-[#1A1827] border-t border-white/10 px-6 pt-10 pb-8">
+        <footer className="bg-[#162347] border-t border-white/10 px-6 pt-10 pb-8">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="text-lg font-black text-white">UNIFY</span>

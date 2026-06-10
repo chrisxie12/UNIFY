@@ -24,7 +24,7 @@ function FAQItem({ faq }) {
         className="w-full text-left flex items-center justify-between gap-4 py-5 group"
       >
         <span className="font-semibold text-white/80 group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
-        <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#7B2FBE] border-[#7B2FBE]' : 'border-[#7B2FBE]/40 bg-white/5'}`}>
+        <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}>
           <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-purple-400'}`} />
         </span>
       </button>
@@ -39,7 +39,7 @@ function FAQItem({ faq }) {
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#0F0E17' }}>
+    <div className="min-h-screen" style={{ background: '#0D1B3E' }}>
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
@@ -48,17 +48,17 @@ export default function FAQPage() {
         <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
       </nav>
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
+        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
         <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Got Questions?<br />We've Got Answers.</h1>
         <p className="text-white/60 text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
       </div>
       <div className="max-w-3xl mx-auto px-6 pb-24">
-        <div className="rounded-3xl border border-white/10 px-6 md:px-10 bg-[#1A1827]">
+        <div className="rounded-3xl border border-white/10 px-6 md:px-10 bg-[#162347]">
           {FAQS.map((faq, i) => <FAQItem key={i} faq={faq} />)}
         </div>
         <div className="mt-10 text-center">
           <p className="text-white/50 text-sm mb-4">Still have questions?</p>
-          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#7B2FBE] hover:bg-[#6A1FA8] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Email us →</a>
+          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Email us →</a>
         </div>
       </div>
     </div>

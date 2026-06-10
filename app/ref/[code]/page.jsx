@@ -45,7 +45,7 @@ export default function RefPage({ params }) {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center p-6"
-          style={{ background: '#0F0E17' }}>
+          style={{ background: '#0D1B3E' }}>
 
       <style>{`
         @keyframes checkPop {
@@ -87,14 +87,14 @@ export default function RefPage({ params }) {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#1A1827] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
+      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
         {/* Gradient top bar */}
-        <div className="h-1.5 bg-gradient-to-r from-[#7B2FBE] via-amber-400 to-[#00F5D4]" />
+        <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         <div className="p-8">
           {/* Logo */}
@@ -118,14 +118,14 @@ export default function RefPage({ params }) {
 
               {/* Referral badge */}
               <div className="anim-float flex justify-center mb-6">
-                <span className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#00F5D4]">
+                <span className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#A8C4FF]">
                   Invited via UNIFY referral · Code: <span className="font-mono font-bold">{code}</span>
                 </span>
               </div>
 
               {/* Social proof */}
               <p className="anim-fade-up delay-300 text-center text-sm text-white/60 mb-8">
-                <span className="text-[#00F5D4] font-bold">847</span> freshers already joined
+                <span className="text-[#A8C4FF] font-bold">847</span> freshers already joined
               </p>
 
               {/* Form */}
@@ -139,8 +139,8 @@ export default function RefPage({ params }) {
                       onClick={() => setSchool(s.id)}
                       className={`px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
                         school === s.id
-                          ? 'bg-[#7B2FBE] border-[#7B2FBE] text-white'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:border-[#7B2FBE]/40 hover:text-purple-300'
+                          ? 'bg-[#FF6B35] border-[#FF6B35] text-white'
+                          : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
                       }`}
                     >
                       {s.label}
@@ -149,7 +149,7 @@ export default function RefPage({ params }) {
                 </div>
 
                 <p className="text-sm font-semibold text-white mb-2">Phone number</p>
-                <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden mb-5 focus-within:border-[#7B2FBE]/60 focus-within:ring-2 focus-within:ring-[#7B2FBE]/10 transition-all">
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden mb-5 focus-within:border-[#FF6B35]/60 focus-within:ring-2 focus-within:ring-[#FF6B35]/10 transition-all">
                   <span className="px-3 py-3 text-white/40 text-sm border-r border-white/10 flex items-center gap-1.5 shrink-0">🇬🇭 +233</span>
                   <input
                     type="tel"
@@ -164,7 +164,7 @@ export default function RefPage({ params }) {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !school || !phone}
-                  className="w-full py-3 rounded-full font-black text-sm bg-[#7B2FBE] text-white hover:bg-[#6A1FA8] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[0_4px_14px_rgba(123,47,190,0.4)] hover:shadow-[0_8px_24px_rgba(123,47,190,0.5)]"
+                  className="w-full py-3 rounded-full font-black text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[0_4px_14px_rgba(123,47,190,0.4)] hover:shadow-[0_8px_24px_rgba(123,47,190,0.5)]"
                 >
                   {submitting ? 'Joining…' : 'Join the Waitlist →'}
                 </button>
@@ -184,15 +184,15 @@ export default function RefPage({ params }) {
               <div className="anim-fade-up delay-200 bg-white/5 border border-white/10 rounded-2xl p-4 mb-6">
                 <p className="text-xs text-white/40 mb-2 font-medium text-left">Your referral link</p>
                 <div className="flex items-center gap-2">
-                  <span className="flex-1 text-xs text-[#00F5D4] font-mono truncate text-left">
+                  <span className="flex-1 text-xs text-[#A8C4FF] font-mono truncate text-left">
                     https://unify-lake.vercel.app/ref/{myCode}
                   </span>
                   <button
                     onClick={handleCopy}
                     className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                       copied
-                        ? 'bg-[#00F5D4]/10 border-[#00F5D4]/30 text-[#00F5D4]'
-                        : 'bg-white/5 border-white/10 text-white/60 hover:border-[#7B2FBE]/40 hover:text-purple-300'
+                        ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]'
+                        : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
                     }`}
                   >
                     {copied ? 'Copied!' : 'Copy'}

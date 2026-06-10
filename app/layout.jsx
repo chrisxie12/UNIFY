@@ -24,13 +24,13 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: '#0F0E17',
+  themeColor: '#0D1B3E',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans bg-[#0F0E17]">
+      <body className="antialiased font-sans bg-[#0D1B3E]">
         {children}
       </body>
     </html>

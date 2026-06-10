@@ -1,7 +1,7 @@
 export default function ReferralInfoPage() {
   return (
     <main className="relative min-h-screen flex items-center justify-center p-6"
-          style={{ background: '#0F0E17' }}>
+          style={{ background: '#0D1B3E' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -38,14 +38,14 @@ export default function ReferralInfoPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#1A1827] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
+      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
         {/* Gradient top bar */}
-        <div className="h-1.5 bg-gradient-to-r from-[#7B2FBE] via-amber-400 to-[#00F5D4]" />
+        <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         <div className="p-10 text-center">
           {/* Logo */}
@@ -69,7 +69,7 @@ export default function ReferralInfoPage() {
               { icon: '👥', title: 'Friend joins', desc: 'When a friend signs up via your link, they get added to the waitlist with your code.', delay: 'delay-200' },
               { icon: '⚡️', title: 'You both get early access', desc: 'Referrals boost your position. More referrals = earlier campus hub access.', delay: 'delay-300' },
             ].map(({ icon, title, desc, delay }) => (
-              <div key={title} className={`anim-fade-up ${delay} flex gap-4 items-start bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#7B2FBE]/40 hover:-translate-y-0.5 transition-all duration-300`}>
+              <div key={title} className={`anim-fade-up ${delay} flex gap-4 items-start bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#FF6B35]/40 hover:-translate-y-0.5 transition-all duration-300`}>
                 <span className="text-2xl shrink-0 mt-0.5">{icon}</span>
                 <div>
                   <p className="font-black text-sm text-white mb-1">{title}</p>
@@ -79,7 +79,7 @@ export default function ReferralInfoPage() {
             ))}
           </div>
 
-          <a href="/" className="anim-fade-up delay-400 anim-glow inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm bg-[#7B2FBE] text-white hover:bg-[#6A1FA8] transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+          <a href="/" className="anim-fade-up delay-400 anim-glow inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
             ← Back to UNIFY
           </a>
 

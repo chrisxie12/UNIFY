@@ -8,25 +8,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        navy: '#0F0E17',
-        amber: {
-          DEFAULT: '#F4C430',
-          300: '#FFE082',
-          400: '#F4C430',
-          500: '#D4A820',
-          800: '#7B5800',
-          900: '#4A3500',
-          950: '#2A1E00',
+        navy: '#0D1B3E',
+        orange: {
+          DEFAULT: '#FF6B35',
+          400: '#FF8C5A',
+          500: '#FF6B35',
+          600: '#E55A22',
         },
-        purple: {
-          DEFAULT: '#7B2FBE',
-          400: '#9B4DCA',
-          600: '#6A1FA8',
+        blue: {
+          DEFAULT: '#0D1B3E',
+          800: '#162347',
+          900: '#0D1B3E',
+          950: '#081228',
         },
-        cyan: {
-          DEFAULT: '#00F5D4',
-          400: '#00F5D4',
-          500: '#00D4B8',
+        accent: {
+          DEFAULT: '#A8C4FF',
+          400: '#A8C4FF',
+          500: '#7AABFF',
         },
       },
       fontFamily: {
