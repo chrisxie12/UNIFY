@@ -1597,7 +1597,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Already linked! 🔥
               </div>
-              <div className="absolute bottom-8 right-4 bg-[#0066FF]/8 border border-[#0066FF]/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-sm"
+              <div className="absolute bottom-8 right-4 bg-[#00F5D4]/8 border border-[#00F5D4]/20 rounded-2xl rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#00F5D4] shadow-sm"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 560ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1723,18 +1723,18 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="waitlist"
           ref={ctaRef}
-          className="bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-white/10"
-          style={sectionRevealStyle(ctaVisible)}
+          className="py-16 md:py-28 px-6 border-t border-white/10"
+          style={{ ...sectionRevealStyle(ctaVisible), background: '#0F0E17' }}
         >
           <div className="max-w-2xl mx-auto text-center">
             <span className="text-5xl block mb-6">🇬🇭</span>
-            <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-4 py-2 rounded-full mb-7">
+            <div className="inline-flex items-center gap-2 bg-[#00F5D4]/10 border border-[#00F5D4]/30 text-[#00F5D4] text-xs font-bold px-4 py-2 rounded-full mb-7">
               <CheckCircle className="w-3.5 h-3.5" strokeWidth={2} />
               100% free · No subscriptions · Ever
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-5 leading-tight">
               Stop hunting for broken<br />
-              <span className="text-[#0066FF]">WhatsApp group links.</span>
+              <span className="text-[#00F5D4]">WhatsApp group links.</span>
             </h2>
             <p className="text-white/60 text-lg mb-10 max-w-md mx-auto leading-relaxed">
               Secure your spot in the official Class of &apos;30 network today. Your campus people are already inside.
