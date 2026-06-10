@@ -4,24 +4,24 @@ export const metadata = {
 };
 
 const sharedStyles = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#fff', minHeight: '100vh' },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#0F0E17', minHeight: '100vh' },
   nav: { borderBottom: '1px solid #E5E7EB', padding: '0 24px' },
   navInner: { maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 },
-  navLogo: { fontWeight: 800, color: '#111827', textDecoration: 'none', fontSize: '1rem' },
-  navLink: { color: '#6B7280', textDecoration: 'none', fontSize: '0.9rem' },
+  navLogo: { fontWeight: 800, , textDecoration: 'none', fontSize: '1rem' },
+  navLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem' },
   article: { maxWidth: 720, margin: '0 auto', padding: '48px 24px 80px' },
-  backLink: { color: '#6B7280', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
+  backLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
   tag: { display: 'inline-block', background: '#0066FF18', color: '#0066FF', fontSize: '0.78rem', fontWeight: 700, padding: '3px 12px', borderRadius: 9999, marginBottom: 16, letterSpacing: '0.02em' },
-  meta: { color: '#9CA3AF', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
-  h1: { fontSize: '2.5rem', fontWeight: 800, color: '#111827', margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
-  h2: { fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid #E5E7EB' },
-  body: { fontSize: '1.1rem', color: '#374151', lineHeight: 1.8, margin: '0 0 20px' },
+  meta: { color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
+  h1: { fontSize: '2.5rem', fontWeight: 800, , margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
+  h2: { fontSize: '1.5rem', fontWeight: 700, , margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid #E5E7EB' },
+  body: { fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, margin: '0 0 20px' },
   table: { width: '100%', borderCollapse: 'collapse', margin: '24px 0 32px', fontSize: '0.95rem' },
-  th: { background: '#F3F4F6', color: '#111827', fontWeight: 600, padding: '12px', textAlign: 'left', border: '1px solid #E5E7EB' },
-  td: { padding: '12px', border: '1px solid #E5E7EB', color: '#374151', lineHeight: 1.5 },
-  quote: { borderLeft: '4px solid #0066FF', background: '#F0F7FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '20px 0', fontStyle: 'italic', color: '#374151', fontSize: '1rem', lineHeight: 1.7 },
+  th: { background: '#F3F4F6', , fontWeight: 600, padding: '12px', textAlign: 'left', border: '1px solid #E5E7EB' },
+  td: { padding: '12px', border: '1px solid #E5E7EB', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 },
+  quote: { borderLeft: '4px solid #0066FF', background: '#F0F7FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '20px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
   cta: { marginTop: 56, background: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: 12, padding: '36px', textAlign: 'center' },
-  ctaBtn: { display: 'inline-block', background: '#1F2937', color: '#fff', padding: '14px 32px', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '1rem', marginTop: 16 },
+  ctaBtn: { display: 'inline-block', background: '#7B2FBE', color: '#fff', padding: '14px 32px', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '1rem', marginTop: 16 },
   footer: { background: '#0066FF', padding: '32px 24px', textAlign: 'center' },
   footerText: { color: '#fff', fontWeight: 800, fontSize: '1rem' },
   footerSub: { color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', marginTop: 4 },
@@ -143,8 +143,8 @@ export default function KnustHostelRankingPage() {
 
         {/* CTA */}
         <div style={sharedStyles.cta}>
-          <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Ready to find your KNUST roommate?</p>
-          <p style={{ color: '#6B7280', fontSize: '0.95rem', margin: 0 }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 700, , margin: '0 0 8px' }}>Ready to find your KNUST roommate?</p>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', margin: 0 }}>
             Don&apos;t end up with a random match on the first day. Get on UNIFY and connect with compatible freshers before halls fill up.
           </p>
           <a href="/#waitlist" style={sharedStyles.ctaBtn}>

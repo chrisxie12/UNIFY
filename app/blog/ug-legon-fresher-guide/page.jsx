@@ -4,22 +4,22 @@ export const metadata = {
 };
 
 const s = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#fff', minHeight: '100vh' },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#0F0E17', minHeight: '100vh' },
   nav: { borderBottom: '1px solid #E5E7EB', padding: '0 24px' },
   navInner: { maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 },
-  navLogo: { fontWeight: 800, color: '#111827', textDecoration: 'none', fontSize: '1rem' },
-  navLink: { color: '#6B7280', textDecoration: 'none', fontSize: '0.9rem' },
+  navLogo: { fontWeight: 800, , textDecoration: 'none', fontSize: '1rem' },
+  navLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem' },
   article: { maxWidth: 720, margin: '0 auto', padding: '48px 24px 80px' },
-  backLink: { color: '#6B7280', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
+  backLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
   tag: { display: 'inline-block', background: '#FF6B3518', color: '#FF6B35', fontSize: '0.78rem', fontWeight: 700, padding: '3px 12px', borderRadius: 9999, marginBottom: 16, letterSpacing: '0.02em' },
-  meta: { color: '#9CA3AF', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
-  h1: { fontSize: '2.5rem', fontWeight: 800, color: '#111827', margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
-  h2: { fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid #E5E7EB' },
-  body: { fontSize: '1.1rem', color: '#374151', lineHeight: 1.8, margin: '0 0 20px' },
-  li: { fontSize: '1.05rem', color: '#374151', lineHeight: 1.8, marginBottom: 10 },
-  quote: { borderLeft: '4px solid #0066FF', background: '#F0F7FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '20px 0', fontStyle: 'italic', color: '#374151', fontSize: '1rem', lineHeight: 1.7 },
+  meta: { color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
+  h1: { fontSize: '2.5rem', fontWeight: 800, , margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
+  h2: { fontSize: '1.5rem', fontWeight: 700, , margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid #E5E7EB' },
+  body: { fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, margin: '0 0 20px' },
+  li: { fontSize: '1.05rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, marginBottom: 10 },
+  quote: { borderLeft: '4px solid #0066FF', background: '#F0F7FF', padding: '16px 20px', borderRadius: '0 8px 8px 0', margin: '20px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
   cta: { marginTop: 56, background: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: 12, padding: '36px', textAlign: 'center' },
-  ctaBtn: { display: 'inline-block', background: '#1F2937', color: '#fff', padding: '14px 32px', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '1rem', marginTop: 16 },
+  ctaBtn: { display: 'inline-block', background: '#7B2FBE', color: '#fff', padding: '14px 32px', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '1rem', marginTop: 16 },
   footer: { background: '#0066FF', padding: '32px 24px', textAlign: 'center' },
   footerText: { color: '#fff', fontWeight: 800, fontSize: '1rem' },
   footerSub: { color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', marginTop: 4 },
@@ -114,8 +114,8 @@ export default function UGLegonFresherGuidePage() {
 
         {/* CTA */}
         <div style={s.cta}>
-          <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Don&apos;t go to Legon cold.</p>
-          <p style={{ color: '#6B7280', fontSize: '0.95rem', margin: 0 }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 700, , margin: '0 0 8px' }}>Don&apos;t go to Legon cold.</p>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', margin: 0 }}>
             UNIFY matches you with compatible freshers at your school before orientation. Start your year with your people already found.
           </p>
           <a href="/#waitlist" style={s.ctaBtn}>Claim Your Spot on UNIFY →</a>

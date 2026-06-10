@@ -346,10 +346,11 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
       <div
         style={{
           animation: 'revealUp 600ms cubic-bezier(0.16,1,0.3,1) both',
-          background: 'white',
+          background: '#1A1827',
           borderRadius: 24,
           padding: '40px 32px',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.10)',
+          boxShadow: '0 8px 40px rgba(123,47,190,0.2)',
+          border: '1px solid rgba(255,255,255,0.08)',
           textAlign: 'center',
           maxWidth: 480,
           margin: '0 auto',
@@ -609,7 +610,7 @@ function CampusCollage({ animate = false }) {
          style={{ background: 'linear-gradient(135deg,#0a1628 0%,#0d1f3c 60%,#0f2952 100%)' }}>
       {/* Dot grid */}
       <div className="absolute inset-0 opacity-[0.07]"
-           style={{ backgroundImage: 'radial-gradient(circle,white 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
+           style={{ backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
 
       <div className="relative grid grid-cols-2 gap-4">
         {CAMPUS_TILES.map((t) => (
@@ -684,7 +685,7 @@ function SchoolLocatorViz({ animate = false }) {
       <div className="flex flex-col gap-2 flex-1">
         {LOCATOR_SCHOOLS.map((s) => (
           <div key={s.name} className="flex items-center gap-3 rounded-2xl px-3 py-2"
-               style={{ background: 'white', border: `1px solid ${s.color}22`, boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+               style={{ background: '#1A1827', border: `1px solid rgba(255,255,255,0.1)`, boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                         animation: animate ? `schoolCardIn 500ms var(--ease-out-expo) ${s.delay}ms both` : 'none',
                         opacity: animate ? undefined : 0 }}>
             <div style={{ width: 30, height: 30, borderRadius: '50%', background: `linear-gradient(135deg,${s.color},${s.color}99)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -1322,7 +1323,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Card 1 — Hub Preview (top-left, -5°) */}
               <div style={{ position: 'absolute', top: '4%', left: '2%', transform: 'rotate(-5deg)', zIndex: 3 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 0s infinite alternate',
-                  background: 'white', borderRadius: 16, width: 210,
+                  background: '#1A1827', borderRadius: 16, width: 210,
                   boxShadow: '0 12px 40px rgba(0,102,255,0.14), 0 2px 8px rgba(0,0,0,0.06)',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -1340,7 +1341,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Card 2 — Roommate Match (center-right, +3°) */}
               <div style={{ position: 'absolute', top: '30%', right: '0%', transform: 'rotate(3deg)', zIndex: 4 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 1.7s infinite alternate',
-                  background: 'white', borderRadius: 16, width: 220,
+                  background: '#1A1827', borderRadius: 16, width: 220,
                   boxShadow: '0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
@@ -1361,7 +1362,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Card 3 — Chat Bubble (bottom, -2°) */}
               <div style={{ position: 'absolute', bottom: '4%', left: '8%', transform: 'rotate(-2deg)', zIndex: 3 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 0.9s infinite alternate',
-                  background: 'white', borderRadius: 16, width: 230,
+                  background: '#1A1827', borderRadius: 16, width: 230,
                   boxShadow: '0 8px 32px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04)',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '14px 16px' }}>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
@@ -1523,7 +1524,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           ref={communityRef}
           className="relative py-16 md:py-28 px-6 border-t border-white/10"
-          style={{ ...sectionRevealStyle(communityVisible), background: '#f0f7ff' }}
+          style={{ ...sectionRevealStyle(communityVisible), background: '#0F0E17' }}
         >
           {/* Ambient dots */}
           {[

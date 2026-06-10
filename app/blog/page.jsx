@@ -36,15 +36,15 @@ const posts = [
 
 export default function BlogPage() {
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#fff', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#0F0E17', minHeight: '100vh' }}>
       {/* Nav */}
       <nav style={{ borderBottom: '1px solid #E5E7EB', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', color: '#111827', textDecoration: 'none', letterSpacing: '-0.5px' }}>UNIFY</a>
+          <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', , textDecoration: 'none', letterSpacing: '-0.5px' }}>UNIFY</a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <a href="/" style={{ color: '#6B7280', textDecoration: 'none', fontSize: '0.95rem' }}>Home</a>
-            <a href="/schools" style={{ color: '#6B7280', textDecoration: 'none', fontSize: '0.95rem' }}>Schools</a>
-            <a href="/faq" style={{ color: '#6B7280', textDecoration: 'none', fontSize: '0.95rem' }}>FAQ</a>
+            <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Home</a>
+            <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Schools</a>
+            <a href="/faq" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>FAQ</a>
             <a
               href="/#waitlist"
               style={{
@@ -65,10 +65,10 @@ export default function BlogPage() {
 
       {/* Hero */}
       <section style={{ textAlign: 'center', padding: '80px 24px 60px' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', margin: '0 0 16px', letterSpacing: '-1px' }}>
+        <h1 style={{ fontSize: '3rem', fontWeight: 800, , margin: '0 0 16px', letterSpacing: '-1px' }}>
           The Freshers&apos; Blog
         </h1>
-        <p style={{ fontSize: '1.2rem', color: '#6B7280', maxWidth: 520, margin: '0 auto' }}>
+        <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
           Real intel for Ghana&apos;s university freshers — no sugarcoating.
         </p>
       </section>
@@ -100,10 +100,10 @@ export default function BlogPage() {
                 >
                   {post.tag}
                 </span>
-                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#111827', margin: '0 0 12px', lineHeight: 1.4 }}>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, , margin: '0 0 12px', lineHeight: 1.4 }}>
                   {post.title}
                 </h2>
-                <p style={{ fontSize: '0.95rem', color: '#6B7280', margin: '0 0 20px', lineHeight: 1.7 }}>
+                <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)', margin: '0 0 20px', lineHeight: 1.7 }}>
                   {post.excerpt}
                 </p>
                 <span style={{ color: post.color, fontWeight: 600, fontSize: '0.9rem' }}>Read →</span>
