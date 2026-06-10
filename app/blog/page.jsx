@@ -40,7 +40,7 @@ export default function BlogPage() {
       {/* Nav */}
       <nav style={{ borderBottom: '1px solid #E5E7EB', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', , textDecoration: 'none', letterSpacing: '-0.5px' }}>UNIFY</a>
+          <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE' }}>UNIFY</a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Home</a>
             <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Schools</a>
