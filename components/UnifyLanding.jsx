@@ -202,7 +202,7 @@ function BlueDoodle({ drawn = true }) {
     animation: 'drawStroke 400ms var(--ease-out-expo) both',
   } : { strokeDasharray: 200, strokeDashoffset: 200 };
   return (
-    <svg viewBox="0 0 40 40" className="w-8 h-8 text-[#0066FF]" fill="none">
+    <svg viewBox="0 0 40 40" className="w-8 h-8 text-[#7B2FBE]" fill="none">
       <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
       <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
       <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
@@ -222,19 +222,19 @@ function OrangeDoodle({ drawn = true }) {
   } : { strokeDasharray: 200, strokeDashoffset: 200 };
   return (
     <svg viewBox="0 0 40 40" className="w-8 h-8" fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="20" y1="30" x2="20" y2="38" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="2" y1="20" x2="10" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="6" x2="12" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="28" y1="28" x2="34" y2="34" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="34" y1="6" x2="28" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="34" x2="12" y2="28" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="20" y1="2" x2="20" y2="10" stroke="#F4C430" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="20" y1="30" x2="20" y2="38" stroke="#F4C430" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="2" y1="20" x2="10" y2="20" stroke="#F4C430" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="30" y1="20" x2="38" y2="20" stroke="#F4C430" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="6" x2="12" y2="12" stroke="#F4C430" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="28" y1="28" x2="34" y2="34" stroke="#F4C430" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="34" y1="6" x2="28" y2="12" stroke="#F4C430" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
+      <line x1="6" y1="34" x2="12" y2="28" stroke="#F4C430" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
     </svg>
   );
 }
 
-function SparkDoodle({ color = '#0066FF', size = 28, visible = true, delay = 0 }) {
+function SparkDoodle({ color = '#7B2FBE', size = 28, visible = true, delay = 0 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true"
       className={visible ? 'spark-visible' : 'spark-hidden'}
@@ -260,14 +260,14 @@ function SquiggleUnderline({ heroVisible }) {
       style={heroVisible ? { transformOrigin: 'left center' } : { opacity: 0 }}
     >
       <path d="M0,5 C10,1 20,9 30,5 C40,1 50,9 60,5 C70,1 80,9 90,5 C100,1 110,9 120,5"
-        stroke="#FF6B35" strokeWidth="3.5" strokeLinecap="round"/>
+        stroke="#F4C430" strokeWidth="3.5" strokeLinecap="round"/>
     </svg>
   );
 }
 
 function BlueSwirl({ className = '', drawn = false }) {
   return (
-    <svg viewBox="0 0 80 200" className={`w-16 h-40 text-[#0066FF] opacity-20 ${className}`} fill="none">
+    <svg viewBox="0 0 80 200" className={`w-16 h-40 text-[#7B2FBE] opacity-20 ${className}`} fill="none">
       <path
         d="M60,10 C80,40 20,60 40,90 C60,120 80,140 40,170 C20,185 10,190 20,195"
         stroke="currentColor"
@@ -357,11 +357,11 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
         }}
       >
         <div style={{ fontSize: 48, marginBottom: 12 }}>🔥</div>
-        <h3 style={{ fontSize: 24, fontWeight: 900, color: '#111827', marginBottom: 8 }}>You&apos;re in!</h3>
-        <p style={{ color: '#6B7280', fontSize: 15, marginBottom: 4 }}>
-          We&apos;ll text you when your <strong style={{ color: '#111827' }}>{schoolLabel}</strong> hub opens.
+        <h3 style={{ fontSize: 24, fontWeight: 900, color: '#FFFFFE', marginBottom: 8 }}>You&apos;re in!</h3>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, marginBottom: 4 }}>
+          We&apos;ll text you when your <strong style={{ color: '#FFFFFE' }}>{schoolLabel}</strong> hub opens.
         </p>
-        <p style={{ color: '#9CA3AF', fontSize: 13, marginBottom: 24 }}>Share with your friends so they don&apos;t miss out.</p>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 24 }}>Share with your friends so they don&apos;t miss out.</p>
         <a
           href={`https://wa.me/?text=${waShareText}`}
           target="_blank"
@@ -485,7 +485,7 @@ function ExitModal() {
         className="relative bg-[#1A1827] border border-white/10 rounded-3xl max-w-lg w-full shadow-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-[#FF6B35] to-green-600" />
+        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-[#F4C430] to-green-600" />
         <div className="p-8">
           <button
             onClick={close}
@@ -569,14 +569,14 @@ function PhoneMockup() {
           { name: 'Kofi B.', school: 'UG Legon', tag: 'Coursemates' },
         ].map((p) => (
           <div key={p.name} className="bg-white/5 border border-white/10 rounded-2xl p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-xs font-bold text-[#0066FF]">
+            <div className="w-8 h-8 rounded-full bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 flex items-center justify-center text-xs font-bold text-[#7B2FBE]">
               {p.name[0]}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs font-semibold">{p.name}</p>
               <p className="text-white/40 text-[10px]">{p.school}</p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF]">{p.tag}</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 text-[#7B2FBE]">{p.tag}</span>
           </div>
         ))}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-3">
@@ -585,8 +585,8 @@ function PhoneMockup() {
           <p className="text-white/40 text-[10px]">420 freshers · Active</p>
           <div className="mt-2 w-full bg-[#1F2937] text-white text-[10px] font-black rounded-full py-1 text-center">Join Hub →</div>
         </div>
-        <div className="mt-auto bg-[#0066FF]/8 border border-[#0066FF]/15 rounded-2xl p-3 text-center">
-          <p className="text-[#0066FF] text-xs font-black">#247 on waitlist</p>
+        <div className="mt-auto bg-[#7B2FBE]/8 border border-[#7B2FBE]/15 rounded-2xl p-3 text-center">
+          <p className="text-[#7B2FBE] text-xs font-black">#247 on waitlist</p>
           <p className="text-white/40 text-[10px]">Refer friends to move up</p>
         </div>
       </div>
@@ -598,7 +598,7 @@ function PhoneMockup() {
 
 // ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
 const CAMPUS_TILES = [
-  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
+  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#6A1FA8,#7B2FBE)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
   { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
   { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', delay: 160 },
   { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Warren_Library_Ashesi.JPG?width=500', delay: 240 },
@@ -663,11 +663,11 @@ function CampusCollage({ animate = false }) {
 
 // ─── SCHOOL LOCATOR (left side of school search section) ─────────────────────
 const LOCATOR_SCHOOLS = [
-  { name: 'KNUST',    location: 'Kumasi',      freshers: 420, color: '#0066FF', initials: 'KN', delay: 0   },
+  { name: 'KNUST',    location: 'Kumasi',      freshers: 420, color: '#7B2FBE', initials: 'KN', delay: 0   },
   { name: 'UG Legon', location: 'Accra',       freshers: 310, color: '#7c3aed', initials: 'UG', delay: 80  },
   { name: 'UCC',      location: 'Cape Coast',  freshers: 185, color: '#059669', initials: 'UC', delay: 160 },
   { name: 'UPSA',     location: 'Accra',       freshers: 92,  color: '#dc2626', initials: 'UP', delay: 240 },
-  { name: 'UDS',      location: 'Tamale',      freshers: 67,  color: '#FF6B35', initials: 'UD', delay: 320 },
+  { name: 'UDS',      location: 'Tamale',      freshers: 67,  color: '#F4C430', initials: 'UD', delay: 320 },
   { name: 'GCTU',     location: 'Accra',       freshers: 54,  color: '#0891b2', initials: 'GC', delay: 400 },
 ];
 
@@ -677,8 +677,8 @@ function SchoolLocatorViz({ animate = false }) {
          style={{ background: 'linear-gradient(160deg,#f8faff 0%,#eef4ff 100%)', borderRadius: 24 }}>
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p style={{ fontSize: 10, fontWeight: 800, color: '#0066FF', letterSpacing: '0.15em', textTransform: 'uppercase' }}>School Directory</p>
-          <p style={{ fontSize: 14, fontWeight: 900, color: '#111827' }}>Ghana Universities</p>
+          <p style={{ fontSize: 10, fontWeight: 800, color: '#7B2FBE', letterSpacing: '0.15em', textTransform: 'uppercase' }}>School Directory</p>
+          <p style={{ fontSize: 14, fontWeight: 900, color: '#FFFFFE' }}>Ghana Universities</p>
         </div>
         <div style={{ background: '#7B2FBE', color: 'white', fontSize: 10, fontWeight: 900, borderRadius: 50, padding: '4px 10px' }}>180+ schools</div>
       </div>
@@ -692,8 +692,8 @@ function SchoolLocatorViz({ animate = false }) {
               <span style={{ color: 'white', fontWeight: 900, fontSize: 8 }}>{s.initials}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p style={{ fontSize: 11, fontWeight: 900, color: '#111827' }}>{s.name}</p>
-              <p style={{ fontSize: 9, color: '#9CA3AF', fontWeight: 600 }}>{s.location}</p>
+              <p style={{ fontSize: 11, fontWeight: 900, color: '#FFFFFE' }}>{s.name}</p>
+              <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{s.location}</p>
             </div>
             <div style={{ background: `${s.color}12`, border: `1px solid ${s.color}30`, borderRadius: 50, padding: '2px 8px' }}>
               <span style={{ fontSize: 9, fontWeight: 800, color: s.color }}>{s.freshers}</span>
@@ -703,10 +703,10 @@ function SchoolLocatorViz({ animate = false }) {
       </div>
       <div className="mt-3 flex items-center justify-center gap-1.5">
         <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0066FF] opacity-60" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0066FF]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7B2FBE] opacity-60" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#7B2FBE]" />
         </span>
-        <p style={{ fontSize: 9, color: '#6B7280', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
+        <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
       </div>
     </div>
   );
@@ -733,7 +733,7 @@ function FAQAccordion({ items, visible }) {
             <span
               className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#7B2FBE] border-[#7B2FBE]' : 'border-[#7B2FBE]/40 bg-white/5'}`}
             >
-              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#0066FF]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#7B2FBE]'}`} />
             </span>
           </button>
           {/* Smooth height with grid */}
@@ -820,9 +820,9 @@ function MobileMenu() {
         aria-label="Open menu"
         onClick={() => setOpen(true)}
       >
-        <span className="block w-6 h-0.5 bg-[#111827] rounded-full" />
-        <span className="block w-6 h-0.5 bg-[#111827] rounded-full" />
-        <span className="block w-6 h-0.5 bg-[#111827] rounded-full" />
+        <span className="block w-6 h-0.5 bg-white rounded-full" />
+        <span className="block w-6 h-0.5 bg-white rounded-full" />
+        <span className="block w-6 h-0.5 bg-white rounded-full" />
       </button>
 
       {open && (
@@ -865,10 +865,10 @@ function MobileMenu() {
         </nav>
 
         <div className="flex flex-col gap-3 mt-8">
-          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-[#0066FF] hover:text-purple-300 transition-colors text-center">
+          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-[#7B2FBE] hover:text-purple-300 transition-colors text-center">
             Sign In
           </a>
-          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#0066FF] text-white text-sm font-black text-center hover:bg-[#0052cc] transition-colors">
+          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#7B2FBE] text-white text-sm font-black text-center hover:bg-[#6A1FA8] transition-colors">
             Get Early Access →
           </a>
         </div>
@@ -947,11 +947,11 @@ export default function UnifyLanding({ schoolId } = {}) {
 
   // Community avatars
   const AVATARS = [
-    { initials: 'EO', bg: 'bg-orange-100', text: 'text-orange-700', top: '38%', left: '42%', order: 0 },
-    { initials: 'AA', bg: 'bg-blue-100', text: 'text-blue-700', top: '10%', left: '30%', order: 1 },
-    { initials: 'KB', bg: 'bg-green-100', text: 'text-green-700', top: '10%', left: '55%', order: 2 },
-    { initials: 'SM', bg: 'bg-purple-100', text: 'text-purple-700', top: '38%', left: '15%', order: 3 },
-    { initials: 'FA', bg: 'bg-pink-100', text: 'text-pink-700', top: '38%', left: '68%', order: 4 },
+    { initials: 'EO', bg: 'bg-[#F4C430]/20', text: 'text-[#F4C430]', top: '38%', left: '42%', order: 0 },
+    { initials: 'AA', bg: 'bg-[#7B2FBE]/20', text: 'text-purple-300', top: '10%', left: '30%', order: 1 },
+    { initials: 'KB', bg: 'bg-[#00F5D4]/20', text: 'text-[#00F5D4]', top: '10%', left: '55%', order: 2 },
+    { initials: 'SM', bg: 'bg-[#7B2FBE]/30', text: 'text-purple-200', top: '38%', left: '15%', order: 3 },
+    { initials: 'FA', bg: 'bg-[#F4C430]/15', text: 'text-[#F4C430]', top: '38%', left: '68%', order: 4 },
     { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%', order: 5 },
   ];
 
@@ -1106,7 +1106,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
         /* Focus rings */
         :focus-visible {
-          outline: 2px solid #0066FF;
+          outline: 2px solid #7B2FBE;
           outline-offset: 2px;
           border-radius: 4px;
         }
@@ -1116,7 +1116,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           position: absolute;
           top: -100px;
           left: 16px;
-          background: #0066FF;
+          background: #7B2FBE;
           color: white;
           padding: 8px 16px;
           border-radius: 8px;
@@ -1142,7 +1142,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
         /* Nav links */
         .nav-link { position: relative; transition: color 200ms; }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #0066FF; border-radius: 999px; transition: width 200ms var(--ease-out-expo); }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #7B2FBE; border-radius: 999px; transition: width 200ms var(--ease-out-expo); }
         .nav-link:hover::after { width: 100%; }
 
         /* Feature cards */
@@ -1165,7 +1165,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#0066FF]/[0.07] blur-[120px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#7B2FBE]/[0.07] blur-[120px]" />
         <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F5D4]/[0.05] blur-[100px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
@@ -1181,12 +1181,12 @@ export default function UnifyLanding({ schoolId } = {}) {
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/25 text-[#0066FF]">GH</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#7B2FBE]/10 border border-[#7B2FBE]/25 text-[#7B2FBE]">GH</span>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
               <a href="#" className="relative text-white font-semibold" onClick={() => track('nav_click', { page: 'home' })}>
                 Home
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#7B2FBE]" />
               </a>
               <a href="/hubs" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'hubs' })}>Hubs</a>
               <a href="/match" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'match' })}>Match</a>
@@ -1214,11 +1214,11 @@ export default function UnifyLanding({ schoolId } = {}) {
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 50%, rgba(0,102,255,0.06) 0%, transparent 70%)' }} />
           {/* Ambient drift dots */}
           {[
-            { size: 10, top: '15%', left: '8%',  color: '#0066FF', dur: '5.2s', delay: '0s'    },
-            { size: 8,  top: '70%', left: '5%',  color: '#0066FF', dur: '4.1s', delay: '1.2s'  },
-            { size: 12, top: '30%', left: '92%', color: '#0066FF', dur: '6.0s', delay: '0.5s'  },
-            { size: 6,  top: '80%', left: '88%', color: '#FF6B35', dur: '4.8s', delay: '2.1s'  },
-            { size: 8,  top: '55%', left: '3%',  color: '#FF6B35', dur: '5.5s', delay: '0.8s'  },
+            { size: 10, top: '15%', left: '8%',  color: '#7B2FBE', dur: '5.2s', delay: '0s'    },
+            { size: 8,  top: '70%', left: '5%',  color: '#7B2FBE', dur: '4.1s', delay: '1.2s'  },
+            { size: 12, top: '30%', left: '92%', color: '#7B2FBE', dur: '6.0s', delay: '0.5s'  },
+            { size: 6,  top: '80%', left: '88%', color: '#F4C430', dur: '4.8s', delay: '2.1s'  },
+            { size: 8,  top: '55%', left: '3%',  color: '#F4C430', dur: '5.5s', delay: '0.8s'  },
           ].map((d, i) => (
             <div key={i} className="absolute rounded-full pointer-events-none"
               style={{ width: d.size, height: d.size, top: d.top, left: d.left,
@@ -1229,10 +1229,10 @@ export default function UnifyLanding({ schoolId } = {}) {
             {/* Left */}
             <div>
               <div
-                className="inline-flex items-center gap-2 bg-[#0066FF]/8 border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7"
+                className="inline-flex items-center gap-2 bg-[#7B2FBE]/8 border border-[#7B2FBE]/20 text-[#7B2FBE] text-xs font-bold px-3.5 py-2 rounded-full mb-7"
                 style={heroStyle(100)}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7B2FBE] animate-pulse" />
                 {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
               </div>
 
@@ -1241,7 +1241,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
                     {heroHeadline}
                   </span>
-                  <span className="text-[#0066FF] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>
+                  <span className="text-[#7B2FBE] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>
                     fr.
                     <SquiggleUnderline heroVisible={heroVisible} />
                   </span>
@@ -1265,8 +1265,8 @@ export default function UnifyLanding({ schoolId } = {}) {
                 >
                   Get Early Access <ArrowRight className="w-4 h-4" />
                 </a>
-                <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-[#FF6B35] opacity-60" />
-                <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-[#FF6B35] opacity-40" />
+                <span className="absolute -top-1 -right-2 w-2 h-2 rounded-full bg-[#F4C430] opacity-60" />
+                <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-[#F4C430] opacity-40" />
               </span>
 
               <div
@@ -1275,9 +1275,9 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 <div className="flex -space-x-2">
                   {[
-                    { initials: 'KA', grad: 'linear-gradient(135deg,#0066FF,#6366f1)' },
+                    { initials: 'KA', grad: 'linear-gradient(135deg,#7B2FBE,#6366f1)' },
                     { initials: 'YM', grad: 'linear-gradient(135deg,#7c3aed,#a855f7)' },
-                    { initials: 'FA', grad: 'linear-gradient(135deg,#FF6B35,#dc2626)' },
+                    { initials: 'FA', grad: 'linear-gradient(135deg,#F4C430,#dc2626)' },
                     { initials: 'EB', grad: 'linear-gradient(135deg,#059669,#0891b2)' },
                     { initials: 'AO', grad: 'linear-gradient(135deg,#be185d,#9333ea)' },
                   ].map((a) => (
@@ -1327,11 +1327,11 @@ export default function UnifyLanding({ schoolId } = {}) {
                   boxShadow: '0 12px 40px rgba(0,102,255,0.14), 0 2px 8px rgba(0,0,0,0.06)',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: '#0066FF', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Your Hub</div>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: '#7B2FBE', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Your Hub</div>
                     <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
                   </div>
-                  <div style={{ fontSize: 14, fontWeight: 900, color: '#111827', marginBottom: 4 }}>KNUST Brunei Hub</div>
-                  <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 12 }}>420 freshers waiting</div>
+                  <div style={{ fontSize: 14, fontWeight: 900, color: '#FFFFFE', marginBottom: 4 }}>KNUST Brunei Hub</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>420 freshers waiting</div>
                   <div style={{ background: '#7B2FBE', color: 'white', fontWeight: 900, fontSize: 11, borderRadius: 50, padding: '6px 14px', textAlign: 'center' }}>
                     Join Hub →
                   </div>
@@ -1351,11 +1351,11 @@ export default function UnifyLanding({ schoolId } = {}) {
                     <span style={{ fontSize: 11, fontWeight: 800, color: '#16a34a' }}>Roommate Found!</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#0066FF,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
-                    <div style={{ flex: 1, height: 2, background: 'linear-gradient(90deg,#0066FF,#FF6B35)', borderRadius: 2 }} />
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#FF6B35,#dc2626)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#7B2FBE,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
+                    <div style={{ flex: 1, height: 2, background: 'linear-gradient(90deg,#7B2FBE,#F4C430)', borderRadius: 2 }} />
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#F4C430,#dc2626)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
                   </div>
-                  <div style={{ fontSize: 11, color: '#6B7280', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
                 </div>
               </div>
 
@@ -1377,13 +1377,13 @@ export default function UnifyLanding({ schoolId } = {}) {
                     </div>
                     <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#059669,#0891b2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>KA</div>
                   </div>
-                  <div style={{ fontSize: 9, color: '#9CA3AF', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
+                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
                 </div>
               </div>
 
               {/* Decorative orange dot accent */}
-              <div style={{ position: 'absolute', top: '22%', left: '42%', width: 10, height: 10, borderRadius: '50%', background: '#FF6B35', opacity: 0.5, zIndex: 2, animation: 'driftY 4s ease-in-out 0.4s infinite alternate' }} />
-              <div style={{ position: 'absolute', bottom: '28%', right: '8%', width: 7, height: 7, borderRadius: '50%', background: '#0066FF', opacity: 0.4, zIndex: 2, animation: 'driftY 3.5s ease-in-out 1.2s infinite alternate' }} />
+              <div style={{ position: 'absolute', top: '22%', left: '42%', width: 10, height: 10, borderRadius: '50%', background: '#F4C430', opacity: 0.5, zIndex: 2, animation: 'driftY 4s ease-in-out 0.4s infinite alternate' }} />
+              <div style={{ position: 'absolute', bottom: '28%', right: '8%', width: 7, height: 7, borderRadius: '50%', background: '#7B2FBE', opacity: 0.4, zIndex: 2, animation: 'driftY 3.5s ease-in-out 1.2s infinite alternate' }} />
             </div>
           </div>
         </section>
@@ -1392,7 +1392,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden" style={{ background: '#0066FF' }}>
+        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden" style={{ background: '#7B2FBE' }}>
           {/* Subtle dot grid overlay */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
             style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
@@ -1415,9 +1415,9 @@ export default function UnifyLanding({ schoolId } = {}) {
         >
           {/* Ambient dots */}
           {[
-            { size: 9,  top: '12%', right: '4%',  color: '#0066FF', dur: '5s',   delay: '0.3s'  },
-            { size: 6,  top: '60%', right: '2%',  color: '#FF6B35', dur: '4.2s', delay: '1.5s'  },
-            { size: 11, top: '80%', left:  '3%',  color: '#0066FF', dur: '5.8s', delay: '0.7s'  },
+            { size: 9,  top: '12%', right: '4%',  color: '#7B2FBE', dur: '5s',   delay: '0.3s'  },
+            { size: 6,  top: '60%', right: '2%',  color: '#F4C430', dur: '4.2s', delay: '1.5s'  },
+            { size: 11, top: '80%', left:  '3%',  color: '#7B2FBE', dur: '5.8s', delay: '0.7s'  },
           ].map((d, i) => (
             <div key={i} className="absolute rounded-full pointer-events-none"
               style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
@@ -1429,7 +1429,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <BlueDoodle drawn={featuresVisible} />
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#7B2FBE]">Why UNIFY</span>
                 </div>
                 <SparkDoodle visible={featuresVisible} delay={200} />
                 <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
@@ -1442,16 +1442,16 @@ export default function UnifyLanding({ schoolId } = {}) {
 
               <div className="flex flex-col gap-4">
                 {[
-                  { icon: <Users2 className="w-5 h-5 text-[#0066FF]" />, title: '180+ Campus Hubs', body: 'Official hubs for KNUST, UG Legon, UCC, UPSA and 180+ schools across Ghana.' },
-                  { icon: <GraduationCap className="w-5 h-5 text-[#0066FF]" />, title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.' },
-                  { icon: <Building2 className="w-5 h-5 text-[#0066FF]" />, title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.' },
+                  { icon: <Users2 className="w-5 h-5 text-[#7B2FBE]" />, title: '180+ Campus Hubs', body: 'Official hubs for KNUST, UG Legon, UCC, UPSA and 180+ schools across Ghana.' },
+                  { icon: <GraduationCap className="w-5 h-5 text-[#7B2FBE]" />, title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.' },
+                  { icon: <Building2 className="w-5 h-5 text-[#7B2FBE]" />, title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.' },
                 ].map((f, i) => (
                   <div
                     key={f.title}
                     className="feature-card bg-[#1A1827] border border-white/10 rounded-3xl p-6 flex items-start gap-4"
                     style={featuresVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 100}ms both` } : { opacity: 0 }}
                   >
-                    <div className="w-11 h-11 rounded-2xl bg-[#0066FF]/8 border border-[#0066FF]/15 flex items-center justify-center flex-shrink-0">
+                    <div className="w-11 h-11 rounded-2xl bg-[#7B2FBE]/8 border border-[#7B2FBE]/15 flex items-center justify-center flex-shrink-0">
                       {f.icon}
                     </div>
                     <div>
@@ -1473,7 +1473,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
             <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
               <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
-                stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"
+                stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"
                 style={{ strokeDasharray: 800, strokeDashoffset: 0 }}/>
             </svg>
           </div>
@@ -1528,9 +1528,9 @@ export default function UnifyLanding({ schoolId } = {}) {
         >
           {/* Ambient dots */}
           {[
-            { size: 8,  top: '10%', left:  '5%',  color: '#FF6B35', dur: '4.5s', delay: '0s'   },
-            { size: 10, top: '70%', right: '3%',  color: '#0066FF', dur: '5.2s', delay: '1.1s' },
-            { size: 7,  top: '40%', right: '6%',  color: '#FF6B35', dur: '3.8s', delay: '0.6s' },
+            { size: 8,  top: '10%', left:  '5%',  color: '#F4C430', dur: '4.5s', delay: '0s'   },
+            { size: 10, top: '70%', right: '3%',  color: '#7B2FBE', dur: '5.2s', delay: '1.1s' },
+            { size: 7,  top: '40%', right: '6%',  color: '#F4C430', dur: '3.8s', delay: '0.6s' },
           ].map((d, i) => (
             <div key={i} className="absolute rounded-full pointer-events-none"
               style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
@@ -1541,7 +1541,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <OrangeDoodle drawn={communityVisible} />
-                <Sparkles className="w-5 h-5 text-[#FF6B35]" />
+                <Sparkles className="w-5 h-5 text-[#F4C430]" />
               </div>
               <SparkDoodle visible={communityVisible} delay={200} />
               <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
@@ -1684,14 +1684,14 @@ export default function UnifyLanding({ schoolId } = {}) {
                       <div className="text-5xl font-black text-amber-400 leading-none mb-4">&ldquo;</div>
                       <p className="text-white/60 text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
                       <div className="border-t border-white/10 pt-5 flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center text-sm font-black text-[#0066FF] flex-shrink-0">{t.initials}</div>
+                        <div className="w-11 h-11 rounded-full bg-[#7B2FBE]/10 border border-[#7B2FBE]/20 flex items-center justify-center text-sm font-black text-[#7B2FBE] flex-shrink-0">{t.initials}</div>
                         <div className="flex-1">
                           <p className="font-bold text-white text-sm">{t.name}</p>
                           <p className="text-white/40 text-xs">{t.role}</p>
                         </div>
                         <div className="flex items-center gap-0.5">
                           {[1,2,3,4,5].map(s => (
-                            <svg key={s} viewBox="0 0 12 12" className="w-3.5 h-3.5" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
+                            <svg key={s} viewBox="0 0 12 12" className="w-3.5 h-3.5" fill={s <= t.stars ? '#F4C430' : '#E5E7EB'}>
                               <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
                             </svg>
                           ))}
@@ -1707,13 +1707,13 @@ export default function UnifyLanding({ schoolId } = {}) {
             <div className="md:hidden mt-6 flex items-center justify-center gap-3">
               <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/60 hover:border-[#7B2FBE]/50 hover:text-purple-300 transition-all">←</button>
               {TESTIMONIALS.map((_, i) => (
-                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
+                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#7B2FBE] w-6' : 'bg-[#E5E7EB] w-2'}`} />
               ))}
               <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/60 hover:border-[#7B2FBE]/50 hover:text-purple-300 transition-all">→</button>
             </div>
             <div className="hidden md:flex mt-6 items-center justify-center gap-2">
               {TESTIMONIALS.map((_, i) => (
-                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#E5E7EB] w-2'}`} />
+                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#7B2FBE] w-6' : 'bg-[#E5E7EB] w-2'}`} />
               ))}
             </div>
           </div>
@@ -1754,7 +1754,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>
             <svg viewBox="0 0 80 600" fill="none" className="h-full w-full opacity-20">
               <path d="M20,0 C80,80 -10,180 60,280 C100,340 10,420 50,520 C70,570 30,590 20,600"
-                stroke="#0066FF" strokeWidth="1.5" strokeLinecap="round"/>
+                stroke="#7B2FBE" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </div>
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-start">
@@ -1773,9 +1773,9 @@ export default function UnifyLanding({ schoolId } = {}) {
                 We&apos;ll answer everything. Drop your number and we&apos;ll reach out.
               </p>
               {faqDone ? (
-                <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-full px-5 py-4">
-                  <CheckCircle className="text-green-600 w-5 h-5 flex-shrink-0" />
-                  <p className="text-green-800 font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
+                <div className="flex items-center gap-3 bg-[#00F5D4]/10 border border-[#00F5D4]/30 rounded-full px-5 py-4">
+                  <CheckCircle className="text-[#00F5D4] w-5 h-5 flex-shrink-0" />
+                  <p className="text-[#00F5D4] font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
                 </div>
               ) : (
                 <form onSubmit={handleFaqSubmit} className="flex items-center bg-[#1A1827] border border-white/10 rounded-full overflow-hidden pr-1.5 focus-within:border-[#7B2FBE]/60">
@@ -1806,7 +1806,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── FOOTER ──────────────────────────────────────────────────── */}
-        <footer className="bg-[#0066FF] px-6 pt-14 pb-8">
+        <footer className="bg-[#7B2FBE] px-6 pt-14 pb-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-white/20">
 
