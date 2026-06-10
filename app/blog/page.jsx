@@ -37,27 +37,17 @@ const posts = [
 export default function BlogPage() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#0D1B3E', minHeight: '100vh' }}>
+      <style>{`@media(min-width:640px){.md-show{display:block !important}}`}</style>
       {/* Nav */}
       <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <a href="/" style={{ fontWeight: 800, fontSize: '1.25rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE' }}>UNIFY</a>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Home</a>
-            <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>Schools</a>
-            <a href="/faq" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.95rem' }}>FAQ</a>
-            <a
-              href="/#waitlist"
-              style={{
-                background: '#FF6B35',
-                color: '#fff',
-                padding: '8px 20px',
-                borderRadius: 9999,
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: 600,
-              }}
-            >
-              Get Early Access
+          <a href="/" style={{ fontWeight: 900, fontSize: '1.1rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE', fontFamily: "'Barlow Condensed', sans-serif" }}>UNIFY</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Home</a>
+            <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Schools</a>
+            <a href="/faq" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">FAQ</a>
+            <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 9999, textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+              Join Waitlist
             </a>
           </div>
         </div>
@@ -75,7 +65,7 @@ export default function BlogPage() {
 
       {/* Grid */}
       <section style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px 100px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
           {posts.map((post) => (
             <a
               key={post.slug}

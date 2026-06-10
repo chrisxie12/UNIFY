@@ -10,6 +10,10 @@ html {
   color: #FFFFFE;
 }
 
+body {
+  font-family: 'Barlow', system-ui, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }

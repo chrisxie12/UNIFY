@@ -1236,19 +1236,17 @@ export default function UnifyLanding({ schoolId } = {}) {
                 {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
               </div>
 
-              <div className="flex items-start gap-3 mb-4">
-                <h1 className="text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-white">
+              <div className="mb-6">
+                <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, lineHeight: 1, letterSpacing: '-0.01em' }} className="text-[3.2rem] md:text-[5rem] uppercase text-white">
                   <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
                     {heroHeadline}
                   </span>
-                  <span className="text-[#FF6B35] fr block" style={heroStyle(250, 'heroFadeUp', '800ms')}>
-                    fr.
+                  <span className="block relative" style={heroStyle(250, 'heroFadeUp', '800ms')}>
+                    <span className="text-[#FF6B35]">fr.</span>
+                    <span className="inline-block ml-3 align-middle" style={{ width: 48, height: 6, background: '#FF6B35', borderRadius: 3, verticalAlign: 'middle', display: 'inline-block' }} />
                     <SquiggleUnderline heroVisible={heroVisible} />
                   </span>
                 </h1>
-                <div style={heroStyle(800, 'heroDoodle', '400ms')}>
-                  <BlueDoodle drawn={true} />
-                </div>
               </div>
 
               <p
