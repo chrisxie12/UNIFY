@@ -393,7 +393,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             type="button"
             aria-pressed={school === s.id}
             onClick={() => { setSchool(s.id); track('nav_click', { page: s.id }); }}
-            className={`text-xs font-bold px-4 py-2 rounded-full border transition-all duration-200 ${
+            className={`text-xs font-bold px-4 py-2 rounded-none border transition-all duration-200 ${
               school === s.id
                 ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[0_4px_14px_rgba(123,47,190,0.3)]'
                 : 'bg-white/5 text-white/60 border-white/10 hover:border-[#FF6B35]/40 hover:text-purple-300'
@@ -414,14 +414,14 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(''); }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             disabled={loading}
-            className="flex-1 bg-white/5 border border-white/10 rounded-full px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
+            className="flex-1 bg-white/5 border border-white/10 rounded-none px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
             style={phoneError ? { borderColor: '#dc2626', boxShadow: '0 0 0 2px rgba(220,38,38,0.15)' } : {}}
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.4)] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? 'Claiming…' : 'Claim Your Handle →'}
         </button>
@@ -558,7 +558,7 @@ function StickyBar() {
 function PhoneMockup() {
   return (
     <div style={{ animation: 'phoneBob 6s ease-in-out infinite' }} className="relative w-64 h-[520px] mx-auto">
-      <div className="absolute inset-0 rounded-[40px] bg-[#162347] border border-white/10 shadow-[0_30px_60px_rgba(123,47,190,0.20)]" />
+      <div className="absolute inset-0 rounded-none bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_rgba(255,107,53,0.3)]" />
       <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-[#162347] p-4 flex flex-col gap-3">
         <div className="flex justify-between text-[10px] text-white/40 px-1">
           <span>9:41</span><span>●●●</span>
@@ -731,7 +731,7 @@ function FAQAccordion({ items, visible }) {
           >
             <span className="font-semibold text-sm text-white group-hover:text-purple-300 transition-colors duration-200">{faq.q}</span>
             <span
-              className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}
+              className={`flex-shrink-0 w-6 h-6 rounded-none border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}
             >
               <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#FF6B35]'}`} />
             </span>
@@ -868,7 +868,7 @@ function MobileMenu() {
           <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-[#FF6B35] hover:text-purple-300 transition-colors text-center">
             Sign In
           </a>
-          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#FF6B35] text-white text-sm font-black text-center hover:bg-[#E55A22] transition-colors">
+          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-none bg-[#FF6B35] text-white text-sm font-black text-center hover:bg-[#E55A22] transition-colors">
             Get Early Access →
           </a>
         </div>
