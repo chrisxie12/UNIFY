@@ -1171,7 +1171,7 @@ export default function UnifyLanding({ schoolId } = {}) {
       </div>
 
       {/* Browser wrapper */}
-      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
         <nav
