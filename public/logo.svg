@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- Sphere: bright blue top-left → deep navy bottom-right (mirrors the green sphere in original) -->
+    <radialGradient id="sphere" cx="36%" cy="30%" r="78%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#2060d8"/>
+      <stop offset="48%"  stop-color="#082868"/>
+      <stop offset="100%" stop-color="#020b20"/>
+    </radialGradient>
+
+    <!-- Lettermark: UNIFY blue → light cyan, bottom-left to top-right (mirrors original green→cyan) -->
+    <linearGradient id="mark" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#0052cc"/>
+      <stop offset="55%"  stop-color="#0066FF"/>
+      <stop offset="100%" stop-color="#38d4f5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background sphere -->
+  <circle cx="100" cy="100" r="100" fill="url(#sphere)"/>
+
+  <!--
+    Left element — stylised U with a pointed/angled base:
+      outer-left bar   x=55–68, from y=48 down to y=128, then diagonal to point
+      point            at ~(80,155)
+      outer-right bar  x=80–92, full height y=48–155
+      inner diagonal   (81,144) → (68,116) reconnects the two bars inside
+  -->
+  <path fill="url(#mark)" d="
+    M 55,48
+    L 55,128  L 80,155  L 92,155
+    L 92,48   L 81,48
+    L 81,144  L 67,116
+    L 67,48
+    Z
+  "/>
+
+  <!--
+    Right element — ] bracket:
+      full-height right bar  x=128–142
+      top cap                y=48–62, x=100–142
+      bottom cap             y=141–155, x=100–142
+  -->
+  <path fill="url(#mark)" d="
+    M 100,48  L 142,48
+    L 142,155 L 100,155
+    L 100,141 L 128,141
+    L 128,62  L 100,62
+    Z
+  "/>
+</svg>

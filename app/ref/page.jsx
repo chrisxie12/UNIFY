@@ -38,12 +38,12 @@ export default function ReferralInfoPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
+      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
         {/* Gradient top bar */}
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
@@ -51,11 +51,11 @@ export default function ReferralInfoPage() {
           {/* Logo */}
           <div className="anim-fade-up flex items-center justify-center gap-2 mb-6">
             <span className="text-2xl font-black tracking-tight text-white">UNIFY</span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
           </div>
 
           {/* Ghana flag stripe */}
-          <div className="w-24 h-1 rounded-full mx-auto mb-10 bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+          <div className="w-24 h-1 rounded-none mx-auto mb-10 bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
 
           <h1 className="anim-fade-up delay-100 text-3xl font-black text-white mb-3">Share UNIFY with your friends</h1>
           <p className="anim-fade-up delay-200 text-white/60 text-base leading-relaxed mb-12">
@@ -69,7 +69,7 @@ export default function ReferralInfoPage() {
               { icon: '👥', title: 'Friend joins', desc: 'When a friend signs up via your link, they get added to the waitlist with your code.', delay: 'delay-200' },
               { icon: '⚡️', title: 'You both get early access', desc: 'Referrals boost your position. More referrals = earlier campus hub access.', delay: 'delay-300' },
             ].map(({ icon, title, desc, delay }) => (
-              <div key={title} className={`anim-fade-up ${delay} flex gap-4 items-start bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#FF6B35]/40 hover:-translate-y-0.5 transition-all duration-300`}>
+              <div key={title} className={`anim-fade-up ${delay} flex gap-4 items-start bg-white/5 border border-white/10 rounded-none p-5 hover:border-[#FF6B35]/40 hover:-translate-y-0.5 transition-all duration-300`}>
                 <span className="text-2xl shrink-0 mt-0.5">{icon}</span>
                 <div>
                   <p className="font-black text-sm text-white mb-1">{title}</p>
@@ -79,7 +79,7 @@ export default function ReferralInfoPage() {
             ))}
           </div>
 
-          <a href="/" className="anim-fade-up delay-400 anim-glow inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+          <a href="/" className="anim-fade-up delay-400 inline-flex items-center gap-2 px-6 py-3 rounded-none font-bold text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)]">
             ← Back to UNIFY
           </a>
 

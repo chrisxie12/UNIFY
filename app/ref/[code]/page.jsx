@@ -87,9 +87,9 @@ export default function RefPage({ params }) {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
@@ -100,11 +100,11 @@ export default function RefPage({ params }) {
           {/* Logo */}
           <div className="anim-fade-up flex items-center gap-2 mb-6">
             <span className="text-xl font-black tracking-tight text-white">UNIFY</span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
           </div>
 
           {/* Ghana flag stripe */}
-          <div className="w-full h-1 rounded-full mb-8 bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+          <div className="w-full h-1 rounded-none mb-8 bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
 
           {!submitted ? (
             <>
@@ -140,7 +140,7 @@ export default function RefPage({ params }) {
                       className={`px-3 py-1.5 rounded-none text-sm font-semibold border transition-all ${
                         school === s.id
                           ? 'bg-[#FF6B35] border-[#FF6B35] text-white'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
+                          : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
                       }`}
                     >
                       {s.label}
@@ -164,7 +164,7 @@ export default function RefPage({ params }) {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !school || !phone}
-                  className="w-full py-3 rounded-none font-black text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[0_4px_14px_rgba(123,47,190,0.4)] hover:shadow-[0_8px_24px_rgba(123,47,190,0.5)]"
+                  className="w-full py-3 rounded-none font-black text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[4px_4px_0px_#FF6B35] hover:shadow-[6px_6px_0px_#FF6B35]"
                 >
                   {submitting ? 'Joining…' : 'Join the Waitlist →'}
                 </button>
@@ -172,7 +172,7 @@ export default function RefPage({ params }) {
             </>
           ) : (
             <div className="text-center py-8">
-              <div className="w-20 h-20 rounded-full bg-white/70 backdrop-blur-sm border border-green-200/70 flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 rounded-none bg-white/70 backdrop-blur-sm border border-green-200/70 flex items-center justify-center mx-auto mb-6">
                 <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'checkPop 0.4s ease-out' }}>
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
@@ -192,7 +192,7 @@ export default function RefPage({ params }) {
                     className={`shrink-0 px-3 py-1.5 rounded-none text-xs font-semibold border transition-all ${
                       copied
                         ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]'
-                        : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
+                        : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
                     }`}
                   >
                     {copied ? 'Copied!' : 'Copy'}

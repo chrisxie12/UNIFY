@@ -48,8 +48,8 @@ function SchoolCard({ school }) {
         <div className="flex items-center justify-between pt-3 border-t border-white/10">
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A8C4FF] opacity-40" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#A8C4FF]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#A8C4FF] opacity-40" />
+              <span className="relative inline-flex rounded-none h-1.5 w-1.5 bg-[#A8C4FF]" />
             </span>
             <span className="text-[11px] font-semibold text-white/50">{school.freshers}</span>
           </div>

@@ -28,9 +28,9 @@ export async function GET() {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
           background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.3)',
-          borderRadius: 50, padding: '10px 24px', marginBottom: 40,
+          borderRadius: 0, padding: '10px 24px', marginBottom: 40,
         }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#4FC3F7' }} />
+          <div style={{ width: 10, height: 10, borderRadius: 0, background: '#4FC3F7' }} />
           <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700, letterSpacing: 2 }}>BUILT FOR GHANA FRESHERS</span>
         </div>
         {/* UNIFY wordmark */}

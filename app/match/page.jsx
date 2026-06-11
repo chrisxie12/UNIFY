@@ -5,7 +5,7 @@ import { MapPin, ArrowRight, X, Users, BookOpen, Home, Heart, Filter, Users2 } f
 
 const PROFILES = [
   {
-    id: 1, name: 'Ama Owusu', initials: 'AO', grad: 'linear-gradient(135deg,#0066FF,#6366f1)',
+    id: 1, name: 'Ama Owusu', initials: 'AO', grad: 'linear-gradient(135deg,#0066FF,#0052cc)',
     school: 'KNUST', course: 'Computer Science', year: 'Fresher 2026', hometown: 'Accra',
     habits: ['Early riser', 'Quiet study', 'Non-smoker'],
     bio: "Into machine learning and Afrobeats. Looking for a quiet roommate who won't judge my 2am debugging sessions.",
@@ -26,7 +26,7 @@ const PROFILES = [
     lookingFor: 'Roommate',
   },
   {
-    id: 4, name: 'Kofi Boateng', initials: 'KB', grad: 'linear-gradient(135deg,#7c3aed,#a855f7)',
+    id: 4, name: 'Kofi Boateng', initials: 'KB', grad: 'linear-gradient(135deg,#FF6B35,#E55A22)',
     school: 'UG Legon', course: 'Political Science', year: 'Fresher 2026', hometown: 'Tamale',
     habits: ['Social', 'Night owl'],
     bio: 'Debate club president in SHS. Looking for coursemates to form a study group before lectures start.',
@@ -68,7 +68,7 @@ const PROFILES = [
     lookingFor: 'Roommate',
   },
   {
-    id: 10, name: 'Fiifi Mensah', initials: 'FM', grad: 'linear-gradient(135deg,#6366f1,#7c3aed)',
+    id: 10, name: 'Fiifi Mensah', initials: 'FM', grad: 'linear-gradient(135deg,#0066FF,#FF6B35)',
     school: 'KNUST', course: 'Electrical Engineering', year: 'Fresher 2026', hometown: 'Tema',
     habits: ['Night owl', 'Quiet study', 'Non-smoker'],
     bio: "PCB designs and lo-fi beats. I'm clean and quiet, need the same in return.",
@@ -103,7 +103,7 @@ const PROFILES = [
     lookingFor: 'Coursemates',
   },
   {
-    id: 15, name: 'Afia Boampong', initials: 'AB', grad: 'linear-gradient(135deg,#0066FF,#6366f1)',
+    id: 15, name: 'Afia Boampong', initials: 'AB', grad: 'linear-gradient(135deg,#0066FF,#0052cc)',
     school: 'KNUST', course: 'Pharmacy', year: 'Fresher 2026', hometown: 'Kumasi',
     habits: ['Quiet study', 'Non-smoker', 'Early riser'],
     bio: 'Pharmacy is intense. Looking for a roommate who understands that and keeps things peaceful.',
@@ -115,14 +115,14 @@ const SCHOOLS = ['All', 'KNUST', 'UG Legon', 'UCC'];
 const HABITS = ['All', 'Early riser', 'Night owl', 'Quiet study', 'Social', 'Gym rat', 'Non-smoker'];
 
 function getSchoolStyle(school) {
-  if (school === 'KNUST')    return { pill: 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30', dot: 'bg-[#FF6B35]' };
+  if (school === 'KNUST')    return { pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30', dot: 'bg-[#FF6B35]' };
   if (school === 'UG Legon') return { pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30', dot: 'bg-[#A8C4FF]' };
   if (school === 'UCC')      return { pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30', dot: 'bg-amber-400' };
   return { pill: 'bg-white/5 text-white/60 border-white/10', dot: 'bg-white/40' };
 }
 
 function getLookingForStyle(lookingFor) {
-  if (lookingFor === 'Roommate')   return 'bg-[#FF6B35]/10 text-purple-300 border-[#FF6B35]/30';
+  if (lookingFor === 'Roommate')   return 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30';
   if (lookingFor === 'Coursemates') return 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30';
   return 'bg-amber-400/10 text-amber-300 border-amber-400/20';
 }
@@ -139,23 +139,23 @@ function ProfileCard({ profile, onConnect }) {
     <div className="bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none p-5 flex flex-col gap-4 hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_#FF6B35] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="relative w-16 h-16 rounded-2xl flex-shrink-0">
+          <div className="relative w-16 h-16 rounded-none flex-shrink-0">
             <div
-              className="w-full h-full rounded-2xl flex items-center justify-center text-white font-black text-lg border-2 border-white/60"
+              className="w-full h-full rounded-none flex items-center justify-center text-white font-black text-lg border-2 border-white/60"
               style={{ background: profile.grad }}
             >
               {profile.initials}
             </div>
-            <div className={`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-white ${school.dot}`} />
+            <div className={`absolute bottom-1 right-1 w-3 h-3 rounded-none border-2 border-white ${school.dot}`} />
           </div>
           <div>
             <p className="font-semibold text-white text-sm leading-tight">{profile.name}</p>
-            <span className={`inline-block mt-1 text-[11px] px-2 py-0.5 rounded-full border ${school.pill}`}>
+            <span className={`inline-block mt-1 text-[11px] px-2 py-0.5 rounded-none border ${school.pill}`}>
               {profile.school}
             </span>
           </div>
         </div>
-        <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-full border flex-shrink-0 ${getLookingForStyle(profile.lookingFor)}`}>
+        <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-none border flex-shrink-0 ${getLookingForStyle(profile.lookingFor)}`}>
           {getLookingForIcon(profile.lookingFor)}
           {profile.lookingFor}
         </span>
@@ -173,7 +173,7 @@ function ProfileCard({ profile, onConnect }) {
 
       <div className="flex flex-wrap gap-1.5">
         {profile.habits.map(habit => (
-          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/60">
+          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-none bg-white/5 border border-white/10 text-white/60">
             {habit}
           </span>
         ))}
@@ -247,8 +247,8 @@ export default function MatchPage() {
           to   { opacity: 1; transform: scale(1); }
         }
         @keyframes glowPulse {
-          0%, 100% { box-shadow: 0 0 20px rgba(0,102,255,0.15); }
-          50%       { box-shadow: 0 0 40px rgba(0,102,255,0.30); }
+          0%, 100% { box-shadow: 4px 4px 0px rgba(0,102,255,0.35); }
+          50%       { box-shadow: 6px 6px 0px rgba(0,102,255,0.6); }
         }
         @keyframes floatBadge {
           0%, 100% { transform: translateY(0px); }
@@ -268,9 +268,9 @@ export default function MatchPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
@@ -283,14 +283,14 @@ export default function MatchPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
             </a>
             <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
               <a href="/" className="hover:text-white transition-colors">Home</a>
               <a href="/hubs" className="hover:text-white transition-colors">Hubs</a>
               <a href="/match" className="relative text-white font-semibold">
                 Match
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#FF6B35]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-none bg-[#FF6B35]" />
               </a>
             </div>
             <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-xs px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_rgba(255,255,255,0.3)] transition-all hover:-translate-y-0.5">
@@ -302,10 +302,10 @@ export default function MatchPage() {
         {/* ── HERO ── */}
         <section className="pt-16 md:pt-24 pb-12 px-6 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-purple-300 text-xs font-bold px-4 py-1.5 rounded-full anim-fade-up">
+            <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-xs font-bold px-4 py-1.5 rounded-none anim-fade-up">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B35]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#FF6B35] opacity-75" />
+                <span className="relative inline-flex rounded-none h-2 w-2 bg-[#FF6B35]" />
               </span>
               847 freshers matched so far
             </div>
@@ -321,7 +321,7 @@ export default function MatchPage() {
             </p>
 
             <div className="anim-fade-up delay-300 flex justify-center pt-2">
-              <div className="h-1 w-24 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+              <div className="h-1 w-24 rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
             </div>
           </div>
         </section>
@@ -340,7 +340,7 @@ export default function MatchPage() {
                   className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     schoolFilter === s
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
+                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
                   }`}
                 >
                   {s}
@@ -359,7 +359,7 @@ export default function MatchPage() {
                   className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     habitsFilter === h
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
+                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
                   }`}
                 >
                   {h}
@@ -378,7 +378,7 @@ export default function MatchPage() {
                 <p className="text-[#6B7280] text-lg max-w-sm mx-auto leading-relaxed">
                   No freshers match your filters yet. Be the first to join from your school!
                 </p>
-                <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+                <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm px-5 py-2.5 rounded-none transition-all hover:-translate-y-0.5 shadow-[4px_4px_0px_#FF6B35]">
                   Join the waitlist <ArrowRight size={14} />
                 </a>
               </div>
@@ -396,7 +396,7 @@ export default function MatchPage() {
         <section className="px-6 pb-20">
           <div className="max-w-2xl mx-auto text-center bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none px-8 py-14">
             <div className="flex justify-center mb-6">
-              <div className="h-1 w-16 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+              <div className="h-1 w-16 rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
               Ready to find your match?
@@ -415,7 +415,7 @@ export default function MatchPage() {
           <div className="max-w-7xl mx-auto text-center text-sm text-white/70">
             © 2026 UNIFY · Ghana 🇬🇭 · Built for freshers
           </div>
-          <div className="max-w-6xl mx-auto mt-4 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+          <div className="max-w-6xl mx-auto mt-4 h-[3px] rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
         </footer>
 
       </div>

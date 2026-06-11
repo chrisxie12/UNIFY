@@ -43,7 +43,7 @@ export default function FAQPage() {
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
-          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400">GH</span>
+          <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/20 text-amber-400">GH</span>
         </a>
         <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
       </nav>
