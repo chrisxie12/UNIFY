@@ -118,7 +118,7 @@ function getSchoolStyle(school) {
   if (school === 'KNUST')    return { pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30', dot: 'bg-[#FF6B35]' };
   if (school === 'UG Legon') return { pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30', dot: 'bg-[#A8C4FF]' };
   if (school === 'UCC')      return { pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30', dot: 'bg-amber-400' };
-  return { pill: 'bg-white/5 text-white/60 border-white/10', dot: 'bg-white/40' };
+  return { pill: 'bg-[#162347] text-white/60 border-white/10', dot: 'bg-white/40' };
 }
 
 function getLookingForStyle(lookingFor) {
@@ -173,7 +173,7 @@ function ProfileCard({ profile, onConnect }) {
 
       <div className="flex flex-wrap gap-1.5">
         {profile.habits.map(habit => (
-          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-none bg-white/5 border border-white/10 text-white/60">
+          <span key={habit} className="text-[11px] px-2 py-0.5 rounded-none bg-[#162347] border border-white/10 text-white/60">
             {habit}
           </span>
         ))}
@@ -268,9 +268,6 @@ export default function MatchPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
@@ -279,7 +276,7 @@ export default function MatchPage() {
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b-2 border-[#FF6B35]/50">
+        <nav className="sticky top-0 z-50 bg-[#0D1B3E] border-b-2 border-[#FF6B35]/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
@@ -340,7 +337,7 @@ export default function MatchPage() {
                   className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     schoolFilter === s
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
+                      : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
                   }`}
                 >
                   {s}
@@ -359,7 +356,7 @@ export default function MatchPage() {
                   className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     habitsFilter === h
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
-                      : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
+                      : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
                   }`}
                 >
                   {h}

@@ -83,7 +83,7 @@ function maskPhone(phone) {
 }
 
 function Skeleton({ className }) {
-  return <div className={`animate-pulse rounded-none bg-white/[0.05] ${className}`} />;
+  return <div className={`animate-pulse rounded-none bg-[#121A30] ${className}`} />;
 }
 
 // ── WIKI LOGOS ───────────────────────────────────────────────────────────────
@@ -136,7 +136,6 @@ function LoginScreen({ onLogin }) {
   return (
     <div className="min-h-screen bg-[#030810] flex items-center justify-center px-6 relative overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/[0.04] rounded-none blur-3xl pointer-events-none" />
       <div className={`w-full max-w-[340px] transition-all duration-150 ${shake ? 'translate-x-2' : ''}`}
         style={shake ? { animation: 'shake 0.4s ease' } : {}}>
         <div className="flex flex-col items-center mb-10">
@@ -173,7 +172,7 @@ function NavItem({ icon: Icon, active, onClick, tooltip }) {
       className={`w-10 h-10 flex items-center justify-center rounded-none transition-all ${
         active
           ? 'bg-amber-400/15 text-amber-400 shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/10'
-          : 'text-white/25 hover:text-white/60 hover:bg-white/[0.05]'
+          : 'text-white/25 hover:text-white/60 hover:bg-[#121A30]'
       }`}>
       <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
     </button>
@@ -190,7 +189,7 @@ function MetricCard({ label, value, icon: Icon, glowClass, accentColor, sparkCol
           <p className="text-2xl font-black text-white leading-none">{value}</p>
           <p className="text-[10px] font-bold uppercase tracking-widest text-white/35 mt-2">{label}</p>
         </div>
-        <div className="w-8 h-8 rounded-none bg-white/[0.05] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-none bg-[#121A30] flex items-center justify-center">
           <Icon size={15} className="text-white/40" />
         </div>
       </div>
@@ -269,7 +268,7 @@ export default function AdminPage() {
   const pendingVerif    = Math.floor(total * 0.011);
   const dataSaved       = (total * 0.00034).toFixed(1);
 
-  const blurCard = liteMode ? '' : 'backdrop-blur-md';
+  const blurCard = liteMode ? '' : '';
 
   return (
     <div className="h-screen w-screen bg-[#0B0F19] text-white flex overflow-hidden"
@@ -306,7 +305,7 @@ export default function AdminPage() {
 
         {/* ── HEADER ── */}
         <header className={`h-14 flex-shrink-0 flex items-center justify-between px-6 border-b border-white/[0.05] z-10
-          ${liteMode ? 'bg-[#0B0F19]' : 'bg-[#0B0F19]/80 backdrop-blur'}`}>
+          ${liteMode ? 'bg-[#0B0F19]' : 'bg-[#0B0F19]'}`}>
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 text-sm">
@@ -469,7 +468,7 @@ export default function AdminPage() {
                       className={`text-[11px] font-bold px-3 py-1 rounded-none transition-all ${
                         activeFilter === pill
                           ? 'bg-amber-400 text-[#0B0F19]'
-                          : 'bg-white/[0.05] text-white/50 hover:bg-white/[0.09] hover:text-white/70'
+                          : 'bg-[#121A30] text-white/50 hover:bg-white/[0.09] hover:text-white/70'
                       }`}>
                       {pill}
                     </button>

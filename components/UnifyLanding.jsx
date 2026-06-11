@@ -296,7 +296,7 @@ function CopyButton({ text }) {
   return (
     <button
       onClick={copy}
-      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-none border transition-all ${copied ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'}`}
+      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-none border transition-all ${copied ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]' : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'}`}
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>
@@ -396,7 +396,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             className={`text-xs font-bold px-4 py-2 rounded-none border transition-all duration-200 ${
               school === s.id
                 ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]'
-                : 'bg-white/5 text-white/60 border-white/10 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
+                : 'bg-[#162347] text-white/60 border-white/10 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
             }`}
           >
             {s.label}
@@ -414,7 +414,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(''); }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             disabled={loading}
-            className="flex-1 bg-white/5 border border-white/10 rounded-none px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
+            className="flex-1 bg-[#162347] border border-white/10 rounded-none px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
             style={phoneError ? { borderColor: '#dc2626', boxShadow: '0 0 0 2px rgba(220,38,38,0.15)' } : {}}
           />
         </div>
@@ -480,7 +480,7 @@ function ExitModal() {
 
   return (
     <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/30" />
       <div
         className="relative bg-[#162347] border border-white/10 rounded-none max-w-lg w-full shadow-[6px_6px_0px_#FF6B35] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
@@ -489,7 +489,7 @@ function ExitModal() {
         <div className="p-8">
           <button
             onClick={close}
-            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-none bg-white/5 hover:bg-white/10 text-white/40 hover:text-white text-lg transition-all"
+            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-none bg-[#162347] hover:bg-white/10 text-white/40 hover:text-white text-lg transition-all"
             aria-label="Close"
           >
             ×
@@ -568,7 +568,7 @@ function PhoneMockup() {
           { name: 'Ama O.', school: 'KNUST', tag: 'Roommate' },
           { name: 'Kofi B.', school: 'UG Legon', tag: 'Coursemates' },
         ].map((p) => (
-          <div key={p.name} className="bg-white/5 border border-white/10 rounded-none p-3 flex items-center gap-3">
+          <div key={p.name} className="bg-[#162347] border border-white/10 rounded-none p-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center text-xs font-bold text-[#FF6B35]">
               {p.name[0]}
             </div>
@@ -579,7 +579,7 @@ function PhoneMockup() {
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35]">{p.tag}</span>
           </div>
         ))}
-        <div className="bg-white/5 border border-white/10 rounded-none p-3">
+        <div className="bg-[#162347] border border-white/10 rounded-none p-3">
           <p className="text-white/40 text-[10px] mb-2">YOUR HUB</p>
           <p className="text-white text-xs font-bold">KNUST Brunei Hub</p>
           <p className="text-white/40 text-[10px]">420 freshers · Active</p>
@@ -844,7 +844,7 @@ function MobileMenu() {
         aria-label="Navigation menu"
       >
         <button
-          className="self-end w-10 h-10 rounded-none border border-white/10 bg-white/5 flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all mb-8"
+          className="self-end w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all mb-8"
           aria-label="Close menu"
           onClick={() => setOpen(false)}
         >
@@ -1165,9 +1165,6 @@ export default function UnifyLanding({ schoolId } = {}) {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.07] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       {/* Browser wrapper */}
@@ -1175,7 +1172,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
         <nav
-          className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b-2 border-[#FF6B35]/50"
+          className="sticky top-0 z-50 bg-[#0D1B3E] border-b-2 border-[#FF6B35]/50"
           style={heroStyle(0, 'heroFadeDown', '600ms')}
         >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -1194,7 +1191,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               <a href="#faq" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'faq' })}>FAQ</a>
             </div>
             <div className="flex items-center gap-2">
-              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-white/70 px-4 py-2 rounded-none border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-colors">
+              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-white/70 px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-amber-400/50 hover:text-amber-400 transition-colors">
                 Sign In
               </a>
               <a
@@ -1295,7 +1292,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
               <div className="flex flex-wrap gap-2">
                 {['✓ 100% Free', '✓ Works on 2G', '✓ Verified students'].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold text-white/60 bg-white/5 border border-white/10 px-3 py-1 rounded-none">
+                  <span key={t} className="text-[11px] font-semibold text-white/60 bg-[#162347] border border-white/10 px-3 py-1 rounded-none">
                     {t}
                   </span>
                 ))}
@@ -1507,10 +1504,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </a>
               </div>
               <div className="flex flex-wrap gap-3">
-                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-white/5 hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
+                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
                   Browse all hubs <ArrowRight className="w-3.5 h-3.5" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-white/5 hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
+                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
                   Find a roommate <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -1587,7 +1584,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </div>
               ))}
               <div
-                className="absolute top-2 right-0 bg-[#162347]/90 backdrop-blur-sm border border-white/10 rounded-none rounded-tl-sm px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                className="absolute top-2 right-0 bg-[#162347] border border-white/10 rounded-none px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 400ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1595,7 +1592,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Already linked! 🔥
               </div>
-              <div className="absolute bottom-8 right-4 bg-[#A8C4FF]/8 border border-[#A8C4FF]/20 rounded-none rounded-br-sm px-3 py-1.5 text-xs font-semibold text-[#A8C4FF] shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+              <div className="absolute bottom-8 right-4 bg-[#A8C4FF]/8 border border-[#A8C4FF]/20 rounded-none px-3 py-1.5 text-xs font-semibold text-[#A8C4FF] shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 560ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1603,7 +1600,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Found my roomie!
               </div>
-              <div className="absolute bottom-2 left-0 bg-[#162347]/90 backdrop-blur-sm border border-white/10 rounded-none rounded-bl-sm px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+              <div className="absolute bottom-2 left-0 bg-[#162347] border border-white/10 rounded-none px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 720ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1613,7 +1610,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
               <div className="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
                 {['W', 'IG', 'X'].map((s) => (
-                  <div key={s} className="social-icon w-8 h-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center text-[9px] font-black text-white/50">
+                  <div key={s} className="social-icon w-8 h-8 rounded-none bg-[#162347] border border-white/10 flex items-center justify-center text-[9px] font-black text-white/50">
                     {s}
                   </div>
                 ))}
@@ -1653,12 +1650,12 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <button
                   aria-label="Previous testimonial"
                   onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }}
-                  className="w-10 h-10 rounded-none border border-white/10 bg-white/5 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
+                  className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
                 >←</button>
                 <button
                   aria-label="Next testimonial"
                   onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }}
-                  className="w-10 h-10 rounded-none border border-white/10 bg-white/5 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
+                  className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
                 >→</button>
               </div>
             </div>
@@ -1703,11 +1700,11 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             {/* Dot indicators + mobile arrows */}
             <div className="md:hidden mt-6 flex items-center justify-center gap-3">
-              <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-white/5 flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">←</button>
+              <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">←</button>
               {TESTIMONIALS.map((_, i) => (
                 <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-none transition-all duration-300 ${i === activeTestimonial ? 'bg-[#FF6B35] w-6' : 'bg-[#E5E7EB] w-2'}`} />
               ))}
-              <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-white/5 flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">→</button>
+              <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">→</button>
             </div>
             <div className="hidden md:flex mt-6 items-center justify-center gap-2">
               {TESTIMONIALS.map((_, i) => (
