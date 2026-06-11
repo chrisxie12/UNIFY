@@ -46,7 +46,7 @@ const HUBS = [
     id: 'evandy', name: 'Evandy Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 340, type: 'Off-campus', color: 'orange',
     grad: 'linear-gradient(135deg,#FF6B35,#E55A22)', initials: 'EV',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     description: 'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
     perks: ['Good water supply', 'Quiet floors', 'Close to Medical School', 'Female-friendly'],
@@ -55,7 +55,7 @@ const HUBS = [
     id: 'tf', name: 'TF Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 290, type: 'Off-campus', color: 'sky',
     grad: 'linear-gradient(135deg,#0891b2,#0066FF)', initials: 'TF',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Affordable', 'Mixed', 'Social Floor'],
     description: 'Budget-friendly and centrally located. Known for its social atmosphere. A solid first-year option for UCC freshers.',
     perks: ['Affordable rates', 'Central location', 'Social common areas', 'Near campus gate'],
@@ -64,7 +64,7 @@ const HUBS = [
     id: 'casford', name: 'Casford Hall', school: 'UCC', location: 'Cape Coast Campus',
     residents: 445, type: 'On-campus', color: 'teal',
     grad: 'linear-gradient(135deg,#0891b2,#059669)', initials: 'CA',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Academic', 'Disciplined', 'Early Risers'],
     description: 'On-campus hall known for academic focus and discipline. Great for students serious about their first year GPA.',
     perks: ['On-campus location', 'Quiet study environment', 'Close to lecture halls', 'Organized hall structure'],
@@ -277,7 +277,7 @@ export default function HubsPage() {
               {[
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: 'linear-gradient(135deg,#0066FF,#4FC3F7)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=500', grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
               ].map((item, i) => (
                 <div key={i} className="relative rounded-none overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>

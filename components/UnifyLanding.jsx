@@ -600,8 +600,8 @@ function PhoneMockup() {
 const CAMPUS_TILES = [
   { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#E55A22,#FF6B35)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
   { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#FF6B35,#0066FF)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
-  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', delay: 160 },
-  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Warren_Library_Ashesi.JPG?width=500', delay: 240 },
+  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', delay: 160 },
+  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Joshua_Alarbi_Library_(UPSA)_1.jpg?width=500', delay: 240 },
 ];
 
 function CampusCollage({ animate = false }) {
