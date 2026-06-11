@@ -93,7 +93,7 @@ const FRAMES = [
     caption: 'Main Campus · Cape Coast',
     initials: 'UC',
     stripe: '#FFD700',
-    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     bg: 'linear-gradient(150deg, #1a0000 0%, #4a0606 38%, #7a0a0a 68%, #3a0303 100%)',
     orb: 'rgba(255,210,60,0.18)', orbPos: '65% 72%',
     width: 235, height: 176,
