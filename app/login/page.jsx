@@ -161,7 +161,7 @@ function CampusFrame({ frame, scrollY }) {
         left: frame.left,
         width: frame.width,
         zIndex: frame.zIndex,
-        borderRadius: 16,
+        borderRadius: 0,
         background: '#162347',
         padding: 10,
         boxShadow: '0 20px 40px -10px rgba(0,0,0,0.40), 0 4px 16px rgba(0,0,0,0.20)',
@@ -172,7 +172,7 @@ function CampusFrame({ frame, scrollY }) {
       <div style={{
         width: '100%',
         height: frame.height - 20,
-        borderRadius: 8,
+        borderRadius: 0,
         background: frame.bg,
         position: 'relative',
         overflow: 'hidden',
@@ -190,7 +190,7 @@ function CampusFrame({ frame, scrollY }) {
         <div style={{
           position: 'absolute',
           width: 180, height: 180,
-          borderRadius: '50%',
+          borderRadius: 0,
           background: `radial-gradient(circle, ${frame.orb} 0%, transparent 70%)`,
           top: frame.orbPos.split(' ')[1],
           left: frame.orbPos.split(' ')[0],
@@ -209,7 +209,7 @@ function CampusFrame({ frame, scrollY }) {
           position: 'absolute', top: 10, left: 10,
           background: 'rgba(255,255,255,0.14)',
           border: '1px solid rgba(255,255,255,0.25)',
-          borderRadius: 9999, padding: '3px 9px',
+          borderRadius: 0, padding: '3px 9px',
         }}>
           <span style={{ color: 'rgba(255,255,255,0.92)', fontSize: 9, fontWeight: 700, letterSpacing: 1 }}>
             {frame.school}
@@ -229,7 +229,7 @@ function CampusFrame({ frame, scrollY }) {
           display: 'flex', alignItems: 'flex-end', padding: '0 10px 8px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: frame.stripe }} />
+            <div style={{ width: 5, height: 5, borderRadius: 0, background: frame.stripe }} />
             <span style={{ color: 'rgba(255,255,255,0.88)', fontSize: 10, fontWeight: 600, fontFamily: 'system-ui, sans-serif' }}>
               {frame.caption.split('·')[1]?.trim()}
             </span>
@@ -243,7 +243,7 @@ function CampusFrame({ frame, scrollY }) {
       </div>
       <div style={{
         position: 'absolute', bottom: 0, left: '12%', right: '12%', height: 3,
-        background: frame.stripe, borderRadius: '0 0 4px 4px', opacity: 0.55,
+        background: frame.stripe, borderRadius: 0, opacity: 0.55,
       }} />
     </div>
     </>
@@ -336,7 +336,7 @@ export default function LoginPage() {
           transition: box-shadow 300ms ease, transform 300ms ease;
         }
         .campus-frame:hover {
-          box-shadow: 0 32px 56px -8px rgba(0,0,0,0.40), 0 8px 24px rgba(0,0,0,0.20) !important;
+          box-shadow: 8px 8px 0px #FF6B35 !important;
           z-index: 20 !important;
         }
 
@@ -355,7 +355,7 @@ export default function LoginPage() {
         .login-input::placeholder { color: rgba(255,255,255,0.40); }
         .login-input:focus {
           border-color: #FF6B35;
-          box-shadow: 0 0 0 3px rgba(123,47,190,0.15);
+          box-shadow: 0 0 0 3px rgba(255,107,53,0.25);
           background: rgba(26,24,39,1);
         }
         .login-input.error { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
@@ -366,7 +366,7 @@ export default function LoginPage() {
           display: flex; align-items: center; justify-content: center;
           cursor: pointer; transition: transform 200ms, box-shadow 200ms, background 200ms;
         }
-        .social-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.30); background: rgba(26,24,39,1); }
+        .social-btn:hover { transform: translateY(-2px); box-shadow: 4px 4px 0px rgba(0,0,0,0.45); background: rgba(26,24,39,1); }
         .social-btn:active { transform: scale(0.95); }
 
         .spinner {
@@ -422,7 +422,7 @@ export default function LoginPage() {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 60% 50%, rgba(123,47,190,0.06) 0%, transparent 70%);
+            background: radial-gradient(ellipse at 60% 50%, rgba(255,107,53,0.06) 0%, transparent 70%);
             pointer-events: none;
           }
           .form-side {
@@ -529,10 +529,10 @@ export default function LoginPage() {
                 background: 'rgba(26,24,39,0.80)',
                 backdropFilter: 'blur(12px)',
                 border: '1px solid rgba(255,255,255,0.10)',
-                borderRadius: 9999, padding: '6px 16px',
+                borderRadius: 0, padding: '6px 16px',
                 fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.80)',
                 fontFamily: 'system-ui, sans-serif',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.20)',
+                boxShadow: '3px 3px 0px rgba(0,0,0,0.4)',
               }}>
                 🇬🇭 Ghana University Network
               </span>

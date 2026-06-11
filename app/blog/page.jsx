@@ -30,7 +30,7 @@ const posts = [
     title: 'UCC vs KNUST vs UG Legon: Which Campus is Right for You?',
     excerpt: "Culture, programs, location vibes, and hostel life — an honest comparison to help you understand what you're walking into.",
     tag: 'Campus Life',
-    color: '#7c3aed',
+    color: '#0066FF',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function BlogPage() {
                     fontSize: '0.78rem',
                     fontWeight: 700,
                     padding: '3px 12px',
-                    borderRadius: 9999,
+                    borderRadius: 0,
                     marginBottom: 14,
                     letterSpacing: '0.02em',
                   }}

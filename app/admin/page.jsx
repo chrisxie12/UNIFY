@@ -14,7 +14,7 @@ const CACHE_KEY = 'unify_admin_cache';
 const SCHOOLS = [
   { id: 'knust', label: 'KNUST',    wiki: 'Kwame_Nkrumah_University_of_Science_and_Technology', color: 'text-emerald-400', bar: 'bg-emerald-400', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20', avatar: 'bg-emerald-500/20 text-emerald-300' },
   { id: 'ug',    label: 'UG Legon', wiki: 'University_of_Ghana',                                 color: 'text-blue-400',    bar: 'bg-blue-400',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20',       avatar: 'bg-blue-500/20 text-blue-300'    },
-  { id: 'ucc',   label: 'UCC',      wiki: 'University_of_Cape_Coast',                            color: 'text-violet-400',  bar: 'bg-violet-400',  card: 'from-violet-950/60 to-violet-900/20 border-violet-500/20', avatar: 'bg-violet-500/20 text-violet-300'},
+  { id: 'ucc',   label: 'UCC',      wiki: 'University_of_Cape_Coast',                            color: 'text-[#A8C4FF]',  bar: 'bg-[#FF6B35]',  card: 'from-[#0D1B3E]/60 to-[#162347]/20 border-[#FF6B35]/20', avatar: 'bg-[#FF6B35]/20 text-[#A8C4FF]'},
   { id: 'upsa',  label: 'UPSA',     wiki: 'University_of_Professional_Studies,_Accra',           color: 'text-amber-400',   bar: 'bg-amber-400',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20',    avatar: 'bg-amber-500/20 text-amber-300'  },
   { id: 'uds',   label: 'UDS',      wiki: 'University_for_Development_Studies',                  color: 'text-rose-400',    bar: 'bg-rose-400',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20',       avatar: 'bg-rose-500/20 text-rose-300'    },
   { id: 'gctu',  label: 'GCTU',     wiki: 'Ghana_Communication_Technology_University',           color: 'text-sky-400',     bar: 'bg-sky-400',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20',          avatar: 'bg-sky-500/20 text-sky-300'      },
@@ -25,7 +25,7 @@ const SCHOOL_FILTER_MAP = { 'ALL': null, 'KNUST': 'knust', 'UG LEGON': 'ug', 'UC
 
 const VIBE_TAGS = [
   { label: 'Neat Freak',    color: 'bg-blue-500/20 text-blue-300 border-blue-500/30',       digits: [0,1,2] },
-  { label: 'Night Coder',   color: 'bg-purple-500/20 text-purple-300 border-purple-500/30', digits: [3,4]   },
+  { label: 'Night Coder',   color: 'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30', digits: [3,4]   },
   { label: 'Serious Vibes', color: 'bg-orange-500/20 text-orange-300 border-orange-500/30', digits: [5,6]   },
   { label: 'Early Riser',   color: 'bg-green-500/20 text-green-300 border-green-500/30',    digits: [7,8]   },
   { label: 'Tech Head',     color: 'bg-sky-500/20 text-sky-300 border-sky-500/30',          digits: [9]     },
@@ -83,7 +83,7 @@ function maskPhone(phone) {
 }
 
 function Skeleton({ className }) {
-  return <div className={`animate-pulse rounded-xl bg-white/[0.05] ${className}`} />;
+  return <div className={`animate-pulse rounded-none bg-white/[0.05] ${className}`} />;
 }
 
 // ── WIKI LOGOS ───────────────────────────────────────────────────────────────
@@ -107,12 +107,12 @@ function SchoolLogo({ src, label, size = 'md' }) {
   const dim = size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-9 h-9' : 'w-6 h-6';
   const pad = size === 'sm' ? 'p-0' : 'p-1';
   if (!src) return (
-    <div className={`${dim} rounded-md bg-white/10 flex items-center justify-center flex-shrink-0`}>
+    <div className={`${dim} rounded-none bg-white/10 flex items-center justify-center flex-shrink-0`}>
       <span className="text-[8px] font-black text-white/30">{label.slice(0, 2)}</span>
     </div>
   );
   return (
-    <div className={`${dim} rounded-md bg-white flex items-center justify-center flex-shrink-0 overflow-hidden ${pad}`}>
+    <div className={`${dim} rounded-none bg-white flex items-center justify-center flex-shrink-0 overflow-hidden ${pad}`}>
       <img src={src} alt={label} className="w-full h-full object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
     </div>
   );
@@ -136,11 +136,11 @@ function LoginScreen({ onLogin }) {
   return (
     <div className="min-h-screen bg-[#030810] flex items-center justify-center px-6 relative overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/[0.04] rounded-none blur-3xl pointer-events-none" />
       <div className={`w-full max-w-[340px] transition-all duration-150 ${shake ? 'translate-x-2' : ''}`}
         style={shake ? { animation: 'shake 0.4s ease' } : {}}>
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-2xl shadow-amber-400/30 mb-5">
+          <div className="w-16 h-16 rounded-none bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-[6px_6px_0px_#FF6B35] shadow-amber-400/30 mb-5">
             <span className="text-2xl font-black text-[#030810]">U</span>
           </div>
           <h1 className="text-2xl font-black text-white">UNIFY</h1>
@@ -152,10 +152,10 @@ function LoginScreen({ onLogin }) {
             <input
               type="password" value={pw} onChange={(e) => setPw(e.target.value)}
               placeholder="Enter password" autoFocus
-              className="w-full bg-white/[0.04] border border-white/[0.08] focus:border-amber-400/40 rounded-2xl pl-11 pr-5 py-4 text-sm text-white placeholder-white/20 outline-none transition-all" />
+              className="w-full bg-white/[0.04] border border-white/[0.08] focus:border-amber-400/40 rounded-none pl-11 pr-5 py-4 text-sm text-white placeholder-white/20 outline-none transition-all" />
           </div>
           <button type="submit"
-            className="w-full bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-[#030810] font-black text-sm py-4 rounded-2xl transition-all shadow-lg shadow-amber-400/20 hover:shadow-amber-400/30">
+            className="w-full bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-[#030810] font-black text-sm py-4 rounded-none transition-all shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/20 hover:shadow-amber-400/30">
             Enter Dashboard →
           </button>
         </form>
@@ -170,9 +170,9 @@ function LoginScreen({ onLogin }) {
 function NavItem({ icon: Icon, active, onClick, tooltip }) {
   return (
     <button onClick={onClick} title={tooltip}
-      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+      className={`w-10 h-10 flex items-center justify-center rounded-none transition-all ${
         active
-          ? 'bg-amber-400/15 text-amber-400 shadow-lg shadow-amber-400/10'
+          ? 'bg-amber-400/15 text-amber-400 shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/10'
           : 'text-white/25 hover:text-white/60 hover:bg-white/[0.05]'
       }`}>
       <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
@@ -183,14 +183,14 @@ function NavItem({ icon: Icon, active, onClick, tooltip }) {
 // ── METRIC CARD ──────────────────────────────────────────────────────────────
 function MetricCard({ label, value, icon: Icon, glowClass, accentColor, sparkColor, sparkPoints, liteMode }) {
   return (
-    <div className={`relative overflow-hidden bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5 flex flex-col gap-3 ${glowClass}`}>
+    <div className={`relative overflow-hidden bg-white/[0.04] border border-white/[0.07] rounded-none p-5 flex flex-col gap-3 ${glowClass}`}>
       <div className={`absolute bottom-0 left-0 right-0 h-[2px] ${accentColor} opacity-60`} />
       <div className="flex items-start justify-between">
         <div>
           <p className="text-2xl font-black text-white leading-none">{value}</p>
           <p className="text-[10px] font-bold uppercase tracking-widest text-white/35 mt-2">{label}</p>
         </div>
-        <div className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-none bg-white/[0.05] flex items-center justify-center">
           <Icon size={15} className="text-white/40" />
         </div>
       </div>
@@ -278,7 +278,7 @@ export default function AdminPage() {
       {/* ── SIDEBAR ── */}
       <aside className={`w-16 flex-shrink-0 flex flex-col items-center py-4 gap-2 border-r border-white/[0.06] z-20 bg-white/[0.03] ${blurCard}`}>
         {/* Logo */}
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-lg shadow-amber-400/20 mb-3 flex-shrink-0">
+        <div className="w-9 h-9 rounded-none bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/20 mb-3 flex-shrink-0">
           <span className="text-sm font-black text-[#030810]">U</span>
         </div>
 
@@ -296,7 +296,7 @@ export default function AdminPage() {
         </div>
 
         {/* Admin avatar */}
-        <div className="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
+        <div className="w-9 h-9 rounded-none bg-amber-400/15 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
           <span className="text-xs font-black text-amber-400">A</span>
         </div>
       </aside>
@@ -317,7 +317,7 @@ export default function AdminPage() {
 
           {/* Heartbeat */}
           <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0 ${!liteMode ? 'animate-pulse' : ''}`} />
+            <span className={`w-2 h-2 rounded-none bg-emerald-400 flex-shrink-0 ${!liteMode ? 'animate-pulse' : ''}`} />
             <span className="text-xs font-semibold text-emerald-400/80">System Live</span>
           </div>
 
@@ -327,14 +327,14 @@ export default function AdminPage() {
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-white/30 font-semibold hidden sm:block">Lite Mode</span>
               <button onClick={() => setLiteMode(p => !p)}
-                className={`relative w-9 h-5 rounded-full transition-colors duration-200 flex-shrink-0 ${liteMode ? 'bg-amber-400' : 'bg-white/[0.12]'}`}>
-                <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${liteMode ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                className={`relative w-9 h-5 rounded-none transition-colors duration-200 flex-shrink-0 ${liteMode ? 'bg-amber-400' : 'bg-white/[0.12]'}`}>
+                <span className={`absolute top-0.5 w-4 h-4 rounded-none bg-white shadow transition-transform duration-200 ${liteMode ? 'translate-x-4' : 'translate-x-0.5'}`} />
               </button>
             </div>
 
             {/* Refresh */}
             <button onClick={() => loadData(false)} disabled={loading}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-all disabled:opacity-30">
+              className="w-8 h-8 flex items-center justify-center rounded-none text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-all disabled:opacity-30">
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </button>
 
@@ -351,7 +351,7 @@ export default function AdminPage() {
         <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4 min-h-0">
 
           {error && (
-            <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-3 text-sm text-rose-400 flex items-center gap-3 flex-shrink-0">
+            <div className="bg-rose-500/10 border border-rose-500/20 rounded-none px-5 py-3 text-sm text-rose-400 flex items-center gap-3 flex-shrink-0">
               <span>⚠️</span> {error}
             </div>
           )}
@@ -362,7 +362,7 @@ export default function AdminPage() {
               label="Total Handles"
               value={total.toLocaleString()}
               icon={Users}
-              glowClass={liteMode ? '' : 'shadow-lg shadow-cyan-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-cyan-500/10'}
               accentColor="bg-cyan-400"
               sparkColor="#22d3ee"
               sparkPoints={[3,5,4,8,6,9,7,10]}
@@ -372,9 +372,9 @@ export default function AdminPage() {
               label="Roommate Matches"
               value={roommateMatches.toLocaleString()}
               icon={Heart}
-              glowClass={liteMode ? '' : 'shadow-lg shadow-violet-500/10'}
-              accentColor="bg-violet-400"
-              sparkColor="#a78bfa"
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35]'}
+              accentColor="bg-[#FF6B35]"
+              sparkColor="#A8C4FF"
               sparkPoints={[2,4,3,6,5,7,6,8]}
               liteMode={liteMode}
             />
@@ -382,7 +382,7 @@ export default function AdminPage() {
               label="Pending Verif."
               value={pendingVerif.toLocaleString()}
               icon={Clock}
-              glowClass={liteMode ? '' : 'shadow-lg shadow-amber-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-amber-500/10'}
               accentColor="bg-amber-400"
               sparkColor="#f59e0b"
               sparkPoints={[1,3,2,4,3,5,4,6]}
@@ -392,7 +392,7 @@ export default function AdminPage() {
               label={`${dataSaved} GB saved vs heavy apps`}
               value="Data Saved"
               icon={Zap}
-              glowClass={liteMode ? '' : 'shadow-lg shadow-emerald-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-emerald-500/10'}
               accentColor="bg-emerald-400"
               sparkColor="#34d399"
               sparkPoints={[4,6,5,8,7,9,8,10]}
@@ -404,10 +404,10 @@ export default function AdminPage() {
           <div className="grid md:grid-cols-5 gap-4 flex-1 min-h-0">
 
             {/* ── SCHOOL BREAKDOWN (left) ── */}
-            <div className="md:col-span-2 bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5 flex flex-col gap-4 overflow-y-auto">
+            <div className="md:col-span-2 bg-white/[0.04] border border-white/[0.07] rounded-none p-5 flex flex-col gap-4 overflow-y-auto">
               <div className="flex items-center justify-between flex-shrink-0">
                 <span className="text-sm font-black">By Campus</span>
-                <span className="text-[10px] font-bold bg-white/[0.07] text-white/40 px-2 py-1 rounded-full">{total} total</span>
+                <span className="text-[10px] font-bold bg-white/[0.07] text-white/40 px-2 py-1 rounded-none">{total} total</span>
               </div>
 
               {/* Progress bars */}
@@ -428,8 +428,8 @@ export default function AdminPage() {
                               <span className="text-[10px] text-white/25 w-7 text-right">{pct}%</span>
                             </div>
                           </div>
-                          <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                            <div className={`h-full ${bar} rounded-full transition-all duration-1000`} style={{ width: `${pct}%` }} />
+                          <div className="h-1.5 bg-white/[0.06] rounded-none overflow-hidden">
+                            <div className={`h-full ${bar} rounded-none transition-all duration-1000`} style={{ width: `${pct}%` }} />
                           </div>
                         </div>
                       );
@@ -441,7 +441,7 @@ export default function AdminPage() {
               {!loading && data && (
                 <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/[0.05] flex-shrink-0">
                   {schoolStats.map(({ id, label, count, color, card }) => (
-                    <div key={id} className={`bg-gradient-to-br ${card} border rounded-xl p-3 text-center flex flex-col items-center gap-1.5`}>
+                    <div key={id} className={`bg-gradient-to-br ${card} border rounded-none p-3 text-center flex flex-col items-center gap-1.5`}>
                       <SchoolLogo src={logos[id]} label={label} size="lg" />
                       <p className={`text-base font-black ${color}`}>{count}</p>
                       <p className="text-[9px] text-white/30 font-semibold leading-tight">{label}</p>
@@ -452,21 +452,21 @@ export default function AdminPage() {
             </div>
 
             {/* ── WAITLIST LEDGER (right) ── */}
-            <div className="md:col-span-3 bg-white/[0.04] border border-white/[0.07] rounded-2xl flex flex-col overflow-hidden">
+            <div className="md:col-span-3 bg-white/[0.04] border border-white/[0.07] rounded-none flex flex-col overflow-hidden">
 
               {/* Header + filter pills */}
               <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-white/[0.05]">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-black">Waitlist Ledger</span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
                     <span className="text-[11px] text-white/30">{filteredEntries.length} records</span>
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {FILTER_PILLS.map(pill => (
                     <button key={pill} onClick={() => setActiveFilter(pill)}
-                      className={`text-[11px] font-bold px-3 py-1 rounded-full transition-all ${
+                      className={`text-[11px] font-bold px-3 py-1 rounded-none transition-all ${
                         activeFilter === pill
                           ? 'bg-amber-400 text-[#0B0F19]'
                           : 'bg-white/[0.05] text-white/50 hover:bg-white/[0.09] hover:text-white/70'
@@ -521,7 +521,7 @@ export default function AdminPage() {
 
                           {/* Avatar + phone + school */}
                           <div className="col-span-4 flex items-center gap-2 min-w-0">
-                            <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black flex-shrink-0 ${sc?.avatar || 'bg-white/10 text-white/40'}`}>
+                            <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[10px] font-black flex-shrink-0 ${sc?.avatar || 'bg-white/10 text-white/40'}`}>
                               {initials}
                             </div>
                             <div className="min-w-0">
@@ -532,7 +532,7 @@ export default function AdminPage() {
 
                           {/* Vibe */}
                           <div className="col-span-3">
-                            <span className={`inline-flex text-[9px] font-bold px-2 py-0.5 rounded-full border ${vibe.color}`}>
+                            <span className={`inline-flex text-[9px] font-bold px-2 py-0.5 rounded-none border ${vibe.color}`}>
                               {vibe.label}
                             </span>
                           </div>
@@ -552,9 +552,9 @@ export default function AdminPage() {
                                 </button>
                               </div>
                             ) : (
-                              <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full border ${stCfg.pill}`}>
+                              <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-none border ${stCfg.pill}`}>
                                 {stCfg.dot && (
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+                                  <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse flex-shrink-0" />
                                 )}
                                 {stCfg.label}
                               </span>

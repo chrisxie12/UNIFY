@@ -44,8 +44,8 @@ const HUBS = [
   },
   {
     id: 'evandy', name: 'Evandy Hostel', school: 'UCC', location: 'Cape Coast Campus',
-    residents: 340, type: 'Off-campus', color: 'violet',
-    grad: 'linear-gradient(135deg,#7c3aed,#a855f7)', initials: 'EV',
+    residents: 340, type: 'Off-campus', color: 'orange',
+    grad: 'linear-gradient(135deg,#FF6B35,#E55A22)', initials: 'EV',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=600',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     description: 'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
@@ -103,7 +103,7 @@ const COLOR_MAP = {
   green:   { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
   blue:    { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
   orange:  { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
-  violet:  { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
+  orange:  { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
   sky:     { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
   rose:    { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
   teal:    { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
@@ -130,12 +130,12 @@ function HubCard({ hub }) {
         {/* Large faded initials watermark */}
         <span className="absolute right-4 bottom-2 text-[80px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{hub.initials}</span>
         {/* Centered initials circle */}
-        <div className="relative w-16 h-16 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center">
+        <div className="relative w-16 h-16 rounded-none bg-white/20 border border-white/30 flex items-center justify-center">
           <span className="text-2xl font-black text-white">{hub.initials}</span>
         </div>
         <div className="absolute bottom-3 left-4 flex gap-2">
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm border border-white/20 text-white">{hub.school}</span>
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm border ${hub.type === 'On-campus' ? 'bg-green-500/25 border-green-400/40 text-white' : 'bg-white/20 border-white/30 text-white'}`}>{hub.type}</span>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-black/30 backdrop-blur-sm border border-white/20 text-white">{hub.school}</span>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-none backdrop-blur-sm border ${hub.type === 'On-campus' ? 'bg-green-500/25 border-green-400/40 text-white' : 'bg-white/20 border-white/30 text-white'}`}>{hub.type}</span>
         </div>
       </div>
 
@@ -160,7 +160,7 @@ function HubCard({ hub }) {
 
         <div className="flex flex-wrap gap-1.5">
           {hub.vibe.map(tag => (
-            <span key={tag} className={`text-xs font-medium px-2.5 py-1 rounded-full border ${c.pill}`}>{tag}</span>
+            <span key={tag} className={`text-xs font-medium px-2.5 py-1 rounded-none border ${c.pill}`}>{tag}</span>
           ))}
         </div>
 
@@ -193,8 +193,8 @@ export default function HubsPage() {
           to   { opacity: 1; transform: scale(1); }
         }
         @keyframes glowPulse {
-          0%, 100% { box-shadow: 0 0 20px rgba(0,102,255,0.15); }
-          50%       { box-shadow: 0 0 40px rgba(0,102,255,0.30); }
+          0%, 100% { box-shadow: 4px 4px 0px rgba(0,102,255,0.35); }
+          50%       { box-shadow: 6px 6px 0px rgba(0,102,255,0.6); }
         }
         @keyframes floatBadge {
           0%, 100% { transform: translateY(0px); }
@@ -214,14 +214,14 @@ export default function HubsPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
+        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
 
-        {/* Purple top bar */}
+        {/* Orange top bar */}
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
@@ -229,13 +229,13 @@ export default function HubsPage() {
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
             </a>
             <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
               <a href="/" className="hover:text-white transition-colors">Home</a>
               <a href="/hubs" className="relative text-white font-semibold">
                 Hubs
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#FF6B35]" />
+                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-none bg-[#FF6B35]" />
               </a>
               <a href="/match" className="hover:text-white transition-colors">Match</a>
               <a href="/#faq" className="hover:text-white transition-colors">FAQ</a>
@@ -251,8 +251,8 @@ export default function HubsPage() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
             {/* Left */}
             <div className="anim-slide-right">
-              <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-xs font-bold px-3.5 py-2 rounded-full mb-7">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
+              <div className="anim-float inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] text-xs font-bold px-3.5 py-2 rounded-none mb-7">
+                <span className="w-1.5 h-1.5 rounded-none bg-[#FF6B35] animate-pulse" />
                 10 active hubs · KNUST · UG Legon · UCC
               </div>
               <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-white mb-5">
@@ -263,10 +263,10 @@ export default function HubsPage() {
                 Real intel on hostels and halls from students already living there. No sugarcoating, no guessing.
               </p>
               <div className="anim-fade-up delay-300 flex flex-wrap gap-3">
-                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] anim-glow">
+                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3 rounded-none transition-all hover:-translate-y-0.5 shadow-[4px_4px_0px_#FF6B35] anim-glow">
                   Browse Hubs <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-all">
+                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-none border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-all">
                   Find Roommate
                 </a>
               </div>
@@ -276,11 +276,11 @@ export default function HubsPage() {
             <div className="hidden md:grid grid-cols-2 gap-3 anim-scale-in delay-200">
               {[
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: 'linear-gradient(135deg,#7c3aed,#6366f1)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: 'linear-gradient(135deg,#0066FF,#4FC3F7)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cape_Coast_Ghana.JPG?width=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
                 { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=500', grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
               ].map((item, i) => (
-                <div key={i} className="relative rounded-2xl overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
+                <div key={i} className="relative rounded-none overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
                   <img src={item.photo} alt={item.label} className="absolute inset-0 w-full h-full object-cover object-center" />
                   <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.28)' }} />
                   <span className="absolute right-2 bottom-1 text-[52px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{item.initials}</span>
@@ -353,7 +353,7 @@ export default function HubsPage() {
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
           <div className="max-w-2xl mx-auto text-center bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none p-12">
-            <div className="w-16 h-16 rounded-2xl bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
+            <div className="w-16 h-16 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Your hostel hub is waiting.</h2>
             <p className="text-white/60 text-lg mb-8 leading-relaxed">
               Sign up to get notified <span className="text-amber-400 font-semibold">48hrs before your hub goes live.</span> Be first in. Link early. Walk into orientation knowing people.
@@ -380,7 +380,7 @@ export default function HubsPage() {
             </nav>
             <p className="text-xs text-white/50">© 2026 UNIFY · Built for freshers</p>
           </div>
-          <div className="max-w-6xl mx-auto mt-6 h-[3px] rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+          <div className="max-w-6xl mx-auto mt-6 h-[3px] rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
         </footer>
 
       </div>

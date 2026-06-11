@@ -7,7 +7,7 @@ import Link from 'next/link';
 const MOCK_QUEUE = [
   { id: 1,  name: 'Akosua Mensah',    school: 'KNUST',    program: 'BSc Computer Science',       hs: 'Aburi Girls',        year: 2024, vibe: ['Night Coder','Neat Freak'],    phone: '0551••••234', status: 'pending', imgBg: 'from-emerald-900 to-emerald-800' },
   { id: 2,  name: 'Kwaku Boateng',    school: 'UG Legon', program: 'BA Economics',                hs: 'Prempeh College',    year: 2024, vibe: ['Serious Vibes'],              phone: '0241••••891', status: 'pending', imgBg: 'from-blue-900 to-blue-800' },
-  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-violet-900 to-violet-800' },
+  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-[#0D1B3E] to-[#162347]' },
   { id: 4,  name: 'Yaw Darko',        school: 'UPSA',     program: 'BSc Accounting',              hs: 'Mfantsipim',         year: 2023, vibe: ['Tech Head'],                  phone: '0501••••123', status: 'pending', imgBg: 'from-amber-900 to-amber-800' },
   { id: 5,  name: 'Efua Asante',      school: 'KNUST',    program: 'BSc Electrical Engineering',  hs: 'Holy Child School',  year: 2024, vibe: ['Neat Freak'],                phone: '0209••••456', status: 'pending', imgBg: 'from-rose-900 to-rose-800' },
   { id: 6,  name: 'Kofi Appiah',      school: 'UG Legon', program: 'LLB Law',                     hs: 'Achimota School',    year: 2024, vibe: ['Night Coder','Tech Head'],    phone: '0556••••789', status: 'pending', imgBg: 'from-sky-900 to-sky-800' },
@@ -18,7 +18,7 @@ const MOCK_QUEUE = [
 ];
 
 const VIBE_COLORS = {
-  'Night Coder':   'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  'Night Coder':   'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30',
   'Neat Freak':    'bg-blue-500/20 text-blue-300 border-blue-500/30',
   'Serious Vibes': 'bg-orange-500/20 text-orange-300 border-orange-500/30',
   'Early Riser':   'bg-green-500/20 text-green-300 border-green-500/30',
@@ -29,7 +29,7 @@ const VIBE_COLORS = {
 const SCHOOL_COLORS = {
   'KNUST':    'bg-emerald-500/30 text-emerald-300',
   'UG Legon': 'bg-blue-500/30 text-blue-300',
-  'UCC':      'bg-violet-500/30 text-violet-300',
+  'UCC':      'bg-[#FF6B35]/30 text-[#A8C4FF]',
   'UPSA':     'bg-amber-500/30 text-amber-300',
   'UDS':      'bg-orange-500/30 text-orange-300',
   'GCTU':     'bg-indigo-500/30 text-indigo-300',
@@ -38,7 +38,7 @@ const SCHOOL_COLORS = {
 const SCHOOL_DOT_COLORS = {
   'KNUST':    'bg-emerald-400',
   'UG Legon': 'bg-blue-400',
-  'UCC':      'bg-violet-400',
+  'UCC':      'bg-[#FF6B35]',
   'UPSA':     'bg-amber-400',
   'UDS':      'bg-orange-400',
   'GCTU':     'bg-indigo-400',
@@ -173,11 +173,11 @@ export default function VerifyPage() {
         <div className="flex gap-3 mt-4">
           <button
             onClick={resetAll}
-            className="px-6 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white font-medium transition-all duration-200"
+            className="px-6 py-2 rounded-none bg-emerald-500 hover:bg-emerald-400 text-white font-medium transition-all duration-200"
           >
             Reset Queue
           </button>
-          <Link href="/admin" className="px-6 py-2 rounded-lg bg-white/[0.08] hover:bg-white/[0.12] text-white font-medium transition-all duration-200">
+          <Link href="/admin" className="px-6 py-2 rounded-none bg-white/[0.08] hover:bg-white/[0.12] text-white font-medium transition-all duration-200">
             Back to Admin
           </Link>
         </div>
@@ -228,9 +228,9 @@ export default function VerifyPage() {
         {/* Center — Progress */}
         <div className="flex-1 flex items-center gap-3 max-w-xs mx-auto">
           <span className="text-white/40 text-xs whitespace-nowrap">{totalVerified} / {MOCK_QUEUE.length} verified</span>
-          <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+          <div className="flex-1 h-1.5 rounded-none bg-white/[0.06] overflow-hidden">
             <div
-              className="h-full bg-emerald-400 rounded-full shadow-[0_0_6px_rgba(52,211,153,0.6)] transition-all duration-500"
+              className="h-full bg-emerald-400 rounded-none transition-all duration-500"
               style={{ width: `${progress * 100}%` }}
             />
           </div>
@@ -249,13 +249,13 @@ export default function VerifyPage() {
           <div className="relative">
             <button
               onClick={() => setShowDropdown(d => !d)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/[0.06] hover:bg-white/[0.10] text-white/60 text-xs transition-all duration-200"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-white/[0.06] hover:bg-white/[0.10] text-white/60 text-xs transition-all duration-200"
             >
               <span>{filterSchool || 'All Schools'}</span>
               <ChevronDown size={12} />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 top-full mt-1 w-36 rounded-lg bg-[#1a1f2e] border border-white/[0.08] overflow-hidden z-20 shadow-xl">
+              <div className="absolute right-0 top-full mt-1 w-36 rounded-none bg-[#1a1f2e] border border-white/[0.08] overflow-hidden z-20 shadow-[6px_6px_0px_#FF6B35]">
                 <button
                   onClick={() => { setFilterSchool(null); setShowDropdown(false); setComplete(false); }}
                   className="w-full text-left px-3 py-2 text-xs text-white/60 hover:bg-white/[0.06] transition-colors"
@@ -276,7 +276,7 @@ export default function VerifyPage() {
           </div>
 
           {/* Queue counter */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.06]">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-white/[0.04] border border-white/[0.06]">
             <Users size={12} className="text-white/30" />
             <span className="text-white/50 text-xs font-medium">{pendingQueue.length} left</span>
           </div>
@@ -301,20 +301,20 @@ export default function VerifyPage() {
             {currentStudent ? (
               <div
                 ref={docRef}
-                className={`relative flex-1 rounded-xl overflow-hidden bg-gradient-to-br ${currentStudent.imgBg} cursor-crosshair select-none`}
+                className={`relative flex-1 rounded-none overflow-hidden bg-gradient-to-br ${currentStudent.imgBg} cursor-crosshair select-none`}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
               >
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/5 -translate-y-16 translate-x-16" />
-                <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-black/20 translate-y-24 -translate-x-24" />
-                <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full border border-white/5 -translate-x-1/2 -translate-y-1/2" />
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-white/5 -translate-y-16 translate-x-16" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 rounded-none bg-black/20 translate-y-24 -translate-x-24" />
+                <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-none border border-white/5 -translate-x-1/2 -translate-y-1/2" />
 
                 {/* Document content */}
                 <div className="absolute inset-0 flex flex-col p-8 text-white overflow-hidden">
                   {/* Header */}
                   <div className="relative flex items-start gap-4 mb-5">
-                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center border-2 border-white/30 flex-shrink-0">
+                    <div className="w-12 h-12 rounded-none bg-white/20 flex items-center justify-center border-2 border-white/30 flex-shrink-0">
                       <span className="text-lg font-bold">GH</span>
                     </div>
                     <div className="flex-1">
@@ -356,7 +356,7 @@ export default function VerifyPage() {
                     </div>
 
                     {/* Fake stamp */}
-                    <div className="absolute bottom-4 right-4 w-20 h-20 rounded-full border-4 border-white/20 flex items-center justify-center rotate-12">
+                    <div className="absolute bottom-4 right-4 w-20 h-20 rounded-none border-4 border-white/20 flex items-center justify-center rotate-12">
                       <div className="text-center">
                         <div className="text-white/40 text-[8px] font-bold uppercase leading-tight">OFFICIAL</div>
                         <div className="text-white/40 text-[8px] font-bold uppercase leading-tight">DOCUMENT</div>
@@ -382,7 +382,7 @@ export default function VerifyPage() {
                 {/* Magnifier lens */}
                 {magnifier && (
                   <div
-                    className="absolute pointer-events-none z-10 rounded-full overflow-hidden border-2 border-white/40 shadow-2xl shadow-black/50"
+                    className="absolute pointer-events-none z-10 rounded-none overflow-hidden border-2 border-white/40 shadow-[6px_6px_0px_#FF6B35] shadow-black/50"
                     style={{
                       width: 200,
                       height: 200,
@@ -403,7 +403,7 @@ export default function VerifyPage() {
                       }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center border border-white/30 flex-shrink-0">
+                        <div className="w-8 h-8 rounded-none bg-white/20 flex items-center justify-center border border-white/30 flex-shrink-0">
                           <span className="text-xs font-bold">GH</span>
                         </div>
                         <div>
@@ -425,7 +425,7 @@ export default function VerifyPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex-1 flex items-center justify-center rounded-xl bg-white/[0.02] border border-white/[0.04]">
+              <div className="flex-1 flex items-center justify-center rounded-none bg-white/[0.02] border border-white/[0.04]">
                 <span className="text-white/20 text-sm">No student selected</span>
               </div>
             )}
@@ -435,7 +435,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('approved')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-emerald-500/20"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#FF6B35] shadow-emerald-500/20"
               >
                 <CheckCircle size={16} />
                 Approve
@@ -443,7 +443,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('skipped')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium text-sm transition-all duration-200"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-white/[0.08] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium text-sm transition-all duration-200"
               >
                 <SkipForward size={16} />
                 Skip
@@ -451,7 +451,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('flagged')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500/80 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-red-500/10"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-red-500/80 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#FF6B35] shadow-red-500/10"
               >
                 <XCircle size={16} />
                 Flag
@@ -471,13 +471,13 @@ export default function VerifyPage() {
               <>
                 {/* Avatar + Name */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${SCHOOL_COLORS[currentStudent.school] || 'bg-white/10 text-white'}`}>
+                  <div className={`w-12 h-12 rounded-none flex items-center justify-center font-bold text-sm flex-shrink-0 ${SCHOOL_COLORS[currentStudent.school] || 'bg-white/10 text-white'}`}>
                     {getInitials(currentStudent.name)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-white font-semibold text-base truncate">{currentStudent.name}</div>
                     <div className="mt-1">
-                      <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-medium">
+                      <span className="px-2 py-0.5 rounded-none bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-medium">
                         Pending
                       </span>
                     </div>
@@ -487,7 +487,7 @@ export default function VerifyPage() {
                 {/* Institution */}
                 <Section title="Institution">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${SCHOOL_DOT_COLORS[currentStudent.school] || 'bg-white/40'}`} />
+                    <div className={`w-2 h-2 rounded-none flex-shrink-0 ${SCHOOL_DOT_COLORS[currentStudent.school] || 'bg-white/40'}`} />
                     <span className="text-white text-sm font-medium">{currentStudent.school}</span>
                   </div>
                   <div className="text-white/50 text-sm ml-4">{currentStudent.program}</div>
@@ -505,7 +505,7 @@ export default function VerifyPage() {
                     {currentStudent.vibe.map(v => (
                       <span
                         key={v}
-                        className={`px-2.5 py-1 rounded-full text-xs font-medium border ${VIBE_COLORS[v] || 'bg-white/10 text-white/60 border-white/10'}`}
+                        className={`px-2.5 py-1 rounded-none text-xs font-medium border ${VIBE_COLORS[v] || 'bg-white/10 text-white/60 border-white/10'}`}
                       >
                         {v}
                       </span>
@@ -523,8 +523,8 @@ export default function VerifyPage() {
                   <Section title="Up Next">
                     <div className="flex flex-col gap-2">
                       {nextStudents.map((s, i) => (
-                        <div key={s.id} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.04]">
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 opacity-50 ${SCHOOL_COLORS[s.school] || 'bg-white/10 text-white/40'}`}>
+                        <div key={s.id} className="flex items-center gap-3 px-3 py-2 rounded-none bg-white/[0.03] border border-white/[0.04]">
+                          <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[11px] font-bold flex-shrink-0 opacity-50 ${SCHOOL_COLORS[s.school] || 'bg-white/10 text-white/40'}`}>
                             {getInitials(s.name)}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -580,7 +580,7 @@ function KeyChip({ label, action, color }) {
 
 function StatCard({ label, value, color }) {
   return (
-    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-none bg-white/[0.04] border border-white/[0.08]">
       <span className={`text-2xl font-bold ${color}`}>{value}</span>
       <span className="text-white/40 text-xs">{label}</span>
     </div>

@@ -30,7 +30,7 @@ const STATUS_OPTIONS = [
 const SCHOOL_COLORS = {
   KNUST:      'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   'UG Legon': 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  UCC:        'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  UCC:        'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30',
   UPSA:       'bg-pink-500/20 text-pink-300 border-pink-500/30',
   UDS:        'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   GCTU:       'bg-orange-500/20 text-orange-300 border-orange-500/30',
@@ -77,7 +77,7 @@ function renderPreview(text, schoolLabel) {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 function StatCell({ label, value, warn, icon }) {
   return (
-    <div className="bg-black/20 rounded-xl p-3 flex flex-col gap-1">
+    <div className="bg-black/20 rounded-none p-3 flex flex-col gap-1">
       <span className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">{label}</span>
       <span className={`text-sm font-bold flex items-center gap-1 ${warn ? 'text-amber-400' : 'text-white'}`}>
         {warn && icon}
@@ -91,11 +91,11 @@ function CampaignRow({ campaign }) {
   const pct = Math.round((campaign.delivered / campaign.recipients) * 100);
   const colorClass = SCHOOL_COLORS[campaign.school] ?? SCHOOL_COLORS['All'];
   return (
-    <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl px-5 py-4 flex items-center gap-5">
+    <div className="bg-white/[0.03] border border-white/[0.07] rounded-none px-5 py-4 flex items-center gap-5">
       {/* Left */}
       <div className="flex-1 min-w-0">
         <p className="text-white/90 text-sm font-semibold truncate">{campaign.name}</p>
-        <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${colorClass}`}>
+        <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-none border ${colorClass}`}>
           {campaign.school}
         </span>
       </div>
@@ -105,9 +105,9 @@ function CampaignRow({ campaign }) {
           <span>{fmt(campaign.delivered)} delivered</span>
           <span>{pct}%</span>
         </div>
-        <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+        <div className="h-1.5 rounded-none bg-white/[0.06] overflow-hidden">
           <div
-            className="h-full bg-emerald-400 rounded-full transition-all"
+            className="h-full bg-emerald-400 rounded-none transition-all"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -236,7 +236,7 @@ export default function SMSLaunchpadPage() {
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-amber-400" />
             <span className="text-white font-bold text-sm tracking-tight">SMS Launchpad</span>
-            <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-400 border border-amber-400/25">
+            <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-none bg-amber-400/15 text-amber-400 border border-amber-400/25">
               BETA
             </span>
           </div>
@@ -251,7 +251,7 @@ export default function SMSLaunchpadPage() {
             Campaign History
           </button>
           <div className="h-4 w-px bg-white/10" />
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-none bg-emerald-500/10 border border-emerald-500/20">
             <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
             <span className="text-emerald-300 text-xs font-bold">GH₵ 500.00 credit</span>
           </div>
@@ -264,7 +264,7 @@ export default function SMSLaunchpadPage() {
 
           {/* ── LEFT COLUMN (55%) ── */}
           <div className="flex-[55] min-w-0 flex flex-col gap-4">
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-3xl p-6 flex flex-col gap-6">
+            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6 flex flex-col gap-6">
 
               {/* Section 1 — Target Segmentation */}
               <div>
@@ -273,7 +273,7 @@ export default function SMSLaunchpadPage() {
                     <Users className="w-4 h-4 text-amber-400" />
                     <span className="text-white/90 text-sm font-bold">Target Audience</span>
                   </div>
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-400/15 text-amber-400 border border-amber-400/25">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-amber-400/15 text-amber-400 border border-amber-400/25">
                     {fmt(recipients)} recipients
                   </span>
                 </div>
@@ -283,7 +283,7 @@ export default function SMSLaunchpadPage() {
                     <button
                       key={s.key}
                       onClick={() => setSchoolKey(s.key)}
-                      className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-none transition-all ${
                         schoolKey === s.key
                           ? 'bg-amber-400 text-[#0B0F19] font-black'
                           : 'bg-white/[0.06] text-white/50 border border-white/[0.08] hover:text-white/70 hover:border-white/20'
@@ -299,7 +299,7 @@ export default function SMSLaunchpadPage() {
                     <button
                       key={s.key}
                       onClick={() => setStatusKey(s.key)}
-                      className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-none transition-all ${
                         statusKey === s.key
                           ? 'bg-[#FF6B35] text-white font-bold'
                           : 'bg-white/[0.06] text-white/50 border border-white/[0.08] hover:text-white/70 hover:border-white/20'
@@ -322,7 +322,7 @@ export default function SMSLaunchpadPage() {
                     <button
                       key={t.name}
                       onClick={() => setMessage(t.text)}
-                      className="shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-xl px-3 py-2 text-xs font-semibold text-white/60 hover:text-white hover:border-white/20 transition-all"
+                      className="shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-none px-3 py-2 text-xs font-semibold text-white/60 hover:text-white hover:border-white/20 transition-all"
                     >
                       {t.name}
                     </button>
@@ -341,7 +341,7 @@ export default function SMSLaunchpadPage() {
                     <button
                       key={tag}
                       onClick={() => insertTag(tag)}
-                      className="bg-blue-500/15 text-blue-300 border border-blue-500/25 rounded-lg px-2.5 py-1 text-xs font-mono cursor-pointer hover:bg-blue-500/25 transition-all"
+                      className="bg-blue-500/15 text-blue-300 border border-blue-500/25 rounded-none px-2.5 py-1 text-xs font-mono cursor-pointer hover:bg-blue-500/25 transition-all"
                     >
                       {tag}
                     </button>
@@ -365,7 +365,7 @@ export default function SMSLaunchpadPage() {
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   placeholder="Type your message here, or use a template above..."
-                  className="bg-black/30 border border-white/[0.08] focus:border-amber-400/40 rounded-2xl p-4 text-sm text-white placeholder-white/20 resize-none h-36 w-full outline-none transition-colors"
+                  className="bg-black/30 border border-white/[0.08] focus:border-amber-400/40 rounded-none p-4 text-sm text-white placeholder-white/20 resize-none h-36 w-full outline-none transition-colors"
                 />
               </div>
 
@@ -402,14 +402,14 @@ export default function SMSLaunchpadPage() {
           <div className="flex-[45] min-w-0 flex flex-col gap-4">
 
             {/* Phone Mockup */}
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-3xl p-6">
+            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6">
               <div className="flex items-center gap-2 mb-5">
                 <Smartphone className="w-4 h-4 text-white/40" />
                 <span className="text-white/90 text-sm font-bold">Live Preview</span>
               </div>
-              <div className="bg-[#111827] border border-white/10 rounded-[2.5rem] p-3 w-[240px] mx-auto shadow-2xl shadow-black/50">
+              <div className="bg-[#111827] border border-white/10 rounded-[2.5rem] p-3 w-[240px] mx-auto shadow-[6px_6px_0px_#FF6B35] shadow-black/50">
                 {/* Notch */}
-                <div className="w-20 h-1.5 bg-white/10 rounded-full mx-auto mb-3" />
+                <div className="w-20 h-1.5 bg-white/10 rounded-none mx-auto mb-3" />
                 {/* Screen */}
                 <div className="bg-[#1a1a2e] rounded-[1.8rem] p-4 min-h-[380px] flex flex-col">
                   {/* Status bar */}
@@ -421,20 +421,20 @@ export default function SMSLaunchpadPage() {
                   </div>
                   {/* Sender header */}
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-none bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
                       <span className="text-[10px] font-black text-emerald-400">U</span>
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-white text-xs font-bold">UNIFY</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                        <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 inline-block" />
                       </div>
                       <span className="text-white/30 text-[9px]">Business SMS</span>
                     </div>
                   </div>
                   {/* SMS bubble */}
                   <div className="flex-1">
-                    <div className="bg-[#1e3a2f] border border-emerald-500/20 rounded-2xl rounded-tl-none p-3 text-[10px] text-white/80 leading-relaxed max-w-[90%]">
+                    <div className="bg-[#1e3a2f] border border-emerald-500/20 rounded-none rounded-tl-none p-3 text-[10px] text-white/80 leading-relaxed max-w-[90%]">
                       {message
                         ? renderPreview(message, school.label)
                         : <span className="text-white/30 italic">Your message preview will appear here...</span>
@@ -450,7 +450,7 @@ export default function SMSLaunchpadPage() {
             </div>
 
             {/* Launch Trigger */}
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-3xl p-6">
+            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Send className="w-4 h-4 text-emerald-400" />
                 <span className="text-white/90 text-sm font-bold">Launch Campaign</span>
@@ -458,7 +458,7 @@ export default function SMSLaunchpadPage() {
               <button
                 disabled={!message.trim()}
                 onClick={() => setShowModal(true)}
-                className={`w-full rounded-2xl px-6 py-4 font-black text-sm transition-all flex items-center justify-center gap-2 ${
+                className={`w-full rounded-none px-6 py-4 font-black text-sm transition-all flex items-center justify-center gap-2 ${
                   message.trim()
                     ? 'bg-emerald-500 hover:bg-emerald-400 text-white cursor-pointer'
                     : 'bg-white/[0.06] text-white/20 cursor-not-allowed'
@@ -483,7 +483,7 @@ export default function SMSLaunchpadPage() {
             <div className="flex items-center gap-3">
               <ScrollText className="w-4 h-4 text-white/50" />
               <span className="text-white/90 font-bold">Campaign History</span>
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-white/[0.06] text-white/40 border border-white/[0.08]">
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-none bg-white/[0.06] text-white/40 border border-white/[0.08]">
                 {campaigns.length} campaigns
               </span>
             </div>
@@ -497,7 +497,7 @@ export default function SMSLaunchpadPage() {
       {/* ── CONFIRM MODAL ── */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#111827] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl">
+          <div className="bg-[#111827] border border-white/10 rounded-none p-8 max-w-md w-full shadow-[6px_6px_0px_#FF6B35]">
             {/* Modal header */}
             <div className="flex items-start justify-between mb-6">
               <div>
@@ -506,7 +506,7 @@ export default function SMSLaunchpadPage() {
               </div>
               <button
                 onClick={() => { setShowModal(false); setHolding(false); }}
-                className="w-8 h-8 rounded-xl bg-white/[0.06] flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-none bg-white/[0.06] flex items-center justify-center text-white/50 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -514,21 +514,21 @@ export default function SMSLaunchpadPage() {
 
             {/* Summary cards */}
             <div className="flex flex-col gap-3 mb-6">
-              <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-4 flex items-center gap-3">
+              <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-center gap-3">
                 <Filter className="w-4 h-4 text-white/40 shrink-0" />
                 <div>
                   <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Target</p>
                   <p className="text-white text-sm font-semibold">{school.label} · {statusLabel}</p>
                 </div>
               </div>
-              <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-4 flex items-center gap-3">
+              <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-center gap-3">
                 <Users className="w-4 h-4 text-blue-400 shrink-0" />
                 <div>
                   <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Recipients</p>
                   <p className="text-white text-sm font-semibold">{fmt(recipients)} students</p>
                 </div>
               </div>
-              <div className={`border rounded-2xl p-4 flex items-center gap-3 ${cost > 100 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-white/[0.04] border-white/[0.07]'}`}>
+              <div className={`border rounded-none p-4 flex items-center gap-3 ${cost > 100 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-white/[0.04] border-white/[0.07]'}`}>
                 <DollarSign className={`w-4 h-4 shrink-0 ${cost > 100 ? 'text-amber-400' : 'text-emerald-400'}`} />
                 <div>
                   <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Total Cost</p>
@@ -538,7 +538,7 @@ export default function SMSLaunchpadPage() {
                   </p>
                 </div>
               </div>
-              <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-4 flex items-start gap-3">
+              <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-start gap-3">
                 <MessageSquare className="w-4 h-4 text-white/40 mt-0.5 shrink-0" />
                 <div className="min-w-0">
                   <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold mb-1">Message Preview</p>
@@ -553,13 +553,13 @@ export default function SMSLaunchpadPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => { setShowModal(false); setHolding(false); }}
-                className="flex-1 px-4 py-3 rounded-2xl bg-white/[0.06] text-white/60 font-semibold text-sm hover:bg-white/[0.10] transition-all"
+                className="flex-1 px-4 py-3 rounded-none bg-white/[0.06] text-white/60 font-semibold text-sm hover:bg-white/[0.10] transition-all"
               >
                 Cancel
               </button>
               {/* Hold-to-send button */}
               <div
-                className="flex-[2] relative overflow-hidden rounded-2xl cursor-pointer select-none"
+                className="flex-[2] relative overflow-hidden rounded-none cursor-pointer select-none"
                 onMouseDown={() => setHolding(true)}
                 onMouseUp={() => setHolding(false)}
                 onMouseLeave={() => setHolding(false)}
@@ -593,7 +593,7 @@ export default function SMSLaunchpadPage() {
       {/* ── TOAST ── */}
       {toast && (
         <div className="fixed top-5 right-5 z-50 sms-toast-enter">
-          <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm">
+          <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-5 py-3.5 rounded-none shadow-[6px_6px_0px_#FF6B35] flex items-center gap-3 max-w-sm">
             <CheckCircle className="w-4 h-4 shrink-0" />
             <span className="text-sm font-semibold">{toast.text}</span>
             <button onClick={() => setToast(null)} className="ml-auto text-emerald-400/60 hover:text-emerald-300">
