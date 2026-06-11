@@ -134,8 +134,8 @@ function HubCard({ hub }) {
           <span className="text-2xl font-black text-white">{hub.initials}</span>
         </div>
         <div className="absolute bottom-3 left-4 flex gap-2">
-          <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-black/30 backdrop-blur-sm border border-white/20 text-white">{hub.school}</span>
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-none backdrop-blur-sm border ${hub.type === 'On-campus' ? 'bg-green-500/25 border-green-400/40 text-white' : 'bg-white/20 border-white/30 text-white'}`}>{hub.type}</span>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-black border border-white/40 text-white">{hub.school}</span>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-none border ${hub.type === 'On-campus' ? 'bg-green-700 border-green-400 text-white' : 'bg-[#162347] border-white/60 text-white'}`}>{hub.type}</span>
         </div>
       </div>
 
@@ -214,9 +214,6 @@ export default function HubsPage() {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
@@ -225,7 +222,7 @@ export default function HubsPage() {
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b-2 border-[#FF6B35]/50">
+        <nav className="sticky top-0 z-50 bg-[#0D1B3E] border-b-2 border-[#FF6B35]/50">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
@@ -266,7 +263,7 @@ export default function HubsPage() {
                 <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3 rounded-none transition-all hover:-translate-y-0.5 shadow-[4px_4px_0px_#FF6B35] anim-glow">
                   Browse Hubs <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-none border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-400/50 hover:text-amber-400 transition-all">
+                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-none border border-white/10 bg-[#162347] hover:border-amber-400/50 hover:text-amber-400 transition-all">
                   Find Roommate
                 </a>
               </div>
@@ -295,7 +292,7 @@ export default function HubsPage() {
         </section>
 
         {/* ── STATS BAND ── */}
-        <div className="bg-[#FF6B35]/80 backdrop-blur-xl py-8 px-6">
+        <div className="bg-[#FF6B35] py-8 px-6">
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
             {[
               { num: HUBS.length,                    label: 'Active Hubs' },
@@ -317,7 +314,7 @@ export default function HubsPage() {
             All Hubs
           </a>
           {SCHOOL_GROUPS.map(school => (
-            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-none text-sm font-semibold border bg-white/5 border-white/10 text-white/60 hover:bg-[#FF6B35]/20 hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all">
+            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-none text-sm font-semibold border bg-[#162347] border-white/10 text-white/60 hover:bg-[#FF6B35]/20 hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all">
               {school.label}
             </a>
           ))}

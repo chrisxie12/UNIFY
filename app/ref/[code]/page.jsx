@@ -87,9 +87,6 @@ export default function RefPage({ params }) {
 
       {/* Fixed ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-none bg-[#FF6B35]/[0.10] blur-[120px]" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-[#A8C4FF]/[0.05] blur-[100px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-none bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
       <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
@@ -118,7 +115,7 @@ export default function RefPage({ params }) {
 
               {/* Referral badge */}
               <div className="anim-float flex justify-center mb-6">
-                <span className="text-xs px-3 py-1.5 rounded-none bg-white/5 border border-white/10 text-[#A8C4FF]">
+                <span className="text-xs px-3 py-1.5 rounded-none bg-[#162347] border border-white/10 text-[#A8C4FF]">
                   Invited via UNIFY referral · Code: <span className="font-mono font-bold">{code}</span>
                 </span>
               </div>
@@ -129,7 +126,7 @@ export default function RefPage({ params }) {
               </p>
 
               {/* Form */}
-              <div className="anim-fade-up delay-400 bg-white/5 border border-white/10 rounded-none p-6">
+              <div className="anim-fade-up delay-400 bg-[#162347] border border-white/10 rounded-none p-6">
                 <p className="text-sm font-semibold text-white mb-3">Pick your school</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {SCHOOLS.map((s) => (
@@ -140,7 +137,7 @@ export default function RefPage({ params }) {
                       className={`px-3 py-1.5 rounded-none text-sm font-semibold border transition-all ${
                         school === s.id
                           ? 'bg-[#FF6B35] border-[#FF6B35] text-white'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
+                          : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
                       }`}
                     >
                       {s.label}
@@ -149,7 +146,7 @@ export default function RefPage({ params }) {
                 </div>
 
                 <p className="text-sm font-semibold text-white mb-2">Phone number</p>
-                <div className="flex items-center bg-white/5 border border-white/10 rounded-none overflow-hidden mb-5 focus-within:border-[#FF6B35]/60 focus-within:ring-2 focus-within:ring-[#FF6B35]/10 transition-all">
+                <div className="flex items-center bg-[#162347] border border-white/10 rounded-none overflow-hidden mb-5 focus-within:border-[#FF6B35]/60 focus-within:ring-2 focus-within:ring-[#FF6B35]/10 transition-all">
                   <span className="px-3 py-3 text-white/40 text-sm border-r border-white/10 flex items-center gap-1.5 shrink-0">🇬🇭 +233</span>
                   <input
                     type="tel"
@@ -172,7 +169,7 @@ export default function RefPage({ params }) {
             </>
           ) : (
             <div className="text-center py-8">
-              <div className="w-20 h-20 rounded-none bg-white/70 backdrop-blur-sm border border-green-200/70 flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 rounded-none bg-white border border-green-200/70 flex items-center justify-center mx-auto mb-6">
                 <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'checkPop 0.4s ease-out' }}>
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
@@ -181,7 +178,7 @@ export default function RefPage({ params }) {
               <h2 className="anim-fade-up text-2xl font-black text-white mb-2">You&apos;re on the list!</h2>
               <p className="anim-fade-up delay-100 text-white/60 text-sm mb-8 leading-relaxed">Share your own link to move up and get early access.</p>
 
-              <div className="anim-fade-up delay-200 bg-white/5 border border-white/10 rounded-none p-4 mb-6">
+              <div className="anim-fade-up delay-200 bg-[#162347] border border-white/10 rounded-none p-4 mb-6">
                 <p className="text-xs text-white/40 mb-2 font-medium text-left">Your referral link</p>
                 <div className="flex items-center gap-2">
                   <span className="flex-1 text-xs text-[#A8C4FF] font-mono truncate text-left">
@@ -192,7 +189,7 @@ export default function RefPage({ params }) {
                     className={`shrink-0 px-3 py-1.5 rounded-none text-xs font-semibold border transition-all ${
                       copied
                         ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]'
-                        : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
+                        : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#A8C4FF]'
                     }`}
                   >
                     {copied ? 'Copied!' : 'Copy'}

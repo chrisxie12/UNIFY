@@ -225,7 +225,7 @@ export default function SMSLaunchpadPage() {
     <div className="min-h-screen flex flex-col" style={{ background: '#0B0F19', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#0B0F19]/80 backdrop-blur border-b border-white/[0.06]">
+      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#0B0F19] border-b border-white/[0.06]">
         {/* Left */}
         <div className="flex items-center gap-3">
           <a href="/admin" className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors">
@@ -264,7 +264,7 @@ export default function SMSLaunchpadPage() {
 
           {/* ── LEFT COLUMN (55%) ── */}
           <div className="flex-[55] min-w-0 flex flex-col gap-4">
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6 flex flex-col gap-6">
+            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6 flex flex-col gap-6">
 
               {/* Section 1 — Target Segmentation */}
               <div>
@@ -402,7 +402,7 @@ export default function SMSLaunchpadPage() {
           <div className="flex-[45] min-w-0 flex flex-col gap-4">
 
             {/* Phone Mockup */}
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6">
+            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6">
               <div className="flex items-center gap-2 mb-5">
                 <Smartphone className="w-4 h-4 text-white/40" />
                 <span className="text-white/90 text-sm font-bold">Live Preview</span>
@@ -450,7 +450,7 @@ export default function SMSLaunchpadPage() {
             </div>
 
             {/* Launch Trigger */}
-            <div className="bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-none p-6">
+            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Send className="w-4 h-4 text-emerald-400" />
                 <span className="text-white/90 text-sm font-bold">Launch Campaign</span>
@@ -496,7 +496,7 @@ export default function SMSLaunchpadPage() {
 
       {/* ── CONFIRM MODAL ── */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-[#111827] border border-white/10 rounded-none p-8 max-w-md w-full shadow-[6px_6px_0px_#FF6B35]">
             {/* Modal header */}
             <div className="flex items-start justify-between mb-6">

@@ -43,7 +43,7 @@ function SchoolCard({ school }) {
           {school.faculties.slice(0, 3).map(f => (
             <span key={f} className="text-[10px] font-semibold bg-[#FF6B35]/10 text-[#FF6B35] px-2 py-0.5 rounded-none border border-[#FF6B35]/30">{f}</span>
           ))}
-          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-white/5 text-white/40 px-2 py-0.5 rounded-none border border-white/10">+{school.faculties.length - 3} more</span>}
+          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-[#162347] text-white/40 px-2 py-0.5 rounded-none border border-white/10">+{school.faculties.length - 3} more</span>}
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/10">
           <div className="flex items-center gap-1.5">
@@ -97,7 +97,7 @@ export default function SchoolsPage() {
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <div className="flex gap-2 flex-wrap">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-none border-2 transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}>{t}</button>
+            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-none border-2 transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]' : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}>{t}</button>
           ))}
         </div>
       </div>

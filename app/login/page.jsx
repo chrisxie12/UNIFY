@@ -449,9 +449,7 @@ export default function LoginPage() {
 
         {/* Nav */}
         <nav style={{
-          background: 'rgba(15,14,23,0.80)',
-          backdropFilter: 'blur(14px)',
-          WebkitBackdropFilter: 'blur(14px)',
+          background: '#0F0E17',
           borderBottom: '2px solid #FF6B35',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
@@ -526,8 +524,7 @@ export default function LoginPage() {
             }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
-                background: 'rgba(26,24,39,0.80)',
-                backdropFilter: 'blur(12px)',
+                background: '#1A1827',
                 border: '1px solid rgba(255,255,255,0.10)',
                 borderRadius: 0, padding: '6px 16px',
                 fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.80)',

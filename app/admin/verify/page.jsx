@@ -214,7 +214,7 @@ export default function VerifyPage() {
       `}</style>
 
       {/* POWER BAR */}
-      <div className="h-14 flex-shrink-0 bg-[#0B0F19]/80 backdrop-blur border-b border-white/[0.06] flex items-center px-4 gap-4 z-10">
+      <div className="h-14 flex-shrink-0 bg-[#0B0F19] border-b border-white/[0.06] flex items-center px-4 gap-4 z-10">
         {/* Left */}
         <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
           <Link href="/admin" className="flex items-center gap-1 text-white/50 hover:text-white transition-colors text-sm">
@@ -306,7 +306,7 @@ export default function VerifyPage() {
                 onMouseLeave={handleMouseLeave}
               >
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-white/5 -translate-y-16 translate-x-16" />
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-[#162347] -translate-y-16 translate-x-16" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 rounded-none bg-black/20 translate-y-24 -translate-x-24" />
                 <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-none border border-white/5 -translate-x-1/2 -translate-y-1/2" />
 
