@@ -39,14 +39,14 @@ export default function BlogPage() {
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#0D1B3E', minHeight: '100vh' }}>
       <style>{`@media(min-width:640px){.md-show{display:block !important}}`}</style>
       {/* Nav */}
-      <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 24px' }}>
+      <nav style={{ borderBottom: '2px solid #FF6B35', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           <a href="/" style={{ fontWeight: 900, fontSize: '1.1rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE', fontFamily: "'Barlow Condensed', sans-serif" }}>UNIFY</a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Home</a>
             <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Schools</a>
             <a href="/faq" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">FAQ</a>
-            <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 9999, textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 0, border: '2px solid white', boxShadow: '3px 3px 0px rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
               Join Waitlist
             </a>
           </div>
@@ -55,7 +55,7 @@ export default function BlogPage() {
 
       {/* Hero */}
       <section style={{ textAlign: 'center', padding: '80px 24px 60px' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-1px' }}>
+        <h1 style={{ fontSize: '3rem', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-1px', fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase' }}>
           The Freshers&apos; Blog
         </h1>
         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
@@ -70,10 +70,10 @@ export default function BlogPage() {
             <a
               key={post.slug}
               href={`/blog/${post.slug}`}
-              style={{ textDecoration: 'none', display: 'block', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
+              style={{ textDecoration: 'none', display: 'block', borderRadius: 0, border: '2px solid #FF6B35', boxShadow: '4px 4px 0px #FF6B35', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
             >
               {/* Accent bar */}
-              <div style={{ height: 6, background: post.color }} />
+              <div style={{ height: 8, background: post.color }} />
               <div style={{ padding: '28px 28px 24px' }}>
                 <span
                   style={{
@@ -104,7 +104,7 @@ export default function BlogPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: '#FF6B35', padding: '40px 24px' }}>
+      <footer style={{ background: '#FF6B35', padding: '40px 24px', borderTop: '3px solid #FF6B35' }}>
         <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.5px' }}>UNIFY GH</span>
           <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem' }}>© 2026 UNIFY. All rights reserved.</span>

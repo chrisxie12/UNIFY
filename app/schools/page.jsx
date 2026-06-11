@@ -20,12 +20,12 @@ const SCHOOLS = [
 
 function SchoolCard({ school }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:shadow-[0_8px_32px_rgba(123,47,190,0.2)] transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
+    <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] bg-[#162347] hover:shadow-[6px_6px_0px_#FF6B35] transition-all duration-200 overflow-hidden flex flex-col">
       {/* Gradient banner */}
       <div className="h-20 relative flex items-center px-5" style={{ background: `linear-gradient(135deg, ${school.colors[0]}, ${school.colors[1]})` }}>
         <span className="absolute right-4 top-2 text-[56px] font-black pointer-events-none select-none leading-none" style={{ color: 'rgba(255,255,255,0.13)' }}>{school.initials}</span>
         <div className="relative z-10">
-          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 text-white border border-white/30">{school.type}</span>
+          <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-white/20 text-white border border-white/40">{school.type}</span>
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col">
@@ -41,9 +41,9 @@ function SchoolCard({ school }) {
         </div>
         <div className="flex flex-wrap gap-1.5 mb-4 flex-1">
           {school.faculties.slice(0, 3).map(f => (
-            <span key={f} className="text-[10px] font-semibold bg-[#FF6B35]/10 text-purple-300 px-2 py-0.5 rounded-full">{f}</span>
+            <span key={f} className="text-[10px] font-semibold bg-[#FF6B35]/10 text-[#FF6B35] px-2 py-0.5 rounded-none border border-[#FF6B35]/30">{f}</span>
           ))}
-          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-white/5 text-white/40 px-2 py-0.5 rounded-full">+{school.faculties.length - 3} more</span>}
+          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-white/5 text-white/40 px-2 py-0.5 rounded-none border border-white/10">+{school.faculties.length - 3} more</span>}
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/10">
           <div className="flex items-center gap-1.5">
@@ -53,7 +53,7 @@ function SchoolCard({ school }) {
             </span>
             <span className="text-[11px] font-semibold text-white/50">{school.freshers}</span>
           </div>
-          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-white transition-colors">
+          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-white transition-colors rounded-none border-2 border-white px-2 py-0.5">
             Join Hub <ArrowRight className="w-3 h-3" />
           </a>
         </div>
@@ -74,10 +74,10 @@ export default function SchoolsPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0D1B3E' }}>
-      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
+      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b-2 border-[#FF6B35]">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
-          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400">GH</span>
+          <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35]/40 text-[#FF6B35]">GH</span>
         </a>
         <div className="hidden md:flex items-center gap-6">
           <a href="/hubs" className="text-sm font-semibold text-white/50 hover:text-white">Hubs</a>
@@ -86,10 +86,10 @@ export default function SchoolsPage() {
         </div>
       </nav>
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-purple-300 text-xs font-bold px-4 py-2 rounded-full mb-6">🇬🇭 Ghana University Directory</div>
-        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Find Your School.<br />Claim Your Spot.</h1>
+        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border-2 border-[#FF6B35]/40 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-none mb-6 tracking-widest uppercase">Ghana University Directory</div>
+        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Find Your School.<br />Claim Your Spot.</h1>
         <p className="text-white/60 text-base max-w-xl mx-auto mb-8">Browse {SCHOOLS.length} Ghanaian universities. Join your campus hub before orientation week.</p>
-        <div className="flex items-center gap-2 bg-[#162347] border border-white/10 rounded-2xl px-4 py-3 max-w-lg mx-auto">
+        <div className="flex items-center gap-2 bg-[#162347] border-2 border-[#FF6B35] rounded-none px-4 py-3 max-w-lg mx-auto">
           <Search className="w-4 h-4 text-white/30 shrink-0" />
           <input type="text" placeholder="Search school, city, or programme…" value={query} onChange={e => setQuery(e.target.value)} className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-white/30" />
         </div>
@@ -97,7 +97,7 @@ export default function SchoolsPage() {
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <div className="flex gap-2 flex-wrap">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-full border transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[0_4px_14px_rgba(123,47,190,0.3)]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'}`}>{t}</button>
+            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-none border-2 transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]' : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}>{t}</button>
           ))}
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function SchoolsPage() {
         )}
         <div className="mt-14 text-center">
           <p className="text-white/50 text-sm mb-5">Your school not listed? We're adding more before the 2026 intake.</p>
-          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
+          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
         </div>
       </div>
     </div>

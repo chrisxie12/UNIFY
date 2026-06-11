@@ -18,6 +18,14 @@ body {
   box-sizing: border-box;
 }
 
+:root {
+  --nb-border: 2px solid #FF6B35;
+  --nb-shadow: 4px 4px 0px #FF6B35;
+  --nb-shadow-sm: 2px 2px 0px #FF6B35;
+  --nb-shadow-white: 4px 4px 0px rgba(255,255,255,0.15);
+  --nb-radius: 0px;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

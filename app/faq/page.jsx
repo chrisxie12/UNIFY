@@ -17,14 +17,14 @@ const FAQS = [
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-white/10 last:border-0">
+    <div className="border-b border-[#FF6B35]/30 last:border-0">
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         className="w-full text-left flex items-center justify-between gap-4 py-5 group"
       >
         <span className="font-semibold text-white/80 group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
-        <span className={`flex-shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}>
+        <span className={`flex-shrink-0 w-7 h-7 rounded-none border-2 flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}>
           <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-[#FF6B35]'}`} />
         </span>
       </button>
@@ -48,17 +48,17 @@ export default function FAQPage() {
         <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
       </nav>
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-full mb-6">Frequently Asked Questions</div>
-        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">Got Questions?<br />We've Got Answers.</h1>
+        <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-none mb-6">Frequently Asked Questions</div>
+        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 uppercase tracking-tight">Got Questions?<br />We've Got Answers.</h1>
         <p className="text-white/60 text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
       </div>
       <div className="max-w-3xl mx-auto px-6 pb-24">
-        <div className="rounded-3xl border border-white/10 px-6 md:px-10 bg-[#162347]">
+        <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] px-6 md:px-10 bg-[#162347]">
           {FAQS.map((faq, i) => <FAQItem key={i} faq={faq} />)}
         </div>
         <div className="mt-10 text-center">
           <p className="text-white/50 text-sm mb-4">Still have questions?</p>
-          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.35)] transition-colors">Email us →</a>
+          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-none shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Email us →</a>
         </div>
       </div>
     </div>

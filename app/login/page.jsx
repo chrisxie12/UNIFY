@@ -342,8 +342,8 @@ export default function LoginPage() {
 
         .login-input {
           width: 100%; height: 48px;
-          border-radius: 9999px;
-          border: 1.5px solid rgba(255,255,255,0.10);
+          border-radius: 0;
+          border: 2px solid rgba(255,255,255,0.40);
           background: rgba(26,24,39,0.85);
           font-size: 0.9rem; color: #FFFFFE;
           outline: none;
@@ -361,8 +361,8 @@ export default function LoginPage() {
         .login-input.error { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
 
         .social-btn {
-          width: 44px; height: 44px; border-radius: 50%;
-          border: 1.5px solid rgba(255,255,255,0.10); background: rgba(26,24,39,0.85);
+          width: 44px; height: 44px; border-radius: 0;
+          border: 2px solid rgba(255,255,255,0.30); background: rgba(26,24,39,0.85);
           display: flex; align-items: center; justify-content: center;
           cursor: pointer; transition: transform 200ms, box-shadow 200ms, background 200ms;
         }
@@ -394,12 +394,10 @@ export default function LoginPage() {
           max-width: 420px;
         }
         .form-card {
-          border-radius: 28px;
-          border: 1px solid rgba(255,255,255,0.10);
-          background: rgba(26,24,39,0.80);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.08);
+          border-radius: 0;
+          border: 2px solid #FF6B35;
+          background: #162347;
+          box-shadow: 4px 4px 0px #FF6B35;
           padding: 36px 28px 32px;
           position: relative;
           overflow: hidden;
@@ -442,6 +440,7 @@ export default function LoginPage() {
             width: 100%;
             max-width: 340px;
             padding: 28px 24px 24px;
+            border-radius: 0;
           }
         }
       `}</style>
@@ -453,11 +452,11 @@ export default function LoginPage() {
           background: 'rgba(15,14,23,0.80)',
           backdropFilter: 'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          borderBottom: '2px solid #FF6B35',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#A8C4FF]">GH</span>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35]/40 text-[#FF6B35]">GH</span>
           </a>
           <div className="hidden md:flex items-center gap-6">
             <a href="/schools" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Schools</a>
@@ -591,18 +590,18 @@ export default function LoginPage() {
                   <>
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
-                      borderRadius: 9999, border: '1.5px solid rgba(255,255,255,0.10)',
-                      background: '#162347', padding: 3,
+                      borderRadius: 0, border: '2px solid #FF6B35',
+                      background: '#0D1B3E', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (
                         <button key={m} onClick={() => switchMode(m)} style={{
-                          flex: 1, borderRadius: 9999, border: 'none', cursor: 'pointer',
+                          flex: 1, borderRadius: 0, border: 'none', cursor: 'pointer',
                           fontWeight: mode === m ? 700 : 500,
                           fontSize: '0.8rem',
                           background: mode === m ? '#FF6B35' : 'transparent',
                           color: mode === m ? '#fff' : 'rgba(255,255,255,0.60)',
-                          boxShadow: mode === m ? '0 3px 10px rgba(123,47,190,0.30)' : 'none',
+                          boxShadow: 'none',
                           transition: 'background 280ms cubic-bezier(0.34,1.56,0.64,1), color 280ms, box-shadow 280ms',
                           fontFamily: 'inherit',
                         }}>
@@ -658,11 +657,11 @@ export default function LoginPage() {
                     <div style={{ marginTop: 18, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 300ms both' : 'none' }}>
                       <button onClick={handleSubmit} disabled={loading}
                         style={{
-                          width: '100%', height: 48, borderRadius: 9999,
+                          width: '100%', height: 48, borderRadius: 0,
                           background: '#FF6B35', color: 'white',
                           fontWeight: 800, fontSize: '0.875rem',
-                          border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 14px rgba(123,47,190,0.35)',
+                          border: '2px solid white', cursor: 'pointer',
+                          boxShadow: '3px 3px 0px rgba(255,255,255,0.3)',
                           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                           transition: 'transform 200ms, box-shadow 200ms, opacity 200ms',
                           fontFamily: 'inherit',
