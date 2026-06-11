@@ -92,7 +92,7 @@ export default function RefPage({ params }) {
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.20)] rounded-[32px] overflow-hidden">
+      <div className="anim-scale-in w-full max-w-lg mx-auto bg-[#162347] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
         {/* Gradient top bar */}
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
@@ -118,7 +118,7 @@ export default function RefPage({ params }) {
 
               {/* Referral badge */}
               <div className="anim-float flex justify-center mb-6">
-                <span className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#A8C4FF]">
+                <span className="text-xs px-3 py-1.5 rounded-none bg-white/5 border border-white/10 text-[#A8C4FF]">
                   Invited via UNIFY referral · Code: <span className="font-mono font-bold">{code}</span>
                 </span>
               </div>
@@ -129,7 +129,7 @@ export default function RefPage({ params }) {
               </p>
 
               {/* Form */}
-              <div className="anim-fade-up delay-400 bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div className="anim-fade-up delay-400 bg-white/5 border border-white/10 rounded-none p-6">
                 <p className="text-sm font-semibold text-white mb-3">Pick your school</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {SCHOOLS.map((s) => (
@@ -137,7 +137,7 @@ export default function RefPage({ params }) {
                       key={s.id}
                       type="button"
                       onClick={() => setSchool(s.id)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                      className={`px-3 py-1.5 rounded-none text-sm font-semibold border transition-all ${
                         school === s.id
                           ? 'bg-[#FF6B35] border-[#FF6B35] text-white'
                           : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
@@ -149,7 +149,7 @@ export default function RefPage({ params }) {
                 </div>
 
                 <p className="text-sm font-semibold text-white mb-2">Phone number</p>
-                <div className="flex items-center bg-white/5 border border-white/10 rounded-xl overflow-hidden mb-5 focus-within:border-[#FF6B35]/60 focus-within:ring-2 focus-within:ring-[#FF6B35]/10 transition-all">
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-none overflow-hidden mb-5 focus-within:border-[#FF6B35]/60 focus-within:ring-2 focus-within:ring-[#FF6B35]/10 transition-all">
                   <span className="px-3 py-3 text-white/40 text-sm border-r border-white/10 flex items-center gap-1.5 shrink-0">🇬🇭 +233</span>
                   <input
                     type="tel"
@@ -164,7 +164,7 @@ export default function RefPage({ params }) {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !school || !phone}
-                  className="w-full py-3 rounded-full font-black text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[0_4px_14px_rgba(123,47,190,0.4)] hover:shadow-[0_8px_24px_rgba(123,47,190,0.5)]"
+                  className="w-full py-3 rounded-none font-black text-sm bg-[#FF6B35] text-white hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 shadow-[0_4px_14px_rgba(123,47,190,0.4)] hover:shadow-[0_8px_24px_rgba(123,47,190,0.5)]"
                 >
                   {submitting ? 'Joining…' : 'Join the Waitlist →'}
                 </button>
@@ -181,7 +181,7 @@ export default function RefPage({ params }) {
               <h2 className="anim-fade-up text-2xl font-black text-white mb-2">You&apos;re on the list!</h2>
               <p className="anim-fade-up delay-100 text-white/60 text-sm mb-8 leading-relaxed">Share your own link to move up and get early access.</p>
 
-              <div className="anim-fade-up delay-200 bg-white/5 border border-white/10 rounded-2xl p-4 mb-6">
+              <div className="anim-fade-up delay-200 bg-white/5 border border-white/10 rounded-none p-4 mb-6">
                 <p className="text-xs text-white/40 mb-2 font-medium text-left">Your referral link</p>
                 <div className="flex items-center gap-2">
                   <span className="flex-1 text-xs text-[#A8C4FF] font-mono truncate text-left">
@@ -189,7 +189,7 @@ export default function RefPage({ params }) {
                   </span>
                   <button
                     onClick={handleCopy}
-                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                    className={`shrink-0 px-3 py-1.5 rounded-none text-xs font-semibold border transition-all ${
                       copied
                         ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]'
                         : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'

@@ -1175,7 +1175,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
         <nav
-          className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b border-white/10"
+          className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b-2 border-[#FF6B35]/50"
           style={heroStyle(0, 'heroFadeDown', '600ms')}
         >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -1199,7 +1199,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </a>
               <a
                 href="#waitlist"
-                className="hidden md:inline-flex btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white text-xs font-black px-4 py-2.5 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.4)]"
+                className="hidden md:inline-flex btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
               >
                 Get Early Access →
               </a>
@@ -1259,7 +1259,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               <span className="relative inline-block mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
                 <a
                   href="#waitlist"
-                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-4 rounded-full shadow-[0_4px_14px_rgba(123,47,190,0.4)]"
+                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-4 rounded-none border-2 border-white shadow-[4px_4px_0px_rgba(255,255,255,0.4)]"
                 >
                   Get Early Access <ArrowRight className="w-4 h-4" />
                 </a>
@@ -1390,7 +1390,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <Ticker />
 
         {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden" style={{ background: '#FF6B35' }}>
+        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden border-t-4 border-[#FF6B35]" style={{ background: '#FF6B35' }}>
           {/* Subtle dot grid overlay */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
             style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
@@ -1408,7 +1408,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="features"
           ref={featuresRef}
-          className="relative py-16 md:py-28 px-6 border-t border-white/10"
+          className="relative py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
           style={{ ...sectionRevealStyle(featuresVisible), background: 'linear-gradient(180deg, #0D1B3E 0%, #130F20 100%)' }}
         >
           {/* Ambient dots */}
@@ -1446,7 +1446,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 ].map((f, i) => (
                   <div
                     key={f.title}
-                    className="feature-card bg-[#162347] border border-white/10 rounded-3xl p-6 flex items-start gap-4"
+                    className="feature-card bg-[#162347] border-2 border-[#FF6B35]/40 shadow-[4px_4px_0px_rgba(255,107,53,0.2)] rounded-none p-6 flex items-start gap-4"
                     style={featuresVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 100}ms both` } : { opacity: 0 }}
                   >
                     <div className="w-11 h-11 rounded-2xl bg-[#FF6B35]/8 border border-[#FF6B35]/15 flex items-center justify-center flex-shrink-0">
@@ -1467,7 +1467,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t border-white/10">
+        <section id="schools" className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20">
           <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
             <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
               <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
@@ -1521,7 +1521,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
         <section
           ref={communityRef}
-          className="relative py-16 md:py-28 px-6 border-t border-white/10"
+          className="relative py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
           style={{ ...sectionRevealStyle(communityVisible), background: '#0D1B3E' }}
         >
           {/* Ambient dots */}
@@ -1625,7 +1625,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
         <section
           ref={testimonialsRef}
-          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t border-white/10 overflow-hidden"
+          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20 overflow-hidden"
           style={sectionRevealStyle(testimonialsVisible)}
         >
           {/* Subtle campus photo strip on the right */}
@@ -1674,7 +1674,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 {TESTIMONIALS.map((t) => (
                   <div key={t.name} className="w-full flex-shrink-0 px-1 md:px-3">
-                    <div className="relative overflow-hidden bg-[#162347] border border-white/10 rounded-3xl p-8 md:p-10 flex flex-col min-h-[220px]">
+                    <div className="relative overflow-hidden bg-[#162347] border-2 border-[#FF6B35]/30 shadow-[4px_4px_0px_rgba(255,107,53,0.15)] rounded-none p-8 md:p-10 flex flex-col min-h-[220px]">
                       {/* Watermark quote */}
                       <div className="absolute top-4 right-6 text-[96px] font-black leading-none pointer-events-none select-none"
                            style={{ color: '#FF6B35', opacity: 0.12 }}>&rdquo;</div>
@@ -1721,7 +1721,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="waitlist"
           ref={ctaRef}
-          className="py-16 md:py-28 px-6 border-t border-white/10"
+          className="py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
           style={{ ...sectionRevealStyle(ctaVisible), background: '#0D1B3E' }}
         >
           <div className="max-w-2xl mx-auto text-center">
@@ -1746,7 +1746,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="faq"
           ref={faqRef}
-          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t border-white/10"
+          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
           style={sectionRevealStyle(faqVisible)}
         >
           <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>
