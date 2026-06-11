@@ -1,0 +1,36 @@
+name: Cleanup branches
+
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: 'Space-separated list of branches to delete'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        env:
+          BRANCHES: ${{ inputs.branches }}
+        with:
+          script: |
+            const branches = process.env.BRANCHES.split(/\s+/).filter(Boolean);
+            const defaultBranch = (await github.rest.repos.get(context.repo)).data.default_branch;
+            for (const branch of branches) {
+              if (branch === defaultBranch) {
+                core.warning(`Refusing to delete default branch ${branch}`);
+                continue;
+              }
+              try {
+                await github.rest.git.deleteRef({ ...context.repo, ref: `heads/${branch}` });
+                core.info(`Deleted ${branch}`);
+              } catch (e) {
+                core.warning(`Could not delete ${branch}: ${e.message}`);
+              }
+            }
