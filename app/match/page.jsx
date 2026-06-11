@@ -136,7 +136,7 @@ function getLookingForIcon(lookingFor) {
 function ProfileCard({ profile, onConnect }) {
   const school = getSchoolStyle(profile.school);
   return (
-    <div className="bg-[#162347] border border-white/10 rounded-3xl p-5 flex flex-col gap-4 hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#FF6B35]/40 hover:shadow-[0_16px_48px_rgba(123,47,190,0.2)] transition-all duration-300">
+    <div className="bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none p-5 flex flex-col gap-4 hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_#FF6B35] transition-all duration-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="relative w-16 h-16 rounded-2xl flex-shrink-0">
@@ -183,7 +183,7 @@ function ProfileCard({ profile, onConnect }) {
 
       <button
         onClick={() => onConnect(profile.name)}
-        className="w-full bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)] flex items-center justify-center gap-2"
+        className="w-full bg-[#FF6B35] hover:bg-[#E55A22] text-white font-semibold text-sm py-2.5 rounded-none border-2 border-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)] transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
       >
         Connect <Heart size={14} />
       </button>
@@ -194,7 +194,7 @@ function ProfileCard({ profile, onConnect }) {
 function Toast({ name, onClose }) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm px-4">
-      <div className="bg-[#162347] border border-[#FF6B35]/30 shadow-2xl rounded-2xl p-4 flex items-start gap-3">
+      <div className="bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none p-4 flex items-start gap-3">
         <span className="text-xl flex-shrink-0">🔗</span>
         <div className="flex-1 min-w-0">
           <p className="text-white font-semibold text-sm">Link sent to {name}!</p>
@@ -273,13 +273,13 @@ export default function MatchPage() {
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/[0.04] blur-[80px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border border-white/10 shadow-[0_40px_100px_rgba(123,47,190,0.15)] rounded-[32px] overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
 
         {/* Gradient top bar */}
         <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b border-white/10">
+        <nav className="sticky top-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-2xl border-b-2 border-[#FF6B35]/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
@@ -293,7 +293,7 @@ export default function MatchPage() {
                 <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#FF6B35]" />
               </a>
             </div>
-            <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-xs px-4 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-xs px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_rgba(255,255,255,0.3)] transition-all hover:-translate-y-0.5">
               Get Early Access <ArrowRight size={14} />
             </a>
           </div>
@@ -337,7 +337,7 @@ export default function MatchPage() {
                 <button
                   key={s}
                   onClick={() => setSchoolFilter(s)}
-                  className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
+                  className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     schoolFilter === s
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
                       : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
@@ -356,7 +356,7 @@ export default function MatchPage() {
                 <button
                   key={h}
                   onClick={() => setHabitsFilter(h)}
-                  className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-150 ${
+                  className={`text-sm px-4 py-1.5 rounded-none border transition-all duration-150 ${
                     habitsFilter === h
                       ? 'bg-[#FF6B35] text-white border-[#FF6B35] font-semibold'
                       : 'bg-white/5 border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-purple-300'
@@ -394,7 +394,7 @@ export default function MatchPage() {
 
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
-          <div className="max-w-2xl mx-auto text-center bg-[#162347] border border-white/10 shadow-[0_8px_32px_rgba(123,47,190,0.2)] rounded-3xl px-8 py-14">
+          <div className="max-w-2xl mx-auto text-center bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none px-8 py-14">
             <div className="flex justify-center mb-6">
               <div className="h-1 w-16 rounded-full bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
             </div>
@@ -404,7 +404,7 @@ export default function MatchPage() {
             <p className="text-white/60 text-base leading-relaxed max-w-md mx-auto mb-8">
               Join thousands of Ghana freshers already connecting on UNIFY before orientation week.
             </p>
-            <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(123,47,190,0.4)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-3.5 rounded-none shadow-[2px_2px_0px_rgba(255,255,255,0.3)] transition-all hover:-translate-y-0.5">
               Join the waitlist <ArrowRight size={16} />
             </a>
           </div>
