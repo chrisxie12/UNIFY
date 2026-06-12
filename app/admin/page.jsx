@@ -12,23 +12,23 @@ const PASSWORD  = 'unify2026';
 const CACHE_KEY = 'unify_admin_cache';
 
 const SCHOOLS = [
-  { id: 'knust', label: 'KNUST',    wiki: 'Kwame_Nkrumah_University_of_Science_and_Technology', color: 'text-emerald-400', bar: 'bg-emerald-400', card: 'from-emerald-950/60 to-emerald-900/20 border-emerald-500/20', avatar: 'bg-emerald-500/20 text-emerald-300' },
-  { id: 'ug',    label: 'UG Legon', wiki: 'University_of_Ghana',                                 color: 'text-blue-400',    bar: 'bg-blue-400',    card: 'from-blue-950/60 to-blue-900/20 border-blue-500/20',       avatar: 'bg-blue-500/20 text-blue-300'    },
-  { id: 'ucc',   label: 'UCC',      wiki: 'University_of_Cape_Coast',                            color: 'text-[#A8C4FF]',  bar: 'bg-[#FF6B35]',  card: 'from-[#0D1B3E]/60 to-[#162347]/20 border-[#FF6B35]/20', avatar: 'bg-[#FF6B35]/20 text-[#A8C4FF]'},
-  { id: 'upsa',  label: 'UPSA',     wiki: 'University_of_Professional_Studies,_Accra',           color: 'text-amber-400',   bar: 'bg-amber-400',   card: 'from-amber-950/60 to-amber-900/20 border-amber-500/20',    avatar: 'bg-amber-500/20 text-amber-300'  },
-  { id: 'uds',   label: 'UDS',      wiki: 'University_for_Development_Studies',                  color: 'text-rose-400',    bar: 'bg-rose-400',    card: 'from-rose-950/60 to-rose-900/20 border-rose-500/20',       avatar: 'bg-rose-500/20 text-rose-300'    },
-  { id: 'gctu',  label: 'GCTU',     wiki: 'Ghana_Communication_Technology_University',           color: 'text-sky-400',     bar: 'bg-sky-400',     card: 'from-sky-950/60 to-sky-900/20 border-sky-500/20',          avatar: 'bg-sky-500/20 text-sky-300'      },
+  { id: 'knust', label: 'KNUST',    wiki: 'Kwame_Nkrumah_University_of_Science_and_Technology', color: 'text-emerald-700', bar: 'bg-emerald-500', card: 'bg-[#DFF5E3] border-black', avatar: 'bg-[#DFF5E3] text-emerald-700 border border-black' },
+  { id: 'ug',    label: 'UG Legon', wiki: 'University_of_Ghana',                                 color: 'text-blue-700',    bar: 'bg-blue-500',    card: 'bg-[#E3EDFF] border-black', avatar: 'bg-[#E3EDFF] text-blue-700 border border-black'    },
+  { id: 'ucc',   label: 'UCC',      wiki: 'University_of_Cape_Coast',                            color: 'text-[#555]',      bar: 'bg-[#FF6B35]',  card: 'bg-[#FFE8DC] border-black', avatar: 'bg-[#FFE8DC] text-black border border-black'},
+  { id: 'upsa',  label: 'UPSA',     wiki: 'University_of_Professional_Studies,_Accra',           color: 'text-amber-700',   bar: 'bg-amber-400',   card: 'bg-[#FFF3D6] border-black', avatar: 'bg-[#FFF3D6] text-amber-700 border border-black'  },
+  { id: 'uds',   label: 'UDS',      wiki: 'University_for_Development_Studies',                  color: 'text-rose-700',    bar: 'bg-rose-400',    card: 'bg-[#FFE3E3] border-black', avatar: 'bg-[#FFE3E3] text-rose-700 border border-black'    },
+  { id: 'gctu',  label: 'GCTU',     wiki: 'Ghana_Communication_Technology_University',           color: 'text-sky-700',     bar: 'bg-sky-400',     card: 'bg-[#E3EDFF] border-black', avatar: 'bg-[#E3EDFF] text-sky-700 border border-black'      },
 ];
 
 const FILTER_PILLS = ['ALL', 'KNUST', 'UG LEGON', 'UCC', 'UPSA', 'UDS', 'GCTU'];
 const SCHOOL_FILTER_MAP = { 'ALL': null, 'KNUST': 'knust', 'UG LEGON': 'ug', 'UCC': 'ucc', 'UPSA': 'upsa', 'UDS': 'uds', 'GCTU': 'gctu' };
 
 const VIBE_TAGS = [
-  { label: 'Neat Freak',    color: 'bg-blue-500/20 text-blue-300 border-blue-500/30',       digits: [0,1,2] },
-  { label: 'Night Coder',   color: 'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30', digits: [3,4]   },
-  { label: 'Serious Vibes', color: 'bg-orange-500/20 text-orange-300 border-orange-500/30', digits: [5,6]   },
-  { label: 'Early Riser',   color: 'bg-green-500/20 text-green-300 border-green-500/30',    digits: [7,8]   },
-  { label: 'Tech Head',     color: 'bg-sky-500/20 text-sky-300 border-sky-500/30',          digits: [9]     },
+  { label: 'Neat Freak',    color: 'bg-[#E3EDFF] text-black border-black',       digits: [0,1,2] },
+  { label: 'Night Coder',   color: 'bg-[#FFE8DC] text-black border-black', digits: [3,4]   },
+  { label: 'Serious Vibes', color: 'bg-[#FFE8DC] text-black border-black', digits: [5,6]   },
+  { label: 'Early Riser',   color: 'bg-[#DFF5E3] text-black border-black',    digits: [7,8]   },
+  { label: 'Tech Head',     color: 'bg-[#E3EDFF] text-black border-black',          digits: [9]     },
 ];
 
 function getVibe(phone) {
@@ -45,9 +45,9 @@ function getRowStatus(index) {
 }
 
 const STATUS_CONFIG = {
-  verified: { label: 'Verified', pill: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: true  },
-  pending:  { label: 'Pending',  pill: 'bg-amber-500/15 text-amber-400 border-amber-500/25',       dot: false },
-  flagged:  { label: 'Flagged',  pill: 'bg-red-500/15 text-red-400 border-red-500/25',             dot: false },
+  verified: { label: 'Verified', pill: 'bg-[#DFF5E3] text-black border-black', dot: true  },
+  pending:  { label: 'Pending',  pill: 'bg-[#FFF3D6] text-black border-black',       dot: false },
+  flagged:  { label: 'Flagged',  pill: 'bg-[#FFE3E3] text-black border-black',             dot: false },
 };
 
 // ── SPARKLINE ────────────────────────────────────────────────────────────────
@@ -83,7 +83,7 @@ function maskPhone(phone) {
 }
 
 function Skeleton({ className }) {
-  return <div className={`animate-pulse rounded-none bg-[#121A30] ${className}`} />;
+  return <div className={`animate-pulse rounded-none bg-[#EDE4D3] ${className}`} />;
 }
 
 // ── WIKI LOGOS ───────────────────────────────────────────────────────────────
@@ -107,12 +107,12 @@ function SchoolLogo({ src, label, size = 'md' }) {
   const dim = size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-9 h-9' : 'w-6 h-6';
   const pad = size === 'sm' ? 'p-0' : 'p-1';
   if (!src) return (
-    <div className={`${dim} rounded-none bg-white/10 flex items-center justify-center flex-shrink-0`}>
-      <span className="text-[8px] font-black text-white/30">{label.slice(0, 2)}</span>
+    <div className={`${dim} rounded-none bg-white border border-black flex items-center justify-center flex-shrink-0`}>
+      <span className="text-[8px] font-black text-[#555]">{label.slice(0, 2)}</span>
     </div>
   );
   return (
-    <div className={`${dim} rounded-none bg-white flex items-center justify-center flex-shrink-0 overflow-hidden ${pad}`}>
+    <div className={`${dim} rounded-none bg-white border border-black flex items-center justify-center flex-shrink-0 overflow-hidden ${pad}`}>
       <img src={src} alt={label} className="w-full h-full object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
     </div>
   );
@@ -134,31 +134,31 @@ function LoginScreen({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#030810] flex items-center justify-center px-6 relative overflow-hidden"
+    <div className="min-h-screen bg-[#FAF3E8] flex items-center justify-center px-6 relative overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className={`w-full max-w-[340px] transition-all duration-150 ${shake ? 'translate-x-2' : ''}`}
         style={shake ? { animation: 'shake 0.4s ease' } : {}}>
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 rounded-none bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-[6px_6px_0px_#FF6B35] shadow-amber-400/30 mb-5">
-            <span className="text-2xl font-black text-[#030810]">U</span>
+          <div className="w-16 h-16 rounded-none bg-[#FFD700] border-2 border-black flex items-center justify-center shadow-[6px_6px_0px_#000] mb-5">
+            <span className="text-2xl font-black text-black">U</span>
           </div>
-          <h1 className="text-2xl font-black text-white">UNIFY</h1>
-          <p className="text-white/30 text-xs mt-1 tracking-widest uppercase font-semibold">Admin · Waitlist Dashboard</p>
+          <h1 className="text-2xl font-black text-black">UNIFY</h1>
+          <p className="text-[#555] text-xs mt-1 tracking-widest uppercase font-semibold">Admin · Waitlist Dashboard</p>
         </div>
         <form onSubmit={submit} className="flex flex-col gap-3">
           <div className="relative group">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-amber-400/60 transition-colors text-sm">🔒</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black/40 group-focus-within:text-[#FF6B35] transition-colors text-sm">🔒</span>
             <input
               type="password" value={pw} onChange={(e) => setPw(e.target.value)}
               placeholder="Enter password" autoFocus
-              className="w-full bg-white/[0.04] border border-white/[0.08] focus:border-amber-400/40 rounded-none pl-11 pr-5 py-4 text-sm text-white placeholder-white/20 outline-none transition-all" />
+              className="w-full bg-white border-2 border-black focus:ring-2 focus:ring-[#FF6B35] rounded-none pl-11 pr-5 py-4 text-sm text-black placeholder-black/30 outline-none transition-all" />
           </div>
           <button type="submit"
-            className="w-full bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-[#030810] font-black text-sm py-4 rounded-none transition-all shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/20 hover:shadow-amber-400/30">
+            className="w-full bg-[#FFD700] hover:bg-amber-300 active:scale-[0.98] text-black font-black text-sm py-4 rounded-none border-2 border-black transition-all shadow-[4px_4px_0px_#000]">
             Enter Dashboard →
           </button>
         </form>
-        <p className="text-center text-[11px] text-white/15 mt-8">Private · Admin access only</p>
+        <p className="text-center text-[11px] text-[#555] mt-8">Private · Admin access only</p>
       </div>
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}`}</style>
     </div>
@@ -171,8 +171,8 @@ function NavItem({ icon: Icon, active, onClick, tooltip }) {
     <button onClick={onClick} title={tooltip}
       className={`w-10 h-10 flex items-center justify-center rounded-none transition-all ${
         active
-          ? 'bg-amber-400/15 text-amber-400 shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/10'
-          : 'text-white/25 hover:text-white/60 hover:bg-[#121A30]'
+          ? 'bg-[#FF6B35] text-black border-2 border-black shadow-[4px_4px_0px_#000]'
+          : 'text-black/40 hover:text-black hover:bg-black/10'
       }`}>
       <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
     </button>
@@ -182,15 +182,15 @@ function NavItem({ icon: Icon, active, onClick, tooltip }) {
 // ── METRIC CARD ──────────────────────────────────────────────────────────────
 function MetricCard({ label, value, icon: Icon, glowClass, accentColor, sparkColor, sparkPoints, liteMode }) {
   return (
-    <div className={`relative overflow-hidden bg-white/[0.04] border border-white/[0.07] rounded-none p-5 flex flex-col gap-3 ${glowClass}`}>
-      <div className={`absolute bottom-0 left-0 right-0 h-[2px] ${accentColor} opacity-60`} />
+    <div className={`relative overflow-hidden bg-white border-2 border-black rounded-none p-5 flex flex-col gap-3 ${glowClass}`}>
+      <div className={`absolute bottom-0 left-0 right-0 h-[2px] ${accentColor}`} />
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-2xl font-black text-white leading-none">{value}</p>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-white/35 mt-2">{label}</p>
+          <p className="text-2xl font-black text-black leading-none">{value}</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#555] mt-2">{label}</p>
         </div>
-        <div className="w-8 h-8 rounded-none bg-[#121A30] flex items-center justify-center">
-          <Icon size={15} className="text-white/40" />
+        <div className="w-8 h-8 rounded-none bg-[#FAF3E8] border border-black/15 flex items-center justify-center">
+          <Icon size={15} className="text-[#555]" />
         </div>
       </div>
       {!liteMode && (
@@ -271,14 +271,14 @@ export default function AdminPage() {
   const blurCard = liteMode ? '' : '';
 
   return (
-    <div className="h-screen w-screen bg-[#0B0F19] text-white flex overflow-hidden"
+    <div className="h-screen w-screen bg-[#FAF3E8] text-black flex overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
 
       {/* ── SIDEBAR ── */}
-      <aside className={`w-16 flex-shrink-0 flex flex-col items-center py-4 gap-2 border-r border-white/[0.06] z-20 bg-white/[0.03] ${blurCard}`}>
+      <aside className={`w-16 flex-shrink-0 flex flex-col items-center py-4 gap-2 border-r-2 border-black z-20 bg-white ${blurCard}`}>
         {/* Logo */}
-        <div className="w-9 h-9 rounded-none bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-[4px_4px_0px_#FF6B35] shadow-amber-400/20 mb-3 flex-shrink-0">
-          <span className="text-sm font-black text-[#030810]">U</span>
+        <div className="w-9 h-9 rounded-none bg-[#FFD700] border-2 border-black flex items-center justify-center shadow-[4px_4px_0px_#000] mb-3 flex-shrink-0">
+          <span className="text-sm font-black text-black">U</span>
         </div>
 
         {/* Nav icons */}
@@ -295,8 +295,8 @@ export default function AdminPage() {
         </div>
 
         {/* Admin avatar */}
-        <div className="w-9 h-9 rounded-none bg-amber-400/15 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-xs font-black text-amber-400">A</span>
+        <div className="w-9 h-9 rounded-none bg-[#FFF3D6] border-2 border-black flex items-center justify-center flex-shrink-0">
+          <span className="text-xs font-black text-black">A</span>
         </div>
       </aside>
 
@@ -304,42 +304,42 @@ export default function AdminPage() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* ── HEADER ── */}
-        <header className={`h-14 flex-shrink-0 flex items-center justify-between px-6 border-b border-white/[0.05] z-10
-          ${liteMode ? 'bg-[#0B0F19]' : 'bg-[#0B0F19]'}`}>
+        <header className={`h-14 flex-shrink-0 flex items-center justify-between px-6 border-b-2 border-black z-10
+          ${liteMode ? 'bg-[#FAF3E8]' : 'bg-[#FAF3E8]'}`}>
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 text-sm">
-            <span className="text-white/40 font-medium">Dashboard</span>
-            <ChevronRight size={13} className="text-white/20" />
-            <span className="text-white/70 font-semibold">Overview</span>
+            <span className="text-[#555] font-medium">Dashboard</span>
+            <ChevronRight size={13} className="text-black/30" />
+            <span className="text-black font-semibold">Overview</span>
           </div>
 
           {/* Heartbeat */}
           <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-none bg-emerald-400 flex-shrink-0 ${!liteMode ? 'animate-pulse' : ''}`} />
-            <span className="text-xs font-semibold text-emerald-400/80">System Live</span>
+            <span className={`w-2 h-2 rounded-none bg-emerald-400 border border-black flex-shrink-0 ${!liteMode ? 'animate-pulse' : ''}`} />
+            <span className="text-xs font-semibold text-emerald-700">System Live</span>
           </div>
 
           {/* Right controls */}
           <div className="flex items-center gap-3">
             {/* Lite Mode toggle */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-white/30 font-semibold hidden sm:block">Lite Mode</span>
+              <span className="text-[11px] text-[#555] font-semibold hidden sm:block">Lite Mode</span>
               <button onClick={() => setLiteMode(p => !p)}
-                className={`relative w-9 h-5 rounded-none transition-colors duration-200 flex-shrink-0 ${liteMode ? 'bg-amber-400' : 'bg-white/[0.12]'}`}>
-                <span className={`absolute top-0.5 w-4 h-4 rounded-none bg-white shadow transition-transform duration-200 ${liteMode ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                className={`relative w-9 h-5 rounded-none border-2 border-black transition-colors duration-200 flex-shrink-0 ${liteMode ? 'bg-[#FFD700]' : 'bg-white'}`}>
+                <span className={`absolute top-0 w-4 h-4 rounded-none bg-black transition-transform duration-200 ${liteMode ? 'translate-x-4' : 'translate-x-0.5'}`} />
               </button>
             </div>
 
             {/* Refresh */}
             <button onClick={() => loadData(false)} disabled={loading}
-              className="w-8 h-8 flex items-center justify-center rounded-none text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-all disabled:opacity-30">
+              className="w-8 h-8 flex items-center justify-center rounded-none text-black/50 hover:text-black hover:bg-black/10 transition-all disabled:opacity-30">
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </button>
 
             {/* Last updated */}
             {lastRefresh && (
-              <span className="hidden md:block text-[11px] text-white/20 font-medium">
+              <span className="hidden md:block text-[11px] text-[#555] font-medium">
                 Updated {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             )}
@@ -350,7 +350,7 @@ export default function AdminPage() {
         <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4 min-h-0">
 
           {error && (
-            <div className="bg-rose-500/10 border border-rose-500/20 rounded-none px-5 py-3 text-sm text-rose-400 flex items-center gap-3 flex-shrink-0">
+            <div className="bg-[#FFE3E3] border-2 border-black rounded-none px-5 py-3 text-sm text-black flex items-center gap-3 flex-shrink-0">
               <span>⚠️</span> {error}
             </div>
           )}
@@ -361,7 +361,7 @@ export default function AdminPage() {
               label="Total Handles"
               value={total.toLocaleString()}
               icon={Users}
-              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-cyan-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#000]'}
               accentColor="bg-cyan-400"
               sparkColor="#22d3ee"
               sparkPoints={[3,5,4,8,6,9,7,10]}
@@ -371,7 +371,7 @@ export default function AdminPage() {
               label="Roommate Matches"
               value={roommateMatches.toLocaleString()}
               icon={Heart}
-              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35]'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#000]'}
               accentColor="bg-[#FF6B35]"
               sparkColor="#A8C4FF"
               sparkPoints={[2,4,3,6,5,7,6,8]}
@@ -381,7 +381,7 @@ export default function AdminPage() {
               label="Pending Verif."
               value={pendingVerif.toLocaleString()}
               icon={Clock}
-              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-amber-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#000]'}
               accentColor="bg-amber-400"
               sparkColor="#f59e0b"
               sparkPoints={[1,3,2,4,3,5,4,6]}
@@ -391,7 +391,7 @@ export default function AdminPage() {
               label={`${dataSaved} GB saved vs heavy apps`}
               value="Data Saved"
               icon={Zap}
-              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#FF6B35] shadow-emerald-500/10'}
+              glowClass={liteMode ? '' : 'shadow-[4px_4px_0px_#000]'}
               accentColor="bg-emerald-400"
               sparkColor="#34d399"
               sparkPoints={[4,6,5,8,7,9,8,10]}
@@ -403,10 +403,10 @@ export default function AdminPage() {
           <div className="grid md:grid-cols-5 gap-4 flex-1 min-h-0">
 
             {/* ── SCHOOL BREAKDOWN (left) ── */}
-            <div className="md:col-span-2 bg-white/[0.04] border border-white/[0.07] rounded-none p-5 flex flex-col gap-4 overflow-y-auto">
+            <div className="md:col-span-2 bg-white border-2 border-black shadow-[4px_4px_0px_#000] rounded-none p-5 flex flex-col gap-4 overflow-y-auto">
               <div className="flex items-center justify-between flex-shrink-0">
                 <span className="text-sm font-black">By Campus</span>
-                <span className="text-[10px] font-bold bg-white/[0.07] text-white/40 px-2 py-1 rounded-none">{total} total</span>
+                <span className="text-[10px] font-bold bg-[#FAF3E8] border border-black/15 text-[#555] px-2 py-1 rounded-none">{total} total</span>
               </div>
 
               {/* Progress bars */}
@@ -423,11 +423,11 @@ export default function AdminPage() {
                               <span className={`text-xs font-black ${color}`}>{label}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-bold text-white/60">{count}</span>
-                              <span className="text-[10px] text-white/25 w-7 text-right">{pct}%</span>
+                              <span className="text-xs font-bold text-[#555]">{count}</span>
+                              <span className="text-[10px] text-[#555] w-7 text-right">{pct}%</span>
                             </div>
                           </div>
-                          <div className="h-1.5 bg-white/[0.06] rounded-none overflow-hidden">
+                          <div className="h-1.5 bg-black/10 rounded-none overflow-hidden">
                             <div className={`h-full ${bar} rounded-none transition-all duration-1000`} style={{ width: `${pct}%` }} />
                           </div>
                         </div>
@@ -438,12 +438,12 @@ export default function AdminPage() {
 
               {/* 3x2 badge grid */}
               {!loading && data && (
-                <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/[0.05] flex-shrink-0">
+                <div className="grid grid-cols-3 gap-2 pt-4 border-t border-black/15 flex-shrink-0">
                   {schoolStats.map(({ id, label, count, color, card }) => (
-                    <div key={id} className={`bg-gradient-to-br ${card} border rounded-none p-3 text-center flex flex-col items-center gap-1.5`}>
+                    <div key={id} className={`${card} border-2 rounded-none p-3 text-center flex flex-col items-center gap-1.5`}>
                       <SchoolLogo src={logos[id]} label={label} size="lg" />
                       <p className={`text-base font-black ${color}`}>{count}</p>
-                      <p className="text-[9px] text-white/30 font-semibold leading-tight">{label}</p>
+                      <p className="text-[9px] text-[#555] font-semibold leading-tight">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -451,24 +451,24 @@ export default function AdminPage() {
             </div>
 
             {/* ── WAITLIST LEDGER (right) ── */}
-            <div className="md:col-span-3 bg-white/[0.04] border border-white/[0.07] rounded-none flex flex-col overflow-hidden">
+            <div className="md:col-span-3 bg-white border-2 border-black shadow-[4px_4px_0px_#000] rounded-none flex flex-col overflow-hidden">
 
               {/* Header + filter pills */}
-              <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-white/[0.05]">
+              <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-black/15">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-black">Waitlist Ledger</span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
-                    <span className="text-[11px] text-white/30">{filteredEntries.length} records</span>
+                    <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 border border-black animate-pulse" />
+                    <span className="text-[11px] text-[#555]">{filteredEntries.length} records</span>
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {FILTER_PILLS.map(pill => (
                     <button key={pill} onClick={() => setActiveFilter(pill)}
-                      className={`text-[11px] font-bold px-3 py-1 rounded-none transition-all ${
+                      className={`text-[11px] font-bold px-3 py-1 rounded-none border-2 border-black transition-all ${
                         activeFilter === pill
-                          ? 'bg-amber-400 text-[#0B0F19]'
-                          : 'bg-[#121A30] text-white/50 hover:bg-white/[0.09] hover:text-white/70'
+                          ? 'bg-[#FF6B35] text-black'
+                          : 'bg-white text-[#555] hover:bg-black/5 hover:text-black'
                       }`}>
                       {pill}
                     </button>
@@ -477,12 +477,12 @@ export default function AdminPage() {
               </div>
 
               {/* Column headers */}
-              <div className="flex-shrink-0 grid grid-cols-12 items-center px-5 py-2 bg-white/[0.02] border-b border-white/[0.04]">
-                <span className="col-span-1 text-[9px] font-bold uppercase tracking-widest text-white/20">#</span>
-                <span className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-white/20">Handle</span>
-                <span className="col-span-3 text-[9px] font-bold uppercase tracking-widest text-white/20">Vibe</span>
-                <span className="col-span-2 text-[9px] font-bold uppercase tracking-widest text-white/20">Status</span>
-                <span className="col-span-2 text-[9px] font-bold uppercase tracking-widest text-white/20 hidden lg:block">Date</span>
+              <div className="flex-shrink-0 grid grid-cols-12 items-center px-5 py-2 bg-[#FAF3E8] border-b border-black/15">
+                <span className="col-span-1 text-[9px] font-bold uppercase tracking-widest text-[#555]">#</span>
+                <span className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-[#555]">Handle</span>
+                <span className="col-span-3 text-[9px] font-bold uppercase tracking-widest text-[#555]">Vibe</span>
+                <span className="col-span-2 text-[9px] font-bold uppercase tracking-widest text-[#555]">Status</span>
+                <span className="col-span-2 text-[9px] font-bold uppercase tracking-widest text-[#555] hidden lg:block">Date</span>
               </div>
 
               {/* Rows */}
@@ -494,11 +494,11 @@ export default function AdminPage() {
                 ) : filteredEntries.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full py-16 text-center px-6">
                     <span className="text-4xl mb-4">📭</span>
-                    <p className="text-white/30 text-sm font-semibold">No signups yet</p>
-                    <p className="text-white/15 text-xs mt-1">Share the link to start collecting</p>
+                    <p className="text-[#555] text-sm font-semibold">No signups yet</p>
+                    <p className="text-[#555] text-xs mt-1">Share the link to start collecting</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-white/[0.03]">
+                  <div className="divide-y divide-black/15">
                     {filteredEntries.map((e, i) => {
                       const sc        = SCHOOLS.find(s => s.id === e.school);
                       const vibe      = getVibe(e.phone);
@@ -512,20 +512,20 @@ export default function AdminPage() {
                           onMouseEnter={() => setHoveredRow(i)}
                           onMouseLeave={() => setHoveredRow(null)}
                           className={`grid grid-cols-12 items-center px-5 py-2.5 transition-colors cursor-pointer
-                            ${i % 2 === 0 ? 'bg-white/[0.01]' : 'bg-white/[0.03]'}
-                            hover:bg-white/[0.06]`}>
+                            ${i % 2 === 0 ? 'bg-white' : 'bg-[#FAF3E8]'}
+                            hover:bg-[#FFE8DC]`}>
 
                           {/* # */}
-                          <span className="col-span-1 text-[10px] text-white/15 font-mono">{i + 1}</span>
+                          <span className="col-span-1 text-[10px] text-[#555] font-mono">{i + 1}</span>
 
                           {/* Avatar + phone + school */}
                           <div className="col-span-4 flex items-center gap-2 min-w-0">
-                            <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[10px] font-black flex-shrink-0 ${sc?.avatar || 'bg-white/10 text-white/40'}`}>
+                            <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[10px] font-black flex-shrink-0 ${sc?.avatar || 'bg-white text-[#555] border border-black'}`}>
                               {initials}
                             </div>
                             <div className="min-w-0">
-                              <p className="text-xs text-white/70 font-mono truncate">{maskPhone(e.phone)}</p>
-                              <p className="text-[9px] text-white/30 truncate">{sc?.label || e.school}</p>
+                              <p className="text-xs text-black font-mono truncate">{maskPhone(e.phone)}</p>
+                              <p className="text-[9px] text-[#555] truncate">{sc?.label || e.school}</p>
                             </div>
                           </div>
 
@@ -540,20 +540,20 @@ export default function AdminPage() {
                           <div className="col-span-2">
                             {isHovered ? (
                               <div className="flex items-center gap-1">
-                                <button className="w-5 h-5 rounded bg-emerald-500/20 flex items-center justify-center hover:bg-emerald-500/40 transition-colors" title="Verify">
-                                  <Shield size={10} className="text-emerald-400" />
+                                <button className="w-5 h-5 rounded bg-[#DFF5E3] border border-black flex items-center justify-center hover:bg-emerald-200 transition-colors" title="Verify">
+                                  <Shield size={10} className="text-emerald-700" />
                                 </button>
-                                <button className="w-5 h-5 rounded bg-red-500/20 flex items-center justify-center hover:bg-red-500/40 transition-colors" title="Flag">
-                                  <Flag size={10} className="text-red-400" />
+                                <button className="w-5 h-5 rounded bg-[#FFE3E3] border border-black flex items-center justify-center hover:bg-red-200 transition-colors" title="Flag">
+                                  <Flag size={10} className="text-red-600" />
                                 </button>
-                                <button className="w-5 h-5 rounded bg-blue-500/20 flex items-center justify-center hover:bg-blue-500/40 transition-colors" title="SMS">
-                                  <MessageSquare size={10} className="text-blue-400" />
+                                <button className="w-5 h-5 rounded bg-[#E3EDFF] border border-black flex items-center justify-center hover:bg-blue-200 transition-colors" title="SMS">
+                                  <MessageSquare size={10} className="text-blue-600" />
                                 </button>
                               </div>
                             ) : (
                               <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-none border ${stCfg.pill}`}>
                                 {stCfg.dot && (
-                                  <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse flex-shrink-0" />
+                                  <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 border border-black animate-pulse flex-shrink-0" />
                                 )}
                                 {stCfg.label}
                               </span>
@@ -561,7 +561,7 @@ export default function AdminPage() {
                           </div>
 
                           {/* Date */}
-                          <span className="col-span-2 text-[10px] text-white/20 hidden lg:block">{formatDate(e.ts)}</span>
+                          <span className="col-span-2 text-[10px] text-[#555] hidden lg:block">{formatDate(e.ts)}</span>
                         </div>
                       );
                     })}
