@@ -17,7 +17,13 @@ export type Weekday = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri';
 
 export interface GpaModule {
   readonly id: string;
-  readonly code: string;
+  readonly code?: string;
+  readonly title: string;
+  readonly credits: number;
+  readonly grade: LetterGrade;
+}
+
+export interface NewModuleInput {
   readonly title: string;
   readonly credits: number;
   readonly grade: LetterGrade;
@@ -108,6 +114,7 @@ const TIMETABLE: readonly TimetableSlot[] = [
   { id: 'tt-5', day: 'Wed', start: '14:00', end: '16:00', course: 'COE 152 · Circuits Lab', room: 'Lab A', accent: 'blue' },
   { id: 'tt-6', day: 'Thu', start: '11:00', end: '13:00', course: 'ENGL 158 · Communication Skills', room: 'GF 12', accent: 'yellow' },
   { id: 'tt-7', day: 'Fri', start: '09:00', end: '11:00', course: 'MATH 158 · Tutorial', room: 'CCB 3', accent: 'green' },
+  { id: 'tt-8', day: 'Thu', start: '12:00', end: '14:00', course: 'GES 161 · Study Group', room: 'Lib 2F', accent: 'red' },
 ];
 
 const PROFILE: ProfileMetrics = {
@@ -128,11 +135,28 @@ interface AppState {
   readonly totalCredits: number;
   readonly pendingAssignments: number;
   readonly toggleAssignment: (id: string) => void;
+  readonly addModule: (input: NewModuleInput) => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
 
+// getDay(): 0 = Sunday … 6 = Saturday; weekends have no timetable.
+const WEEKDAY_BY_GETDAY: readonly (Weekday | null)[] = [
+  null,
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  null,
+];
+
+export function currentWeekday(): Weekday | null {
+  return WEEKDAY_BY_GETDAY[new Date().getDay()] ?? null;
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [modules, setModules] = useState<readonly GpaModule[]>(MODULES);
   const [assignments, setAssignments] =
     useState<readonly Assignment[]>(INITIAL_ASSIGNMENTS);
 
@@ -142,17 +166,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const addModule = useCallback((input: NewModuleInput) => {
+    setModules((prev) => [
+      ...prev,
+      {
+        id: `mod-${Date.now()}-${prev.length}`,
+        title: input.title,
+        credits: input.credits,
+        grade: input.grade,
+      },
+    ]);
+  }, []);
+
   const value = useMemo<AppState>(() => {
-    const totalCredits = MODULES.reduce((sum, m) => sum + m.credits, 0);
+    const totalCredits = modules.reduce((sum, m) => sum + m.credits, 0);
     const gpa =
       totalCredits === 0
         ? 0
-        : MODULES.reduce(
+        : modules.reduce(
             (sum, m) => sum + GRADE_POINTS[m.grade] * m.credits,
             0,
           ) / totalCredits;
     return {
-      modules: MODULES,
+      modules,
       assignments,
       timetable: TIMETABLE,
       profile: PROFILE,
@@ -160,8 +196,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       totalCredits,
       pendingAssignments: assignments.filter((a) => !a.completed).length,
       toggleAssignment,
+      addModule,
     };
-  }, [assignments, toggleAssignment]);
+  }, [modules, assignments, toggleAssignment, addModule]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

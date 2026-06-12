@@ -1,14 +1,15 @@
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { NBAvatar, NBCard, NBPopBadge } from '../../components/NB';
+import { NBAvatar, NBCard, NBInput, NBPopBadge } from '../../components/NB';
 import { POP_BG, type PopAccent } from '../../theme/tokens';
 import {
+  currentWeekday,
   useApp,
   type Assignment,
   type GpaModule,
   type LetterGrade,
-  type Weekday,
 } from '../../context/AppContext';
 
 const GRADE_ACCENT: Record<LetterGrade, PopAccent> = {
@@ -22,16 +23,11 @@ const GRADE_ACCENT: Record<LetterGrade, PopAccent> = {
   F: 'red',
 };
 
-// getDay(): 0 = Sunday … 6 = Saturday; weekends have no timetable.
-const WEEKDAY_BY_GETDAY: readonly (Weekday | null)[] = [
-  null,
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  null,
-];
+const GRADE_OPTIONS: readonly LetterGrade[] = ['A', 'B+', 'B', 'C+', 'C', 'D', 'F'];
+const CREDIT_OPTIONS: readonly number[] = [1, 2, 3, 4];
+
+const PRESS_SM =
+  'active:translate-x-[2px] active:translate-y-[2px] active:shadow-none';
 
 function ModuleRow({ module }: { module: GpaModule }) {
   return (
@@ -43,10 +39,10 @@ function ModuleRow({ module }: { module: GpaModule }) {
       </View>
       <View className="flex-1">
         <Text className="font-body-bold text-[13px] text-black">
-          {module.code} · {module.title}
+          {[module.code, module.title].filter(Boolean).join(' · ')}
         </Text>
         <Text className="font-body-medium text-[11px] text-[#555]">
-          {module.credits} credits
+          {module.credits} {module.credits === 1 ? 'credit' : 'credits'}
         </Text>
       </View>
     </View>
@@ -62,7 +58,7 @@ function AssignmentRow({ assignment, onToggle }: AssignmentRowProps) {
   return (
     <Pressable
       onPress={onToggle}
-      className="flex-row items-center gap-3 bg-white border-4 border-black rounded-none shadow-nb-sm px-3 py-2.5 mb-2.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+      className={`flex-row items-center gap-3 bg-white border-4 border-black rounded-none shadow-nb-sm px-3 py-2.5 mb-2.5 ${PRESS_SM}`}
     >
       <View
         className={`w-6 h-6 border-2 border-black items-center justify-center ${
@@ -90,6 +86,126 @@ function AssignmentRow({ assignment, onToggle }: AssignmentRowProps) {
   );
 }
 
+// Neubrutalist module-metrics form: course name input, grade button
+// matrix, credit stepper row, heavy green submit. Wired straight into
+// the global addModule action so the GPA hero re-derives instantly.
+function ModuleMetricsForm() {
+  const { addModule } = useApp();
+  const [courseName, setCourseName] = useState<string>('');
+  const [grade, setGrade] = useState<LetterGrade | null>(null);
+  const [credits, setCredits] = useState<number>(3);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = () => {
+    const title = courseName.trim();
+    if (title.length === 0) {
+      setError('Enter a course name first.');
+      return;
+    }
+    if (grade === null) {
+      setError('Pick a grade from the matrix.');
+      return;
+    }
+    addModule({ title, credits, grade });
+    setCourseName('');
+    setGrade(null);
+    setCredits(3);
+    setError(null);
+  };
+
+  return (
+    <NBCard className="p-4 mb-5">
+      <Text className="font-heading text-sm text-black uppercase tracking-wide mb-3">
+        Log a Module
+      </Text>
+
+      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+        Course Name
+      </Text>
+      <NBInput
+        placeholder="e.g. COE 254 · Digital Systems"
+        value={courseName}
+        onChangeText={(text) => {
+          setCourseName(text);
+          if (error !== null) setError(null);
+        }}
+        className="mb-4"
+      />
+
+      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+        Grade
+      </Text>
+      <View className="flex-row flex-wrap gap-2 mb-4">
+        {GRADE_OPTIONS.map((option) => {
+          const selected = option === grade;
+          return (
+            <Pressable
+              key={option}
+              onPress={() => {
+                setGrade(option);
+                if (error !== null) setError(null);
+              }}
+              accessibilityRole="button"
+              accessibilityState={selected ? { selected: true } : {}}
+              className={`min-w-[44px] items-center px-3 py-2 rounded-none ${
+                selected
+                  ? `${POP_BG[GRADE_ACCENT[option]]} border-4 border-black shadow-nb-sm`
+                  : 'bg-white border-2 border-black'
+              } ${PRESS_SM}`}
+            >
+              <Text className="font-heading text-[13px] text-black">
+                {option}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+        Credits
+      </Text>
+      <View className="flex-row gap-2 mb-4">
+        {CREDIT_OPTIONS.map((option) => {
+          const selected = option === credits;
+          return (
+            <Pressable
+              key={option}
+              onPress={() => setCredits(option)}
+              accessibilityRole="button"
+              accessibilityState={selected ? { selected: true } : {}}
+              className={`flex-1 items-center py-2 rounded-none ${
+                selected
+                  ? 'bg-pop-blue border-4 border-black shadow-nb-sm'
+                  : 'bg-white border-2 border-black'
+              } ${PRESS_SM}`}
+            >
+              <Text className="font-heading text-[13px] text-black">
+                {option}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {error !== null && (
+        <View className="bg-pop-red border-2 border-black rounded-none px-3 py-2 mb-3.5">
+          <Text className="font-body-bold text-xs text-black">⚠ {error}</Text>
+        </View>
+      )}
+
+      <Pressable
+        onPress={submit}
+        accessibilityRole="button"
+        className="bg-pop-green border-4 border-black rounded-none shadow-nb items-center py-3.5 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+      >
+        <Text className="font-heading text-sm text-black uppercase tracking-tight">
+          Log Module Metrics
+        </Text>
+      </Pressable>
+    </NBCard>
+  );
+}
+
 export default function DashboardScreen() {
   const router = useRouter();
   const {
@@ -103,7 +219,7 @@ export default function DashboardScreen() {
     toggleAssignment,
   } = useApp();
 
-  const today = WEEKDAY_BY_GETDAY[new Date().getDay()] ?? null;
+  const today = currentWeekday();
   const classesToday =
     today === null ? 0 : timetable.filter((slot) => slot.day === today).length;
 
@@ -130,7 +246,7 @@ export default function DashboardScreen() {
           </Pressable>
         </View>
 
-        {/* GPA hero */}
+        {/* GPA hero — re-derives live whenever a module is logged */}
         <View className="bg-pop-yellow border-4 border-black rounded-none shadow-nb p-4 mb-4">
           <Text className="font-heading text-xs text-black uppercase tracking-wide mb-1">
             Cumulative GPA
@@ -167,6 +283,9 @@ export default function DashboardScreen() {
             </Text>
           </View>
         </View>
+
+        {/* Module metrics form */}
+        <ModuleMetricsForm />
 
         {/* Modules */}
         <Text className="font-heading text-sm text-black uppercase tracking-wide mb-2.5">

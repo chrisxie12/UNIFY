@@ -1,4 +1,5 @@
-import { FlatList, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { NBAvatar, NBBadge, NBInput, NBPressCard } from '../components/NB';
@@ -58,7 +59,10 @@ interface ChatRowProps {
 
 function ChatRow({ chat, onPress }: ChatRowProps) {
   return (
-    <NBPressCard onPress={onPress} className="mb-3 p-3 flex-row items-center gap-3">
+    <NBPressCard
+      onPress={onPress}
+      className="mb-3 p-3 flex-row items-center gap-3"
+    >
       <NBAvatar initials={chat.initials} accent={chat.accent} />
       <View className="flex-1 min-w-0">
         <View className="flex-row items-center gap-2">
@@ -73,9 +77,12 @@ function ChatRow({ chat, onPress }: ChatRowProps) {
         </Text>
       </View>
       <View className="items-end gap-1.5">
-        <Text className="font-body-medium text-[10px] text-[#555]">
-          {chat.time}
-        </Text>
+        {/* Timestamp chip */}
+        <View className="bg-parchment border-2 border-black rounded-none px-1.5 py-0.5">
+          <Text className="font-body-bold text-[9px] text-black uppercase">
+            {chat.time}
+          </Text>
+        </View>
         {chat.unread > 0 && (
           <NBBadge label={String(chat.unread)} accent="alert" />
         )}
@@ -86,21 +93,67 @@ function ChatRow({ chat, onPress }: ChatRowProps) {
 
 export default function ChatsScreen() {
   const router = useRouter();
+  const [query, setQuery] = useState<string>('');
+
+  const visibleChats = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (needle.length === 0) return CHATS;
+    return CHATS.filter(
+      (chat) =>
+        chat.name.toLowerCase().includes(needle) ||
+        chat.school.toLowerCase().includes(needle),
+    );
+  }, [query]);
+
+  const totalUnread = CHATS.reduce((sum, chat) => sum + chat.unread, 0);
+
   return (
     <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
       <View className="px-4 pt-2 pb-3">
-        <Text className="font-display text-[26px] text-black uppercase tracking-tight mb-3">
-          Chats
-        </Text>
-        <NBInput placeholder="Search matches…" />
+        <View className="flex-row items-center gap-3 mb-3">
+          <Pressable
+            onPress={() => router.back()}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Text className="font-heading text-lg text-black">←</Text>
+          </Pressable>
+          <Text className="font-display text-[26px] text-black uppercase tracking-tight">
+            Chats
+          </Text>
+          {totalUnread > 0 && (
+            <NBBadge
+              label={`${totalUnread} new`}
+              accent="alert"
+              className="ml-auto"
+            />
+          )}
+        </View>
+        <NBInput
+          placeholder="Search matches…"
+          value={query}
+          onChangeText={setQuery}
+        />
       </View>
+
       <FlatList
-        data={CHATS}
-        keyExtractor={(c: Chat) => c.id}
+        data={visibleChats}
+        keyExtractor={(chat: Chat) => chat.id}
         contentContainerClassName="px-4 pt-1 pb-8"
         renderItem={({ item }: { item: Chat }) => (
           <ChatRow chat={item} onPress={() => router.push(`/chat/${item.id}`)} />
         )}
+        ListEmptyComponent={
+          <View className="bg-white border-4 border-black rounded-none shadow-nb p-5 items-center">
+            <Text className="font-heading text-sm text-black uppercase mb-1">
+              No Matches Found
+            </Text>
+            <Text className="font-body-medium text-xs text-[#555]">
+              Try a different name or school.
+            </Text>
+          </View>
+        }
       />
     </SafeAreaView>
   );
