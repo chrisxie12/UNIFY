@@ -1,22 +1,26 @@
 # UNIFY Mobile
 
-Neo-Brutalist mobile app for Ghanaian tertiary students — Instagram-style chat
-plus Reddit-style campus hub threads. Expo + expo-router + NativeWind.
+Neubrutalist mobile app for Ghanaian tertiary students — Instagram-style chat
+plus Reddit-style campus hub threads. **Expo Router + strict TypeScript +
+NativeWind (utility classes only).**
 
 ## Design system
 
-- **Canvas (90%)**: parchment `#F4F4F0` light / `#121212` dark. Reading zones
-  (threads, comments, chat bubbles) stay calm — white or parchment surfaces only.
-- **Accents (10%)**: neon yellow `#FFE600` actions, brand orange `#FF6B35`,
-  neon green `#00FF66` verification badges, hot pink `#FF007A` unread/alerts.
-- **Borders**: every surface gets `1.5–2px` solid `#000`.
-- **Shadows**: hard 0-blur offsets (4px standard, 2px micro). RN blurs native
-  shadows, so `components/NB.jsx` builds them with a stacked-view technique:
-  a black backing view at the final position, face translated up-left by the
-  offset. Pressing translates the face flush — the physical depression effect
-  comes free.
-- **Type**: Archivo Black / Space Grotesk for display, Inter for body.
-- **Radii**: `0px` everywhere (4px max where unavoidable).
+- **Borders**: thick pitch-black — `border-4 border-black` on cards/buttons/inputs,
+  `border-2` on micro elements (badges, avatars, bubbles). No grey hairlines.
+- **Shadows**: hard, 0-blur, 100% opaque black. Custom utilities in
+  `tailwind.config.js`: `shadow-nb` (4px), `shadow-nb-sm` (2px), `shadow-nb-lg` (6px)
+  — compiled by NativeWind to the RN 0.76+ `boxShadow` style (new architecture).
+- **Press depression**: class-driven, no JS state —
+  `active:translate-x-[4px] active:translate-y-[4px] active:shadow-none`
+  shifts the element into its shadow footprint like a physical block.
+- **Palette (90/10)**: calm parchment `#F4F4F0` / white reading zones; loud accents
+  only on actions & status — neon yellow `#FFE600`, brand orange `#FF6B35`,
+  neon green `#00FF66` (verification), hot pink `#FF007A` (unread/alerts).
+  Zero gradients, transparencies, or blurs.
+- **Type**: Archivo Black display (uppercase, tight tracking), Space Grotesk
+  headings, Inter body. Mapped to `font-display` / `font-heading` / `font-body*`.
+- **Radii**: `rounded-none` everywhere.
 
 ## Run it
 
@@ -27,17 +31,25 @@ npx expo start
 ```
 
 Scan the QR with Expo Go, or press `a` / `i` for an emulator.
+Type-check with `npx tsc --noEmit`.
 
 ## Structure
 
 ```
 app/
-  _layout.jsx     tabs shell + font loading
-  index.jsx       Hubs feed (Reddit-style threads)
-  chats.jsx       chat list (Instagram-style)
-  chat/[id].jsx   1:1 chat thread
-  thread/[id].jsx hub thread + comments
-  profile.jsx     profile + quiz answers
-components/NB.jsx NBCard / NBButton / NBBadge / NBInput primitives
-theme/tokens.js   color/shadow/border/radius tokens
+  _layout.tsx       tabs shell + font loading
+  index.tsx         Hubs feed (Reddit-style threads)
+  chats.tsx         chat list (Instagram-style)
+  chat/[id].tsx     1:1 chat thread
+  thread/[id].tsx   hub thread + comments
+  profile.tsx       profile + quiz answers
+components/NB.tsx   NBCard / NBPressCard / NBButton / NBBadge / NBInput / NBAvatar
+theme/tokens.ts     typed color tokens + data interfaces
 ```
+
+## Notes
+
+- Hard `boxShadow` requires React Native 0.76+ with the new architecture
+  (Expo SDK 52 default). On older RN, shadows blur on iOS and Android —
+  the previous stacked-view fallback lives in git history if you need it.
+- `nativewind-env.d.ts` provides `className` typings for RN components.
