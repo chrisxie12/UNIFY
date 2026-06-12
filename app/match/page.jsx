@@ -141,7 +141,7 @@ function ProfileCard({ profile, onConnect }) {
         <div className="flex items-center gap-3">
           <div className="relative w-16 h-16 rounded-none flex-shrink-0">
             <div
-              className="w-full h-full rounded-none flex items-center justify-center text-white font-black text-lg border-2 border-black"
+              className="w-full h-full rounded-none flex items-center justify-center text-[#111] font-black text-lg border-2 border-black"
               style={{ background: profile.grad }}
             >
               {profile.initials}

@@ -23,14 +23,14 @@ function FAQItem({ faq }) {
         aria-expanded={open}
         className="w-full text-left flex items-center justify-between gap-4 py-5 group"
       >
-        <span className="font-semibold text-white/80 group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
+        <span className="font-semibold text-[#333] group-hover:text-amber-400 transition-colors text-sm md:text-base">{faq.q}</span>
         <span className={`flex-shrink-0 w-7 h-7 rounded-none border-2 flex items-center justify-center transition-all duration-300 ${open ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}>
-          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-white' : 'text-[#FF6B35]'}`} />
+          <ChevronDown className={`w-4 h-4 transition-colors duration-300 ${open ? 'text-[#111]' : 'text-[#FF6B35]'}`} />
         </span>
       </button>
       <div style={{ display: 'grid', gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 350ms cubic-bezier(0.16,1,0.3,1)' }}>
         <div style={{ overflow: 'hidden' }}>
-          <p className="text-white/60 text-sm leading-relaxed pb-5">{faq.a}</p>
+          <p className="text-[#555] text-sm leading-relaxed pb-5">{faq.a}</p>
         </div>
       </div>
     </div>
@@ -39,26 +39,26 @@ function FAQItem({ faq }) {
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#0D1B3E' }}>
-      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-white/10">
+    <div className="min-h-screen" style={{ background: '#FAF3E8' }}>
+      <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-black/20">
         <a href="/" className="flex items-center gap-2">
-          <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
+          <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>
           <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/20 text-amber-400">GH</span>
         </a>
-        <a href="/" className="text-sm font-semibold text-white/50 hover:text-white transition-colors">← Back to home</a>
+        <a href="/" className="text-sm font-semibold text-[#666] hover:text-[#111] transition-colors">← Back to home</a>
       </nav>
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
         <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-none mb-6">Frequently Asked Questions</div>
-        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 uppercase tracking-tight">Got Questions?<br />We've Got Answers.</h1>
-        <p className="text-white/60 text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
+        <h1 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4 uppercase tracking-tight">Got Questions?<br />We've Got Answers.</h1>
+        <p className="text-[#555] text-base max-w-xl mx-auto">Everything you need to know about UNIFY before your first day on campus.</p>
       </div>
       <div className="max-w-3xl mx-auto px-6 pb-24">
-        <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] px-6 md:px-10 bg-[#162347]">
+        <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] px-6 md:px-10 bg-white">
           {FAQS.map((faq, i) => <FAQItem key={i} faq={faq} />)}
         </div>
         <div className="mt-10 text-center">
-          <p className="text-white/50 text-sm mb-4">Still have questions?</p>
-          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-none shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Email us →</a>
+          <p className="text-[#666] text-sm mb-4">Still have questions?</p>
+          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Email us →</a>
         </div>
       </div>
     </div>

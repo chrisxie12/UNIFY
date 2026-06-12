@@ -24,7 +24,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: '#0D1B3E',
+  themeColor: '#FAF3E8',
 };
 
 export default function RootLayout({ children }) {
@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased bg-[#0D1B3E]" style={{ fontFamily: "'Barlow', system-ui, sans-serif" }}>
+      <body className="antialiased bg-[#FAF3E8]" style={{ fontFamily: "'Barlow', system-ui, sans-serif" }}>
         {children}
       </body>
     </html>

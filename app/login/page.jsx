@@ -363,7 +363,7 @@ export default function LoginPage() {
 
         .login-shell {
           min-height: 100vh;
-          background: #0D1B3E;
+          background: #FAF3E8;
           font-family: inherit;
         }
 
@@ -381,7 +381,7 @@ export default function LoginPage() {
         .form-card {
           border-radius: 0;
           border: 2px solid #FF6B35;
-          background: #162347;
+          background: #FFFFFF;
           box-shadow: 4px 4px 0px #FF6B35;
           padding: 36px 28px 32px;
           position: relative;
@@ -400,7 +400,7 @@ export default function LoginPage() {
             display: block;
             flex: 0 0 58%;
             position: relative;
-            background: #162347;
+            background: #FFFFFF;
             overflow: hidden;
           }
           .collage-side::after {
@@ -417,7 +417,7 @@ export default function LoginPage() {
             align-items: center;
             justify-content: center;
             padding: 40px 36px;
-            background: #0D1B3E;
+            background: #FAF3E8;
             max-width: none;
             overflow-y: auto;
           }
@@ -438,13 +438,13 @@ export default function LoginPage() {
           borderBottom: '2px solid #FF6B35',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
-            <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35]/40 text-[#FF6B35]">GH</span>
+            <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35] text-[#FF6B35]">GH</span>
           </a>
           <div className="hidden md:flex items-center gap-6">
-            <a href="/schools" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Schools</a>
-            <a href="/hubs"    className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Hubs</a>
-            <a href="/match"   className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Match</a>
+            <a href="/schools" className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Schools</a>
+            <a href="/hubs"    className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Hubs</a>
+            <a href="/match"   className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Match</a>
           </div>
         </nav>
 
@@ -529,7 +529,7 @@ export default function LoginPage() {
               animation: mounted ? 'slideInRight 700ms cubic-bezier(0.16,1,0.3,1) 200ms both' : 'none',
             }}>
               <div className="mb-4 lg:hidden">
-                <a href="/" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">← Back to home</a>
+                <a href="/" className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">← Back to home</a>
               </div>
 
               <div className="form-card">
@@ -550,7 +550,7 @@ export default function LoginPage() {
                     </svg>
                   </div>
                   <a href="/" style={{ textDecoration: 'none' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFE', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#111', letterSpacing: '-0.03em', lineHeight: 1 }}>
                       UNIFY
                     </span>
                   </a>
@@ -563,7 +563,7 @@ export default function LoginPage() {
                 {done ? (
                   <div style={{ textAlign: 'center', padding: '16px 0' }}>
                     <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
-                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#FFFFFE', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
+                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#111', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
                     <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
                       {isSignup ? 'Check your email to verify your account.' : 'Welcome back. Redirecting…'}
                     </p>
@@ -573,7 +573,7 @@ export default function LoginPage() {
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
                       borderRadius: 0, border: '2px solid #FF6B35',
-                      background: '#0D1B3E', padding: 3,
+                      background: '#FAF3E8', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (
@@ -632,7 +632,7 @@ export default function LoginPage() {
 
                     {!isSignup && (
                       <div style={{ textAlign: 'right', marginTop: 6 }}>
-                        <a href="#" style={{ fontSize: '0.75rem', color: '#A8C4FF', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
+                        <a href="#" style={{ fontSize: '0.75rem', color: '#0066FF', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
                       </div>
                     )}
 

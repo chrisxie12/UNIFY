@@ -4,22 +4,22 @@ export const metadata = {
 };
 
 const s = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#0D1B3E', minHeight: '100vh',  },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh',  },
   nav: { borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 720, margin: '0 auto' },
-  back: { fontSize: 14, color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontWeight: 600 },
+  back: { fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 600 },
   blogLink: { fontSize: 14, color: '#FF6B35', textDecoration: 'none', fontWeight: 700 },
   article: { maxWidth: 720, margin: '0 auto', padding: '40px 24px 80px' },
   tag: { display: 'inline-block', background: 'rgba(255,107,53,0.08)', border: '1px solid rgba(255,107,53,0.4)', color: '#FF6B35', fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 0, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 },
-  meta: { fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 32, display: 'flex', gap: 16 },
+  meta: { fontSize: 13, color: '#777', marginBottom: 32, display: 'flex', gap: 16 },
   h1: { fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.15, marginBottom: 12 },
   h2: { fontSize: '1.3rem', fontWeight: 800, marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid rgba(255,255,255,0.1)' },
-  p: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 20 },
-  li: { fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', marginBottom: 8 },
-  callout: { background: '#162347', borderLeft: '4px solid #0066FF', padding: '16px 20px', borderRadius: 0, margin: '24px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
+  p: { fontSize: '1.05rem', lineHeight: 1.8, color: '#333', marginBottom: 20 },
+  li: { fontSize: '1.05rem', lineHeight: 1.8, color: '#333', marginBottom: 8 },
+  callout: { background: '#FFFFFF', borderLeft: '4px solid #0066FF', padding: '16px 20px', borderRadius: 0, margin: '24px 0', fontStyle: 'italic', color: '#333', fontSize: '1rem', lineHeight: 1.7 },
   table: { width: '100%', borderCollapse: 'collapse', marginBottom: 24, fontSize: '0.95rem' },
-  th: { background: '#1E2D5A', padding: '10px 12px', textAlign: 'left', fontWeight: 700, color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.1)' },
-  td: { padding: '10px 12px', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)', verticalAlign: 'top' },
-  cta: { marginTop: 56, background: '#162347', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0, padding: '32px', textAlign: 'center' },
+  th: { background: '#1E2D5A', padding: '10px 12px', textAlign: 'left', fontWeight: 700, color: '#333', border: '2px solid #000' },
+  td: { padding: '10px 12px', border: '2px solid #000', color: '#333', verticalAlign: 'top' },
+  cta: { marginTop: 56, background: '#FFFFFF', border: '2px solid #000', borderRadius: 0, padding: '32px', textAlign: 'center' },
   ctaBtn: { display: 'inline-block', background: '#FF6B35', color: '#fff', fontWeight: 900, fontSize: 15, padding: '14px 28px', borderRadius: 0, textDecoration: 'none', marginTop: 16 },
   footer: { background: '#FF6B35', color: 'white', textAlign: 'center', padding: '24px', fontSize: 13 },
 };
@@ -93,13 +93,13 @@ export default function UCCvsKNUSTvsLegon() {
 
         <div style={s.cta}>
           <p style={{ fontSize: 18, fontWeight: 900, marginBottom: 8 }}>Already know your campus? Find your people now.</p>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 0 }}>Join your school hub on UNIFY, find your roommate, and arrive ready.</p>
+          <p style={{ fontSize: 14, color: '#555', marginBottom: 0 }}>Join your school hub on UNIFY, find your roommate, and arrive ready.</p>
           <a href="/#waitlist" style={s.ctaBtn}>Claim Your Spot →</a>
         </div>
       </article>
 
       <footer style={s.footer}>
-        <p>© 2026 UNIFY Ghana. <a href="/blog" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>Blog</a> · <a href="/faq" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>FAQ</a></p>
+        <p>© 2026 UNIFY Ghana. <a href="/blog" style={{ color: '#333', textDecoration: 'none' }}>Blog</a> · <a href="/faq" style={{ color: '#333', textDecoration: 'none' }}>FAQ</a></p>
       </footer>
     </div>
   );

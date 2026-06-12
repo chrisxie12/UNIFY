@@ -7,7 +7,7 @@ import Link from 'next/link';
 const MOCK_QUEUE = [
   { id: 1,  name: 'Akosua Mensah',    school: 'KNUST',    program: 'BSc Computer Science',       hs: 'Aburi Girls',        year: 2024, vibe: ['Night Coder','Neat Freak'],    phone: '0551••••234', status: 'pending', imgBg: 'from-emerald-900 to-emerald-800' },
   { id: 2,  name: 'Kwaku Boateng',    school: 'UG Legon', program: 'BA Economics',                hs: 'Prempeh College',    year: 2024, vibe: ['Serious Vibes'],              phone: '0241••••891', status: 'pending', imgBg: 'from-blue-900 to-blue-800' },
-  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-[#0D1B3E] to-[#162347]' },
+  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-[#FAF3E8] to-[#FFFFFF]' },
   { id: 4,  name: 'Yaw Darko',        school: 'UPSA',     program: 'BSc Accounting',              hs: 'Mfantsipim',         year: 2023, vibe: ['Tech Head'],                  phone: '0501••••123', status: 'pending', imgBg: 'from-amber-900 to-amber-800' },
   { id: 5,  name: 'Efua Asante',      school: 'KNUST',    program: 'BSc Electrical Engineering',  hs: 'Holy Child School',  year: 2024, vibe: ['Neat Freak'],                phone: '0209••••456', status: 'pending', imgBg: 'from-rose-900 to-rose-800' },
   { id: 6,  name: 'Kofi Appiah',      school: 'UG Legon', program: 'LLB Law',                     hs: 'Achimota School',    year: 2024, vibe: ['Night Coder','Tech Head'],    phone: '0556••••789', status: 'pending', imgBg: 'from-sky-900 to-sky-800' },
@@ -162,8 +162,8 @@ export default function VerifyPage() {
     return (
       <div className="h-screen w-screen overflow-hidden bg-[#0B0F19] flex flex-col items-center justify-center gap-6">
         <div className="text-6xl">🎉</div>
-        <h1 className="text-3xl font-bold text-white">Queue Complete!</h1>
-        <p className="text-white/50 text-sm">All students in the current filter have been processed.</p>
+        <h1 className="text-3xl font-bold text-[#111]">Queue Complete!</h1>
+        <p className="text-[#666] text-sm">All students in the current filter have been processed.</p>
         <div className="flex gap-6 mt-4">
           <StatCard label="Approved" value={approvedCount} color="text-emerald-400" />
           <StatCard label="Flagged"  value={flaggedCount}  color="text-red-400" />
@@ -173,11 +173,11 @@ export default function VerifyPage() {
         <div className="flex gap-3 mt-4">
           <button
             onClick={resetAll}
-            className="px-6 py-2 rounded-none bg-emerald-500 hover:bg-emerald-400 text-white font-medium transition-all duration-200"
+            className="px-6 py-2 rounded-none bg-emerald-500 hover:bg-emerald-400 text-[#111] font-medium transition-all duration-200"
           >
             Reset Queue
           </button>
-          <Link href="/admin" className="px-6 py-2 rounded-none bg-white/[0.08] hover:bg-white/[0.12] text-white font-medium transition-all duration-200">
+          <Link href="/admin" className="px-6 py-2 rounded-none bg-white/[0.08] hover:bg-white/[0.12] text-[#111] font-medium transition-all duration-200">
             Back to Admin
           </Link>
         </div>
@@ -217,17 +217,17 @@ export default function VerifyPage() {
       <div className="h-14 flex-shrink-0 bg-[#0B0F19] border-b border-white/[0.06] flex items-center px-4 gap-4 z-10">
         {/* Left */}
         <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
-          <Link href="/admin" className="flex items-center gap-1 text-white/50 hover:text-white transition-colors text-sm">
+          <Link href="/admin" className="flex items-center gap-1 text-[#666] hover:text-[#111] transition-colors text-sm">
             <ArrowLeft size={14} />
             <span>Back</span>
           </Link>
-          <span className="text-white/20">|</span>
-          <span className="text-white font-semibold text-sm whitespace-nowrap">Verification Queue</span>
+          <span className="text-[#111]/20">|</span>
+          <span className="text-[#111] font-semibold text-sm whitespace-nowrap">Verification Queue</span>
         </div>
 
         {/* Center — Progress */}
         <div className="flex-1 flex items-center gap-3 max-w-xs mx-auto">
-          <span className="text-white/40 text-xs whitespace-nowrap">{totalVerified} / {MOCK_QUEUE.length} verified</span>
+          <span className="text-[#777] text-xs whitespace-nowrap">{totalVerified} / {MOCK_QUEUE.length} verified</span>
           <div className="flex-1 h-1.5 rounded-none bg-white/[0.06] overflow-hidden">
             <div
               className="h-full bg-emerald-400 rounded-none transition-all duration-500"
@@ -239,7 +239,7 @@ export default function VerifyPage() {
         {/* Right */}
         <div className="flex items-center gap-3 ml-auto flex-shrink-0">
           {avgTime && (
-            <div className="flex items-center gap-1 text-white/40 text-xs">
+            <div className="flex items-center gap-1 text-[#777] text-xs">
               <Clock size={12} />
               <span>Avg: {avgTime}s</span>
             </div>
@@ -249,16 +249,16 @@ export default function VerifyPage() {
           <div className="relative">
             <button
               onClick={() => setShowDropdown(d => !d)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-white/[0.06] hover:bg-white/[0.10] text-white/60 text-xs transition-all duration-200"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-white/[0.06] hover:bg-white/[0.10] text-[#555] text-xs transition-all duration-200"
             >
               <span>{filterSchool || 'All Schools'}</span>
               <ChevronDown size={12} />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 top-full mt-1 w-36 rounded-none bg-[#1a1f2e] border border-white/[0.08] overflow-hidden z-20 shadow-[6px_6px_0px_#FF6B35]">
+              <div className="absolute right-0 top-full mt-1 w-36 rounded-none bg-[#1a1f2e] border border-white/[0.08] overflow-hidden z-20 shadow-[6px_6px_0px_#000]">
                 <button
                   onClick={() => { setFilterSchool(null); setShowDropdown(false); setComplete(false); }}
-                  className="w-full text-left px-3 py-2 text-xs text-white/60 hover:bg-white/[0.06] transition-colors"
+                  className="w-full text-left px-3 py-2 text-xs text-[#555] hover:bg-white/[0.06] transition-colors"
                 >
                   All Schools
                 </button>
@@ -266,7 +266,7 @@ export default function VerifyPage() {
                   <button
                     key={s}
                     onClick={() => { setFilterSchool(s); setShowDropdown(false); setComplete(false); }}
-                    className="w-full text-left px-3 py-2 text-xs text-white/60 hover:bg-white/[0.06] transition-colors"
+                    className="w-full text-left px-3 py-2 text-xs text-[#555] hover:bg-white/[0.06] transition-colors"
                   >
                     {s}
                   </button>
@@ -277,8 +277,8 @@ export default function VerifyPage() {
 
           {/* Queue counter */}
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-white/[0.04] border border-white/[0.06]">
-            <Users size={12} className="text-white/30" />
-            <span className="text-white/50 text-xs font-medium">{pendingQueue.length} left</span>
+            <Users size={12} className="text-[#999]" />
+            <span className="text-[#666] text-xs font-medium">{pendingQueue.length} left</span>
           </div>
         </div>
       </div>
@@ -290,9 +290,9 @@ export default function VerifyPage() {
         <div className="w-[60%] flex flex-col bg-white/[0.03] border-r border-white/[0.06]">
           {/* Label */}
           <div className="flex-shrink-0 px-6 py-3 border-b border-white/[0.06] flex items-center justify-between">
-            <span className="text-white/40 text-xs font-medium uppercase tracking-wider">ID / Placement Document</span>
+            <span className="text-[#777] text-xs font-medium uppercase tracking-wider">ID / Placement Document</span>
             {currentStudent && (
-              <span className="text-white/60 text-sm font-medium">{currentStudent.name}</span>
+              <span className="text-[#555] text-sm font-medium">{currentStudent.name}</span>
             )}
           </div>
 
@@ -306,60 +306,60 @@ export default function VerifyPage() {
                 onMouseLeave={handleMouseLeave}
               >
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-[#162347] -translate-y-16 translate-x-16" />
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-white -translate-y-16 translate-x-16" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 rounded-none bg-black/20 translate-y-24 -translate-x-24" />
                 <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-none border border-white/5 -translate-x-1/2 -translate-y-1/2" />
 
                 {/* Document content */}
-                <div className="absolute inset-0 flex flex-col p-8 text-white overflow-hidden">
+                <div className="absolute inset-0 flex flex-col p-8 text-[#111] overflow-hidden">
                   {/* Header */}
                   <div className="relative flex items-start gap-4 mb-5">
-                    <div className="w-12 h-12 rounded-none bg-white/20 flex items-center justify-center border-2 border-white/30 flex-shrink-0">
+                    <div className="w-12 h-12 rounded-none bg-white/20 flex items-center justify-center border-2 border-black/20 flex-shrink-0">
                       <span className="text-lg font-bold">GH</span>
                     </div>
                     <div className="flex-1">
-                      <div className="text-white font-bold text-sm tracking-widest uppercase">Ghana Education Service</div>
-                      <div className="text-white/70 text-xs mt-0.5 tracking-wider">WASSCE / PLACEMENT LETTER</div>
-                      <div className="text-white/50 text-xs mt-0.5">Academic Year {currentStudent.year - 1}/{currentStudent.year}</div>
+                      <div className="text-[#111] font-bold text-sm tracking-widest uppercase">Ghana Education Service</div>
+                      <div className="text-[#555] text-xs mt-0.5 tracking-wider">WASSCE / PLACEMENT LETTER</div>
+                      <div className="text-[#666] text-xs mt-0.5">Academic Year {currentStudent.year - 1}/{currentStudent.year}</div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <div className="text-white/40 text-xs">REF: GES/{currentStudent.year}/{String(currentStudent.id).padStart(5,'0')}</div>
-                      <div className="text-white/40 text-xs mt-1">DATE: {new Date().toLocaleDateString('en-GB')}</div>
+                      <div className="text-[#777] text-xs">REF: GES/{currentStudent.year}/{String(currentStudent.id).padStart(5,'0')}</div>
+                      <div className="text-[#777] text-xs mt-1">DATE: {new Date().toLocaleDateString('en-GB')}</div>
                     </div>
                   </div>
 
                   {/* Divider */}
-                  <div className="relative border-t border-white/20 mb-5" />
+                  <div className="relative border-t border-black/20 mb-5" />
 
                   {/* Body */}
                   <div className="relative flex-1">
-                    <div className="text-white/50 text-xs uppercase tracking-wider mb-1">Student Name</div>
-                    <div className="text-white text-2xl font-bold mb-5">{currentStudent.name}</div>
+                    <div className="text-[#666] text-xs uppercase tracking-wider mb-1">Student Name</div>
+                    <div className="text-[#111] text-2xl font-bold mb-5">{currentStudent.name}</div>
 
                     <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-5">
                       <div>
-                        <div className="text-white/40 text-xs uppercase tracking-wider mb-1">Programme</div>
-                        <div className="text-white font-semibold text-sm">{currentStudent.program}</div>
+                        <div className="text-[#777] text-xs uppercase tracking-wider mb-1">Programme</div>
+                        <div className="text-[#111] font-semibold text-sm">{currentStudent.program}</div>
                       </div>
                       <div>
-                        <div className="text-white/40 text-xs uppercase tracking-wider mb-1">Institution</div>
-                        <div className="text-white font-semibold text-sm">{currentStudent.school}</div>
+                        <div className="text-[#777] text-xs uppercase tracking-wider mb-1">Institution</div>
+                        <div className="text-[#111] font-semibold text-sm">{currentStudent.school}</div>
                       </div>
                       <div>
-                        <div className="text-white/40 text-xs uppercase tracking-wider mb-1">Previous School</div>
-                        <div className="text-white font-semibold text-sm">{currentStudent.hs}</div>
+                        <div className="text-[#777] text-xs uppercase tracking-wider mb-1">Previous School</div>
+                        <div className="text-[#111] font-semibold text-sm">{currentStudent.hs}</div>
                       </div>
                       <div>
-                        <div className="text-white/40 text-xs uppercase tracking-wider mb-1">Year of Completion</div>
-                        <div className="text-white font-semibold text-sm">{currentStudent.year}</div>
+                        <div className="text-[#777] text-xs uppercase tracking-wider mb-1">Year of Completion</div>
+                        <div className="text-[#111] font-semibold text-sm">{currentStudent.year}</div>
                       </div>
                     </div>
 
                     {/* Fake stamp */}
-                    <div className="absolute bottom-4 right-4 w-20 h-20 rounded-none border-4 border-white/20 flex items-center justify-center rotate-12">
+                    <div className="absolute bottom-4 right-4 w-20 h-20 rounded-none border-4 border-black/20 flex items-center justify-center rotate-12">
                       <div className="text-center">
-                        <div className="text-white/40 text-[8px] font-bold uppercase leading-tight">OFFICIAL</div>
-                        <div className="text-white/40 text-[8px] font-bold uppercase leading-tight">DOCUMENT</div>
+                        <div className="text-[#777] text-[8px] font-bold uppercase leading-tight">OFFICIAL</div>
+                        <div className="text-[#777] text-[8px] font-bold uppercase leading-tight">DOCUMENT</div>
                       </div>
                     </div>
 
@@ -373,7 +373,7 @@ export default function VerifyPage() {
                         />
                       ))}
                     </div>
-                    <div className="text-white/30 text-[9px] mt-1 tracking-widest font-mono">
+                    <div className="text-[#999] text-[9px] mt-1 tracking-widest font-mono">
                       {String(currentStudent.id).padStart(2,'0')} {currentStudent.school.replace(' ','')} {currentStudent.year} VERIFIED
                     </div>
                   </div>
@@ -382,7 +382,7 @@ export default function VerifyPage() {
                 {/* Magnifier lens */}
                 {magnifier && (
                   <div
-                    className="absolute pointer-events-none z-10 rounded-none overflow-hidden border-2 border-white/40 shadow-[6px_6px_0px_#FF6B35] shadow-black/50"
+                    className="absolute pointer-events-none z-10 rounded-none overflow-hidden border-2 border-white/40 shadow-[6px_6px_0px_#000] shadow-black/50"
                     style={{
                       width: 200,
                       height: 200,
@@ -391,7 +391,7 @@ export default function VerifyPage() {
                     }}
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${currentStudent.imgBg} flex flex-col p-4 text-white`}
+                      className={`absolute inset-0 bg-gradient-to-br ${currentStudent.imgBg} flex flex-col p-4 text-[#111]`}
                       style={{
                         width: magnifier.rectW,
                         height: magnifier.rectH,
@@ -403,30 +403,30 @@ export default function VerifyPage() {
                       }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 rounded-none bg-white/20 flex items-center justify-center border border-white/30 flex-shrink-0">
+                        <div className="w-8 h-8 rounded-none bg-white/20 flex items-center justify-center border border-black/20 flex-shrink-0">
                           <span className="text-xs font-bold">GH</span>
                         </div>
                         <div>
-                          <div className="text-white font-bold text-[10px] uppercase">Ghana Education Service</div>
-                          <div className="text-white/60 text-[8px]">WASSCE / PLACEMENT LETTER</div>
+                          <div className="text-[#111] font-bold text-[10px] uppercase">Ghana Education Service</div>
+                          <div className="text-[#555] text-[8px]">WASSCE / PLACEMENT LETTER</div>
                         </div>
                       </div>
-                      <div className="border-t border-white/20 mb-2" />
-                      <div className="text-white text-sm font-bold mb-1">{currentStudent.name}</div>
-                      <div className="text-white/70 text-[10px]">{currentStudent.program}</div>
-                      <div className="text-white/50 text-[10px]">{currentStudent.school}</div>
+                      <div className="border-t border-black/20 mb-2" />
+                      <div className="text-[#111] text-sm font-bold mb-1">{currentStudent.name}</div>
+                      <div className="text-[#555] text-[10px]">{currentStudent.program}</div>
+                      <div className="text-[#666] text-[10px]">{currentStudent.school}</div>
                     </div>
                   </div>
                 )}
 
                 {/* Hover hint */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-white/30 text-xs pointer-events-none">
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[#999] text-xs pointer-events-none">
                   🔍 Hover to magnify
                 </div>
               </div>
             ) : (
               <div className="flex-1 flex items-center justify-center rounded-none bg-white/[0.02] border border-white/[0.04]">
-                <span className="text-white/20 text-sm">No student selected</span>
+                <span className="text-[#111]/20 text-sm">No student selected</span>
               </div>
             )}
 
@@ -435,7 +435,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('approved')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#FF6B35] shadow-emerald-500/20"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-[#111] font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#000] shadow-emerald-500/20"
               >
                 <CheckCircle size={16} />
                 Approve
@@ -443,7 +443,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('skipped')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-white/[0.08] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-white font-medium text-sm transition-all duration-200"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-white/[0.08] hover:bg-white/[0.12] disabled:opacity-30 disabled:cursor-not-allowed text-[#111] font-medium text-sm transition-all duration-200"
               >
                 <SkipForward size={16} />
                 Skip
@@ -451,7 +451,7 @@ export default function VerifyPage() {
               <button
                 onClick={() => doAction('flagged')}
                 disabled={!currentStudent}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-red-500/80 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#FF6B35] shadow-red-500/10"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none bg-red-500/80 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-[#111] font-semibold text-sm transition-all duration-200 shadow-[4px_4px_0px_#000] shadow-red-500/10"
               >
                 <XCircle size={16} />
                 Flag
@@ -471,11 +471,11 @@ export default function VerifyPage() {
               <>
                 {/* Avatar + Name */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-12 h-12 rounded-none flex items-center justify-center font-bold text-sm flex-shrink-0 ${SCHOOL_COLORS[currentStudent.school] || 'bg-white/10 text-white'}`}>
+                  <div className={`w-12 h-12 rounded-none flex items-center justify-center font-bold text-sm flex-shrink-0 ${SCHOOL_COLORS[currentStudent.school] || 'bg-white/10 text-[#111]'}`}>
                     {getInitials(currentStudent.name)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white font-semibold text-base truncate">{currentStudent.name}</div>
+                    <div className="text-[#111] font-semibold text-base truncate">{currentStudent.name}</div>
                     <div className="mt-1">
                       <span className="px-2 py-0.5 rounded-none bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-medium">
                         Pending
@@ -488,15 +488,15 @@ export default function VerifyPage() {
                 <Section title="Institution">
                   <div className="flex items-center gap-2 mb-1.5">
                     <div className={`w-2 h-2 rounded-none flex-shrink-0 ${SCHOOL_DOT_COLORS[currentStudent.school] || 'bg-white/40'}`} />
-                    <span className="text-white text-sm font-medium">{currentStudent.school}</span>
+                    <span className="text-[#111] text-sm font-medium">{currentStudent.school}</span>
                   </div>
-                  <div className="text-white/50 text-sm ml-4">{currentStudent.program}</div>
+                  <div className="text-[#666] text-sm ml-4">{currentStudent.program}</div>
                 </Section>
 
                 {/* Origin */}
                 <Section title="Origin">
-                  <div className="text-white/80 text-sm">{currentStudent.hs}</div>
-                  <div className="text-white/40 text-xs mt-1">Class of {currentStudent.year}</div>
+                  <div className="text-[#333] text-sm">{currentStudent.hs}</div>
+                  <div className="text-[#777] text-xs mt-1">Class of {currentStudent.year}</div>
                 </Section>
 
                 {/* Vibe Profile */}
@@ -505,7 +505,7 @@ export default function VerifyPage() {
                     {currentStudent.vibe.map(v => (
                       <span
                         key={v}
-                        className={`px-2.5 py-1 rounded-none text-xs font-medium border ${VIBE_COLORS[v] || 'bg-white/10 text-white/60 border-white/10'}`}
+                        className={`px-2.5 py-1 rounded-none text-xs font-medium border ${VIBE_COLORS[v] || 'bg-white/10 text-[#555] border-black/20'}`}
                       >
                         {v}
                       </span>
@@ -515,7 +515,7 @@ export default function VerifyPage() {
 
                 {/* Contact */}
                 <Section title="Contact">
-                  <div className="text-white/60 text-sm font-mono">{currentStudent.phone}</div>
+                  <div className="text-[#555] text-sm font-mono">{currentStudent.phone}</div>
                 </Section>
 
                 {/* Queue Preview */}
@@ -524,14 +524,14 @@ export default function VerifyPage() {
                     <div className="flex flex-col gap-2">
                       {nextStudents.map((s, i) => (
                         <div key={s.id} className="flex items-center gap-3 px-3 py-2 rounded-none bg-white/[0.03] border border-white/[0.04]">
-                          <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[11px] font-bold flex-shrink-0 opacity-50 ${SCHOOL_COLORS[s.school] || 'bg-white/10 text-white/40'}`}>
+                          <div className={`w-7 h-7 rounded-none flex items-center justify-center text-[11px] font-bold flex-shrink-0 opacity-50 ${SCHOOL_COLORS[s.school] || 'bg-white/10 text-[#777]'}`}>
                             {getInitials(s.name)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-white/40 text-xs truncate">{s.name}</div>
-                            <div className="text-white/25 text-[11px] truncate">{s.school}</div>
+                            <div className="text-[#777] text-xs truncate">{s.name}</div>
+                            <div className="text-[#111]/25 text-[11px] truncate">{s.school}</div>
                           </div>
-                          <span className="text-white/20 text-xs flex-shrink-0">+{i + 1}</span>
+                          <span className="text-[#111]/20 text-xs flex-shrink-0">+{i + 1}</span>
                         </div>
                       ))}
                     </div>
@@ -540,14 +540,14 @@ export default function VerifyPage() {
               </>
             ) : (
               <div className="flex items-center justify-center h-full">
-                <span className="text-white/20 text-sm">Queue empty</span>
+                <span className="text-[#111]/20 text-sm">Queue empty</span>
               </div>
             )}
           </div>
 
           {/* Hotkeys Legend */}
           <div className="flex-shrink-0 border-t border-white/[0.06] px-4 py-3 flex items-center gap-4 bg-white/[0.02]">
-            <span className="text-white/25 text-xs font-medium uppercase tracking-wider mr-1">Keys</span>
+            <span className="text-[#111]/25 text-xs font-medium uppercase tracking-wider mr-1">Keys</span>
             <KeyChip label="SPACE" action="Approve" color="text-emerald-400" />
             <KeyChip label="→" action="Skip" color="text-amber-400" />
             <KeyChip label="⌫" action="Flag" color="text-red-400" />
@@ -561,7 +561,7 @@ export default function VerifyPage() {
 function Section({ title, children }) {
   return (
     <div className="mb-5">
-      <div className="text-white/30 text-[11px] uppercase tracking-wider font-medium mb-2">{title}</div>
+      <div className="text-[#999] text-[11px] uppercase tracking-wider font-medium mb-2">{title}</div>
       {children}
     </div>
   );
@@ -570,7 +570,7 @@ function Section({ title, children }) {
 function KeyChip({ label, action, color }) {
   return (
     <div className="flex items-center gap-1.5">
-      <kbd className="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.10] text-white/50 text-[11px] font-mono min-w-[28px] text-center">
+      <kbd className="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.10] text-[#666] text-[11px] font-mono min-w-[28px] text-center">
         {label}
       </kbd>
       <span className={`text-xs ${color}`}>{action}</span>
@@ -582,7 +582,7 @@ function StatCard({ label, value, color }) {
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-none bg-white/[0.04] border border-white/[0.08]">
       <span className={`text-2xl font-bold ${color}`}>{value}</span>
-      <span className="text-white/40 text-xs">{label}</span>
+      <span className="text-[#777] text-xs">{label}</span>
     </div>
   );
 }
