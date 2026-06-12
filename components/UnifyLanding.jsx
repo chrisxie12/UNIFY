@@ -888,6 +888,7 @@ export default function UnifyLanding({ schoolId } = {}) {
   const heroVisible = useHeroSequence();
 
   const [statsRef, statsVisible] = useScrollReveal(0.05);
+  const [howRef, howVisible] = useScrollReveal();
   const [featuresRef, featuresVisible] = useScrollReveal();
   const [communityRef, communityVisible] = useScrollReveal();
   const [testimonialsRef, testimonialsVisible] = useScrollReveal();
@@ -1379,6 +1380,100 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Decorative orange dot accent */}
               <div style={{ position: 'absolute', top: '22%', left: '42%', width: 10, height: 10, borderRadius: 0, background: '#FF6B35', opacity: 0.5, zIndex: 2, animation: 'driftY 4s ease-in-out 0.4s infinite alternate' }} />
               <div style={{ position: 'absolute', bottom: '28%', right: '8%', width: 7, height: 7, borderRadius: 0, background: '#FF6B35', opacity: 0.4, zIndex: 2, animation: 'driftY 3.5s ease-in-out 1.2s infinite alternate' }} />
+            </div>
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS ────────────────────────────────────────────── */}
+        <section
+          id="how-it-works"
+          ref={howRef}
+          className="relative bg-[#FAF3E8] py-16 md:py-24 px-6 border-t-2 border-black"
+          style={sectionRevealStyle(howVisible)}
+        >
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="inline-block text-xs font-black uppercase tracking-[0.2em] text-[#111] bg-[#FFD23F] border-2 border-black shadow-[3px_3px_0px_#000] px-4 py-2 rounded-none mb-5">
+                How UNIFY Works
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight">
+                Three Steps To Your<br />Campus Squad.
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+              {[
+                {
+                  num: '1',
+                  accent: '#FF6B35',
+                  title: 'Sign Up with Your University',
+                  time: 'Verified in 24 hours',
+                  points: [
+                    'Enter your university email (UG, KNUST, UCC, etc.)',
+                    'Upload your student ID for verification',
+                    'Get verified in 24 hours',
+                  ],
+                },
+                {
+                  num: '2',
+                  accent: '#0066FF',
+                  title: 'Take the Roommate Quiz',
+                  time: 'Takes 2 minutes',
+                  points: [
+                    'Answer 10 questions about your lifestyle',
+                    'Cleanliness, sleep schedule, budget, preferences',
+                    'We calculate your compatibility score',
+                  ],
+                },
+                {
+                  num: '3',
+                  accent: '#16a34a',
+                  title: 'Get Matched + Find Your Room',
+                  time: 'Before orientation',
+                  points: [
+                    'See 5–10 compatible roommates instantly',
+                    'Chat with potential roommates',
+                    'Browse verified room listings + hostel reviews',
+                    'Choose your roommate before orientation!',
+                  ],
+                },
+              ].map((step, i) => (
+                <div
+                  key={step.num}
+                  className="relative bg-white border-2 border-black shadow-[5px_5px_0px_#000] rounded-none p-7 flex flex-col hover:-translate-y-1 hover:shadow-[7px_7px_0px_#000] transition-all duration-200"
+                  style={howVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 120}ms both` } : { opacity: 0 }}
+                >
+                  <div className="flex items-center justify-between mb-5">
+                    <div
+                      className="w-12 h-12 flex items-center justify-center text-xl font-black text-white border-2 border-black shadow-[3px_3px_0px_#000] rounded-none"
+                      style={{ background: step.accent }}
+                    >
+                      {step.num}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#111] bg-[#FAF3E8] border-2 border-black px-2.5 py-1 rounded-none">
+                      {step.time}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-black text-[#111] leading-snug mb-4">{step.title}</h3>
+                  <ul className="flex flex-col gap-2.5">
+                    {step.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2.5 text-sm text-[#333] leading-relaxed">
+                        <span className="font-black flex-shrink-0" style={{ color: step.accent }}>➜</span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <a
+                href="#waitlist"
+                className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-black shadow-[4px_4px_0px_#000]"
+              >
+                Start Step 1 — It&apos;s Free <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </section>
