@@ -328,30 +328,29 @@ export default function LoginPage() {
         .login-input {
           width: 100%; height: 48px;
           border-radius: 0;
-          border: 2px solid rgba(255,255,255,0.40);
-          background: rgba(26,24,39,0.85);
-          font-size: 0.9rem; color: #FFFFFE;
+          border: 2px solid #111111;
+          background: #FFFFFF;
+          font-size: 0.9rem; color: #111111;
           outline: none;
           transition: border-color 200ms, box-shadow 200ms, background 200ms;
           padding: 0 16px 0 40px;
           box-sizing: border-box;
           font-family: inherit;
         }
-        .login-input::placeholder { color: rgba(255,255,255,0.40); }
+        .login-input::placeholder { color: #999999; }
         .login-input:focus {
           border-color: #FF6B35;
-          box-shadow: 0 0 0 3px rgba(255,107,53,0.25);
-          background: rgba(26,24,39,1);
+          box-shadow: 3px 3px 0px #000;
         }
-        .login-input.error { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
+        .login-input.error { border-color: #EF4444; box-shadow: 3px 3px 0px #EF4444; }
 
         .social-btn {
           width: 44px; height: 44px; border-radius: 0;
-          border: 2px solid rgba(255,255,255,0.30); background: rgba(26,24,39,0.85);
+          border: 2px solid #111111; background: #FFFFFF;
           display: flex; align-items: center; justify-content: center;
           cursor: pointer; transition: transform 200ms, box-shadow 200ms, background 200ms;
         }
-        .social-btn:hover { transform: translateY(-2px); box-shadow: 4px 4px 0px rgba(0,0,0,0.45); background: rgba(26,24,39,1); }
+        .social-btn:hover { transform: translateY(-2px); box-shadow: 3px 3px 0px #000; }
         .social-btn:active { transform: scale(0.95); }
 
         .spinner {
@@ -380,9 +379,9 @@ export default function LoginPage() {
         }
         .form-card {
           border-radius: 0;
-          border: 2px solid #FF6B35;
+          border: 2px solid #111111;
           background: #FFFFFF;
-          box-shadow: 4px 4px 0px #FF6B35;
+          box-shadow: 6px 6px 0px #000;
           padding: 36px 28px 32px;
           position: relative;
           overflow: hidden;
@@ -401,14 +400,8 @@ export default function LoginPage() {
             flex: 0 0 58%;
             position: relative;
             background: #FFFFFF;
+            border-right: 2px solid #111111;
             overflow: hidden;
-          }
-          .collage-side::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 60% 50%, rgba(255,107,53,0.06) 0%, transparent 70%);
-            pointer-events: none;
           }
           .form-side {
             flex: 0 0 42%;
@@ -434,8 +427,8 @@ export default function LoginPage() {
 
         {/* Nav */}
         <nav style={{
-          background: '#0F0E17',
-          borderBottom: '2px solid #FF6B35',
+          background: '#FFFFFF',
+          borderBottom: '2px solid #111111',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>
@@ -509,12 +502,12 @@ export default function LoginPage() {
             }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
-                background: '#1A1827',
-                border: '1px solid rgba(255,255,255,0.10)',
+                background: '#FFFFFF',
+                border: '2px solid #111111',
                 borderRadius: 0, padding: '6px 16px',
-                fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.80)',
+                fontSize: 12, fontWeight: 700, color: '#111111',
                 fontFamily: 'system-ui, sans-serif',
-                boxShadow: '3px 3px 0px rgba(0,0,0,0.4)',
+                boxShadow: '3px 3px 0px #000',
               }}>
                 🇬🇭 Ghana University Network
               </span>
@@ -555,7 +548,7 @@ export default function LoginPage() {
                     </span>
                   </a>
                   <OrangeScribble width={72} />
-                  <p style={{ marginTop: 8, color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', fontFamily: 'inherit' }}>
+                  <p style={{ marginTop: 8, color: '#555555', fontSize: '0.85rem', fontFamily: 'inherit' }}>
                     {isSignup ? "Join Ghana's campus network" : 'Welcome back'}
                   </p>
                 </div>
@@ -564,7 +557,7 @@ export default function LoginPage() {
                   <div style={{ textAlign: 'center', padding: '16px 0' }}>
                     <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
                     <h3 style={{ fontSize: 18, fontWeight: 900, color: '#111', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
-                    <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
+                    <p style={{ color: '#555555', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
                       {isSignup ? 'Check your email to verify your account.' : 'Welcome back. Redirecting…'}
                     </p>
                   </div>
@@ -572,7 +565,7 @@ export default function LoginPage() {
                   <>
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
-                      borderRadius: 0, border: '2px solid #FF6B35',
+                      borderRadius: 0, border: '2px solid #111111',
                       background: '#FAF3E8', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
@@ -582,7 +575,7 @@ export default function LoginPage() {
                           fontWeight: mode === m ? 700 : 500,
                           fontSize: '0.8rem',
                           background: mode === m ? '#FF6B35' : 'transparent',
-                          color: mode === m ? '#fff' : 'rgba(255,255,255,0.60)',
+                          color: mode === m ? '#fff' : '#555555',
                           boxShadow: 'none',
                           transition: 'background 280ms cubic-bezier(0.34,1.56,0.64,1), color 280ms, box-shadow 280ms',
                           fontFamily: 'inherit',
@@ -605,7 +598,7 @@ export default function LoginPage() {
                           <line x1="3"  y1="5"  x2="8"  y2="10" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                       </div>
-                      <Mail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.40)', width: 16, height: 16, zIndex: 1,
+                      <Mail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#999999', width: 16, height: 16, zIndex: 1,
                         ...(emailError ? { top: 24, transform: 'none' } : {}) }} />
                       <input type="email" placeholder="Your email address" value={email}
                         onChange={e => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
@@ -614,7 +607,7 @@ export default function LoginPage() {
                     </div>
 
                     <div style={{ position: 'relative', marginTop: 10, animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 260ms both' : 'none' }}>
-                      <Lock style={{ position: 'absolute', left: 14, top: 16, color: 'rgba(255,255,255,0.40)', width: 16, height: 16, zIndex: 1 }} />
+                      <Lock style={{ position: 'absolute', left: 14, top: 16, color: '#999999', width: 16, height: 16, zIndex: 1 }} />
                       <input type={showPassword ? 'text' : 'password'}
                         placeholder={isSignup ? 'Create a password' : 'Your password'}
                         value={password}
@@ -623,7 +616,7 @@ export default function LoginPage() {
                         className={`login-input${passwordError ? ' error' : ''}`}
                         style={{ paddingRight: 42 }} />
                       <button type="button" onClick={() => setShowPassword(v => !v)}
-                        style={{ position: 'absolute', right: 14, top: 15, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(255,255,255,0.40)' }}
+                        style={{ position: 'absolute', right: 14, top: 15, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#999999' }}
                         aria-label={showPassword ? 'Hide password' : 'Show password'}>
                         {showPassword ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
                       </button>
@@ -642,8 +635,8 @@ export default function LoginPage() {
                           width: '100%', height: 48, borderRadius: 0,
                           background: '#FF6B35', color: 'white',
                           fontWeight: 800, fontSize: '0.875rem',
-                          border: '2px solid white', cursor: 'pointer',
-                          boxShadow: '3px 3px 0px rgba(255,255,255,0.3)',
+                          border: '2px solid #111111', cursor: 'pointer',
+                          boxShadow: '3px 3px 0px #000',
                           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                           transition: 'transform 200ms, box-shadow 200ms, opacity 200ms',
                           fontFamily: 'inherit',
@@ -658,16 +651,16 @@ export default function LoginPage() {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0' }}>
-                      <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.10)' }} />
-                      <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.40)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
+                      <div style={{ flex: 1, height: 2, background: '#111111' }} />
+                      <span style={{ fontSize: '0.68rem', color: '#777777', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
                         {isSignup ? 'or sign up with' : 'or log in with'}
                       </span>
-                      <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.10)' }} />
+                      <div style={{ flex: 1, height: 2, background: '#111111' }} />
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: 16, animation: mounted ? 'formScaleIn 600ms cubic-bezier(0.16,1,0.3,1) 420ms both' : 'none' }}>
                       <button className="social-btn" aria-label="Continue with Apple">
-                        <svg viewBox="0 0 24 24" width="17" height="17" fill="#FFFFFE">
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="#111111">
                           <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                         </svg>
                       </button>
@@ -691,12 +684,12 @@ export default function LoginPage() {
               </div>
 
               {/* Footer */}
-              <div style={{ marginTop: 18, textAlign: 'center', fontSize: '0.72rem', color: 'rgba(255,255,255,0.40)', fontFamily: 'inherit' }}>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Terms of use</a>
+              <div style={{ marginTop: 18, textAlign: 'center', fontSize: '0.72rem', color: '#777777', fontFamily: 'inherit' }}>
+                <a href="#" style={{ color: '#777777', textDecoration: 'none' }}>Terms of use</a>
                 <span style={{ padding: '0 6px' }}>·</span>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Privacy policy</a>
+                <a href="#" style={{ color: '#777777', textDecoration: 'none' }}>Privacy policy</a>
                 <span style={{ padding: '0 6px' }}>·</span>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.40)', textDecoration: 'none' }}>Copyrights</a>
+                <a href="#" style={{ color: '#777777', textDecoration: 'none' }}>Copyrights</a>
               </div>
             </div>
           </div>
