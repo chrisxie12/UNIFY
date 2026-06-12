@@ -30,11 +30,11 @@ const STATUS_OPTIONS = [
 const SCHOOL_COLORS = {
   KNUST:      'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   'UG Legon': 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  UCC:        'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30',
+  UCC:        'bg-[#FF6B35]/20 text-[#0066FF] border-[#FF6B35]/30',
   UPSA:       'bg-pink-500/20 text-pink-300 border-pink-500/30',
   UDS:        'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   GCTU:       'bg-orange-500/20 text-orange-300 border-orange-500/30',
-  All:        'bg-white/10 text-white/60 border-white/20',
+  All:        'bg-white/10 text-[#555] border-black/20',
 };
 
 const TEMPLATES = [
@@ -78,8 +78,8 @@ function renderPreview(text, schoolLabel) {
 function StatCell({ label, value, warn, icon }) {
   return (
     <div className="bg-black/20 rounded-none p-3 flex flex-col gap-1">
-      <span className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">{label}</span>
-      <span className={`text-sm font-bold flex items-center gap-1 ${warn ? 'text-amber-400' : 'text-white'}`}>
+      <span className="text-[#777] text-[10px] uppercase tracking-widest font-semibold">{label}</span>
+      <span className={`text-sm font-bold flex items-center gap-1 ${warn ? 'text-amber-400' : 'text-[#111]'}`}>
         {warn && icon}
         {value}
       </span>
@@ -94,14 +94,14 @@ function CampaignRow({ campaign }) {
     <div className="bg-white/[0.03] border border-white/[0.07] rounded-none px-5 py-4 flex items-center gap-5">
       {/* Left */}
       <div className="flex-1 min-w-0">
-        <p className="text-white/90 text-sm font-semibold truncate">{campaign.name}</p>
+        <p className="text-[#111]/90 text-sm font-semibold truncate">{campaign.name}</p>
         <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-none border ${colorClass}`}>
           {campaign.school}
         </span>
       </div>
       {/* Center */}
       <div className="w-40 shrink-0">
-        <div className="flex justify-between text-[10px] text-white/40 mb-1">
+        <div className="flex justify-between text-[10px] text-[#777] mb-1">
           <span>{fmt(campaign.delivered)} delivered</span>
           <span>{pct}%</span>
         </div>
@@ -114,9 +114,9 @@ function CampaignRow({ campaign }) {
       </div>
       {/* Right */}
       <div className="text-right shrink-0">
-        <p className="text-white/50 text-xs">{campaign.date}</p>
-        <p className="text-white/80 text-sm font-semibold mt-0.5">GH₵ {campaign.cost.toFixed(2)}</p>
-        <p className="text-white/30 text-[10px] mt-0.5">{fmt(campaign.recipients)} recipients</p>
+        <p className="text-[#666] text-xs">{campaign.date}</p>
+        <p className="text-[#333] text-sm font-semibold mt-0.5">GH₵ {campaign.cost.toFixed(2)}</p>
+        <p className="text-[#999] text-[10px] mt-0.5">{fmt(campaign.recipients)} recipients</p>
       </div>
     </div>
   );
@@ -222,20 +222,20 @@ export default function SMSLaunchpadPage() {
   const statusLabel = STATUS_OPTIONS.find(s => s.key === statusKey)?.label ?? '';
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#0B0F19', fontFamily: 'system-ui, Inter, sans-serif' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#FAF3E8', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#0B0F19] border-b border-white/[0.06]">
+      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#FAF3E8] border-b border-black/20">
         {/* Left */}
         <div className="flex items-center gap-3">
-          <a href="/admin" className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors">
+          <a href="/admin" className="flex items-center gap-1 text-[#777] hover:text-[#555] text-sm transition-colors">
             <ChevronRight className="w-3.5 h-3.5 rotate-180" />
             <span>Admin</span>
           </a>
-          <span className="text-white/20 text-xs">›</span>
+          <span className="text-[#111]/20 text-xs">›</span>
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-amber-400" />
-            <span className="text-white font-bold text-sm tracking-tight">SMS Launchpad</span>
+            <span className="text-[#111] font-bold text-sm tracking-tight">SMS Launchpad</span>
             <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-none bg-amber-400/15 text-amber-400 border border-amber-400/25">
               BETA
             </span>
@@ -245,7 +245,7 @@ export default function SMSLaunchpadPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => historyRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs font-semibold transition-colors"
+            className="flex items-center gap-2 text-[#666] hover:text-[#333] text-xs font-semibold transition-colors"
           >
             <ScrollText className="w-4 h-4" />
             Campaign History
@@ -264,14 +264,14 @@ export default function SMSLaunchpadPage() {
 
           {/* ── LEFT COLUMN (55%) ── */}
           <div className="flex-[55] min-w-0 flex flex-col gap-4">
-            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6 flex flex-col gap-6">
+            <div className="bg-white border border-black/20 rounded-none p-6 flex flex-col gap-6">
 
               {/* Section 1 — Target Segmentation */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-amber-400" />
-                    <span className="text-white/90 text-sm font-bold">Target Audience</span>
+                    <span className="text-[#111]/90 text-sm font-bold">Target Audience</span>
                   </div>
                   <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-amber-400/15 text-amber-400 border border-amber-400/25">
                     {fmt(recipients)} recipients
@@ -286,7 +286,7 @@ export default function SMSLaunchpadPage() {
                       className={`text-xs font-semibold px-3 py-1.5 rounded-none transition-all ${
                         schoolKey === s.key
                           ? 'bg-amber-400 text-[#0B0F19] font-black'
-                          : 'bg-white/[0.06] text-white/50 border border-white/[0.08] hover:text-white/70 hover:border-white/20'
+                          : 'bg-white/[0.06] text-[#666] border border-black/20 hover:text-[#555] hover:border-black/20'
                       }`}
                     >
                       {s.label} ({fmt(s.count)})
@@ -301,8 +301,8 @@ export default function SMSLaunchpadPage() {
                       onClick={() => setStatusKey(s.key)}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-none transition-all ${
                         statusKey === s.key
-                          ? 'bg-[#FF6B35] text-white font-bold'
-                          : 'bg-white/[0.06] text-white/50 border border-white/[0.08] hover:text-white/70 hover:border-white/20'
+                          ? 'bg-[#FF6B35] text-[#111] font-bold'
+                          : 'bg-white/[0.06] text-[#666] border border-black/20 hover:text-[#555] hover:border-black/20'
                       }`}
                     >
                       {s.label}
@@ -315,14 +315,14 @@ export default function SMSLaunchpadPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4 text-blue-400" />
-                  <span className="text-white/90 text-sm font-bold">Quick Templates</span>
+                  <span className="text-[#111]/90 text-sm font-bold">Quick Templates</span>
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                   {TEMPLATES.map(t => (
                     <button
                       key={t.name}
                       onClick={() => setMessage(t.text)}
-                      className="shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-none px-3 py-2 text-xs font-semibold text-white/60 hover:text-white hover:border-white/20 transition-all"
+                      className="shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-none px-3 py-2 text-xs font-semibold text-[#555] hover:text-[#111] hover:border-black/20 transition-all"
                     >
                       {t.name}
                     </button>
@@ -334,7 +334,7 @@ export default function SMSLaunchpadPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Filter className="w-4 h-4 text-blue-300" />
-                  <span className="text-white/90 text-sm font-bold">Insert Variable</span>
+                  <span className="text-[#111]/90 text-sm font-bold">Insert Variable</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {TAGS.map(tag => (
@@ -353,10 +353,10 @@ export default function SMSLaunchpadPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-white/40" />
-                    <span className="text-white/90 text-sm font-bold">Message</span>
+                    <MessageSquare className="w-4 h-4 text-[#777]" />
+                    <span className="text-[#111]/90 text-sm font-bold">Message</span>
                   </div>
-                  <span className={`text-xs font-mono ${len > 160 ? 'text-amber-400' : 'text-white/30'}`}>
+                  <span className={`text-xs font-mono ${len > 160 ? 'text-amber-400' : 'text-[#999]'}`}>
                     {len} / 160
                   </span>
                 </div>
@@ -365,7 +365,7 @@ export default function SMSLaunchpadPage() {
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   placeholder="Type your message here, or use a template above..."
-                  className="bg-black/30 border border-white/[0.08] focus:border-amber-400/40 rounded-none p-4 text-sm text-white placeholder-white/20 resize-none h-36 w-full outline-none transition-colors"
+                  className="bg-black/30 border border-black/20 focus:border-amber-400/40 rounded-none p-4 text-sm text-[#111] placeholder-[#999] resize-none h-36 w-full outline-none transition-colors"
                 />
               </div>
 
@@ -402,21 +402,21 @@ export default function SMSLaunchpadPage() {
           <div className="flex-[45] min-w-0 flex flex-col gap-4">
 
             {/* Phone Mockup */}
-            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6">
+            <div className="bg-white border border-black/20 rounded-none p-6">
               <div className="flex items-center gap-2 mb-5">
-                <Smartphone className="w-4 h-4 text-white/40" />
-                <span className="text-white/90 text-sm font-bold">Live Preview</span>
+                <Smartphone className="w-4 h-4 text-[#777]" />
+                <span className="text-[#111]/90 text-sm font-bold">Live Preview</span>
               </div>
-              <div className="bg-[#111827] border border-white/10 rounded-[2.5rem] p-3 w-[240px] mx-auto shadow-[6px_6px_0px_#FF6B35] shadow-black/50">
+              <div className="bg-white border border-black/20 rounded-[2.5rem] p-3 w-[240px] mx-auto shadow-[6px_6px_0px_#000]">
                 {/* Notch */}
                 <div className="w-20 h-1.5 bg-white/10 rounded-none mx-auto mb-3" />
                 {/* Screen */}
-                <div className="bg-[#1a1a2e] rounded-[1.8rem] p-4 min-h-[380px] flex flex-col">
+                <div className="bg-[#FAF3E8] rounded-[1.8rem] p-4 min-h-[380px] flex flex-col">
                   {/* Status bar */}
                   <div className="flex justify-between items-center mb-4 px-1">
-                    <span className="text-white/40 text-[10px]">{currentTime}</span>
+                    <span className="text-[#777] text-[10px]">{currentTime}</span>
                     <div className="flex gap-1">
-                      <Radio className="w-3 h-3 text-white/30" />
+                      <Radio className="w-3 h-3 text-[#999]" />
                     </div>
                   </div>
                   {/* Sender header */}
@@ -426,22 +426,22 @@ export default function SMSLaunchpadPage() {
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-white text-xs font-bold">UNIFY</span>
+                        <span className="text-[#111] text-xs font-bold">UNIFY</span>
                         <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 inline-block" />
                       </div>
-                      <span className="text-white/30 text-[9px]">Business SMS</span>
+                      <span className="text-[#999] text-[9px]">Business SMS</span>
                     </div>
                   </div>
                   {/* SMS bubble */}
                   <div className="flex-1">
-                    <div className="bg-[#1e3a2f] border border-emerald-500/20 rounded-none rounded-tl-none p-3 text-[10px] text-white/80 leading-relaxed max-w-[90%]">
+                    <div className="bg-[#dcfce7] border border-emerald-500/20 rounded-none rounded-tl-none p-3 text-[10px] text-[#333] leading-relaxed max-w-[90%]">
                       {message
                         ? renderPreview(message, school.label)
-                        : <span className="text-white/30 italic">Your message preview will appear here...</span>
+                        : <span className="text-[#999] italic">Your message preview will appear here...</span>
                       }
                     </div>
                     <div className="flex items-center gap-1 mt-1.5 ml-1">
-                      <span className="text-white/25 text-[9px]">Just now</span>
+                      <span className="text-[#111]/25 text-[9px]">Just now</span>
                       <span className="text-emerald-400 text-[9px] font-bold">✓✓</span>
                     </div>
                   </div>
@@ -450,18 +450,18 @@ export default function SMSLaunchpadPage() {
             </div>
 
             {/* Launch Trigger */}
-            <div className="bg-[#121A30] border border-white/[0.08] rounded-none p-6">
+            <div className="bg-white border border-black/20 rounded-none p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Send className="w-4 h-4 text-emerald-400" />
-                <span className="text-white/90 text-sm font-bold">Launch Campaign</span>
+                <span className="text-[#111]/90 text-sm font-bold">Launch Campaign</span>
               </div>
               <button
                 disabled={!message.trim()}
                 onClick={() => setShowModal(true)}
                 className={`w-full rounded-none px-6 py-4 font-black text-sm transition-all flex items-center justify-center gap-2 ${
                   message.trim()
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-white cursor-pointer'
-                    : 'bg-white/[0.06] text-white/20 cursor-not-allowed'
+                    ? 'bg-emerald-500 hover:bg-emerald-400 text-[#111] cursor-pointer'
+                    : 'bg-white/[0.06] text-[#111]/20 cursor-not-allowed'
                 }`}
               >
                 <Send className="w-4 h-4" />
@@ -471,7 +471,7 @@ export default function SMSLaunchpadPage() {
                 }
               </button>
               {!message.trim() && (
-                <p className="text-white/30 text-xs text-center mt-2">Write a message to enable sending</p>
+                <p className="text-[#999] text-xs text-center mt-2">Write a message to enable sending</p>
               )}
             </div>
           </div>
@@ -481,9 +481,9 @@ export default function SMSLaunchpadPage() {
         <div ref={historyRef} className="mt-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <ScrollText className="w-4 h-4 text-white/50" />
-              <span className="text-white/90 font-bold">Campaign History</span>
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-none bg-white/[0.06] text-white/40 border border-white/[0.08]">
+              <ScrollText className="w-4 h-4 text-[#666]" />
+              <span className="text-[#111]/90 font-bold">Campaign History</span>
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-none bg-white/[0.06] text-[#777] border border-black/20">
                 {campaigns.length} campaigns
               </span>
             </div>
@@ -497,16 +497,16 @@ export default function SMSLaunchpadPage() {
       {/* ── CONFIRM MODAL ── */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#111827] border border-white/10 rounded-none p-8 max-w-md w-full shadow-[6px_6px_0px_#FF6B35]">
+          <div className="bg-white border border-black/20 rounded-none p-8 max-w-md w-full shadow-[6px_6px_0px_#000]">
             {/* Modal header */}
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h2 className="text-white font-black text-lg">Confirm Campaign Launch</h2>
-                <p className="text-white/40 text-sm mt-1">Review details before sending</p>
+                <h2 className="text-[#111] font-black text-lg">Confirm Campaign Launch</h2>
+                <p className="text-[#777] text-sm mt-1">Review details before sending</p>
               </div>
               <button
                 onClick={() => { setShowModal(false); setHolding(false); }}
-                className="w-8 h-8 rounded-none bg-white/[0.06] flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-none bg-white/[0.06] flex items-center justify-center text-[#666] hover:text-[#111] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -515,34 +515,34 @@ export default function SMSLaunchpadPage() {
             {/* Summary cards */}
             <div className="flex flex-col gap-3 mb-6">
               <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-center gap-3">
-                <Filter className="w-4 h-4 text-white/40 shrink-0" />
+                <Filter className="w-4 h-4 text-[#777] shrink-0" />
                 <div>
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Target</p>
-                  <p className="text-white text-sm font-semibold">{school.label} · {statusLabel}</p>
+                  <p className="text-[#777] text-[10px] uppercase tracking-widest font-semibold">Target</p>
+                  <p className="text-[#111] text-sm font-semibold">{school.label} · {statusLabel}</p>
                 </div>
               </div>
               <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-center gap-3">
                 <Users className="w-4 h-4 text-blue-400 shrink-0" />
                 <div>
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Recipients</p>
-                  <p className="text-white text-sm font-semibold">{fmt(recipients)} students</p>
+                  <p className="text-[#777] text-[10px] uppercase tracking-widest font-semibold">Recipients</p>
+                  <p className="text-[#111] text-sm font-semibold">{fmt(recipients)} students</p>
                 </div>
               </div>
               <div className={`border rounded-none p-4 flex items-center gap-3 ${cost > 100 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-white/[0.04] border-white/[0.07]'}`}>
                 <DollarSign className={`w-4 h-4 shrink-0 ${cost > 100 ? 'text-amber-400' : 'text-emerald-400'}`} />
                 <div>
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Total Cost</p>
-                  <p className={`text-sm font-semibold ${cost > 100 ? 'text-amber-400' : 'text-white'}`}>
+                  <p className="text-[#777] text-[10px] uppercase tracking-widest font-semibold">Total Cost</p>
+                  <p className={`text-sm font-semibold ${cost > 100 ? 'text-amber-400' : 'text-[#111]'}`}>
                     GH₵ {cost.toFixed(2)}
                     {cost > 100 && <span className="text-amber-400/70 text-xs ml-1">(high spend)</span>}
                   </p>
                 </div>
               </div>
               <div className="bg-white/[0.04] border border-white/[0.07] rounded-none p-4 flex items-start gap-3">
-                <MessageSquare className="w-4 h-4 text-white/40 mt-0.5 shrink-0" />
+                <MessageSquare className="w-4 h-4 text-[#777] mt-0.5 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold mb-1">Message Preview</p>
-                  <p className="text-white/70 text-xs leading-relaxed break-words">
+                  <p className="text-[#777] text-[10px] uppercase tracking-widest font-semibold mb-1">Message Preview</p>
+                  <p className="text-[#555] text-xs leading-relaxed break-words">
                     {message.slice(0, 80)}{message.length > 80 ? '…' : ''}
                   </p>
                 </div>
@@ -553,7 +553,7 @@ export default function SMSLaunchpadPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => { setShowModal(false); setHolding(false); }}
-                className="flex-1 px-4 py-3 rounded-none bg-white/[0.06] text-white/60 font-semibold text-sm hover:bg-white/[0.10] transition-all"
+                className="flex-1 px-4 py-3 rounded-none bg-white/[0.06] text-[#555] font-semibold text-sm hover:bg-white/[0.10] transition-all"
               >
                 Cancel
               </button>
@@ -575,8 +575,8 @@ export default function SMSLaunchpadPage() {
                 />
                 {/* Label */}
                 <div className="relative flex items-center justify-center gap-2 px-4 py-3 z-10">
-                  <Send className="w-4 h-4 text-white" />
-                  <span className="text-white font-black text-sm">
+                  <Send className="w-4 h-4 text-[#111]" />
+                  <span className="text-[#111] font-black text-sm">
                     {holding
                       ? holdPct < 100 ? `Hold… ${Math.round(holdPct)}%` : 'Sending!'
                       : 'Hold to Send'
@@ -585,7 +585,7 @@ export default function SMSLaunchpadPage() {
                 </div>
               </div>
             </div>
-            <p className="text-white/20 text-[10px] text-center mt-3">Hold the button for 2 seconds to confirm send</p>
+            <p className="text-[#111]/20 text-[10px] text-center mt-3">Hold the button for 2 seconds to confirm send</p>
           </div>
         </div>
       )}
@@ -593,7 +593,7 @@ export default function SMSLaunchpadPage() {
       {/* ── TOAST ── */}
       {toast && (
         <div className="fixed top-5 right-5 z-50 sms-toast-enter">
-          <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-5 py-3.5 rounded-none shadow-[6px_6px_0px_#FF6B35] flex items-center gap-3 max-w-sm">
+          <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-5 py-3.5 rounded-none shadow-[6px_6px_0px_#000] flex items-center gap-3 max-w-sm">
             <CheckCircle className="w-4 h-4 shrink-0" />
             <span className="text-sm font-semibold">{toast.text}</span>
             <button onClick={() => setToast(null)} className="ml-auto text-emerald-400/60 hover:text-emerald-300">

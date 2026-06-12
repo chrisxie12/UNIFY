@@ -350,7 +350,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
           borderRadius: 0,
           padding: '40px 32px',
           boxShadow: '8px 8px 0px #000',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '2px solid #000',
           textAlign: 'center',
           maxWidth: 480,
           margin: '0 auto',
@@ -421,7 +421,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
         <button
           type="submit"
           disabled={loading}
-          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-6 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_#000] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-6 py-3.5 rounded-none border-2 border-black shadow-[3px_3px_0px_#000] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? 'Claiming…' : 'Claim Your Handle →'}
         </button>
@@ -654,7 +654,7 @@ function CampusCollage({ animate = false }) {
           <span style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Live · Ghana</span>
         </div>
         <div style={{ background: '#FFFFFF', border: '2px solid #000', borderRadius: 0, padding: '4px 14px' }}>
-          <span style={{ fontSize: 12, fontWeight: 900, color: 'white' }}>1,074 freshers online</span>
+          <span style={{ fontSize: 12, fontWeight: 900, color: '#111' }}>1,074 freshers online</span>
         </div>
       </div>
     </div>
@@ -685,7 +685,7 @@ function SchoolLocatorViz({ animate = false }) {
       <div className="flex flex-col gap-2 flex-1">
         {LOCATOR_SCHOOLS.map((s) => (
           <div key={s.name} className="flex items-center gap-3 rounded-none px-3 py-2"
-               style={{ background: '#FFFFFF', border: `1px solid rgba(255,255,255,0.1)`, boxShadow: '3px 3px 0px #000',
+               style={{ background: '#FFFFFF', border: '2px solid #000', boxShadow: '3px 3px 0px #000',
                         animation: animate ? `schoolCardIn 500ms var(--ease-out-expo) ${s.delay}ms both` : 'none',
                         opacity: animate ? undefined : 0 }}>
             <div style={{ width: 30, height: 30, borderRadius: 0, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -1256,7 +1256,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               <span className="relative inline-block mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
                 <a
                   href="#waitlist"
-                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-white shadow-[4px_4px_0px_rgba(255,255,255,0.4)]"
+                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-black shadow-[4px_4px_0px_#000]"
                 >
                   Get Early Access <ArrowRight className="w-4 h-4" />
                 </a>

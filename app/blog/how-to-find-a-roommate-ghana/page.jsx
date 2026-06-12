@@ -5,14 +5,14 @@ export const metadata = {
 
 const s = {
   page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh',  },
-  nav: { borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 720, margin: '0 auto' },
+  nav: { borderBottom: '1px solid rgba(0,0,0,0.15)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 720, margin: '0 auto' },
   back: { fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 600 },
   blogLink: { fontSize: 14, color: '#FF6B35', textDecoration: 'none', fontWeight: 700 },
   article: { maxWidth: 720, margin: '0 auto', padding: '40px 24px 80px' },
   tag: { display: 'inline-block', background: '#F0FDF4', border: '1px solid #BBF7D0', color: '#16a34a', fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 0, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 },
   meta: { fontSize: 13, color: '#777', marginBottom: 32, display: 'flex', gap: 16 },
   h1: { fontSize: '2.2rem', fontWeight: 900, lineHeight: 1.15, marginBottom: 12 },
-  h2: { fontSize: '1.3rem', fontWeight: 800, marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid rgba(255,255,255,0.1)' },
+  h2: { fontSize: '1.3rem', fontWeight: 800, marginTop: 40, marginBottom: 12, paddingBottom: 8, borderBottom: '2px solid rgba(0,0,0,0.15)' },
   p: { fontSize: '1.05rem', lineHeight: 1.8, color: '#333', marginBottom: 20 },
   li: { fontSize: '1.05rem', lineHeight: 1.8, color: '#333', marginBottom: 10 },
   callout: { background: '#FFFFFF', borderLeft: '4px solid #0066FF', padding: '16px 20px', borderRadius: 0, margin: '24px 0', fontStyle: 'italic', color: '#333', fontSize: '1rem', lineHeight: 1.7 },

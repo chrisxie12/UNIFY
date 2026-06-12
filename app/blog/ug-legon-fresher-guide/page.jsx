@@ -5,7 +5,7 @@ export const metadata = {
 
 const s = {
   page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh' },
-  nav: { borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 24px' },
+  nav: { borderBottom: '1px solid rgba(0,0,0,0.15)', padding: '0 24px' },
   navInner: { maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 },
   navLogo: { fontWeight: 800, textDecoration: 'none', fontSize: '1rem' },
   navLink: { color: '#555', textDecoration: 'none', fontSize: '0.9rem' },
@@ -14,7 +14,7 @@ const s = {
   tag: { display: 'inline-block', background: 'rgba(244,196,48,0.1)', color: '#FF6B35', fontSize: '0.78rem', fontWeight: 700, padding: '3px 12px', borderRadius: 0, marginBottom: 16, letterSpacing: '0.02em' },
   meta: { color: '#777', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
   h1: { fontSize: '2.5rem', fontWeight: 800, margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
-  h2: { fontSize: '1.5rem', fontWeight: 700, margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,0.1)' },
+  h2: { fontSize: '1.5rem', fontWeight: 700, margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid rgba(0,0,0,0.15)' },
   body: { fontSize: '1.1rem', color: '#333', lineHeight: 1.8, margin: '0 0 20px' },
   li: { fontSize: '1.05rem', color: '#333', lineHeight: 1.8, marginBottom: 10 },
   quote: { borderLeft: '4px solid #0066FF', background: '#FFFFFF', padding: '16px 20px', borderRadius: 0, margin: '20px 0', fontStyle: 'italic', color: '#333', fontSize: '1rem', lineHeight: 1.7 },

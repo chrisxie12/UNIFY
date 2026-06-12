@@ -58,7 +58,7 @@ export default function FAQPage() {
         </div>
         <div className="mt-10 text-center">
           <p className="text-[#666] text-sm mb-4">Still have questions?</p>
-          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Email us →</a>
+          <a href="mailto:unify@email.com" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none shadow-[3px_3px_0px_#000] transition-colors">Email us →</a>
         </div>
       </div>
     </div>

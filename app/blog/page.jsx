@@ -46,7 +46,7 @@ export default function BlogPage() {
             <a href="/" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Home</a>
             <a href="/schools" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Schools</a>
             <a href="/faq" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">FAQ</a>
-            <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 0, border: '2px solid white', boxShadow: '3px 3px 0px rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 0, border: '2px solid #111', boxShadow: '3px 3px 0px #000', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
               Join Waitlist
             </a>
           </div>

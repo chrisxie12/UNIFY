@@ -25,7 +25,7 @@ function SchoolCard({ school }) {
       <div className="h-20 relative flex items-center px-5" style={{ background: `linear-gradient(135deg, ${school.colors[0]}, ${school.colors[1]})` }}>
         <span className="absolute right-4 top-2 text-[56px] font-black pointer-events-none select-none leading-none" style={{ color: 'rgba(255,255,255,0.13)' }}>{school.initials}</span>
         <div className="relative z-10">
-          <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-white/20 text-[#111] border border-white/40">{school.type}</span>
+          <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-white text-[#111] border border-black">{school.type}</span>
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col">
@@ -53,7 +53,7 @@ function SchoolCard({ school }) {
             </span>
             <span className="text-[11px] font-semibold text-[#666]">{school.freshers}</span>
           </div>
-          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-[#111] transition-colors rounded-none border-2 border-white px-2 py-0.5">
+          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#0066FF] hover:text-[#111] transition-colors rounded-none border-2 border-black px-2 py-0.5">
             Join Hub <ArrowRight className="w-3 h-3" />
           </a>
         </div>
@@ -111,7 +111,7 @@ export default function SchoolsPage() {
         )}
         <div className="mt-14 text-center">
           <p className="text-[#666] text-sm mb-5">Your school not listed? We're adding more before the 2026 intake.</p>
-          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
+          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none border-2 border-black shadow-[3px_3px_0px_#000] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
         </div>
       </div>
     </div>

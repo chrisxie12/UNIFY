@@ -18,7 +18,7 @@ const MOCK_QUEUE = [
 ];
 
 const VIBE_COLORS = {
-  'Night Coder':   'bg-[#FF6B35]/20 text-[#A8C4FF] border-[#FF6B35]/30',
+  'Night Coder':   'bg-[#FF6B35]/20 text-[#0066FF] border-[#FF6B35]/30',
   'Neat Freak':    'bg-blue-500/20 text-blue-300 border-blue-500/30',
   'Serious Vibes': 'bg-orange-500/20 text-orange-300 border-orange-500/30',
   'Early Riser':   'bg-green-500/20 text-green-300 border-green-500/30',
@@ -29,7 +29,7 @@ const VIBE_COLORS = {
 const SCHOOL_COLORS = {
   'KNUST':    'bg-emerald-500/30 text-emerald-300',
   'UG Legon': 'bg-blue-500/30 text-blue-300',
-  'UCC':      'bg-[#FF6B35]/30 text-[#A8C4FF]',
+  'UCC':      'bg-[#FF6B35]/30 text-[#0066FF]',
   'UPSA':     'bg-amber-500/30 text-amber-300',
   'UDS':      'bg-orange-500/30 text-orange-300',
   'GCTU':     'bg-indigo-500/30 text-indigo-300',
@@ -160,7 +160,7 @@ export default function VerifyPage() {
 
   if (complete) {
     return (
-      <div className="h-screen w-screen overflow-hidden bg-[#0B0F19] flex flex-col items-center justify-center gap-6">
+      <div className="h-screen w-screen overflow-hidden bg-[#FAF3E8] flex flex-col items-center justify-center gap-6">
         <div className="text-6xl">🎉</div>
         <h1 className="text-3xl font-bold text-[#111]">Queue Complete!</h1>
         <p className="text-[#666] text-sm">All students in the current filter have been processed.</p>
@@ -188,7 +188,7 @@ export default function VerifyPage() {
   const nextStudents = pendingQueue.slice(1, 4);
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#0B0F19] flex flex-col">
+    <div className="h-screen w-screen overflow-hidden bg-[#FAF3E8] flex flex-col">
 
       {/* Flash Overlay */}
       {flashVisible && flash && (
@@ -214,7 +214,7 @@ export default function VerifyPage() {
       `}</style>
 
       {/* POWER BAR */}
-      <div className="h-14 flex-shrink-0 bg-[#0B0F19] border-b border-white/[0.06] flex items-center px-4 gap-4 z-10">
+      <div className="h-14 flex-shrink-0 bg-[#FAF3E8] border-b border-black/20 flex items-center px-4 gap-4 z-10">
         {/* Left */}
         <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
           <Link href="/admin" className="flex items-center gap-1 text-[#666] hover:text-[#111] transition-colors text-sm">
@@ -255,7 +255,7 @@ export default function VerifyPage() {
               <ChevronDown size={12} />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 top-full mt-1 w-36 rounded-none bg-[#1a1f2e] border border-white/[0.08] overflow-hidden z-20 shadow-[6px_6px_0px_#000]">
+              <div className="absolute right-0 top-full mt-1 w-36 rounded-none bg-[#1a1f2e] border border-black/20 overflow-hidden z-20 shadow-[6px_6px_0px_#000]">
                 <button
                   onClick={() => { setFilterSchool(null); setShowDropdown(false); setComplete(false); }}
                   className="w-full text-left px-3 py-2 text-xs text-[#555] hover:bg-white/[0.06] transition-colors"
@@ -276,7 +276,7 @@ export default function VerifyPage() {
           </div>
 
           {/* Queue counter */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-white/[0.04] border border-white/[0.06]">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-white/[0.04] border border-black/20">
             <Users size={12} className="text-[#999]" />
             <span className="text-[#666] text-xs font-medium">{pendingQueue.length} left</span>
           </div>
@@ -287,9 +287,9 @@ export default function VerifyPage() {
       <div className="flex-1 flex overflow-hidden">
 
         {/* LEFT PANEL — 60% */}
-        <div className="w-[60%] flex flex-col bg-white/[0.03] border-r border-white/[0.06]">
+        <div className="w-[60%] flex flex-col bg-white/[0.03] border-r border-black/20">
           {/* Label */}
-          <div className="flex-shrink-0 px-6 py-3 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="flex-shrink-0 px-6 py-3 border-b border-black/20 flex items-center justify-between">
             <span className="text-[#777] text-xs font-medium uppercase tracking-wider">ID / Placement Document</span>
             {currentStudent && (
               <span className="text-[#555] text-sm font-medium">{currentStudent.name}</span>
@@ -308,7 +308,7 @@ export default function VerifyPage() {
                 {/* Decorative elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-none bg-white -translate-y-16 translate-x-16" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 rounded-none bg-black/20 translate-y-24 -translate-x-24" />
-                <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-none border border-white/5 -translate-x-1/2 -translate-y-1/2" />
+                <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-none border border-black/10 -translate-x-1/2 -translate-y-1/2" />
 
                 {/* Document content */}
                 <div className="absolute inset-0 flex flex-col p-8 text-[#111] overflow-hidden">
@@ -546,7 +546,7 @@ export default function VerifyPage() {
           </div>
 
           {/* Hotkeys Legend */}
-          <div className="flex-shrink-0 border-t border-white/[0.06] px-4 py-3 flex items-center gap-4 bg-white/[0.02]">
+          <div className="flex-shrink-0 border-t border-black/20 px-4 py-3 flex items-center gap-4 bg-white/[0.02]">
             <span className="text-[#111]/25 text-xs font-medium uppercase tracking-wider mr-1">Keys</span>
             <KeyChip label="SPACE" action="Approve" color="text-emerald-400" />
             <KeyChip label="→" action="Skip" color="text-amber-400" />
@@ -580,7 +580,7 @@ function KeyChip({ label, action, color }) {
 
 function StatCard({ label, value, color }) {
   return (
-    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-none bg-white/[0.04] border border-white/[0.08]">
+    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-none bg-white/[0.04] border border-black/20">
       <span className={`text-2xl font-bold ${color}`}>{value}</span>
       <span className="text-[#777] text-xs">{label}</span>
     </div>

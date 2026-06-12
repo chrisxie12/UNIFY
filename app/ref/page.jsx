@@ -76,7 +76,7 @@ export default function ReferralInfoPage() {
             ))}
           </div>
 
-          <a href="/" className="anim-fade-up delay-400 inline-flex items-center gap-2 px-6 py-3 rounded-none font-bold text-sm bg-[#FF6B35] text-[#111] hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 border-2 border-white shadow-[3px_3px_0px_#000]">
+          <a href="/" className="anim-fade-up delay-400 inline-flex items-center gap-2 px-6 py-3 rounded-none font-bold text-sm bg-[#FF6B35] text-[#111] hover:bg-[#E55A22] transition-all hover:-translate-y-0.5 border-2 border-black shadow-[3px_3px_0px_#000]">
             ← Back to UNIFY
           </a>
 
