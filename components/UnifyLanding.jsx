@@ -131,10 +131,14 @@ const TESTIMONIALS = [
 ];
 
 const FAQS_NEW = [
-  { q: 'What is UNIFY?', a: "UNIFY is Ghana's peer-to-peer university transition network. It helps freshers find roommates, link with coursemates, and join their official campus hub — all before matriculation day." },
-  { q: 'When do campus hubs go live?', a: "We notify you 48 hours before your school hub opens. KNUST, UG Legon, UCC, and UPSA hubs are launching first in 2026. You'll get a message the moment yours is ready." },
-  { q: 'Is UNIFY free for freshers?', a: "100% free. No subscription, no hidden charges, no premium tier. We're building this for Ghana's freshers — not to extract money from students already stretched thin." },
-  { q: 'How does roommate matching work?', a: "You fill in your habits — neatness, sleep schedule, study preferences, hostel area — and our engine pairs you with compatible freshers. No brokers, no random guessing, no group chat chaos." },
+  { q: 'Is UNIFY free?', a: 'Yes! Roommate matching is 100% free. You only pay for rent when you book a room.' },
+  { q: 'How does ID verification work?', a: 'Upload your student ID + verify with your university email. We approve within 24 hours. No fake accounts.' },
+  { q: "What if my university isn't listed?", a: "We have 180+ schools! If you don't see yours, message us on WhatsApp and we'll add it in 24 hours." },
+  { q: 'Can I use UNIFY if I already have a roommate?', a: 'Yes! Join the campus hub, link coursemates, and find study groups. UNIFY is for more than just roommates.' },
+  { q: 'Do I have to share my phone number?', a: "No! Chat through UNIFY first. Only share your number when you're ready to meet." },
+  { q: 'How does the matching algorithm work?', a: 'We compare your 10-question quiz answers (cleanliness, sleep schedule, budget, etc.) and show you roommates with 80%+ compatibility.' },
+  { q: 'Can I post my own room listing?', a: 'Yes! Verified students can post rooms with photos, rent (GHS), and amenities. All listings are reviewed.' },
+  { q: "What's the WhatsApp community for?", a: 'Real freshers, zero spam. Get campus intel, meet people before orientation, and ask questions. 12,400+ freshers already there.' },
 ];
 
 // ─── HOOKS ───────────────────────────────────────────────────────────────────
@@ -889,6 +893,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
   const [statsRef, statsVisible] = useScrollReveal(0.05);
   const [howRef, howVisible] = useScrollReveal();
+  const [mockupsRef, mockupsVisible] = useScrollReveal();
   const [featuresRef, featuresVisible] = useScrollReveal();
   const [communityRef, communityVisible] = useScrollReveal();
   const [testimonialsRef, testimonialsVisible] = useScrollReveal();
@@ -1474,6 +1479,131 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Start Step 1 — It&apos;s Free <ArrowRight className="w-4 h-4" />
               </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ── APP PREVIEW MOCKUPS ─────────────────────────────────────── */}
+        <section
+          id="app-preview"
+          ref={mockupsRef}
+          className="relative bg-white py-16 md:py-24 px-6 border-t-2 border-black overflow-hidden"
+          style={sectionRevealStyle(mockupsVisible)}
+        >
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-14">
+              <span className="inline-block text-xs font-black uppercase tracking-[0.2em] text-[#111] bg-[#FF6B35] border-2 border-black shadow-[3px_3px_0px_#000] px-4 py-2 rounded-none mb-5">
+                App Preview
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight">
+                See It Before<br />You Use It.
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-10 md:gap-8 justify-items-center">
+
+              {/* ── Phone 1: Registration ── */}
+              <div
+                className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200"
+                style={{ transform: 'rotate(-2deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 0ms both' } : { opacity: 0 }) }}
+              >
+                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-sm font-black text-[#111]">UNIFY</span>
+                    <span className="text-[8px] font-black px-1.5 py-0.5 border border-black text-[#FF6B35] bg-white">GH</span>
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555] mb-1.5">Select University</p>
+                  <div className="bg-white border-2 border-black rounded-none px-3 py-2.5 mb-4 flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#111]">UG Legon</span>
+                    <span className="text-[#111] text-xs">▾</span>
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555] mb-1.5">Email</p>
+                  <div className="bg-white border-2 border-black rounded-none px-3 py-2.5 mb-2">
+                    <span className="text-xs text-[#777]">name@st.ug.edu.gh</span>
+                  </div>
+                  <p className="text-[9px] text-[#777] mb-5">We'll verify your student ID in 24 hours</p>
+                  <div className="mt-auto">
+                    <div className="bg-[#FF6B35] border-2 border-black shadow-[3px_3px_0px_#000] rounded-none py-3 text-center">
+                      <span className="text-xs font-black text-[#111]">Continue →</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center text-xs font-black text-[#111] mt-3 mb-1">1 · Sign Up &amp; Verify</p>
+              </div>
+
+              {/* ── Phone 2: Roommate Quiz ── */}
+              <div
+                className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200 md:mt-6"
+                style={{ transform: 'rotate(1.5deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 150ms both' } : { opacity: 0 }) }}
+              >
+                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-black text-[#111]">UNIFY</span>
+                    <span className="text-[9px] font-black text-[#111] bg-[#FFD23F] border border-black px-1.5 py-0.5">Question 3/10</span>
+                  </div>
+                  <div className="h-2 bg-white border-2 border-black rounded-none mb-5 overflow-hidden">
+                    <div className="h-full bg-[#0066FF]" style={{ width: '30%' }} />
+                  </div>
+                  <p className="text-base font-black text-[#111] leading-snug mb-5">What's your<br />sleep schedule?</p>
+                  {[
+                    { label: 'Early Bird', selected: false },
+                    { label: 'Night Owl', selected: true },
+                    { label: 'Flexible', selected: false },
+                  ].map((opt) => (
+                    <div
+                      key={opt.label}
+                      className={`flex items-center gap-2.5 border-2 border-black rounded-none px-3 py-2.5 mb-2.5 ${opt.selected ? 'bg-[#0066FF]' : 'bg-white'}`}
+                    >
+                      <span className={`w-3.5 h-3.5 border-2 border-black rounded-none flex-shrink-0 ${opt.selected ? 'bg-white' : 'bg-[#FAF3E8]'}`} />
+                      <span className={`text-xs font-bold ${opt.selected ? 'text-white' : 'text-[#111]'}`}>{opt.label}</span>
+                    </div>
+                  ))}
+                  <div className="mt-auto">
+                    <div className="bg-[#0066FF] border-2 border-black shadow-[3px_3px_0px_#000] rounded-none py-3 text-center">
+                      <span className="text-xs font-black text-white">Next →</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center text-xs font-black text-[#111] mt-3 mb-1">2 · 2-Minute Quiz</p>
+              </div>
+
+              {/* ── Phone 3: Matches ── */}
+              <div
+                className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200"
+                style={{ transform: 'rotate(-1deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 300ms both' } : { opacity: 0 }) }}
+              >
+                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-black text-[#111]">UNIFY</span>
+                    <span className="text-[9px] font-black text-white bg-[#16a34a] border border-black px-1.5 py-0.5">2 NEW</span>
+                  </div>
+                  <p className="text-base font-black text-[#111] mb-4">Your Matches</p>
+                  {[
+                    { name: 'Sarah', school: 'UG Legon', quote: '"Clean, quiet"', score: '92%', initials: 'SA', color: '#FF6B35' },
+                    { name: 'Michael', school: 'KNUST', quote: '"Study buddy"', score: '87%', initials: 'MI', color: '#0066FF' },
+                  ].map((m) => (
+                    <div key={m.name} className="bg-white border-2 border-black shadow-[3px_3px_0px_#000] rounded-none p-3 mb-3.5">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span
+                          className="w-7 h-7 flex items-center justify-center text-[9px] font-black text-white border border-black flex-shrink-0"
+                          style={{ background: m.color }}
+                        >{m.initials}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-black text-[#111] leading-tight">{m.name}</p>
+                          <p className="text-[9px] text-[#555] leading-tight">{m.school}</p>
+                        </div>
+                        <span className="text-[10px] font-black text-[#111] bg-[#FFD23F] border border-black px-1.5 py-0.5 flex-shrink-0">{m.score}</span>
+                      </div>
+                      <p className="text-[10px] text-[#555] italic mb-2">{m.quote}</p>
+                      <div className="bg-[#16a34a] border border-black rounded-none py-1.5 text-center">
+                        <span className="text-[10px] font-black text-white">Chat</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-center text-xs font-black text-[#111] mt-3 mb-1">3 · Match &amp; Chat</p>
+              </div>
+
             </div>
           </div>
         </section>
