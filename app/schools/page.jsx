@@ -20,40 +20,40 @@ const SCHOOLS = [
 
 function SchoolCard({ school }) {
   return (
-    <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] bg-[#162347] hover:shadow-[6px_6px_0px_#FF6B35] transition-all duration-200 overflow-hidden flex flex-col">
+    <div className="rounded-none border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] bg-white hover:shadow-[6px_6px_0px_#000] transition-all duration-200 overflow-hidden flex flex-col">
       {/* Gradient banner */}
       <div className="h-20 relative flex items-center px-5" style={{ background: `linear-gradient(135deg, ${school.colors[0]}, ${school.colors[1]})` }}>
         <span className="absolute right-4 top-2 text-[56px] font-black pointer-events-none select-none leading-none" style={{ color: 'rgba(255,255,255,0.13)' }}>{school.initials}</span>
         <div className="relative z-10">
-          <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-white/20 text-white border border-white/40">{school.type}</span>
+          <span className="text-xs font-bold px-2 py-0.5 rounded-none bg-white/20 text-[#111] border border-white/40">{school.type}</span>
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex items-center gap-2 mb-1">
-          <h3 className="font-black text-white text-base">{school.name}</h3>
+          <h3 className="font-black text-[#111] text-base">{school.name}</h3>
         </div>
-        <p className="text-white/50 text-xs mb-3 truncate">{school.full}</p>
-        <div className="flex items-center gap-1.5 text-white/40 text-xs mb-1">
+        <p className="text-[#666] text-xs mb-3 truncate">{school.full}</p>
+        <div className="flex items-center gap-1.5 text-[#777] text-xs mb-1">
           <MapPin className="w-3 h-3 text-amber-400 shrink-0" />{school.location}
         </div>
-        <div className="flex items-center gap-1.5 text-white/40 text-xs mb-4">
+        <div className="flex items-center gap-1.5 text-[#777] text-xs mb-4">
           <GraduationCap className="w-3 h-3 text-[#A8C4FF] shrink-0" />Est. {school.founded}
         </div>
         <div className="flex flex-wrap gap-1.5 mb-4 flex-1">
           {school.faculties.slice(0, 3).map(f => (
             <span key={f} className="text-[10px] font-semibold bg-[#FF6B35]/10 text-[#FF6B35] px-2 py-0.5 rounded-none border border-[#FF6B35]/30">{f}</span>
           ))}
-          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-[#162347] text-white/40 px-2 py-0.5 rounded-none border border-white/10">+{school.faculties.length - 3} more</span>}
+          {school.faculties.length > 3 && <span className="text-[10px] font-semibold bg-white text-[#777] px-2 py-0.5 rounded-none border border-black/20">+{school.faculties.length - 3} more</span>}
         </div>
-        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+        <div className="flex items-center justify-between pt-3 border-t border-black/20">
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#A8C4FF] opacity-40" />
               <span className="relative inline-flex rounded-none h-1.5 w-1.5 bg-[#A8C4FF]" />
             </span>
-            <span className="text-[11px] font-semibold text-white/50">{school.freshers}</span>
+            <span className="text-[11px] font-semibold text-[#666]">{school.freshers}</span>
           </div>
-          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-white transition-colors rounded-none border-2 border-white px-2 py-0.5">
+          <a href="/hubs" className="inline-flex items-center gap-1 text-xs font-black text-[#A8C4FF] hover:text-[#111] transition-colors rounded-none border-2 border-white px-2 py-0.5">
             Join Hub <ArrowRight className="w-3 h-3" />
           </a>
         </div>
@@ -73,45 +73,45 @@ export default function SchoolsPage() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#0D1B3E' }}>
+    <div className="min-h-screen" style={{ background: '#FAF3E8' }}>
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b-2 border-[#FF6B35]">
         <a href="/" className="flex items-center gap-2">
-          <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
+          <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>
           <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35]/40 text-[#FF6B35]">GH</span>
         </a>
         <div className="hidden md:flex items-center gap-6">
-          <a href="/hubs" className="text-sm font-semibold text-white/50 hover:text-white">Hubs</a>
-          <a href="/match" className="text-sm font-semibold text-white/50 hover:text-white">Match</a>
-          <a href="/faq" className="text-sm font-semibold text-white/50 hover:text-white">FAQ</a>
+          <a href="/hubs" className="text-sm font-semibold text-[#666] hover:text-[#111]">Hubs</a>
+          <a href="/match" className="text-sm font-semibold text-[#666] hover:text-[#111]">Match</a>
+          <a href="/faq" className="text-sm font-semibold text-[#666] hover:text-[#111]">FAQ</a>
         </div>
       </nav>
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-10 text-center">
         <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 border-2 border-[#FF6B35]/40 text-[#FF6B35] text-xs font-bold px-4 py-2 rounded-none mb-6 tracking-widest uppercase">Ghana University Directory</div>
-        <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Find Your School.<br />Claim Your Spot.</h1>
-        <p className="text-white/60 text-base max-w-xl mx-auto mb-8">Browse {SCHOOLS.length} Ghanaian universities. Join your campus hub before orientation week.</p>
-        <div className="flex items-center gap-2 bg-[#162347] border-2 border-[#FF6B35] rounded-none px-4 py-3 max-w-lg mx-auto">
-          <Search className="w-4 h-4 text-white/30 shrink-0" />
-          <input type="text" placeholder="Search school, city, or programme…" value={query} onChange={e => setQuery(e.target.value)} className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-white/30" />
+        <h1 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4 uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Find Your School.<br />Claim Your Spot.</h1>
+        <p className="text-[#555] text-base max-w-xl mx-auto mb-8">Browse {SCHOOLS.length} Ghanaian universities. Join your campus hub before orientation week.</p>
+        <div className="flex items-center gap-2 bg-white border-2 border-[#FF6B35] rounded-none px-4 py-3 max-w-lg mx-auto">
+          <Search className="w-4 h-4 text-[#999] shrink-0" />
+          <input type="text" placeholder="Search school, city, or programme…" value={query} onChange={e => setQuery(e.target.value)} className="flex-1 bg-transparent text-[#111] text-sm outline-none placeholder:text-[#999]" />
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <div className="flex gap-2 flex-wrap">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-none border-2 transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]' : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}>{t}</button>
+            <button key={t} onClick={() => setFilter(t)} className={`text-xs font-bold px-4 py-2 rounded-none border-2 transition-all ${filter === t ? 'bg-[#FF6B35] border-[#FF6B35] text-[#111] shadow-[2px_2px_0px_#000]' : 'bg-white border-black/20 text-[#555] hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}>{t}</button>
           ))}
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 pb-24">
         {filtered.length === 0 ? (
-          <div className="text-center py-20 text-white/40"><p className="text-2xl mb-2">No schools found</p><p className="text-sm">Try a different search term or filter.</p></div>
+          <div className="text-center py-20 text-[#777]"><p className="text-2xl mb-2">No schools found</p><p className="text-sm">Try a different search term or filter.</p></div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filtered.map(s => <SchoolCard key={s.id} school={s} />)}
           </div>
         )}
         <div className="mt-14 text-center">
-          <p className="text-white/50 text-sm mb-5">Your school not listed? We're adding more before the 2026 intake.</p>
-          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
+          <p className="text-[#666] text-sm mb-5">Your school not listed? We're adding more before the 2026 intake.</p>
+          <a href="/" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors">Join the Waitlist <ArrowRight className="w-4 h-4" /></a>
         </div>
       </div>
     </div>

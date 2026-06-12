@@ -36,16 +36,16 @@ const posts = [
 
 export default function BlogPage() {
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#0D1B3E', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh' }}>
       <style>{`@media(min-width:640px){.md-show{display:block !important}}`}</style>
       {/* Nav */}
       <nav style={{ borderBottom: '2px solid #FF6B35', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <a href="/" style={{ fontWeight: 900, fontSize: '1.1rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#FFFFFE', fontFamily: "'Barlow Condensed', sans-serif" }}>UNIFY</a>
+          <a href="/" style={{ fontWeight: 900, fontSize: '1.1rem', textDecoration: 'none', letterSpacing: '-0.5px', color: '#111', fontFamily: "'Barlow Condensed', sans-serif" }}>UNIFY</a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <a href="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Home</a>
-            <a href="/schools" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Schools</a>
-            <a href="/faq" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">FAQ</a>
+            <a href="/" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Home</a>
+            <a href="/schools" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">Schools</a>
+            <a href="/faq" style={{ color: '#555', textDecoration: 'none', fontSize: '0.9rem', display: 'none' }} className="md-show">FAQ</a>
             <a href="/#waitlist" style={{ background: '#FF6B35', color: '#fff', padding: '8px 18px', borderRadius: 0, border: '2px solid white', boxShadow: '3px 3px 0px rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
               Join Waitlist
             </a>
@@ -58,7 +58,7 @@ export default function BlogPage() {
         <h1 style={{ fontSize: '3rem', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-1px', fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase' }}>
           The Freshers&apos; Blog
         </h1>
-        <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
+        <p style={{ fontSize: '1.2rem', color: '#555', maxWidth: 520, margin: '0 auto' }}>
           Real intel for Ghana&apos;s university freshers — no sugarcoating.
         </p>
       </section>
@@ -70,7 +70,7 @@ export default function BlogPage() {
             <a
               key={post.slug}
               href={`/blog/${post.slug}`}
-              style={{ textDecoration: 'none', display: 'block', borderRadius: 0, border: '2px solid #FF6B35', boxShadow: '4px 4px 0px #FF6B35', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
+              style={{ textDecoration: 'none', display: 'block', borderRadius: 0, border: '2px solid #FF6B35', boxShadow: '4px 4px 0px #000', overflow: 'hidden', transition: 'box-shadow 0.2s' }}
             >
               {/* Accent bar */}
               <div style={{ height: 8, background: post.color }} />
@@ -93,7 +93,7 @@ export default function BlogPage() {
                 <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 12px', lineHeight: 1.4 }}>
                   {post.title}
                 </h2>
-                <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)', margin: '0 0 20px', lineHeight: 1.7 }}>
+                <p style={{ fontSize: '0.95rem', color: '#555', margin: '0 0 20px', lineHeight: 1.7 }}>
                   {post.excerpt}
                 </p>
                 <span style={{ color: post.color, fontWeight: 600, fontSize: '0.9rem' }}>Read →</span>

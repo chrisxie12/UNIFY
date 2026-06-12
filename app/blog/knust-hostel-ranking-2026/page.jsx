@@ -4,27 +4,27 @@ export const metadata = {
 };
 
 const sharedStyles = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#0D1B3E', minHeight: '100vh' },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh' },
   nav: { borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 24px' },
   navInner: { maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 },
   navLogo: { fontWeight: 800, textDecoration: 'none', fontSize: '1rem' },
-  navLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.9rem' },
+  navLink: { color: '#555', textDecoration: 'none', fontSize: '0.9rem' },
   article: { maxWidth: 720, margin: '0 auto', padding: '48px 24px 80px' },
-  backLink: { color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
+  backLink: { color: '#555', textDecoration: 'none', fontSize: '0.875rem', display: 'inline-block', marginBottom: 32 },
   tag: { display: 'inline-block', background: 'rgba(255,107,53,0.1)', color: '#FF6B35', fontSize: '0.78rem', fontWeight: 700, padding: '3px 12px', borderRadius: 0, marginBottom: 16, letterSpacing: '0.02em' },
-  meta: { color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
+  meta: { color: '#777', fontSize: '0.875rem', marginBottom: 40, display: 'flex', gap: 16 },
   h1: { fontSize: '2.5rem', fontWeight: 800, margin: '0 0 16px', lineHeight: 1.2, letterSpacing: '-0.5px' },
   h2: { fontSize: '1.5rem', fontWeight: 700, margin: '48px 0 16px', paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,0.1)' },
-  body: { fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, margin: '0 0 20px' },
+  body: { fontSize: '1.1rem', color: '#333', lineHeight: 1.8, margin: '0 0 20px' },
   table: { width: '100%', borderCollapse: 'collapse', margin: '24px 0 32px', fontSize: '0.95rem' },
-  th: { background: '#1E2D5A', fontWeight: 600, padding: '12px', textAlign: 'left', border: '1px solid rgba(255,255,255,0.1)' },
-  td: { padding: '12px', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 },
-  quote: { borderLeft: '4px solid #0066FF', background: '#162347', padding: '16px 20px', borderRadius: 0, margin: '20px 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.8)', fontSize: '1rem', lineHeight: 1.7 },
-  cta: { marginTop: 56, background: '#162347', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0, padding: '36px', textAlign: 'center' },
+  th: { background: '#1E2D5A', fontWeight: 600, padding: '12px', textAlign: 'left', border: '2px solid #000' },
+  td: { padding: '12px', border: '2px solid #000', color: '#333', lineHeight: 1.5 },
+  quote: { borderLeft: '4px solid #0066FF', background: '#FFFFFF', padding: '16px 20px', borderRadius: 0, margin: '20px 0', fontStyle: 'italic', color: '#333', fontSize: '1rem', lineHeight: 1.7 },
+  cta: { marginTop: 56, background: '#FFFFFF', border: '2px solid #000', borderRadius: 0, padding: '36px', textAlign: 'center' },
   ctaBtn: { display: 'inline-block', background: '#FF6B35', color: '#fff', padding: '14px 32px', borderRadius: 0, textDecoration: 'none', fontWeight: 700, fontSize: '1rem', marginTop: 16 },
   footer: { background: '#FF6B35', padding: '32px 24px', textAlign: 'center' },
   footerText: { color: '#fff', fontWeight: 800, fontSize: '1rem' },
-  footerSub: { color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', marginTop: 4 },
+  footerSub: { color: '#555', fontSize: '0.8rem', marginTop: 4 },
 };
 
 export default function KnustHostelRankingPage() {
@@ -144,7 +144,7 @@ export default function KnustHostelRankingPage() {
         {/* CTA */}
         <div style={sharedStyles.cta}>
           <p style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 8px' }}>Ready to find your KNUST roommate?</p>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem', margin: 0 }}>
+          <p style={{ color: '#555', fontSize: '0.95rem', margin: 0 }}>
             Don&apos;t end up with a random match on the first day. Get on UNIFY and connect with compatible freshers before halls fill up.
           </p>
           <a href="/#waitlist" style={sharedStyles.ctaBtn}>

@@ -296,7 +296,7 @@ function CopyButton({ text }) {
   return (
     <button
       onClick={copy}
-      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-none border transition-all ${copied ? 'bg-[#A8C4FF]/10 border-[#A8C4FF]/30 text-[#A8C4FF]' : 'bg-[#162347] border-white/10 text-white/60 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'}`}
+      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-none border transition-all ${copied ? 'bg-[#0066FF]/10 border-[#0066FF] text-[#0066FF]' : 'bg-white border-black/20 text-[#555] hover:border-[#FF6B35] hover:text-[#FF6B35]'}`}
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>
@@ -346,10 +346,10 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
       <div
         style={{
           animation: 'revealUp 600ms cubic-bezier(0.16,1,0.3,1) both',
-          background: '#162347',
+          background: '#FFFFFF',
           borderRadius: 0,
           padding: '40px 32px',
-          boxShadow: '8px 8px 0px #FF6B35',
+          boxShadow: '8px 8px 0px #000',
           border: '1px solid rgba(255,255,255,0.08)',
           textAlign: 'center',
           maxWidth: 480,
@@ -357,11 +357,11 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
         }}
       >
         <div style={{ fontSize: 48, marginBottom: 12 }}>🔥</div>
-        <h3 style={{ fontSize: 24, fontWeight: 900, color: '#FFFFFE', marginBottom: 8 }}>You&apos;re in!</h3>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, marginBottom: 4 }}>
-          We&apos;ll text you when your <strong style={{ color: '#FFFFFE' }}>{schoolLabel}</strong> hub opens.
+        <h3 style={{ fontSize: 24, fontWeight: 900, color: '#111', marginBottom: 8 }}>You&apos;re in!</h3>
+        <p style={{ color: '#666', fontSize: 15, marginBottom: 4 }}>
+          We&apos;ll text you when your <strong style={{ color: '#111' }}>{schoolLabel}</strong> hub opens.
         </p>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 24 }}>Share with your friends so they don&apos;t miss out.</p>
+        <p style={{ color: '#777', fontSize: 13, marginBottom: 24 }}>Share with your friends so they don&apos;t miss out.</p>
         <a
           href={`https://wa.me/?text=${waShareText}`}
           target="_blank"
@@ -371,7 +371,7 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: '#25D366', color: 'white', fontWeight: 900, fontSize: 15,
             borderRadius: 0, padding: '12px 28px', textDecoration: 'none',
-            boxShadow: '4px 4px 0px rgba(37,211,102,0.45)',
+            boxShadow: '4px 4px 0px #000',
           }}
         >
           <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
@@ -395,8 +395,8 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             onClick={() => { setSchool(s.id); track('nav_click', { page: s.id }); }}
             className={`text-xs font-bold px-4 py-2 rounded-none border transition-all duration-200 ${
               school === s.id
-                ? 'bg-[#FF6B35] border-[#FF6B35] text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]'
-                : 'bg-[#162347] text-white/60 border-white/10 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
+                ? 'bg-[#FF6B35] border-[#FF6B35] text-[#111] shadow-[2px_2px_0px_#000]'
+                : 'bg-white text-[#555] border-black/20 hover:border-[#FF6B35] hover:text-[#FF6B35]'
             }`}
           >
             {s.label}
@@ -414,14 +414,14 @@ function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
             onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(''); }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             disabled={loading}
-            className="flex-1 bg-[#162347] border border-white/10 rounded-none px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
+            className="flex-1 bg-white border border-black/20 rounded-none px-5 py-3.5 text-sm text-[#111] placeholder-[#999] outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
             style={phoneError ? { borderColor: '#dc2626', boxShadow: '0 0 0 2px rgba(220,38,38,0.15)' } : {}}
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_rgba(255,255,255,0.3)] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-6 py-3.5 rounded-none border-2 border-white shadow-[3px_3px_0px_#000] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? 'Claiming…' : 'Claim Your Handle →'}
         </button>
@@ -448,14 +448,14 @@ function Ticker() {
         maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
         WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
       }}
-      className="overflow-hidden border-y border-white/10 bg-[#162347] py-3 relative"
+      className="overflow-hidden border-y border-black/20 bg-white py-3 relative"
     >
       <div
         className="flex gap-10 whitespace-nowrap w-max"
         style={{ animation: 'ticker 40s linear infinite', animationPlayState: paused ? 'paused' : 'running' }}
       >
         {items.map((item, i) => (
-          <span key={i} className="text-[11px] font-semibold text-white/40 tracking-wide">{item}</span>
+          <span key={i} className="text-[11px] font-semibold text-[#777] tracking-wide">{item}</span>
         ))}
       </div>
     </div>
@@ -482,14 +482,14 @@ function ExitModal() {
     <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
       <div className="absolute inset-0 bg-black/30" />
       <div
-        className="relative bg-[#162347] border border-white/10 rounded-none max-w-lg w-full shadow-[6px_6px_0px_#FF6B35] overflow-hidden"
+        className="relative bg-white border border-black/20 rounded-none max-w-lg w-full shadow-[6px_6px_0px_#000] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-1 w-full bg-gradient-to-r from-red-600 via-[#FF6B35] to-green-600" />
         <div className="p-8">
           <button
             onClick={close}
-            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-none bg-[#162347] hover:bg-white/10 text-white/40 hover:text-white text-lg transition-all"
+            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-none bg-white hover:bg-white/10 text-[#777] hover:text-[#111] text-lg transition-all"
             aria-label="Close"
           >
             ×
@@ -497,17 +497,17 @@ function ExitModal() {
           <div className="flex items-start gap-4 mb-6">
             <span className="text-3xl">👀</span>
             <div>
-              <h3 className="text-xl font-black text-white leading-tight mb-1">
+              <h3 className="text-xl font-black text-[#111] leading-tight mb-1">
                 Hold on — your spot isn&apos;t saved yet.
               </h3>
-              <p className="text-white/60 text-sm leading-relaxed">
+              <p className="text-[#555] text-sm leading-relaxed">
                 Freshers who sign up early get 48-hour priority access before their school hub opens to everyone.
               </p>
             </div>
           </div>
-          <div className="border-t border-white/30 mb-6" />
+          <div className="border-t border-black/20 mb-6" />
           <WaitlistForm id="exit-form" />
-          <p className="text-[11px] text-white/40 mt-4 text-center">
+          <p className="text-[11px] text-[#777] mt-4 text-center">
             🔒 Free forever · No spam · Built by Ghanaians
           </p>
         </div>
@@ -530,20 +530,20 @@ function StickyBar() {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3">
-      <div className="flex items-center gap-2 bg-[#162347] border border-white/10 shadow-[4px_4px_0px_#FF6B35] rounded-none px-4 py-3">
+      <div className="flex items-center gap-2 bg-white border border-black/20 shadow-[4px_4px_0px_#000] rounded-none px-4 py-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-white truncate">Secure your spot 🎓</p>
-          <p className="text-[10px] text-white/50 truncate">Join Ghana&apos;s fresher network — free</p>
+          <p className="text-xs font-black text-[#111] truncate">Secure your spot 🎓</p>
+          <p className="text-[10px] text-[#666] truncate">Join Ghana&apos;s fresher network — free</p>
         </div>
         <a
           href="#waitlist"
-          className="bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-xs px-4 py-2.5 rounded-none whitespace-nowrap flex-shrink-0 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+          className="bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-xs px-4 py-2.5 rounded-none whitespace-nowrap flex-shrink-0 active:scale-95 transition-all shadow-[2px_2px_0px_#000]"
         >
           Claim Handle →
         </a>
         <button
           onClick={() => setDismissed(true)}
-          className="text-white/40 hover:text-white/60 text-lg leading-none flex-shrink-0 pl-1"
+          className="text-[#777] hover:text-[#555] text-lg leading-none flex-shrink-0 pl-1"
           aria-label="Dismiss"
         >
           ×
@@ -558,36 +558,36 @@ function StickyBar() {
 function PhoneMockup() {
   return (
     <div style={{ animation: 'phoneBob 6s ease-in-out infinite' }} className="relative w-64 h-[520px] mx-auto">
-      <div className="absolute inset-0 rounded-none bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_rgba(255,107,53,0.3)]" />
-      <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-[#162347] p-4 flex flex-col gap-3">
-        <div className="flex justify-between text-[10px] text-white/40 px-1">
+      <div className="absolute inset-0 rounded-none bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_rgba(255,107,53,0.3)]" />
+      <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-white p-4 flex flex-col gap-3">
+        <div className="flex justify-between text-[10px] text-[#777] px-1">
           <span>9:41</span><span>●●●</span>
         </div>
-        <div className="text-white text-sm font-bold">Find your campus fam 👋</div>
+        <div className="text-[#111] text-sm font-bold">Find your campus fam 👋</div>
         {[
           { name: 'Ama O.', school: 'KNUST', tag: 'Roommate' },
           { name: 'Kofi B.', school: 'UG Legon', tag: 'Coursemates' },
         ].map((p) => (
-          <div key={p.name} className="bg-[#162347] border border-white/10 rounded-none p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center text-xs font-bold text-[#FF6B35]">
+          <div key={p.name} className="bg-white border border-black/20 rounded-none p-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-none bg-[#FF6B35]/10 border border-black/20 flex items-center justify-center text-xs font-bold text-[#FF6B35]">
               {p.name[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold">{p.name}</p>
-              <p className="text-white/40 text-[10px]">{p.school}</p>
+              <p className="text-[#111] text-xs font-semibold">{p.name}</p>
+              <p className="text-[#777] text-[10px]">{p.school}</p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 text-[#FF6B35]">{p.tag}</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-none bg-[#FF6B35]/10 border border-black/20 text-[#FF6B35]">{p.tag}</span>
           </div>
         ))}
-        <div className="bg-[#162347] border border-white/10 rounded-none p-3">
-          <p className="text-white/40 text-[10px] mb-2">YOUR HUB</p>
-          <p className="text-white text-xs font-bold">KNUST Brunei Hub</p>
-          <p className="text-white/40 text-[10px]">420 freshers · Active</p>
-          <div className="mt-2 w-full bg-[#1F2937] text-white text-[10px] font-black rounded-none py-1 text-center">Join Hub →</div>
+        <div className="bg-white border border-black/20 rounded-none p-3">
+          <p className="text-[#777] text-[10px] mb-2">YOUR HUB</p>
+          <p className="text-[#111] text-xs font-bold">KNUST Brunei Hub</p>
+          <p className="text-[#777] text-[10px]">420 freshers · Active</p>
+          <div className="mt-2 w-full bg-[#1F2937] text-[#111] text-[10px] font-black rounded-none py-1 text-center">Join Hub →</div>
         </div>
-        <div className="mt-auto bg-[#FF6B35]/8 border border-[#FF6B35]/15 rounded-none p-3 text-center">
+        <div className="mt-auto bg-[#FF6B35]/8 border border-[#FF6B35] rounded-none p-3 text-center">
           <p className="text-[#FF6B35] text-xs font-black">#247 on waitlist</p>
-          <p className="text-white/40 text-[10px]">Refer friends to move up</p>
+          <p className="text-[#777] text-[10px]">Refer friends to move up</p>
         </div>
       </div>
     </div>
@@ -598,16 +598,16 @@ function PhoneMockup() {
 
 // ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
 const CAMPUS_TILES = [
-  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: 'linear-gradient(135deg,#E55A22,#FF6B35)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
-  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: 'linear-gradient(135deg,#FF6B35,#0066FF)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
-  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: 'linear-gradient(135deg,#059669,#0891b2)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', delay: 160 },
-  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: 'linear-gradient(135deg,#dc2626,#be185d)', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Joshua_Alarbi_Library_(UPSA)_1.jpg?width=500', delay: 240 },
+  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: '#FF6B35', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
+  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: '#FF6B35', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
+  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: '#059669', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', delay: 160 },
+  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: '#dc2626', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Joshua_Alarbi_Library_(UPSA)_1.jpg?width=500', delay: 240 },
 ];
 
 function CampusCollage({ animate = false }) {
   return (
-    <div className="relative rounded-none overflow-hidden p-6 md:p-8"
-         style={{ background: 'linear-gradient(135deg,#0a1628 0%,#0d1f3c 60%,#0f2952 100%)' }}>
+    <div className="relative rounded-none overflow-hidden p-6 md:p-8 border-2 border-black"
+         style={{ background: '#FAF3E8' }}>
       {/* Dot grid */}
       <div className="absolute inset-0 opacity-[0.07]"
            style={{ backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
@@ -632,13 +632,13 @@ function CampusCollage({ animate = false }) {
             {/* Dark overlay */}
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.38) 100%)' }} />
             {/* Large faded initials */}
-            <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(255,255,255,0.13)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
+            <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(0,0,0,0.08)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
               {t.initials}
             </div>
-            <span style={{ position: 'relative', fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
+            <span style={{ position: 'relative', fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.9)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
             <div style={{ position: 'relative' }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: 'white', lineHeight: 1 }}>{t.sub}</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
+              <div style={{ fontSize: 10, color: '#666', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
             </div>
           </div>
         ))}
@@ -648,12 +648,12 @@ function CampusCollage({ animate = false }) {
       <div className="relative mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#4FC3F7] opacity-60" />
-            <span className="relative inline-flex rounded-none h-2 w-2 bg-[#4FC3F7]" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#FF6B35] opacity-60" />
+            <span className="relative inline-flex rounded-none h-2 w-2 bg-[#FF6B35]" />
           </span>
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#4FC3F7', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Live · Ghana</span>
+          <span style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Live · Ghana</span>
         </div>
-        <div style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 0, padding: '4px 14px' }}>
+        <div style={{ background: '#FFFFFF', border: '2px solid #000', borderRadius: 0, padding: '4px 14px' }}>
           <span style={{ fontSize: 12, fontWeight: 900, color: 'white' }}>1,074 freshers online</span>
         </div>
       </div>
@@ -674,28 +674,28 @@ const LOCATOR_SCHOOLS = [
 function SchoolLocatorViz({ animate = false }) {
   return (
     <div className="relative w-full h-full min-h-[300px] flex flex-col p-5"
-         style={{ background: 'linear-gradient(160deg,#f8faff 0%,#eef4ff 100%)', borderRadius: 0 }}>
+         style={{ background: '#FFFFFF', borderRadius: 0, border: '2px solid #000' }}>
       <div className="flex items-center justify-between mb-3">
         <div>
           <p style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', letterSpacing: '0.15em', textTransform: 'uppercase' }}>School Directory</p>
-          <p style={{ fontSize: 14, fontWeight: 900, color: '#FFFFFE' }}>Ghana Universities</p>
+          <p style={{ fontSize: 14, fontWeight: 900, color: '#111' }}>Ghana Universities</p>
         </div>
         <div style={{ background: '#FF6B35', color: 'white', fontSize: 10, fontWeight: 900, borderRadius: 0, padding: '4px 10px' }}>180+ schools</div>
       </div>
       <div className="flex flex-col gap-2 flex-1">
         {LOCATOR_SCHOOLS.map((s) => (
           <div key={s.name} className="flex items-center gap-3 rounded-none px-3 py-2"
-               style={{ background: '#162347', border: `1px solid rgba(255,255,255,0.1)`, boxShadow: '3px 3px 0px rgba(0,0,0,0.4)',
+               style={{ background: '#FFFFFF', border: `1px solid rgba(255,255,255,0.1)`, boxShadow: '3px 3px 0px #000',
                         animation: animate ? `schoolCardIn 500ms var(--ease-out-expo) ${s.delay}ms both` : 'none',
                         opacity: animate ? undefined : 0 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 0, background: `linear-gradient(135deg,${s.color},${s.color}99)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 0, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <span style={{ color: 'white', fontWeight: 900, fontSize: 8 }}>{s.initials}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p style={{ fontSize: 11, fontWeight: 900, color: '#FFFFFE' }}>{s.name}</p>
-              <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{s.location}</p>
+              <p style={{ fontSize: 11, fontWeight: 900, color: '#111' }}>{s.name}</p>
+              <p style={{ fontSize: 9, color: '#777', fontWeight: 600 }}>{s.location}</p>
             </div>
-            <div style={{ background: `${s.color}12`, border: `1px solid ${s.color}30`, borderRadius: 0, padding: '2px 8px' }}>
+            <div style={{ background: 'white', border: `2px solid ${s.color}`, borderRadius: 0, padding: '2px 8px' }}>
               <span style={{ fontSize: 9, fontWeight: 800, color: s.color }}>{s.freshers}</span>
             </div>
           </div>
@@ -706,7 +706,7 @@ function SchoolLocatorViz({ animate = false }) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-[#FF6B35] opacity-60" />
           <span className="relative inline-flex rounded-none h-1.5 w-1.5 bg-[#FF6B35]" />
         </span>
-        <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
+        <p style={{ fontSize: 9, color: '#666', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
       </div>
     </div>
   );
@@ -717,7 +717,7 @@ function SchoolLocatorViz({ animate = false }) {
 function FAQAccordion({ items, visible }) {
   const [open, setOpen] = useState(null);
   return (
-    <div className="flex flex-col divide-y divide-white/30">
+    <div className="flex flex-col divide-y divide-black/20">
       {items.map((faq, i) => (
         <div
           key={i}
@@ -729,11 +729,11 @@ function FAQAccordion({ items, visible }) {
             className="w-full text-left flex items-center justify-between gap-4 group"
             onClick={() => { setOpen(open === i ? null : i); track('faq_expand', { question: faq.q }); }}
           >
-            <span className="font-semibold text-sm text-white group-hover:text-[#FF6B35] transition-colors duration-200">{faq.q}</span>
+            <span className="font-semibold text-sm text-[#111] group-hover:text-[#FF6B35] transition-colors duration-200">{faq.q}</span>
             <span
-              className={`flex-shrink-0 w-6 h-6 rounded-none border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35]/40 bg-white/5'}`}
+              className={`flex-shrink-0 w-6 h-6 rounded-none border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#FF6B35] border-[#FF6B35]' : 'border-[#FF6B35] bg-white/5'}`}
             >
-              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#FF6B35]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-[#111]' : 'text-[#FF6B35]'}`} />
             </span>
           </button>
           {/* Smooth height with grid */}
@@ -746,7 +746,7 @@ function FAQAccordion({ items, visible }) {
           >
             <div style={{ overflow: 'hidden' }}>
               <p
-                className="text-sm text-white/60 leading-relaxed mt-3 pr-8"
+                className="text-sm text-[#555] leading-relaxed mt-3 pr-8"
                 style={{
                   opacity: open === i ? 1 : 0,
                   transition: 'opacity 300ms var(--ease-out-expo) 100ms',
@@ -779,8 +779,8 @@ function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, t
   const display = formatStat(animVal, { is12K, isDecimal, suffix });
   return (
     <div className="px-4" style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}>
-      <p className="text-3xl md:text-4xl font-black text-white">{display}</p>
-      <p className="text-white/70 text-sm mt-1">{label}</p>
+      <p className="text-3xl md:text-4xl font-black text-[#111]">{display}</p>
+      <p className="text-[#555] text-sm mt-1">{label}</p>
     </div>
   );
 }
@@ -820,9 +820,9 @@ function MobileMenu() {
         aria-label="Open menu"
         onClick={() => setOpen(true)}
       >
-        <span className="block w-6 h-0.5 bg-white rounded-none" />
-        <span className="block w-6 h-0.5 bg-white rounded-none" />
-        <span className="block w-6 h-0.5 bg-white rounded-none" />
+        <span className="block w-6 h-0.5 bg-[#111] rounded-none" />
+        <span className="block w-6 h-0.5 bg-[#111] rounded-none" />
+        <span className="block w-6 h-0.5 bg-[#111] rounded-none" />
       </button>
 
       {open && (
@@ -834,7 +834,7 @@ function MobileMenu() {
       )}
 
       <div
-        className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-[#162347] border-l border-white/10 z-[100] flex flex-col p-8 shadow-[6px_6px_0px_#FF6B35]"
+        className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-white border-l border-black/20 z-[100] flex flex-col p-8 shadow-[6px_6px_0px_#000]"
         style={{
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           transition: open ? 'transform 300ms cubic-bezier(0.16,1,0.3,1)' : 'transform 250ms ease-in',
@@ -844,7 +844,7 @@ function MobileMenu() {
         aria-label="Navigation menu"
       >
         <button
-          className="self-end w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all mb-8"
+          className="self-end w-10 h-10 rounded-none border border-black/20 bg-white flex items-center justify-center text-[#555] hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all mb-8"
           aria-label="Close menu"
           onClick={() => setOpen(false)}
         >
@@ -857,7 +857,7 @@ function MobileMenu() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="text-2xl font-black text-white py-3 border-b border-white/10 hover:text-[#FF6B35] transition-colors"
+              className="text-2xl font-black text-[#111] py-3 border-b border-black/20 hover:text-[#FF6B35] transition-colors"
             >
               {link.label}
             </a>
@@ -865,10 +865,10 @@ function MobileMenu() {
         </nav>
 
         <div className="flex flex-col gap-3 mt-8">
-          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-none border border-white/10 text-sm font-semibold text-white hover:border-[#FF6B35] hover:text-[#FF6B35] transition-colors text-center">
+          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-none border border-black/20 text-sm font-semibold text-[#111] hover:border-[#FF6B35] hover:text-[#FF6B35] transition-colors text-center">
             Sign In
           </a>
-          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-none bg-[#FF6B35] text-white text-sm font-black text-center hover:bg-[#E55A22] transition-colors">
+          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-none bg-[#FF6B35] text-[#111] text-sm font-black text-center hover:bg-[#E55A22] transition-colors">
             Get Early Access →
           </a>
         </div>
@@ -949,7 +949,7 @@ export default function UnifyLanding({ schoolId } = {}) {
   const AVATARS = [
     { initials: 'EO', bg: 'bg-[#FF6B35]/20', text: 'text-[#FF6B35]', top: '38%', left: '42%', order: 0 },
     { initials: 'AA', bg: 'bg-[#FF6B35]/20', text: 'text-[#FF6B35]', top: '10%', left: '30%', order: 1 },
-    { initials: 'KB', bg: 'bg-[#A8C4FF]/20', text: 'text-[#A8C4FF]', top: '10%', left: '55%', order: 2 },
+    { initials: 'KB', bg: 'bg-[#0066FF]/20', text: 'text-[#0066FF]', top: '10%', left: '55%', order: 2 },
     { initials: 'SM', bg: 'bg-[#FF6B35]/30', text: 'text-[#FF6B35]', top: '38%', left: '15%', order: 3 },
     { initials: 'FA', bg: 'bg-[#FF6B35]/15', text: 'text-[#FF6B35]', top: '38%', left: '68%', order: 4 },
     { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%', order: 5 },
@@ -964,7 +964,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: '#0D1B3E', fontFamily: "'Inter', system-ui, sans-serif" }}>
+         style={{ background: '#FAF3E8', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <style>{`
@@ -1168,35 +1168,35 @@ export default function UnifyLanding({ schoolId } = {}) {
       </div>
 
       {/* Browser wrapper */}
-      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#FAF3E8] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
         <nav
-          className="sticky top-0 z-50 bg-[#0D1B3E] border-b-2 border-[#FF6B35]/50"
+          className="sticky top-0 z-50 bg-[#FAF3E8] border-b-2 border-[#FF6B35]"
           style={heroStyle(0, 'heroFadeDown', '600ms')}
         >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
+              <span className="text-lg font-black tracking-tight text-[#111]">UNIFY</span>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/25 text-[#FF6B35]">GH</span>
             </div>
-            <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
-              <a href="#" className="relative text-white font-semibold" onClick={() => track('nav_click', { page: 'home' })}>
+            <div className="hidden md:flex items-center gap-6 text-sm text-[#666] font-medium">
+              <a href="#" className="relative text-[#111] font-semibold" onClick={() => track('nav_click', { page: 'home' })}>
                 Home
                 <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-none bg-[#FF6B35]" />
               </a>
-              <a href="/hubs" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'hubs' })}>Hubs</a>
-              <a href="/match" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'match' })}>Match</a>
-              <a href="#schools" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'schools' })}>Schools</a>
-              <a href="#faq" className="nav-link hover:text-white transition-colors" onClick={() => track('nav_click', { page: 'faq' })}>FAQ</a>
+              <a href="/hubs" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'hubs' })}>Hubs</a>
+              <a href="/match" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'match' })}>Match</a>
+              <a href="#schools" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'schools' })}>Schools</a>
+              <a href="#faq" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'faq' })}>FAQ</a>
             </div>
             <div className="flex items-center gap-2">
-              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-white/70 px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-amber-400/50 hover:text-amber-400 transition-colors">
+              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-[#555] px-4 py-2 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] transition-colors">
                 Sign In
               </a>
               <a
                 href="#waitlist"
-                className="hidden md:inline-flex btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-white text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                className="hidden md:inline-flex btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_#000]"
               >
                 Get Early Access →
               </a>
@@ -1206,9 +1206,9 @@ export default function UnifyLanding({ schoolId } = {}) {
         </nav>
 
         {/* ── HERO — 55/45 asymmetric ─────────────────────────────────── */}
-        <section id="main-content" className="relative bg-[#0D1B3E] pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+        <section id="main-content" className="relative bg-[#FAF3E8] pt-16 md:pt-24 pb-12 md:pb-20 px-6">
           {/* Hero glow */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 70% 50%, rgba(0,102,255,0.06) 0%, transparent 70%)' }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'transparent' }} />
           {/* Ambient drift dots */}
           {[
             { size: 10, top: '15%', left: '8%',  color: '#FF6B35', dur: '5.2s', delay: '0s'    },
@@ -1226,7 +1226,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             {/* Left */}
             <div>
               <div
-                className="inline-flex items-center gap-2 bg-[#FF6B35]/8 border border-[#FF6B35]/20 text-[#FF6B35] text-xs font-bold px-3.5 py-2 rounded-none mb-7"
+                className="inline-flex items-center gap-2 bg-[#FF6B35]/8 border border-black/20 text-[#FF6B35] text-xs font-bold px-3.5 py-2 rounded-none mb-7"
                 style={heroStyle(100)}
               >
                 <span className="w-1.5 h-1.5 rounded-none bg-[#FF6B35] animate-pulse" />
@@ -1234,7 +1234,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
 
               <div className="mb-6">
-                <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, lineHeight: 1, letterSpacing: '-0.01em' }} className="text-[3.2rem] md:text-[5rem] uppercase text-white">
+                <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, lineHeight: 1, letterSpacing: '-0.01em' }} className="text-[3.2rem] md:text-[5rem] uppercase text-[#111]">
                   <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
                     {heroHeadline}
                   </span>
@@ -1247,7 +1247,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
 
               <p
-                className="text-base md:text-lg text-white/60 leading-relaxed mb-8 max-w-[440px] mt-5"
+                className="text-base md:text-lg text-[#555] leading-relaxed mb-8 max-w-[440px] mt-5"
                 style={heroStyle(400, 'heroFadeUp', '700ms')}
               >
                 {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
@@ -1256,7 +1256,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               <span className="relative inline-block mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
                 <a
                   href="#waitlist"
-                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base px-8 py-4 rounded-none border-2 border-white shadow-[4px_4px_0px_rgba(255,255,255,0.4)]"
+                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-white shadow-[4px_4px_0px_rgba(255,255,255,0.4)]"
                 >
                   Get Early Access <ArrowRight className="w-4 h-4" />
                 </a>
@@ -1270,29 +1270,29 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 <div className="flex -space-x-2">
                   {[
-                    { initials: 'KA', grad: 'linear-gradient(135deg,#FF6B35,#6366f1)' },
-                    { initials: 'YM', grad: 'linear-gradient(135deg,#FF6B35,#E55A22)' },
-                    { initials: 'FA', grad: 'linear-gradient(135deg,#FF6B35,#dc2626)' },
-                    { initials: 'EB', grad: 'linear-gradient(135deg,#059669,#0891b2)' },
-                    { initials: 'AO', grad: 'linear-gradient(135deg,#be185d,#9333ea)' },
+                    { initials: 'KA', grad: '#FF6B35' },
+                    { initials: 'YM', grad: '#FF6B35' },
+                    { initials: 'FA', grad: '#FF6B35' },
+                    { initials: 'EB', grad: '#059669' },
+                    { initials: 'AO', grad: '#be185d' },
                   ].map((a) => (
                     <div
                       key={a.initials}
-                      className="w-8 h-8 rounded-none border-2 border-white/60 flex items-center justify-center text-[8px] font-black text-white"
+                      className="w-8 h-8 rounded-none border-2 border-white/60 flex items-center justify-center text-[8px] font-black text-[#111]"
                       style={{ background: a.grad }}
                     >
                       {a.initials}
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-white/60">
-                  <strong className="text-white font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
+                <p className="text-sm text-[#555]">
+                  <strong className="text-[#111] font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {['✓ 100% Free', '✓ Works on 2G', '✓ Verified students'].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold text-white/60 bg-[#162347] border border-white/10 px-3 py-1 rounded-none">
+                  <span key={t} className="text-[11px] font-semibold text-[#555] bg-white border border-black/20 px-3 py-1 rounded-none">
                     {t}
                   </span>
                 ))}
@@ -1309,24 +1309,24 @@ export default function UnifyLanding({ schoolId } = {}) {
                   className="w-full h-full object-cover object-center"
                   style={{ filter: 'brightness(0.65)' }}
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(0,102,255,0.20) 0%, rgba(0,0,0,0.08) 100%)' }} />
+                <div className="absolute inset-0" style={{ background: 'transparent' }} />
               </div>
               {/* Glow */}
               <div className="absolute w-72 h-72 rounded-none pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(0,102,255,0.10) 0%, transparent 70%)', zIndex: 0 }} />
+                style={{ background: 'transparent', zIndex: 0 }} />
 
               {/* Card 1 — Hub Preview (top-left, -5°) */}
               <div style={{ position: 'absolute', top: '4%', left: '2%', transform: 'rotate(-5deg)', zIndex: 3 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 0s infinite alternate',
-                  background: '#162347', borderRadius: 0, width: 210,
-                  boxShadow: '0 12px 40px rgba(0,102,255,0.14), 0 2px 8px rgba(0,0,0,0.06)',
+                  background: '#FFFFFF', borderRadius: 0, width: 210,
+                  boxShadow: '4px 4px 0px #000',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <div style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Your Hub</div>
                     <span style={{ width: 7, height: 7, borderRadius: 0, background: '#22c55e', display: 'inline-block' }} />
                   </div>
-                  <div style={{ fontSize: 14, fontWeight: 900, color: '#FFFFFE', marginBottom: 4 }}>KNUST Brunei Hub</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>420 freshers waiting</div>
+                  <div style={{ fontSize: 14, fontWeight: 900, color: '#111', marginBottom: 4 }}>KNUST Brunei Hub</div>
+                  <div style={{ fontSize: 11, color: '#666', marginBottom: 12 }}>420 freshers waiting</div>
                   <div style={{ background: '#FF6B35', color: 'white', fontWeight: 900, fontSize: 11, borderRadius: 0, padding: '6px 14px', textAlign: 'center' }}>
                     Join Hub →
                   </div>
@@ -1336,8 +1336,8 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Card 2 — Roommate Match (center-right, +3°) */}
               <div style={{ position: 'absolute', top: '30%', right: '0%', transform: 'rotate(3deg)', zIndex: 4 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 1.7s infinite alternate',
-                  background: '#162347', borderRadius: 0, width: 220,
-                  boxShadow: '6px 6px 0px rgba(0,0,0,0.18)',
+                  background: '#FFFFFF', borderRadius: 0, width: 220,
+                  boxShadow: '6px 6px 0px #000',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '16px 18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
                     <div style={{ width: 20, height: 20, borderRadius: 0, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1346,22 +1346,22 @@ export default function UnifyLanding({ schoolId } = {}) {
                     <span style={{ fontSize: 11, fontWeight: 800, color: '#16a34a' }}>Roommate Found!</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 0, background: 'linear-gradient(135deg,#FF6B35,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
-                    <div style={{ flex: 1, height: 2, background: 'linear-gradient(90deg,#FF6B35,#FF6B35)', borderRadius: 0 }} />
-                    <div style={{ width: 36, height: 36, borderRadius: 0, background: 'linear-gradient(135deg,#FF6B35,#dc2626)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
+                    <div style={{ width: 36, height: 36, borderRadius: 0, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
+                    <div style={{ flex: 1, height: 2, background: '#FF6B35', borderRadius: 0 }} />
+                    <div style={{ width: 36, height: 36, borderRadius: 0, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
                   </div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
+                  <div style={{ fontSize: 11, color: '#666', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
                 </div>
               </div>
 
               {/* Card 3 — Chat Bubble (bottom, -2°) */}
               <div style={{ position: 'absolute', bottom: '4%', left: '8%', transform: 'rotate(-2deg)', zIndex: 3 }}>
                 <div style={{ animation: 'driftY 5s ease-in-out 0.9s infinite alternate',
-                  background: '#162347', borderRadius: 0, width: 230,
-                  boxShadow: '5px 5px 0px rgba(0,0,0,0.15)',
+                  background: '#FFFFFF', borderRadius: 0, width: 230,
+                  boxShadow: '5px 5px 0px #000',
                   border: '1px solid rgba(229,231,235,0.8)', padding: '14px 16px' }}>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 0, background: 'linear-gradient(135deg,#FF6B35,#0066FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>YM</div>
+                    <div style={{ width: 28, height: 28, borderRadius: 0, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>YM</div>
                     <div style={{ background: '#F3F4F6', borderRadius: 0, padding: '7px 11px', fontSize: 11, color: '#374151', maxWidth: 160 }}>
                       Which hall is closer to SRC? 🏠
                     </div>
@@ -1370,9 +1370,9 @@ export default function UnifyLanding({ schoolId } = {}) {
                     <div style={{ background: '#FF6B35', borderRadius: 0, padding: '7px 11px', fontSize: 11, color: 'white', maxWidth: 160 }}>
                       Evandy! And cheaper too ✓
                     </div>
-                    <div style={{ width: 28, height: 28, borderRadius: 0, background: 'linear-gradient(135deg,#059669,#0891b2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>KA</div>
+                    <div style={{ width: 28, height: 28, borderRadius: 0, background: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>KA</div>
                   </div>
-                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
+                  <div style={{ fontSize: 9, color: '#777', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
                 </div>
               </div>
 
@@ -1405,8 +1405,8 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="features"
           ref={featuresRef}
-          className="relative py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
-          style={{ ...sectionRevealStyle(featuresVisible), background: 'linear-gradient(180deg, #0D1B3E 0%, #130F20 100%)' }}
+          className="relative py-16 md:py-28 px-6 border-t-2 border-black/20"
+          style={{ ...sectionRevealStyle(featuresVisible), background: '#FAF3E8' }}
         >
           {/* Ambient dots */}
           {[
@@ -1427,10 +1427,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF6B35]">Why UNIFY</span>
                 </div>
                 <SparkDoodle visible={featuresVisible} delay={200} />
-                <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
+                <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
                   That&apos;s The Way<br />To Fresher.
                 </h2>
-                <p className="text-white/60 text-base leading-relaxed max-w-sm">
+                <p className="text-[#555] text-base leading-relaxed max-w-sm">
                   Not a copy-paste Western social app. Every decision built around the real Ghanaian fresher experience.
                 </p>
               </div>
@@ -1443,15 +1443,15 @@ export default function UnifyLanding({ schoolId } = {}) {
                 ].map((f, i) => (
                   <div
                     key={f.title}
-                    className="feature-card bg-[#162347] border-2 border-[#FF6B35]/40 shadow-[4px_4px_0px_rgba(255,107,53,0.2)] rounded-none p-6 flex items-start gap-4"
+                    className="feature-card bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none p-6 flex items-start gap-4"
                     style={featuresVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 100}ms both` } : { opacity: 0 }}
                   >
-                    <div className="w-11 h-11 rounded-none bg-[#FF6B35]/8 border border-[#FF6B35]/15 flex items-center justify-center flex-shrink-0">
+                    <div className="w-11 h-11 rounded-none bg-[#FF6B35]/8 border border-[#FF6B35] flex items-center justify-center flex-shrink-0">
                       {f.icon}
                     </div>
                     <div>
-                      <h3 className="font-black text-white mb-1">{f.title}</h3>
-                      <p className="text-sm text-white/60 leading-relaxed">{f.body}</p>
+                      <h3 className="font-black text-[#111] mb-1">{f.title}</h3>
+                      <p className="text-sm text-[#555] leading-relaxed">{f.body}</p>
                     </div>
                   </div>
                 ))}
@@ -1464,7 +1464,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20">
+        <section id="schools" className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20">
           <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
             <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
               <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
@@ -1479,15 +1479,15 @@ export default function UnifyLanding({ schoolId } = {}) {
             <div className="relative">
               <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
               <SparkDoodle visible={featuresVisible} delay={300} />
-              <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
+              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
                 Find Your Campus,<br />Find Your People.
               </h2>
-              <p className="text-white/60 text-base leading-relaxed mb-7">
+              <p className="text-[#555] text-base leading-relaxed mb-7">
                 Browse 180+ Ghana universities. Pick your school and claim your handle before your classmates do.
               </p>
-              <div className="flex items-center gap-2 bg-[#162347] border border-white/10 rounded-none p-2 pl-5 mb-5">
+              <div className="flex items-center gap-2 bg-white border border-black/20 rounded-none p-2 pl-5 mb-5">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                <select className="flex-1 bg-transparent text-white text-sm outline-none">
+                <select className="flex-1 bg-transparent text-[#111] text-sm outline-none">
                   <option value="">Choose your school</option>
                   <option>KNUST</option>
                   <option>UG Legon</option>
@@ -1498,16 +1498,16 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </select>
                 <a
                   href="/hubs"
-                  className="btn-cta-glow bg-[#FF6B35] text-white font-black text-sm px-5 py-2 rounded-none hover:bg-[#E55A22] transition-colors whitespace-nowrap shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                  className="btn-cta-glow bg-[#FF6B35] text-[#111] font-black text-sm px-5 py-2 rounded-none hover:bg-[#E55A22] transition-colors whitespace-nowrap shadow-[2px_2px_0px_#000]"
                 >
                   Find Hub →
                 </a>
               </div>
               <div className="flex flex-wrap gap-3">
-                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
+                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#555] hover:text-[#111] px-4 py-2 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all footer-link">
                   Browse all hubs <ArrowRight className="w-3.5 h-3.5" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/60 hover:text-white px-4 py-2 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all footer-link">
+                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#555] hover:text-[#111] px-4 py-2 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all footer-link">
                   Find a roommate <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -1518,8 +1518,8 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── COMMUNITY ────────────────────────────────────────────────── */}
         <section
           ref={communityRef}
-          className="relative py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
-          style={{ ...sectionRevealStyle(communityVisible), background: '#0D1B3E' }}
+          className="relative py-16 md:py-28 px-6 border-t-2 border-black/20"
+          style={{ ...sectionRevealStyle(communityVisible), background: '#FAF3E8' }}
         >
           {/* Ambient dots */}
           {[
@@ -1539,12 +1539,12 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <Sparkles className="w-5 h-5 text-[#FF6B35]" />
               </div>
               <SparkDoodle visible={communityVisible} delay={200} />
-              <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
+              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
                 Your Campus Fam<br />Is Calling.
                 <br />
-                <span className="text-white/60 text-3xl md:text-4xl font-bold">Don&apos;t Miss Orientation.</span>
+                <span className="text-[#555] text-3xl md:text-4xl font-bold">Don&apos;t Miss Orientation.</span>
               </h2>
-              <p className="text-white/60 text-base leading-relaxed mb-8">
+              <p className="text-[#555] text-base leading-relaxed mb-8">
                 Join the official WhatsApp community for your school. Real freshers, real intel, zero spam.
               </p>
               <a
@@ -1552,7 +1552,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track('whatsapp_click', { type: 'join' })}
-                className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-7 py-3.5 rounded-none shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-7 py-3.5 rounded-none shadow-[2px_2px_0px_#000]"
               >
                 <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -1571,7 +1571,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               {AVATARS.map((a) => (
                 <div
                   key={a.initials}
-                  className={`absolute w-12 h-12 rounded-none ${a.bg} border-2 border-white/60 flex items-center justify-center text-xs font-black ${a.text} shadow-[2px_2px_0px_rgba(255,255,255,0.3)]`}
+                  className={`absolute w-12 h-12 rounded-none ${a.bg} border-2 border-white/60 flex items-center justify-center text-xs font-black ${a.text} shadow-[2px_2px_0px_#000]`}
                   style={{
                     top: a.top, left: a.left,
                     animation: communityVisible
@@ -1584,7 +1584,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 </div>
               ))}
               <div
-                className="absolute top-2 right-0 bg-[#162347] border border-white/10 rounded-none px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                className="absolute top-2 right-0 bg-white border border-black/20 rounded-none px-3 py-1.5 text-xs font-semibold text-[#111] shadow-[2px_2px_0px_#000]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 400ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1592,7 +1592,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Already linked! 🔥
               </div>
-              <div className="absolute bottom-8 right-4 bg-[#A8C4FF]/8 border border-[#A8C4FF]/20 rounded-none px-3 py-1.5 text-xs font-semibold text-[#A8C4FF] shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+              <div className="absolute bottom-8 right-4 bg-[#0066FF]/10 border border-[#0066FF] rounded-none px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-[2px_2px_0px_#000]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 560ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1600,7 +1600,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 Found my roomie!
               </div>
-              <div className="absolute bottom-2 left-0 bg-[#162347] border border-white/10 rounded-none px-3 py-1.5 text-xs font-semibold text-white shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+              <div className="absolute bottom-2 left-0 bg-white border border-black/20 rounded-none px-3 py-1.5 text-xs font-semibold text-[#111] shadow-[2px_2px_0px_#000]"
                 style={{
                   animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 720ms both' : 'none',
                   opacity: communityVisible ? undefined : 0,
@@ -1610,7 +1610,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               </div>
               <div className="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
                 {['W', 'IG', 'X'].map((s) => (
-                  <div key={s} className="social-icon w-8 h-8 rounded-none bg-[#162347] border border-white/10 flex items-center justify-center text-[9px] font-black text-white/50">
+                  <div key={s} className="social-icon w-8 h-8 rounded-none bg-white border border-black/20 flex items-center justify-center text-[9px] font-black text-[#666]">
                     {s}
                   </div>
                 ))}
@@ -1622,7 +1622,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
         <section
           ref={testimonialsRef}
-          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20 overflow-hidden"
+          className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20 overflow-hidden"
           style={sectionRevealStyle(testimonialsVisible)}
         >
           {/* Subtle campus photo strip on the right */}
@@ -1632,17 +1632,17 @@ export default function UnifyLanding({ schoolId } = {}) {
               alt="Accra skyline"
               className="w-full h-full object-cover object-center opacity-[0.12]"
             />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, #0D1B3E 0%, transparent 40%)' }} />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, white 0%, transparent 40%)' }} />
           </div>
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-10">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#A8C4FF]">Reviews</span>
-                  <Star className="w-4 h-4 text-[#A8C4FF]" />
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Reviews</span>
+                  <Star className="w-4 h-4 text-[#0066FF]" />
                 </div>
                 <SparkDoodle visible={testimonialsVisible} delay={200} />
-                <h2 className="text-4xl md:text-5xl font-black text-white">
+                <h2 className="text-4xl md:text-5xl font-black text-[#111]">
                   Satisfied Freshers Are<br />Our Best Ads.
                 </h2>
               </div>
@@ -1650,12 +1650,12 @@ export default function UnifyLanding({ schoolId } = {}) {
                 <button
                   aria-label="Previous testimonial"
                   onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }}
-                  className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
+                  className="w-10 h-10 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] flex items-center justify-center text-[#555] transition-all duration-200 hover:scale-110 active:scale-95"
                 >←</button>
                 <button
                   aria-label="Next testimonial"
                   onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }}
-                  className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] hover:border-[#FF6B35]/50 hover:text-[#FF6B35] flex items-center justify-center text-white/60 transition-all duration-200 hover:scale-110 active:scale-95"
+                  className="w-10 h-10 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] flex items-center justify-center text-[#555] transition-all duration-200 hover:scale-110 active:scale-95"
                 >→</button>
               </div>
             </div>
@@ -1671,18 +1671,18 @@ export default function UnifyLanding({ schoolId } = {}) {
               >
                 {TESTIMONIALS.map((t) => (
                   <div key={t.name} className="w-full flex-shrink-0 px-1 md:px-3">
-                    <div className="relative overflow-hidden bg-[#162347] border-2 border-[#FF6B35]/30 shadow-[4px_4px_0px_rgba(255,107,53,0.15)] rounded-none p-8 md:p-10 flex flex-col min-h-[220px]">
+                    <div className="relative overflow-hidden bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none p-8 md:p-10 flex flex-col min-h-[220px]">
                       {/* Watermark quote */}
                       <div className="absolute top-4 right-6 text-[96px] font-black leading-none pointer-events-none select-none"
                            style={{ color: '#FF6B35', opacity: 0.12 }}>&rdquo;</div>
                       {/* Visible small quote */}
                       <div className="text-5xl font-black text-amber-400 leading-none mb-4">&ldquo;</div>
-                      <p className="text-white/60 text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
-                      <div className="border-t border-white/10 pt-5 flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center text-sm font-black text-[#FF6B35] flex-shrink-0">{t.initials}</div>
+                      <p className="text-[#555] text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
+                      <div className="border-t border-black/20 pt-5 flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-none bg-[#FF6B35]/10 border border-black/20 flex items-center justify-center text-sm font-black text-[#FF6B35] flex-shrink-0">{t.initials}</div>
                         <div className="flex-1">
-                          <p className="font-bold text-white text-sm">{t.name}</p>
-                          <p className="text-white/40 text-xs">{t.role}</p>
+                          <p className="font-bold text-[#111] text-sm">{t.name}</p>
+                          <p className="text-[#777] text-xs">{t.role}</p>
                         </div>
                         <div className="flex items-center gap-0.5">
                           {[1,2,3,4,5].map(s => (
@@ -1700,11 +1700,11 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             {/* Dot indicators + mobile arrows */}
             <div className="md:hidden mt-6 flex items-center justify-center gap-3">
-              <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">←</button>
+              <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-none border border-black/20 bg-white flex items-center justify-center text-[#555] hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all">←</button>
               {TESTIMONIALS.map((_, i) => (
                 <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-none transition-all duration-300 ${i === activeTestimonial ? 'bg-[#FF6B35] w-6' : 'bg-[#E5E7EB] w-2'}`} />
               ))}
-              <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-none border border-white/10 bg-[#162347] flex items-center justify-center text-white/60 hover:border-[#FF6B35]/50 hover:text-[#FF6B35] transition-all">→</button>
+              <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-none border border-black/20 bg-white flex items-center justify-center text-[#555] hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all">→</button>
             </div>
             <div className="hidden md:flex mt-6 items-center justify-center gap-2">
               {TESTIMONIALS.map((_, i) => (
@@ -1718,24 +1718,24 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="waitlist"
           ref={ctaRef}
-          className="py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
-          style={{ ...sectionRevealStyle(ctaVisible), background: '#0D1B3E' }}
+          className="py-16 md:py-28 px-6 border-t-2 border-black/20"
+          style={{ ...sectionRevealStyle(ctaVisible), background: '#FAF3E8' }}
         >
           <div className="max-w-2xl mx-auto text-center">
             <span className="text-5xl block mb-6">🇬🇭</span>
-            <div className="inline-flex items-center gap-2 bg-[#A8C4FF]/10 border border-[#A8C4FF]/30 text-[#A8C4FF] text-xs font-bold px-4 py-2 rounded-none mb-7">
+            <div className="inline-flex items-center gap-2 bg-[#0066FF]/10 border border-[#0066FF] text-[#0066FF] text-xs font-bold px-4 py-2 rounded-none mb-7">
               <CheckCircle className="w-3.5 h-3.5" strokeWidth={2} />
               100% free · No subscriptions · Ever
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-5 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-[#111] tracking-tight mb-5 leading-tight">
               Stop hunting for broken<br />
-              <span className="text-[#A8C4FF]">WhatsApp group links.</span>
+              <span className="text-[#0066FF]">WhatsApp group links.</span>
             </h2>
-            <p className="text-white/60 text-lg mb-10 max-w-md mx-auto leading-relaxed">
+            <p className="text-[#555] text-lg mb-10 max-w-md mx-auto leading-relaxed">
               Secure your spot in the official Class of &apos;30 network today. Your campus people are already inside.
             </p>
             <WaitlistForm id="cta-form" defaultSchool={schoolId || ''} />
-            <p className="text-xs text-white/40 mt-5">🔒 Free forever · No spam · Built by Ghanaians in Ghana</p>
+            <p className="text-xs text-[#777] mt-5">🔒 Free forever · No spam · Built by Ghanaians in Ghana</p>
           </div>
         </section>
 
@@ -1743,7 +1743,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="faq"
           ref={faqRef}
-          className="relative bg-[#0D1B3E] py-16 md:py-28 px-6 border-t-2 border-[#FF6B35]/20"
+          className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20"
           style={sectionRevealStyle(faqVisible)}
         >
           <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>
@@ -1757,35 +1757,35 @@ export default function UnifyLanding({ schoolId } = {}) {
               <BlueSwirl className="absolute -left-4 -top-4" drawn={faqVisible} />
               <div className="flex items-center gap-3 mb-4">
                 <OrangeDoodle drawn={faqVisible} />
-                <MessageCircle className="w-5 h-5 text-[#A8C4FF]" />
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#A8C4FF]">Get in touch</span>
+                <MessageCircle className="w-5 h-5 text-[#0066FF]" />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
               </div>
               <SparkDoodle visible={faqVisible} delay={200} />
-              <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
+              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
                 Got A Question<br />For UNIFY?
               </h2>
-              <p className="text-white/60 text-base leading-relaxed mb-7">
+              <p className="text-[#555] text-base leading-relaxed mb-7">
                 We&apos;ll answer everything. Drop your number and we&apos;ll reach out.
               </p>
               {faqDone ? (
-                <div className="flex items-center gap-3 bg-[#A8C4FF]/10 border border-[#A8C4FF]/30 rounded-none px-5 py-4">
-                  <CheckCircle className="text-[#A8C4FF] w-5 h-5 flex-shrink-0" />
-                  <p className="text-[#A8C4FF] font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
+                <div className="flex items-center gap-3 bg-[#0066FF]/10 border border-[#0066FF] rounded-none px-5 py-4">
+                  <CheckCircle className="text-[#0066FF] w-5 h-5 flex-shrink-0" />
+                  <p className="text-[#0066FF] font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
                 </div>
               ) : (
-                <form onSubmit={handleFaqSubmit} className="flex items-center bg-[#162347] border border-white/10 rounded-none overflow-hidden pr-1.5 focus-within:border-[#FF6B35]/60">
+                <form onSubmit={handleFaqSubmit} className="flex items-center bg-white border border-black/20 rounded-none overflow-hidden pr-1.5 focus-within:border-[#FF6B35]/60">
                   <input
                     type="text"
                     value={faqPhone}
                     onChange={(e) => setFaqPhone(e.target.value)}
                     placeholder="Your phone number..."
                     required
-                    className="flex-1 bg-transparent px-5 py-3.5 text-sm text-white placeholder-white/30 outline-none"
+                    className="flex-1 bg-transparent px-5 py-3.5 text-sm text-[#111] placeholder-[#999] outline-none"
                   />
                   <button
                     type="submit"
                     disabled={faqLoading}
-                    className="bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-5 py-2.5 rounded-none transition-colors disabled:opacity-60 whitespace-nowrap shadow-[2px_2px_0px_rgba(255,255,255,0.3)]"
+                    className="bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-5 py-2.5 rounded-none transition-colors disabled:opacity-60 whitespace-nowrap shadow-[2px_2px_0px_#000]"
                   >
                     {faqLoading ? '...' : 'Submit'}
                   </button>
@@ -1794,7 +1794,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             <div>
-              <p className="text-sm text-white/60 mb-4">Check if your question is already answered:</p>
+              <p className="text-sm text-[#555] mb-4">Check if your question is already answered:</p>
               <FAQAccordion items={FAQS_NEW} visible={faqVisible} />
             </div>
           </div>
@@ -1803,22 +1803,22 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── FOOTER ──────────────────────────────────────────────────── */}
         <footer className="bg-[#FF6B35] px-6 pt-14 pb-8">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-white/20">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-black/20">
 
               {/* Col 1 — Brand */}
               <div className="col-span-2 md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl font-black text-white tracking-tight">UNIFY</span>
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-white/15 border border-white/25 text-white">GH</span>
+                  <span className="text-2xl font-black text-[#111] tracking-tight">UNIFY</span>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-white/15 border border-white/25 text-[#111]">GH</span>
                 </div>
-                <p className="text-sm text-white/70 leading-relaxed max-w-[200px]">
+                <p className="text-sm text-[#555] leading-relaxed max-w-[200px]">
                   We always make our customer happy by providing as many choices as possible.
                 </p>
               </div>
 
               {/* Col 2 — Company */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Company</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#111] mb-4">Company</p>
                 <div className="flex flex-col gap-2.5">
                   {[
                     { label: 'About Us', href: '#' },
@@ -1826,35 +1826,35 @@ export default function UnifyLanding({ schoolId } = {}) {
                     { label: 'Blog', href: '/blog' },
                     { label: 'FAQ', href: '#faq' },
                   ].map((l) => (
-                    <a key={l.label} href={l.href} className="footer-link text-sm text-white/80 hover:text-white">{l.label}</a>
+                    <a key={l.label} href={l.href} className="footer-link text-sm text-[#333] hover:text-[#111]">{l.label}</a>
                   ))}
                 </div>
               </div>
 
               {/* Col 3 — Resources */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Resources</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#111] mb-4">Resources</p>
                 <div className="flex flex-col gap-2.5">
                   {['Events', 'Promo', 'Req Demo'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
+                    <a key={l} href="#" className="footer-link text-sm text-[#333] hover:text-[#111]">{l}</a>
                   ))}
                 </div>
               </div>
 
               {/* Col 4 — Support */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Support</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#111] mb-4">Support</p>
                 <div className="flex flex-col gap-2.5">
                   {['Account', 'Support Center', 'Feedback', 'Contact Us', 'Accessibility'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/80 hover:text-white">{l}</a>
+                    <a key={l} href="#" className="footer-link text-sm text-[#333] hover:text-[#111]">{l}</a>
                   ))}
                 </div>
               </div>
 
               {/* Col 5 — Contact */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Contact Info</p>
-                <a href="mailto:unify@email.com" className="footer-link text-sm text-white/80 hover:text-white block mb-5">unify@email.com</a>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#111] mb-4">Contact Info</p>
+                <a href="mailto:unify@email.com" className="footer-link text-sm text-[#333] hover:text-[#111] block mb-5">unify@email.com</a>
                 <div className="flex gap-2">
                   {/* Instagram */}
                   <a href="#" className="social-icon w-9 h-9 rounded-none bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Instagram">
@@ -1881,7 +1881,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             {/* Bottom bar */}
             <div className="pt-6 text-center">
-              <p className="text-xs text-white/60">Copyright © 2026 UNIFY. All right reserved.</p>
+              <p className="text-xs text-[#555]">Copyright © 2026 UNIFY. All right reserved.</p>
             </div>
             <div className="mt-5 h-[3px] rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
           </div>

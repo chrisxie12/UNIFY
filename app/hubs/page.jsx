@@ -9,7 +9,7 @@ const HUBS = [
   {
     id: 'brunei', name: 'Brunei Hostel', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 420, type: 'Off-campus', color: 'emerald',
-    grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'BR',
+    grad: '#059669', initials: 'BR',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
     vibe: ['Tech Heads', 'Night Coders', 'Quiet Block'],
     description: 'The most popular off-campus zone for KNUST CS and Engineering students. Close to Faculty of Computing, walkable to campus gate.',
@@ -18,7 +18,7 @@ const HUBS = [
   {
     id: 'kotei', name: 'Kotei Hostels', school: 'KNUST', location: 'Kotei, Kumasi',
     residents: 680, type: 'Off-campus', color: 'green',
-    grad: 'linear-gradient(135deg,#16a34a,#059669)', initials: 'KO',
+    grad: '#16a34a', initials: 'KO',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=600',
     vibe: ['Mixed Vibes', 'Social', 'Uber Splitters'],
     description: 'Broad residential area with dozens of private hostels. Budget-friendly options exist. Popular among all faculties.',
@@ -27,7 +27,7 @@ const HUBS = [
   {
     id: 'unity', name: 'Unity Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 890, type: 'On-campus', color: 'blue',
-    grad: 'linear-gradient(135deg,#0066FF,#6366f1)', initials: 'UN',
+    grad: '#0066FF', initials: 'UN',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=600',
     vibe: ['Social', 'Traditions', 'Katanga Rivals'],
     description: 'One of the oldest and most spirited halls on campus. Brotherhood culture is strong. Close to the Great Hall and SRC.',
@@ -36,7 +36,7 @@ const HUBS = [
   {
     id: 'katanga', name: 'Katanga Hall', school: 'KNUST', location: 'KNUST Main Campus',
     residents: 760, type: 'On-campus', color: 'orange',
-    grad: 'linear-gradient(135deg,#FF6B35,#dc2626)', initials: 'KA',
+    grad: '#FF6B35', initials: 'KA',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
     vibe: ['Brotherhood', 'Sporty', 'Loud & Proud'],
     description: 'The most legendary hall at KNUST. Famous for hall week, sports dominance, and a culture freshers either love or find intense.',
@@ -45,7 +45,7 @@ const HUBS = [
   {
     id: 'evandy', name: 'Evandy Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 340, type: 'Off-campus', color: 'orange',
-    grad: 'linear-gradient(135deg,#FF6B35,#E55A22)', initials: 'EV',
+    grad: '#FF6B35', initials: 'EV',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Quiet Study', 'Neat Freaks', 'Medical Students'],
     description: 'Top choice for UCC Nursing and Allied Health students. Quiet environment, good water supply, close to the School of Medical Sciences.',
@@ -54,7 +54,7 @@ const HUBS = [
   {
     id: 'tf', name: 'TF Hostel', school: 'UCC', location: 'Cape Coast Campus',
     residents: 290, type: 'Off-campus', color: 'sky',
-    grad: 'linear-gradient(135deg,#0891b2,#0066FF)', initials: 'TF',
+    grad: '#0891b2', initials: 'TF',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Affordable', 'Mixed', 'Social Floor'],
     description: 'Budget-friendly and centrally located. Known for its social atmosphere. A solid first-year option for UCC freshers.',
@@ -63,7 +63,7 @@ const HUBS = [
   {
     id: 'casford', name: 'Casford Hall', school: 'UCC', location: 'Cape Coast Campus',
     residents: 445, type: 'On-campus', color: 'teal',
-    grad: 'linear-gradient(135deg,#0891b2,#059669)', initials: 'CA',
+    grad: '#0891b2', initials: 'CA',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
     vibe: ['Academic', 'Disciplined', 'Early Risers'],
     description: 'On-campus hall known for academic focus and discipline. Great for students serious about their first year GPA.',
@@ -72,7 +72,7 @@ const HUBS = [
   {
     id: 'volta', name: 'Volta Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 510, type: 'On-campus', color: 'rose',
-    grad: 'linear-gradient(135deg,#be185d,#9333ea)', initials: 'VO',
+    grad: '#be185d', initials: 'VO',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
     vibe: ['Sisterhood', 'Scholars', 'Night Library Runs'],
     description: 'The most prestigious female hall at Legon. Strong academic culture, beautiful grounds, and a tight-knit sisterhood community.',
@@ -81,7 +81,7 @@ const HUBS = [
   {
     id: 'limann', name: 'Limann Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 390, type: 'On-campus', color: 'blue',
-    grad: 'linear-gradient(135deg,#0066FF,#0891b2)', initials: 'LI',
+    grad: '#0066FF', initials: 'LI',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_Oval_at_University_of_Ghana,_Legon.jpg?width=600',
     vibe: ['Mixed', 'Chill', 'Good Wi-Fi'],
     description: 'A newer hall at Legon with modern facilities. Popular with Business and Social Sciences students. Good internet infrastructure.',
@@ -90,7 +90,7 @@ const HUBS = [
   {
     id: 'commonwealth', name: 'Commonwealth Hall', school: 'UG Legon', location: 'University of Ghana',
     residents: 820, type: 'On-campus', color: 'orange',
-    grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: 'CW',
+    grad: '#d97706', initials: 'CW',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
     vibe: ['Brotherhood', 'Vandal Nation', 'Legendary'],
     description: 'The most famous male hall at Legon. Home of the Vandals. Massive culture, hall week is unmissable. Brotherhood is for life.',
@@ -99,14 +99,14 @@ const HUBS = [
 ];
 
 const COLOR_MAP = {
-  emerald: { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
-  green:   { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
-  blue:    { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
+  emerald: { border: 'border-[#0066FF]/30', accent: 'text-[#0066FF]', pill: 'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/30' },
+  green:   { border: 'border-[#0066FF]/30', accent: 'text-[#0066FF]', pill: 'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/30' },
+  blue:    { border: 'border-[#FF6B35]', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
   orange:  { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
-  orange:  { border: 'border-[#FF6B35]/40', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
-  sky:     { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
+  orange:  { border: 'border-[#FF6B35]', accent: 'text-[#FF6B35]', pill: 'bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/30' },
+  sky:     { border: 'border-[#0066FF]/30', accent: 'text-[#0066FF]', pill: 'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/30' },
   rose:    { border: 'border-amber-400/30', accent: 'text-amber-400',  pill: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
-  teal:    { border: 'border-[#A8C4FF]/30', accent: 'text-[#A8C4FF]', pill: 'bg-[#A8C4FF]/10 text-[#A8C4FF] border-[#A8C4FF]/30' },
+  teal:    { border: 'border-[#0066FF]/30', accent: 'text-[#0066FF]', pill: 'bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/30' },
 };
 
 const SCHOOL_GROUPS = [
@@ -118,7 +118,7 @@ const SCHOOL_GROUPS = [
 function HubCard({ hub }) {
   const c = COLOR_MAP[hub.color] || COLOR_MAP.blue;
   return (
-    <div className="relative bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none overflow-hidden flex flex-col hover:bg-[#1f1d30] hover:-translate-y-1.5 hover:border-[#FF6B35]/80 hover:shadow-[6px_6px_0px_#FF6B35] transition-all duration-300">
+    <div className="relative bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none overflow-hidden flex flex-col hover:bg-[#f0e8dc] hover:-translate-y-1.5 hover:border-[#FF6B35] hover:shadow-[6px_6px_0px_#000] transition-all duration-300">
       {/* Gradient banner */}
       <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
         {/* Campus photo */}
@@ -126,33 +126,33 @@ function HubCard({ hub }) {
           <img src={hub.photo} alt={hub.name} className="absolute inset-0 w-full h-full object-cover object-center" />
         )}
         {/* Dark gradient overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%)' }} />
         {/* Large faded initials watermark */}
         <span className="absolute right-4 bottom-2 text-[80px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{hub.initials}</span>
         {/* Centered initials circle */}
-        <div className="relative w-16 h-16 rounded-none bg-white/20 border border-white/30 flex items-center justify-center">
-          <span className="text-2xl font-black text-white">{hub.initials}</span>
+        <div className="relative w-16 h-16 rounded-none bg-white/20 border border-black/20 flex items-center justify-center">
+          <span className="text-2xl font-black text-[#111]">{hub.initials}</span>
         </div>
         <div className="absolute bottom-3 left-4 flex gap-2">
-          <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-black border border-white/40 text-white">{hub.school}</span>
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-none border ${hub.type === 'On-campus' ? 'bg-green-700 border-green-400 text-white' : 'bg-[#162347] border-white/60 text-white'}`}>{hub.type}</span>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-none bg-black border border-white/40 text-[#111]">{hub.school}</span>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-none border ${hub.type === 'On-campus' ? 'bg-green-700 border-green-400 text-[#111]' : 'bg-white border-black text-[#111]'}`}>{hub.type}</span>
         </div>
       </div>
 
       <div className="p-6 flex flex-col flex-1 gap-4">
         <div>
-          <h3 className="text-xl font-black text-white leading-tight mb-2">{hub.name}</h3>
+          <h3 className="text-xl font-black text-[#111] leading-tight mb-2">{hub.name}</h3>
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-sm text-white/50 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hub.location}</span>
+            <span className="text-sm text-[#666] flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hub.location}</span>
             <span className={`text-sm font-bold ${c.accent}`}><Users className="w-3.5 h-3.5 inline mr-1" />{hub.residents.toLocaleString()}+ freshers</span>
           </div>
         </div>
 
-        <p className="text-sm text-white/60 leading-relaxed">{hub.description}</p>
+        <p className="text-sm text-[#555] leading-relaxed">{hub.description}</p>
 
         <ul className="space-y-1.5">
           {hub.perks.map(perk => (
-            <li key={perk} className="flex items-center gap-2 text-sm text-white/80">
+            <li key={perk} className="flex items-center gap-2 text-sm text-[#333]">
               <Check className={`w-3.5 h-3.5 flex-shrink-0 ${c.accent}`} />{perk}
             </li>
           ))}
@@ -164,7 +164,7 @@ function HubCard({ hub }) {
           ))}
         </div>
 
-        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-none bg-[#FF6B35] hover:bg-[#E55A22] text-white text-sm font-black transition-all hover:-translate-y-0.5 shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">
+        <a href="/#waitlist" className="mt-auto flex items-center justify-center gap-2 w-full py-3 px-4 rounded-none bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] text-sm font-black transition-all hover:-translate-y-0.5 shadow-[2px_2px_0px_#000]">
           Join {hub.name} Hub <ArrowRight className="w-4 h-4" />
         </a>
       </div>
@@ -177,7 +177,7 @@ export default function HubsPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: '#0D1B3E', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#FAF3E8', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -216,28 +216,28 @@ export default function HubsPage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#0D1B3E] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#FF6B35] rounded-none overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#FAF3E8] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
 
         {/* Orange top bar */}
-        <div className="h-1.5 bg-gradient-to-r from-[#FF6B35] via-amber-400 to-[#A8C4FF]" />
+        <div className="h-1.5 bg-[#FF6B35]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#0D1B3E] border-b-2 border-[#FF6B35]/50">
+        <nav className="sticky top-0 z-50 bg-[#FAF3E8] border-b-2 border-[#FF6B35]">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight text-white">UNIFY</span>
+              <span className="text-lg font-black tracking-tight text-[#111]">UNIFY</span>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-amber-400/10 border border-amber-400/25 text-amber-400">GH</span>
             </a>
-            <div className="hidden md:flex items-center gap-6 text-sm text-white/50 font-medium">
-              <a href="/" className="hover:text-white transition-colors">Home</a>
-              <a href="/hubs" className="relative text-white font-semibold">
+            <div className="hidden md:flex items-center gap-6 text-sm text-[#666] font-medium">
+              <a href="/" className="hover:text-[#111] transition-colors">Home</a>
+              <a href="/hubs" className="relative text-[#111] font-semibold">
                 Hubs
                 <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-none bg-[#FF6B35]" />
               </a>
-              <a href="/match" className="hover:text-white transition-colors">Match</a>
-              <a href="/#faq" className="hover:text-white transition-colors">FAQ</a>
+              <a href="/match" className="hover:text-[#111] transition-colors">Match</a>
+              <a href="/#faq" className="hover:text-[#111] transition-colors">FAQ</a>
             </div>
-            <a href="/#waitlist" className="bg-[#FF6B35] hover:bg-[#E55A22] text-white text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_rgba(255,255,255,0.3)] transition-all hover:-translate-y-0.5">
+            <a href="/#waitlist" className="bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_#000] transition-all hover:-translate-y-0.5">
               Get Early Access →
             </a>
           </div>
@@ -252,18 +252,18 @@ export default function HubsPage() {
                 <span className="w-1.5 h-1.5 rounded-none bg-[#FF6B35] animate-pulse" />
                 10 active hubs · KNUST · UG Legon · UCC
               </div>
-              <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-white mb-5">
+              <h1 className="anim-fade-up delay-100 text-[2.4rem] md:text-[3.4rem] font-black leading-[1.05] tracking-tight text-[#111] mb-5">
                 Find your people<br />before you find<br />
                 <span className="text-amber-400">your room.</span>
               </h1>
-              <p className="anim-fade-up delay-200 text-base md:text-lg text-white/60 leading-relaxed mb-8 max-w-md">
+              <p className="anim-fade-up delay-200 text-base md:text-lg text-[#555] leading-relaxed mb-8 max-w-md">
                 Real intel on hostels and halls from students already living there. No sugarcoating, no guessing.
               </p>
               <div className="anim-fade-up delay-300 flex flex-wrap gap-3">
-                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-sm px-6 py-3 rounded-none transition-all hover:-translate-y-0.5 shadow-[4px_4px_0px_#FF6B35] anim-glow">
+                <a href="#hubs-top" className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-6 py-3 rounded-none transition-all hover:-translate-y-0.5 shadow-[4px_4px_0px_#000] anim-glow">
                   Browse Hubs <ArrowRight className="w-4 h-4" />
                 </a>
-                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-white/60 px-6 py-3 rounded-none border border-white/10 bg-[#162347] hover:border-amber-400/50 hover:text-amber-400 transition-all">
+                <a href="/match" className="inline-flex items-center gap-2 text-sm font-semibold text-[#555] px-6 py-3 rounded-none border border-black/20 bg-white hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all">
                   Find Roommate
                 </a>
               </div>
@@ -272,18 +272,18 @@ export default function HubsPage() {
             {/* Right — campus photo collage */}
             <div className="hidden md:grid grid-cols-2 gap-3 anim-scale-in delay-200">
               {[
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', grad: 'linear-gradient(135deg,#0052cc,#0066FF)', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: 'linear-gradient(135deg,#0066FF,#4FC3F7)', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', grad: 'linear-gradient(135deg,#059669,#0891b2)', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
-                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=500', grad: 'linear-gradient(135deg,#d97706,#FF6B35)', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', grad: '#0066FF', initials: 'KN', label: 'KNUST', sub: '2,750 freshers' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', grad: '#0066FF', initials: 'UG', label: 'UG Legon', sub: '1,720 freshers' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', grad: '#059669', initials: 'UC', label: 'UCC', sub: '1,075 freshers' },
+                { photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/KNUST_main_entrance_with_Kwame_Nkrumah_Memorial_Park.jpg?width=500', grad: '#d97706', initials: '10', label: 'Hubs Live', sub: 'Claim your spot' },
               ].map((item, i) => (
-                <div key={i} className="relative rounded-none overflow-hidden border border-white/60 flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
+                <div key={i} className="relative rounded-none overflow-hidden border border-black flex items-center justify-center" style={{ height: '140px', background: item.grad }}>
                   <img src={item.photo} alt={item.label} className="absolute inset-0 w-full h-full object-cover object-center" />
                   <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.28)' }} />
                   <span className="absolute right-2 bottom-1 text-[52px] font-black leading-none select-none pointer-events-none" style={{ color: 'rgba(255,255,255,0.15)' }}>{item.initials}</span>
                   <div className="relative text-center">
-                    <p className="text-white font-black text-lg leading-tight">{item.label}</p>
-                    <p className="text-white/70 text-[11px] font-semibold">{item.sub}</p>
+                    <p className="text-[#111] font-black text-lg leading-tight">{item.label}</p>
+                    <p className="text-[#555] text-[11px] font-semibold">{item.sub}</p>
                   </div>
                 </div>
               ))}
@@ -301,8 +301,8 @@ export default function HubsPage() {
               { num: '48h',                          label: 'Early Access Notice' },
             ].map(s => (
               <div key={s.label} className="px-4 anim-scale-in">
-                <p className="text-3xl md:text-4xl font-black text-white">{s.num}</p>
-                <p className="text-white/70 text-sm mt-1">{s.label}</p>
+                <p className="text-3xl md:text-4xl font-black text-[#111]">{s.num}</p>
+                <p className="text-[#555] text-sm mt-1">{s.label}</p>
               </div>
             ))}
           </div>
@@ -310,11 +310,11 @@ export default function HubsPage() {
 
         {/* ── FILTER PILLS ── */}
         <div className="flex justify-center gap-2 px-6 pt-12 flex-wrap">
-          <a href="#hubs-top" className="px-5 py-2 rounded-none text-sm font-semibold border bg-[#FF6B35]/20 border-[#FF6B35]/40 text-[#FF6B35]">
+          <a href="#hubs-top" className="px-5 py-2 rounded-none text-sm font-semibold border bg-[#FF6B35]/20 border-[#FF6B35] text-[#FF6B35]">
             All Hubs
           </a>
           {SCHOOL_GROUPS.map(school => (
-            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-none text-sm font-semibold border bg-[#162347] border-white/10 text-white/60 hover:bg-[#FF6B35]/20 hover:border-[#FF6B35]/40 hover:text-[#FF6B35] transition-all">
+            <a key={school.id} href={`#${school.id}`} className="px-5 py-2 rounded-none text-sm font-semibold border bg-white border-black/20 text-[#555] hover:bg-[#FF6B35]/20 hover:border-[#FF6B35] hover:text-[#FF6B35] transition-all">
               {school.label}
             </a>
           ))}
@@ -326,17 +326,17 @@ export default function HubsPage() {
             const schoolResidents = school.hubs.reduce((sum, h) => sum + h.residents, 0);
             return (
               <section key={school.id} id={school.id}>
-                <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-8 pb-4 border-b border-white/10">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-8 pb-4 border-b border-black/20">
                   <div className="flex items-center gap-3">
                     <Building2 className="w-5 h-5 text-[#FF6B35]" />
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-black text-white">{school.label} Hubs</h2>
-                      <p className="text-sm text-white/40 mt-1">{school.full}</p>
+                      <h2 className="text-2xl md:text-3xl font-black text-[#111]">{school.label} Hubs</h2>
+                      <p className="text-sm text-[#777] mt-1">{school.full}</p>
                     </div>
                   </div>
                   <div className="sm:ml-auto">
-                    <span className="text-sm text-white/40">{school.hubs.length} hubs · </span>
-                    <span className="text-sm font-bold text-[#A8C4FF]">{schoolResidents.toLocaleString()}+ residents</span>
+                    <span className="text-sm text-[#777]">{school.hubs.length} hubs · </span>
+                    <span className="text-sm font-bold text-[#0066FF]">{schoolResidents.toLocaleString()}+ residents</span>
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -349,35 +349,35 @@ export default function HubsPage() {
 
         {/* ── BOTTOM CTA ── */}
         <section className="px-6 pb-20">
-          <div className="max-w-2xl mx-auto text-center bg-[#162347] border-2 border-[#FF6B35] shadow-[4px_4px_0px_#FF6B35] rounded-none p-12">
+          <div className="max-w-2xl mx-auto text-center bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none p-12">
             <div className="w-16 h-16 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center mx-auto mb-6 text-2xl">🏠</div>
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Your hostel hub is waiting.</h2>
-            <p className="text-white/60 text-lg mb-8 leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-black text-[#111] mb-4">Your hostel hub is waiting.</h2>
+            <p className="text-[#555] text-lg mb-8 leading-relaxed">
               Sign up to get notified <span className="text-amber-400 font-semibold">48hrs before your hub goes live.</span> Be first in. Link early. Walk into orientation knowing people.
             </p>
-            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-none bg-[#FF6B35] hover:bg-[#E55A22] text-white font-black text-base transition-all hover:-translate-y-0.5 shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">
+            <a href="/#waitlist" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-none bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base transition-all hover:-translate-y-0.5 shadow-[2px_2px_0px_#000]">
               Claim Your Handle →
             </a>
-            <p className="text-white/30 text-xs mt-5">Free · No spam · Ghana university freshers only</p>
+            <p className="text-[#999] text-xs mt-5">Free · No spam · Ghana university freshers only</p>
           </div>
         </section>
 
         {/* ── FOOTER ── */}
-        <footer className="bg-[#162347] border-t border-white/10 px-6 pt-10 pb-8">
+        <footer className="bg-white border-t border-black/20 px-6 pt-10 pb-8">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black text-white">UNIFY</span>
+              <span className="text-lg font-black text-[#111]">UNIFY</span>
               <span className="text-2xl">🇬🇭</span>
             </div>
-            <nav className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/70">
-              <a href="/" className="hover:text-white transition-colors">Home</a>
-              <a href="/hubs" className="text-white font-semibold">Hubs</a>
-              <a href="/match" className="hover:text-white transition-colors">Match</a>
-              <a href="/#waitlist" className="hover:text-white transition-colors">Join Waitlist</a>
+            <nav className="flex flex-wrap items-center justify-center gap-6 text-sm text-[#555]">
+              <a href="/" className="hover:text-[#111] transition-colors">Home</a>
+              <a href="/hubs" className="text-[#111] font-semibold">Hubs</a>
+              <a href="/match" className="hover:text-[#111] transition-colors">Match</a>
+              <a href="/#waitlist" className="hover:text-[#111] transition-colors">Join Waitlist</a>
             </nav>
-            <p className="text-xs text-white/50">© 2026 UNIFY · Built for freshers</p>
+            <p className="text-xs text-[#666]">© 2026 UNIFY · Built for freshers</p>
           </div>
-          <div className="max-w-6xl mx-auto mt-6 h-[3px] rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+          <div className="max-w-6xl mx-auto mt-6 h-[3px] rounded-none bg-[#FF6B35]" />
         </footer>
 
       </div>

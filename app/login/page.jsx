@@ -46,8 +46,7 @@ const FRAMES = [
     initials: 'KN',
     stripe: '#FFD700',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=600',
-    bg: 'linear-gradient(150deg, #0a2e0a 0%, #1a4a10 40%, #2d6e1e 70%, #1a3d0a 100%)',
-    orb: 'rgba(255,210,50,0.20)', orbPos: '72% 18%',
+    bg: '#0a2e0a',
     width: 270, height: 202,
     top: '22%', left: '24%',
     rotation: -2, zIndex: 10,
@@ -62,8 +61,7 @@ const FRAMES = [
     initials: 'UG',
     stripe: '#C0A000',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=600',
-    bg: 'linear-gradient(150deg, #020b1f 0%, #05194a 40%, #0a2f72 70%, #031232 100%)',
-    orb: 'rgba(192,160,0,0.22)', orbPos: '22% 28%',
+    bg: '#020b1f',
     width: 215, height: 161,
     top: '6%', left: '6%',
     rotation: -9, zIndex: 6,
@@ -78,8 +76,7 @@ const FRAMES = [
     initials: 'AU',
     stripe: '#C0C0C0',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Warren_Library_Ashesi.JPG?width=600',
-    bg: 'linear-gradient(150deg, #2a0000 0%, #5a0808 38%, #8B1010 65%, #3d0505 100%)',
-    orb: 'rgba(192,192,192,0.18)', orbPos: '35% 25%',
+    bg: '#2a0000',
     width: 210, height: 158,
     top: '5%', left: '50%',
     rotation: 8, zIndex: 8,
@@ -94,8 +91,7 @@ const FRAMES = [
     initials: 'UC',
     stripe: '#FFD700',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=600',
-    bg: 'linear-gradient(150deg, #1a0000 0%, #4a0606 38%, #7a0a0a 68%, #3a0303 100%)',
-    orb: 'rgba(255,210,60,0.18)', orbPos: '65% 72%',
+    bg: '#1a0000',
     width: 235, height: 176,
     top: '50%', left: '38%',
     rotation: 6, zIndex: 9,
@@ -110,8 +106,7 @@ const FRAMES = [
     initials: 'UP',
     stripe: '#CC2222',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=600',
-    bg: 'linear-gradient(150deg, #03031a 0%, #0d0d4a 40%, #1a1a72 68%, #06062a 100%)',
-    orb: 'rgba(204,40,40,0.22)', orbPos: '78% 62%',
+    bg: '#03031a',
     width: 198, height: 149,
     top: '48%', left: '6%',
     rotation: -7, zIndex: 7,
@@ -126,8 +121,7 @@ const FRAMES = [
     initials: 'UD',
     stripe: '#FF8C00',
     photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Front-view_of_the_UDS_Central_Administration_Block.jpg?width=600',
-    bg: 'linear-gradient(150deg, #001a00 0%, #003d00 38%, #005c00 65%, #002800 100%)',
-    orb: 'rgba(255,140,0,0.22)', orbPos: '60% 40%',
+    bg: '#001a00',
     width: 192, height: 144,
     top: '68%', left: '24%',
     rotation: -4, zIndex: 5,
@@ -162,9 +156,10 @@ function CampusFrame({ frame, scrollY }) {
         width: frame.width,
         zIndex: frame.zIndex,
         borderRadius: 0,
-        background: '#162347',
+        background: '#FFFFFF',
+        border: '2px solid #111111',
         padding: 10,
-        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.40), 0 4px 16px rgba(0,0,0,0.20)',
+        boxShadow: '4px 4px 0px #000',
         animation: `${entranceKey} 650ms cubic-bezier(0.16,1,0.3,1) ${frame.delay} both, ${floatKey} ${frame.floatDur} ease-in-out calc(${frame.delay} + 650ms) infinite alternate`,
         willChange: 'transform',
       }}>
@@ -187,16 +182,6 @@ function CampusFrame({ frame, scrollY }) {
         {frame.photo && (
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.30) 100%)' }} />
         )}
-        <div style={{
-          position: 'absolute',
-          width: 180, height: 180,
-          borderRadius: 0,
-          background: `radial-gradient(circle, ${frame.orb} 0%, transparent 70%)`,
-          top: frame.orbPos.split(' ')[1],
-          left: frame.orbPos.split(' ')[0],
-          transform: 'translate(-50%,-50%)',
-          pointerEvents: 'none',
-        }} />
         <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.07 }} preserveAspectRatio="none">
           {[0.18, 0.36, 0.54, 0.72, 0.90].map(x => (
             <line key={x} x1={`${x*100}%`} y1="0" x2={`${x*100}%`} y2="100%" stroke="white" strokeWidth="1" />
@@ -238,8 +223,8 @@ function CampusFrame({ frame, scrollY }) {
       </div>
       {/* Polaroid caption strip */}
       <div style={{ paddingTop: 7, paddingBottom: 2, textAlign: 'center' }}>
-        <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#FFFFFE', fontFamily: 'system-ui, sans-serif' }}>{frame.school}</p>
-        <p style={{ margin: '1px 0 0', fontSize: 9, color: 'rgba(255,255,255,0.60)', fontFamily: 'system-ui, sans-serif' }}>{frame.caption}</p>
+        <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#111111', fontFamily: 'system-ui, sans-serif' }}>{frame.school}</p>
+        <p style={{ margin: '1px 0 0', fontSize: 9, color: '#555555', fontFamily: 'system-ui, sans-serif' }}>{frame.caption}</p>
       </div>
       <div style={{
         position: 'absolute', bottom: 0, left: '12%', right: '12%', height: 3,
@@ -378,7 +363,7 @@ export default function LoginPage() {
 
         .login-shell {
           min-height: 100vh;
-          background: #0D1B3E;
+          background: #FAF3E8;
           font-family: inherit;
         }
 
@@ -396,7 +381,7 @@ export default function LoginPage() {
         .form-card {
           border-radius: 0;
           border: 2px solid #FF6B35;
-          background: #162347;
+          background: #FFFFFF;
           box-shadow: 4px 4px 0px #FF6B35;
           padding: 36px 28px 32px;
           position: relative;
@@ -415,7 +400,7 @@ export default function LoginPage() {
             display: block;
             flex: 0 0 58%;
             position: relative;
-            background: #162347;
+            background: #FFFFFF;
             overflow: hidden;
           }
           .collage-side::after {
@@ -432,7 +417,7 @@ export default function LoginPage() {
             align-items: center;
             justify-content: center;
             padding: 40px 36px;
-            background: #0D1B3E;
+            background: #FAF3E8;
             max-width: none;
             overflow-y: auto;
           }
@@ -453,13 +438,13 @@ export default function LoginPage() {
           borderBottom: '2px solid #FF6B35',
         }} className="px-6 py-3.5 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
-            <span className="text-xl font-black text-white tracking-tight">UNIFY</span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35]/40 text-[#FF6B35]">GH</span>
+            <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-none border border-[#FF6B35] text-[#FF6B35]">GH</span>
           </a>
           <div className="hidden md:flex items-center gap-6">
-            <a href="/schools" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Schools</a>
-            <a href="/hubs"    className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Hubs</a>
-            <a href="/match"   className="text-sm font-semibold text-white/60 hover:text-white transition-colors">Match</a>
+            <a href="/schools" className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Schools</a>
+            <a href="/hubs"    className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Hubs</a>
+            <a href="/match"   className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">Match</a>
           </div>
         </nav>
 
@@ -544,7 +529,7 @@ export default function LoginPage() {
               animation: mounted ? 'slideInRight 700ms cubic-bezier(0.16,1,0.3,1) 200ms both' : 'none',
             }}>
               <div className="mb-4 lg:hidden">
-                <a href="/" className="text-sm font-semibold text-white/60 hover:text-white transition-colors">← Back to home</a>
+                <a href="/" className="text-sm font-semibold text-[#555] hover:text-[#111] transition-colors">← Back to home</a>
               </div>
 
               <div className="form-card">
@@ -565,7 +550,7 @@ export default function LoginPage() {
                     </svg>
                   </div>
                   <a href="/" style={{ textDecoration: 'none' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFE', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    <span style={{ fontSize: '2rem', fontWeight: 900, color: '#111', letterSpacing: '-0.03em', lineHeight: 1 }}>
                       UNIFY
                     </span>
                   </a>
@@ -578,7 +563,7 @@ export default function LoginPage() {
                 {done ? (
                   <div style={{ textAlign: 'center', padding: '16px 0' }}>
                     <div style={{ fontSize: 40, marginBottom: 8 }}>🔥</div>
-                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#FFFFFE', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
+                    <h3 style={{ fontSize: 18, fontWeight: 900, color: '#111', margin: '0 0 6px', fontFamily: 'inherit' }}>You're in!</h3>
                     <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.85rem', margin: 0, fontFamily: 'inherit' }}>
                       {isSignup ? 'Check your email to verify your account.' : 'Welcome back. Redirecting…'}
                     </p>
@@ -588,7 +573,7 @@ export default function LoginPage() {
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
                       borderRadius: 0, border: '2px solid #FF6B35',
-                      background: '#0D1B3E', padding: 3,
+                      background: '#FAF3E8', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (
@@ -647,7 +632,7 @@ export default function LoginPage() {
 
                     {!isSignup && (
                       <div style={{ textAlign: 'right', marginTop: 6 }}>
-                        <a href="#" style={{ fontSize: '0.75rem', color: '#A8C4FF', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
+                        <a href="#" style={{ fontSize: '0.75rem', color: '#0066FF', fontWeight: 600, textDecoration: 'none', fontFamily: 'inherit' }}>Forgot password?</a>
                       </div>
                     )}
 
