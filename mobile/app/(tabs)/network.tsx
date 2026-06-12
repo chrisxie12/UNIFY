@@ -1,8 +1,8 @@
 import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { NBBadge, NBButton, NBPressCard } from '../components/NB';
-import type { Thread } from '../theme/tokens';
+import { NBBadge, NBButton, NBPressCard } from '../../components/NB';
+import type { Thread } from '../../theme/tokens';
 
 const THREADS: readonly Thread[] = [
   {
@@ -84,15 +84,21 @@ function ThreadCard({ thread, onPress }: ThreadCardProps) {
   );
 }
 
-export default function HubsScreen() {
+export default function NetworkScreen() {
   const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
       <View className="flex-row items-center px-4 pt-2 pb-3">
         <Text className="font-display text-[26px] text-black uppercase tracking-tight">
-          Campus Hubs
+          Network
         </Text>
-        <NBBadge label="3" accent="alert" className="ml-auto" />
+        <View className="ml-auto">
+          <NBButton
+            label="Chats 💬"
+            size="sm"
+            onPress={() => router.push('/chats')}
+          />
+        </View>
       </View>
 
       <FlatList
@@ -107,7 +113,7 @@ export default function HubsScreen() {
         )}
       />
 
-      <View className="absolute bottom-20 right-4">
+      <View className="absolute bottom-5 right-4">
         <NBButton label="Post Thread" onPress={() => undefined} />
       </View>
     </SafeAreaView>

@@ -23,6 +23,24 @@ export type AccentColor = keyof Pick<
   'action' | 'brand' | 'verify' | 'alert' | 'info' | 'success'
 >;
 
+// Flat vibrant component-variation palette (dashboard/schedule/network).
+// All four are light enough for black text — never pair with white.
+export const POP_COLORS = {
+  red: '#FF6B6B',
+  blue: '#4D96FF',
+  green: '#6BCB77',
+  yellow: '#FFD93D',
+} as const;
+
+export type PopAccent = keyof typeof POP_COLORS;
+
+export const POP_BG: Record<PopAccent, string> = {
+  red: 'bg-pop-red',
+  blue: 'bg-pop-blue',
+  green: 'bg-pop-green',
+  yellow: 'bg-pop-yellow',
+};
+
 export interface Thread {
   id: string;
   hub: string;

@@ -37,14 +37,19 @@ Type-check with `npx tsc --noEmit`.
 
 ```
 app/
-  _layout.tsx       tabs shell + font loading
-  index.tsx         Hubs feed (Reddit-style threads)
-  chats.tsx         chat list (Instagram-style)
-  chat/[id].tsx     1:1 chat thread
-  thread/[id].tsx   hub thread + comments
-  profile.tsx       profile + quiz answers
-components/NB.tsx   NBCard / NBPressCard / NBButton / NBBadge / NBInput / NBAvatar
-theme/tokens.ts     typed color tokens + data interfaces
+  _layout.tsx           root Stack + AppProvider + font loading
+  (tabs)/
+    _layout.tsx         custom Neubrutalist tab bar (Dashboard / Schedule / Network)
+    index.tsx           Dashboard — GPA, modules, assignment schedule
+    schedule.tsx        Timetable planner with weekday selector
+    network.tsx         Campus networking (Reddit-style hub threads)
+  chats.tsx             chat list (Instagram-style), pushed from Network
+  chat/[id].tsx         1:1 chat thread
+  thread/[id].tsx       hub thread + comments
+  profile.tsx           profile + quiz answers, pushed from Dashboard
+components/NB.tsx       NBCard / NBPressCard / NBButton / NBBadge / NBPopBadge / NBInput / NBAvatar
+context/AppContext.tsx  AppProvider + useApp — GPA modules, assignments, timetable, profile
+theme/tokens.ts         typed color tokens (incl. pop palette) + data interfaces
 ```
 
 ## Notes

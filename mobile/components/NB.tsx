@@ -1,6 +1,6 @@
 import { Pressable, Text, TextInput, View } from 'react-native';
 import type { ReactNode } from 'react';
-import { COLORS, type AccentColor } from '../theme/tokens';
+import { COLORS, POP_BG, type AccentColor, type PopAccent } from '../theme/tokens';
 
 // Hard 0-blur shadows (shadow-nb / shadow-nb-sm / shadow-nb-lg) require the
 // RN new-architecture boxShadow style (RN 0.76+), which NativeWind compiles
@@ -107,6 +107,30 @@ export function NBBadge({ label, accent = 'verify', className = '' }: NBBadgePro
       <Text
         className={`${ACCENT_TEXT[accent]} text-[10px] font-body-bold uppercase tracking-wide`}
       >
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+interface NBPopBadgeProps {
+  label: string;
+  accent?: PopAccent;
+  className?: string;
+}
+
+// Badge in the pop palette (red/blue/green/yellow) — all four surfaces
+// are light, so the text is always black.
+export function NBPopBadge({
+  label,
+  accent = 'yellow',
+  className = '',
+}: NBPopBadgeProps) {
+  return (
+    <View
+      className={`${POP_BG[accent]} border-2 border-black rounded-none shadow-nb-sm px-2 py-0.5 ${className}`}
+    >
+      <Text className="text-black text-[10px] font-body-bold uppercase tracking-wide">
         {label}
       </Text>
     </View>

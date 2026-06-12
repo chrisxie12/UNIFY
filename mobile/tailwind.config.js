@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  content: [
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './context/**/*.{ts,tsx}',
+    './theme/**/*.{ts,tsx}',
+  ],
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
@@ -13,6 +18,10 @@ module.exports = {
         verify: '#00FF66',
         alert: '#FF007A',
         info: '#0066FF',
+        'pop-red': '#FF6B6B',
+        'pop-blue': '#4D96FF',
+        'pop-green': '#6BCB77',
+        'pop-yellow': '#FFD93D',
       },
       fontFamily: {
         display: ['ArchivoBlack'],
