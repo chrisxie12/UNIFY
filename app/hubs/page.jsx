@@ -118,7 +118,7 @@ const SCHOOL_GROUPS = [
 function HubCard({ hub }) {
   const c = COLOR_MAP[hub.color] || COLOR_MAP.blue;
   return (
-    <div className="relative bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none overflow-hidden flex flex-col hover:bg-[#f0e8dc] hover:-translate-y-1.5 hover:border-[#FF6B35] hover:shadow-[6px_6px_0px_#000] transition-all duration-300">
+    <div className="relative bg-white border-2 border-[#FF6B35] shadow-[4px_4px_0px_#000] rounded-none overflow-hidden flex flex-col hover:bg-[#e9e9e3] hover:-translate-y-1.5 hover:border-[#FF6B35] hover:shadow-[6px_6px_0px_#000] transition-all duration-300">
       {/* Gradient banner */}
       <div className="relative h-48 overflow-hidden flex items-center justify-center" style={{ background: hub.grad }}>
         {/* Campus photo */}
@@ -177,7 +177,7 @@ export default function HubsPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: '#FAF3E8', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#F4F4F0', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -216,13 +216,13 @@ export default function HubsPage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#FAF3E8] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#F4F4F0] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
 
         {/* Orange top bar */}
         <div className="h-1.5 bg-[#FF6B35]" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#FAF3E8] border-b-2 border-[#FF6B35]">
+        <nav className="sticky top-0 z-50 bg-[#F4F4F0] border-b-2 border-[#FF6B35]">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-[#111]">UNIFY</span>

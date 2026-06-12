@@ -45,7 +45,7 @@ export default function RefPage({ params }) {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center p-6"
-          style={{ background: '#FAF3E8' }}>
+          style={{ background: '#F4F4F0' }}>
 
       <style>{`
         @keyframes checkPop {

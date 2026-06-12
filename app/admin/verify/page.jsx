@@ -7,7 +7,7 @@ import Link from 'next/link';
 const MOCK_QUEUE = [
   { id: 1,  name: 'Akosua Mensah',    school: 'KNUST',    program: 'BSc Computer Science',       hs: 'Aburi Girls',        year: 2024, vibe: ['Night Coder','Neat Freak'],    phone: '0551••••234', status: 'pending', imgBg: 'from-emerald-900 to-emerald-800' },
   { id: 2,  name: 'Kwaku Boateng',    school: 'UG Legon', program: 'BA Economics',                hs: 'Prempeh College',    year: 2024, vibe: ['Serious Vibes'],              phone: '0241••••891', status: 'pending', imgBg: 'from-blue-900 to-blue-800' },
-  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-[#FAF3E8] to-[#FFFFFF]' },
+  { id: 3,  name: 'Ama Serwaa',       school: 'UCC',      program: 'BSc Nursing',                 hs: 'Wesley Girls',       year: 2024, vibe: ['Early Riser','Study First'],   phone: '0271••••567', status: 'pending', imgBg: 'from-[#F4F4F0] to-[#FFFFFF]' },
   { id: 4,  name: 'Yaw Darko',        school: 'UPSA',     program: 'BSc Accounting',              hs: 'Mfantsipim',         year: 2023, vibe: ['Tech Head'],                  phone: '0501••••123', status: 'pending', imgBg: 'from-amber-900 to-amber-800' },
   { id: 5,  name: 'Efua Asante',      school: 'KNUST',    program: 'BSc Electrical Engineering',  hs: 'Holy Child School',  year: 2024, vibe: ['Neat Freak'],                phone: '0209••••456', status: 'pending', imgBg: 'from-rose-900 to-rose-800' },
   { id: 6,  name: 'Kofi Appiah',      school: 'UG Legon', program: 'LLB Law',                     hs: 'Achimota School',    year: 2024, vibe: ['Night Coder','Tech Head'],    phone: '0556••••789', status: 'pending', imgBg: 'from-sky-900 to-sky-800' },
@@ -160,7 +160,7 @@ export default function VerifyPage() {
 
   if (complete) {
     return (
-      <div className="h-screen w-screen overflow-hidden bg-[#FAF3E8] flex flex-col items-center justify-center gap-6">
+      <div className="h-screen w-screen overflow-hidden bg-[#F4F4F0] flex flex-col items-center justify-center gap-6">
         <div className="text-6xl">🎉</div>
         <h1 className="text-3xl font-bold text-[#111]">Queue Complete!</h1>
         <p className="text-[#666] text-sm">All students in the current filter have been processed.</p>
@@ -188,7 +188,7 @@ export default function VerifyPage() {
   const nextStudents = pendingQueue.slice(1, 4);
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#FAF3E8] flex flex-col">
+    <div className="h-screen w-screen overflow-hidden bg-[#F4F4F0] flex flex-col">
 
       {/* Flash Overlay */}
       {flashVisible && flash && (
@@ -214,7 +214,7 @@ export default function VerifyPage() {
       `}</style>
 
       {/* POWER BAR */}
-      <div className="h-14 flex-shrink-0 bg-[#FAF3E8] border-b border-black/20 flex items-center px-4 gap-4 z-10">
+      <div className="h-14 flex-shrink-0 bg-[#F4F4F0] border-b border-black/20 flex items-center px-4 gap-4 z-10">
         {/* Left */}
         <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
           <Link href="/admin" className="flex items-center gap-1 text-[#666] hover:text-[#111] transition-colors text-sm">

@@ -39,7 +39,7 @@ function FAQItem({ faq }) {
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#FAF3E8' }}>
+    <div className="min-h-screen" style={{ background: '#F4F4F0' }}>
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b border-black/20">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>

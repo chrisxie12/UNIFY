@@ -13,7 +13,7 @@ export async function GET() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#FAF3E8',
+          background: '#F4F4F0',
           fontFamily: 'system-ui, sans-serif',
           padding: 80,
           border: '8px solid #111111',

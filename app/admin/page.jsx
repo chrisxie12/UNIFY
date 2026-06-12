@@ -134,7 +134,7 @@ function LoginScreen({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF3E8] flex items-center justify-center px-6 relative overflow-hidden"
+    <div className="min-h-screen bg-[#F4F4F0] flex items-center justify-center px-6 relative overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className={`w-full max-w-[340px] transition-all duration-150 ${shake ? 'translate-x-2' : ''}`}
         style={shake ? { animation: 'shake 0.4s ease' } : {}}>
@@ -189,7 +189,7 @@ function MetricCard({ label, value, icon: Icon, glowClass, accentColor, sparkCol
           <p className="text-2xl font-black text-black leading-none">{value}</p>
           <p className="text-[10px] font-bold uppercase tracking-widest text-[#555] mt-2">{label}</p>
         </div>
-        <div className="w-8 h-8 rounded-none bg-[#FAF3E8] border border-black/15 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-none bg-[#F4F4F0] border border-black/15 flex items-center justify-center">
           <Icon size={15} className="text-[#555]" />
         </div>
       </div>
@@ -271,7 +271,7 @@ export default function AdminPage() {
   const blurCard = liteMode ? '' : '';
 
   return (
-    <div className="h-screen w-screen bg-[#FAF3E8] text-black flex overflow-hidden"
+    <div className="h-screen w-screen bg-[#F4F4F0] text-black flex overflow-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
 
       {/* ── SIDEBAR ── */}
@@ -305,7 +305,7 @@ export default function AdminPage() {
 
         {/* ── HEADER ── */}
         <header className={`h-14 flex-shrink-0 flex items-center justify-between px-6 border-b-2 border-black z-10
-          ${liteMode ? 'bg-[#FAF3E8]' : 'bg-[#FAF3E8]'}`}>
+          ${liteMode ? 'bg-[#F4F4F0]' : 'bg-[#F4F4F0]'}`}>
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 text-sm">
@@ -406,7 +406,7 @@ export default function AdminPage() {
             <div className="md:col-span-2 bg-white border-2 border-black shadow-[4px_4px_0px_#000] rounded-none p-5 flex flex-col gap-4 overflow-y-auto">
               <div className="flex items-center justify-between flex-shrink-0">
                 <span className="text-sm font-black">By Campus</span>
-                <span className="text-[10px] font-bold bg-[#FAF3E8] border border-black/15 text-[#555] px-2 py-1 rounded-none">{total} total</span>
+                <span className="text-[10px] font-bold bg-[#F4F4F0] border border-black/15 text-[#555] px-2 py-1 rounded-none">{total} total</span>
               </div>
 
               {/* Progress bars */}
@@ -477,7 +477,7 @@ export default function AdminPage() {
               </div>
 
               {/* Column headers */}
-              <div className="flex-shrink-0 grid grid-cols-12 items-center px-5 py-2 bg-[#FAF3E8] border-b border-black/15">
+              <div className="flex-shrink-0 grid grid-cols-12 items-center px-5 py-2 bg-[#F4F4F0] border-b border-black/15">
                 <span className="col-span-1 text-[9px] font-bold uppercase tracking-widest text-[#555]">#</span>
                 <span className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-[#555]">Handle</span>
                 <span className="col-span-3 text-[9px] font-bold uppercase tracking-widest text-[#555]">Vibe</span>
@@ -512,7 +512,7 @@ export default function AdminPage() {
                           onMouseEnter={() => setHoveredRow(i)}
                           onMouseLeave={() => setHoveredRow(null)}
                           className={`grid grid-cols-12 items-center px-5 py-2.5 transition-colors cursor-pointer
-                            ${i % 2 === 0 ? 'bg-white' : 'bg-[#FAF3E8]'}
+                            ${i % 2 === 0 ? 'bg-white' : 'bg-[#F4F4F0]'}
                             hover:bg-[#FFE8DC]`}>
 
                           {/* # */}

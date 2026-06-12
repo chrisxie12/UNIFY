@@ -4,7 +4,7 @@ export const metadata = {
 };
 
 const s = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh' },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#F4F4F0', minHeight: '100vh' },
   nav: { borderBottom: '1px solid rgba(0,0,0,0.15)', padding: '0 24px' },
   navInner: { maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 },
   navLogo: { fontWeight: 800, textDecoration: 'none', fontSize: '1rem' },

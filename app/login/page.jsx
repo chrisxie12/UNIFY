@@ -362,7 +362,7 @@ export default function LoginPage() {
 
         .login-shell {
           min-height: 100vh;
-          background: #FAF3E8;
+          background: #F4F4F0;
           font-family: inherit;
         }
 
@@ -410,7 +410,7 @@ export default function LoginPage() {
             align-items: center;
             justify-content: center;
             padding: 40px 36px;
-            background: #FAF3E8;
+            background: #F4F4F0;
             max-width: none;
             overflow-y: auto;
           }
@@ -566,7 +566,7 @@ export default function LoginPage() {
                     <div style={{
                       display: 'flex', width: 240, height: 44, margin: '0 auto 20px',
                       borderRadius: 0, border: '2px solid #111111',
-                      background: '#FAF3E8', padding: 3,
+                      background: '#F4F4F0', padding: 3,
                       animation: mounted ? 'formFadeUp 600ms cubic-bezier(0.16,1,0.3,1) 100ms both' : 'none',
                     }}>
                       {['signup', 'login'].map(m => (

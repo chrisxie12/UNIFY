@@ -222,10 +222,10 @@ export default function SMSLaunchpadPage() {
   const statusLabel = STATUS_OPTIONS.find(s => s.key === statusKey)?.label ?? '';
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#FAF3E8', fontFamily: 'system-ui, Inter, sans-serif' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#F4F4F0', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#FAF3E8] border-b border-black/20">
+      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-6 bg-[#F4F4F0] border-b border-black/20">
         {/* Left */}
         <div className="flex items-center gap-3">
           <a href="/admin" className="flex items-center gap-1 text-[#777] hover:text-[#555] text-sm transition-colors">
@@ -411,7 +411,7 @@ export default function SMSLaunchpadPage() {
                 {/* Notch */}
                 <div className="w-20 h-1.5 bg-white/10 rounded-none mx-auto mb-3" />
                 {/* Screen */}
-                <div className="bg-[#FAF3E8] rounded-[1.8rem] p-4 min-h-[380px] flex flex-col">
+                <div className="bg-[#F4F4F0] rounded-[1.8rem] p-4 min-h-[380px] flex flex-col">
                   {/* Status bar */}
                   <div className="flex justify-between items-center mb-4 px-1">
                     <span className="text-[#777] text-[10px]">{currentTime}</span>

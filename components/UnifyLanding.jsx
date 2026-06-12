@@ -611,7 +611,7 @@ const CAMPUS_TILES = [
 function CampusCollage({ animate = false }) {
   return (
     <div className="relative rounded-none overflow-hidden p-6 md:p-8 border-2 border-black"
-         style={{ background: '#FAF3E8' }}>
+         style={{ background: '#F4F4F0' }}>
       {/* Dot grid */}
       <div className="absolute inset-0 opacity-[0.07]"
            style={{ backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
@@ -970,7 +970,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
   return (
     <div className="relative min-h-screen p-4 md:p-8 antialiased"
-         style={{ background: '#FAF3E8', fontFamily: "'Inter', system-ui, sans-serif" }}>
+         style={{ background: '#F4F4F0', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <style>{`
@@ -1174,11 +1174,11 @@ export default function UnifyLanding({ schoolId } = {}) {
       </div>
 
       {/* Browser wrapper */}
-      <div className="max-w-7xl mx-auto bg-[#FAF3E8] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#F4F4F0] border-2 border-[#FF6B35] shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
 
         {/* ── NAVIGATION ──────────────────────────────────────────────── */}
         <nav
-          className="sticky top-0 z-50 bg-[#FAF3E8] border-b-2 border-[#FF6B35]"
+          className="sticky top-0 z-50 bg-[#F4F4F0] border-b-2 border-[#FF6B35]"
           style={heroStyle(0, 'heroFadeDown', '600ms')}
         >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -1212,7 +1212,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         </nav>
 
         {/* ── HERO — 55/45 asymmetric ─────────────────────────────────── */}
-        <section id="main-content" className="relative bg-[#FAF3E8] pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+        <section id="main-content" className="relative bg-[#F4F4F0] pt-16 md:pt-24 pb-12 md:pb-20 px-6">
           {/* Hero glow */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'transparent' }} />
           {/* Ambient drift dots */}
@@ -1298,7 +1298,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
               <div className="flex flex-wrap gap-2">
                 {['✓ 100% Free', '✓ Works on 2G', '✓ Verified students'].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold text-[#555] bg-white border border-black/20 px-3 py-1 rounded-none">
+                  <span key={t} className="text-[11px] font-bold text-[#111] bg-[#00FF66] border-2 border-black shadow-[2px_2px_0px_0px_#000] px-3 py-1 rounded-none">
                     {t}
                   </span>
                 ))}
@@ -1393,7 +1393,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="how-it-works"
           ref={howRef}
-          className="relative bg-[#FAF3E8] py-16 md:py-24 px-6 border-t-2 border-black"
+          className="relative bg-[#F4F4F0] py-16 md:py-24 px-6 border-t-2 border-black"
           style={sectionRevealStyle(howVisible)}
         >
           <div className="max-w-6xl mx-auto">
@@ -1455,7 +1455,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                     >
                       {step.num}
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#111] bg-[#FAF3E8] border-2 border-black px-2.5 py-1 rounded-none">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#111] bg-[#F4F4F0] border-2 border-black px-2.5 py-1 rounded-none">
                       {step.time}
                     </span>
                   </div>
@@ -1507,7 +1507,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200"
                 style={{ transform: 'rotate(-2deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 0ms both' } : { opacity: 0 }) }}
               >
-                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                <div className="bg-[#F4F4F0] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
                   <div className="flex items-center justify-between mb-5">
                     <span className="text-sm font-black text-[#111]">UNIFY</span>
                     <span className="text-[8px] font-black px-1.5 py-0.5 border border-black text-[#FF6B35] bg-white">GH</span>
@@ -1536,7 +1536,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                 className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200 md:mt-6"
                 style={{ transform: 'rotate(1.5deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 150ms both' } : { opacity: 0 }) }}
               >
-                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                <div className="bg-[#F4F4F0] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-black text-[#111]">UNIFY</span>
                     <span className="text-[9px] font-black text-[#111] bg-[#FFD23F] border border-black px-1.5 py-0.5">Question 3/10</span>
@@ -1554,7 +1554,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                       key={opt.label}
                       className={`flex items-center gap-2.5 border-2 border-black rounded-none px-3 py-2.5 mb-2.5 ${opt.selected ? 'bg-[#0066FF]' : 'bg-white'}`}
                     >
-                      <span className={`w-3.5 h-3.5 border-2 border-black rounded-none flex-shrink-0 ${opt.selected ? 'bg-white' : 'bg-[#FAF3E8]'}`} />
+                      <span className={`w-3.5 h-3.5 border-2 border-black rounded-none flex-shrink-0 ${opt.selected ? 'bg-white' : 'bg-[#F4F4F0]'}`} />
                       <span className={`text-xs font-bold ${opt.selected ? 'text-white' : 'text-[#111]'}`}>{opt.label}</span>
                     </div>
                   ))}
@@ -1572,10 +1572,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                 className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200"
                 style={{ transform: 'rotate(-1deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 300ms both' } : { opacity: 0 }) }}
               >
-                <div className="bg-[#FAF3E8] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
+                <div className="bg-[#F4F4F0] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-black text-[#111]">UNIFY</span>
-                    <span className="text-[9px] font-black text-white bg-[#16a34a] border border-black px-1.5 py-0.5">2 NEW</span>
+                    <span className="text-[9px] font-black text-white bg-[#FF007A] border border-black shadow-[2px_2px_0px_0px_#000] px-1.5 py-0.5">2 NEW</span>
                   </div>
                   <p className="text-base font-black text-[#111] mb-4">Your Matches</p>
                   {[
@@ -1631,7 +1631,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           id="features"
           ref={featuresRef}
           className="relative py-16 md:py-28 px-6 border-t-2 border-black/20"
-          style={{ ...sectionRevealStyle(featuresVisible), background: '#FAF3E8' }}
+          style={{ ...sectionRevealStyle(featuresVisible), background: '#F4F4F0' }}
         >
           {/* Ambient dots */}
           {[
@@ -1689,7 +1689,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         </section>
 
         {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20">
+        <section id="schools" className="relative bg-[#F4F4F0] py-16 md:py-28 px-6 border-t-2 border-black/20">
           <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
             <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
               <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
@@ -1744,7 +1744,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           ref={communityRef}
           className="relative py-16 md:py-28 px-6 border-t-2 border-black/20"
-          style={{ ...sectionRevealStyle(communityVisible), background: '#FAF3E8' }}
+          style={{ ...sectionRevealStyle(communityVisible), background: '#F4F4F0' }}
         >
           {/* Ambient dots */}
           {[
@@ -1847,7 +1847,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
         <section
           ref={testimonialsRef}
-          className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20 overflow-hidden"
+          className="relative bg-[#F4F4F0] py-16 md:py-28 px-6 border-t-2 border-black/20 overflow-hidden"
           style={sectionRevealStyle(testimonialsVisible)}
         >
           {/* Subtle campus photo strip on the right */}
@@ -1944,7 +1944,7 @@ export default function UnifyLanding({ schoolId } = {}) {
           id="waitlist"
           ref={ctaRef}
           className="py-16 md:py-28 px-6 border-t-2 border-black/20"
-          style={{ ...sectionRevealStyle(ctaVisible), background: '#FAF3E8' }}
+          style={{ ...sectionRevealStyle(ctaVisible), background: '#F4F4F0' }}
         >
           <div className="max-w-2xl mx-auto text-center">
             <span className="text-5xl block mb-6">🇬🇭</span>
@@ -1968,7 +1968,7 @@ export default function UnifyLanding({ schoolId } = {}) {
         <section
           id="faq"
           ref={faqRef}
-          className="relative bg-[#FAF3E8] py-16 md:py-28 px-6 border-t-2 border-black/20"
+          className="relative bg-[#F4F4F0] py-16 md:py-28 px-6 border-t-2 border-black/20"
           style={sectionRevealStyle(faqVisible)}
         >
           <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>

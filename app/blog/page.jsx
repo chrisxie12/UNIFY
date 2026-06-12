@@ -36,7 +36,7 @@ const posts = [
 
 export default function BlogPage() {
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#F4F4F0', minHeight: '100vh' }}>
       <style>{`@media(min-width:640px){.md-show{display:block !important}}`}</style>
       {/* Nav */}
       <nav style={{ borderBottom: '2px solid #FF6B35', padding: '0 24px' }}>

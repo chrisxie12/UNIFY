@@ -73,7 +73,7 @@ export default function SchoolsPage() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#FAF3E8' }}>
+    <div className="min-h-screen" style={{ background: '#F4F4F0' }}>
       <nav className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto border-b-2 border-[#FF6B35]">
         <a href="/" className="flex items-center gap-2">
           <span className="text-xl font-black text-[#111] tracking-tight">UNIFY</span>

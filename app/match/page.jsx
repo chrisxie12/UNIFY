@@ -231,7 +231,7 @@ export default function MatchPage() {
 
   return (
     <div className="relative min-h-screen p-4 md:p-6 antialiased"
-         style={{ background: '#FAF3E8', fontFamily: 'system-ui, Inter, sans-serif' }}>
+         style={{ background: '#F4F4F0', fontFamily: 'system-ui, Inter, sans-serif' }}>
 
       <style>{`
         @keyframes fadeUp {
@@ -270,13 +270,13 @@ export default function MatchPage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
       </div>
 
-      <div className="max-w-7xl mx-auto bg-[#FAF3E8] border-2 border-black shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-[#F4F4F0] border-2 border-black shadow-[6px_6px_0px_#000] rounded-none overflow-hidden">
 
         {/* Flat top bar */}
         <div className="h-1.5 bg-[#FF6B35] border-b-2 border-black" />
 
         {/* ── NAV ── */}
-        <nav className="sticky top-0 z-50 bg-[#FAF3E8] border-b-2 border-black">
+        <nav className="sticky top-0 z-50 bg-[#F4F4F0] border-b-2 border-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2">
               <span className="text-lg font-black tracking-tight text-black">UNIFY</span>

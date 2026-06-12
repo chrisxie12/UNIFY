@@ -4,7 +4,7 @@ export const metadata = {
 };
 
 const s = {
-  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#FAF3E8', minHeight: '100vh',  },
+  page: { fontFamily: "'Inter', system-ui, sans-serif", background: '#F4F4F0', minHeight: '100vh',  },
   nav: { borderBottom: '1px solid rgba(0,0,0,0.15)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 720, margin: '0 auto' },
   back: { fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 600 },
   blogLink: { fontSize: 14, color: '#FF6B35', textDecoration: 'none', fontWeight: 700 },
