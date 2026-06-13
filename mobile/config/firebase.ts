@@ -1,18 +1,17 @@
 import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
-// Fill these in from your Firebase console → Project Settings → Your apps → SDK setup
-// Or create a .env file with EXPO_PUBLIC_ prefixed keys.
+// getAnalytics is web-only and not supported in React Native — omitted intentionally.
 export const firebaseConfig = {
-  apiKey:            process.env.EXPO_PUBLIC_FIREBASE_API_KEY            ?? '',
-  authDomain:        process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN        ?? '',
-  projectId:         process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID         ?? '',
-  storageBucket:     process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET     ?? '',
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
-  appId:             process.env.EXPO_PUBLIC_FIREBASE_APP_ID             ?? '',
+  apiKey:            'AIzaSyB5bC3Aqd_bmsnjc6RefyDb0Fr31PlRj8o',
+  authDomain:        'unify-b92fd.firebaseapp.com',
+  projectId:         'unify-b92fd',
+  storageBucket:     'unify-b92fd.firebasestorage.app',
+  messagingSenderId: '752669005350',
+  appId:             '1:752669005350:web:88aa322e433e0b4f18f8e7',
 };
 
-export const isFirebaseConfigured = !!firebaseConfig.apiKey;
+export const isFirebaseConfigured = true;
 
 let app: FirebaseApp;
 if (getApps().length === 0) {
