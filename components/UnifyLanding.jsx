@@ -41,7 +41,7 @@ const SCHOOL_CONFIG = {
   knust: {
     id: 'knust', name: 'KNUST',
     full: 'Kwame Nkrumah University of Science & Technology',
-    badge: "KNUST Freshers · Class of '30",
+    badge: "KNUST Freshers",
     headline: "Don't Pull Up To Kotei Alone,",
     sub: "The fresher network built for KNUST. Find your roommate around Brunei, Kotei, or Unity Hall — link with coursemates in Engineering, CS, and Medicine before lectures even start.",
     hostels: ['Brunei', 'Kotei', 'Unity Hall', 'Evandy', 'TF Hostel'],
@@ -49,7 +49,7 @@ const SCHOOL_CONFIG = {
   ug: {
     id: 'ug', name: 'UG Legon',
     full: 'University of Ghana',
-    badge: "UG Legon Freshers · Class of '30",
+    badge: "UG Legon Freshers",
     headline: "Don't Walk Into Legon Alone,",
     sub: "The fresher network built for UG Legon. Find your roommate at Volta, Limann, or Commonwealth — link with coursemates in Business, Law, and Social Sciences before orientation week.",
     hostels: ['Volta Hall', 'Limann Hall', 'Commonwealth Hall', 'Mensah Sarbah'],
@@ -57,7 +57,7 @@ const SCHOOL_CONFIG = {
   ucc: {
     id: 'ucc', name: 'UCC',
     full: 'University of Cape Coast',
-    badge: "UCC Freshers · Class of '30",
+    badge: "UCC Freshers",
     headline: "Don't Pull Up To Cape Coast Alone,",
     sub: "The fresher network built for UCC. Find your roommate around Casford or Atlantic Hall — link with coursemates in Education, Nursing, and Sciences before matriculation day.",
     hostels: ['Casford Hall', 'Atlantic Hall', 'Oguaa Hall'],
@@ -65,7 +65,7 @@ const SCHOOL_CONFIG = {
   upsa: {
     id: 'upsa', name: 'UPSA',
     full: 'University of Professional Studies',
-    badge: "UPSA Freshers · Class of '30",
+    badge: "UPSA Freshers",
     headline: "Don't Start UPSA Alone,",
     sub: "The fresher network built for UPSA. Connect with fellow Business, Accounting, and Law freshers — find your people before the semester kicks off.",
     hostels: ['On-campus hostel', 'Legon area'],
@@ -73,7 +73,7 @@ const SCHOOL_CONFIG = {
   uds: {
     id: 'uds', name: 'UDS',
     full: 'University for Development Studies',
-    badge: "UDS Freshers · Class of '30",
+    badge: "UDS Freshers",
     headline: "Don't Pull Up To Tamale Alone,",
     sub: "The fresher network built for UDS. Connect with Agriculture, Medicine, and Law freshers across Tamale, Wa, and Navrongo campuses.",
     hostels: ['Tamale campus', 'Wa campus', 'Navrongo campus'],
@@ -81,7 +81,7 @@ const SCHOOL_CONFIG = {
   gctu: {
     id: 'gctu', name: 'GCTU',
     full: 'Ghana Communication Technology University',
-    badge: "GCTU Freshers · Class of '30",
+    badge: "GCTU Freshers",
     headline: "Don't Start GCTU Alone,",
     sub: "The fresher network built for GCTU. Link up with Tech, Telecom, and Business freshers — find your people and secure your spot before the hub fills up.",
     hostels: ['On-campus hostel', 'Accra area'],
@@ -91,7 +91,7 @@ const SCHOOL_CONFIG = {
 const TICKER_ITEMS = [
   "🔥 45 freshers from Prempeh College just claimed their handles",
   "⚡️ 120 roomies matched for KNUST Brunei & Kotei hostels",
-  "🎓 Legon Class of '30 hubs are officially live",
+  "🎓 Legon fresher hubs are officially live",
   "🔥 32 girls just joined the Volta Hall fresher network",
   "⚡️ Avoid the portal rush — 210 students linked up early",
   "🏠 Evandy & TF hostel threads trending in UCC hub",
@@ -99,7 +99,7 @@ const TICKER_ITEMS = [
   "🔥 UPSA Business fresher hub is growing fast — claim your spot",
   "⚡️ 67 Law freshers linked up at Legon before lectures even start",
   "🏠 Katanga & Unity Hall residents dropping real hostel intel",
-  "🎓 Achimota Class of '30 placement group: 340 members and counting",
+  "🎓 Achimota placement group: 340 members and counting",
   "🔥 Wesley Girls intake crew already planning Legon orientation week",
 ];
 
@@ -1162,7 +1162,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
               <div className="mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
                 <DownloadButtons center={false} />
-                <p className="text-xs text-[#777] mt-3 font-medium">Available for iOS and Android. Built for Ghana&apos;s Class of &apos;30.</p>
+                <p className="text-xs text-[#777] mt-3 font-medium">Built for Ghanaian students.</p>
               </div>
 
               <div
@@ -1859,7 +1859,7 @@ export default function UnifyLanding({ schoolId } = {}) {
               Download UNIFY and find your roommate, link with coursemates, and tap into your official campus hub before orientation.
             </p>
             <DownloadButtons />
-            <p className="text-xs text-[#777] mt-5">Available for iOS and Android. Built for Ghana&apos;s Class of &apos;30.</p>
+            <p className="text-xs text-[#777] mt-5">Built for Ghanaian students.</p>
           </div>
         </section>
 
