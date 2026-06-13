@@ -295,7 +295,7 @@ export default function UnifyLanding() {
           {/* Wordmark */}
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="" width={30} height={30} className="rounded-lg" />
+            <img src="/logo-icon.png" alt="UNIFY" width={32} height={32} className="rounded-xl" />
             <span className="font-bold text-lg text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
 
@@ -343,8 +343,9 @@ export default function UnifyLanding() {
 
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           {/* Label */}
-          <div className="hero-label inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-wide uppercase">
-            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+          <div className="hero-label inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold px-2 pr-3.5 py-1.5 rounded-full mb-8 tracking-wide uppercase">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-icon.png" alt="" width={22} height={22} className="rounded-lg" />
             Built for university campuses
           </div>
 
@@ -696,7 +697,8 @@ export default function UnifyLanding() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="" width={26} height={26} className="rounded-md" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-icon.png" alt="UNIFY" width={28} height={28} className="rounded-xl" />
             <span className="font-bold text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
