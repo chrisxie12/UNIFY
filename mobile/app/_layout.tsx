@@ -8,10 +8,10 @@ import {
 import {
   Inter_400Regular,
   Inter_500Medium,
+  Inter_600SemiBold,
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { StatusBar } from 'expo-status-bar';
-import { AppProvider } from '../context/AppContext';
 import { COLORS } from '../theme/tokens';
 import '../global.css';
 
@@ -22,26 +22,31 @@ export default function RootLayout() {
     SpaceGrotesk_700Bold,
     Inter_400Regular,
     Inter_500Medium,
+    Inter_600SemiBold,
     Inter_700Bold,
   });
 
   if (!loaded) return null;
 
   return (
-    <AppProvider>
+    <>
       <StatusBar style="dark" backgroundColor={COLORS.white} />
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: COLORS.white },
+          animation: 'slide_from_right',
         }}
       >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="chats" />
-        <Stack.Screen name="profile" />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="auth/index" />
+        <Stack.Screen name="auth/verify" />
+        <Stack.Screen name="onboarding/index" />
+        <Stack.Screen name="(main)" />
         <Stack.Screen name="chat/[id]" />
-        <Stack.Screen name="thread/[id]" />
+        <Stack.Screen name="hub/[id]" />
+        <Stack.Screen name="user/[id]" />
       </Stack>
-    </AppProvider>
+    </>
   );
 }

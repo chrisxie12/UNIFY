@@ -1,28 +1,25 @@
 import { useCallback, useRef, useState } from 'react';
 import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  Text,
-  View,
+  FlatList, KeyboardAvoidingView, Platform,
+  Pressable, Text, TextInput, View,
   type FlatList as FlatListType,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { NBAvatar, NBInput } from '../../components/NB';
-import type { Chat, ChatMessage } from '../../theme/tokens';
+import { Avatar } from '../../components/UI';
+import { COLORS } from '../../theme/tokens';
+import type { ChatMessage } from '../../theme/tokens';
 
-const CONTACTS: Readonly<Record<string, Omit<Chat, 'last' | 'time' | 'unread'>>> = {
-  c1: { id: 'c1', name: 'Sarah',   school: 'UG Legon', match: '92%', initials: 'SA', accent: 'brand'   },
-  c2: { id: 'c2', name: 'Michael', school: 'KNUST',    match: '87%', initials: 'MI', accent: 'info'    },
-  c3: { id: 'c3', name: 'Efua',    school: 'UCC',      match: '84%', initials: 'EF', accent: 'success' },
-  c4: { id: 'c4', name: 'Kwame',   school: 'UPSA',     match: '81%', initials: 'KW', accent: 'alert'   },
+const CONTACTS: Record<string, { name: string; school: string; match: string; initials: string; color: string }> = {
+  c1: { name: 'Ama Serwaa',    school: 'KNUST', match: '94%', initials: 'AS', color: 'orange' },
+  c2: { name: 'Michael Agyei', school: 'KNUST', match: '88%', initials: 'MA', color: 'blue'   },
+  c3: { name: 'Efua Boateng',  school: 'UCC',   match: '82%', initials: 'EB', color: 'green'  },
+  c4: { name: 'Yaw Mensah',    school: 'UPSA',  match: '79%', initials: 'YM', color: 'red'    },
 };
 
-const SEED_MESSAGES: Readonly<Record<string, readonly ChatMessage[]>> = {
+const SEED_MESSAGES: Record<string, ChatMessage[]> = {
   c1: [
-    { id: 'm1', mine: false, text: 'Hey! We matched 92% 🔥 Are you early bird or night owl fr?', time: '10:02' },
+    { id: 'm1', mine: false, text: 'Hey! We matched 94% 🔥 Are you early bird or night owl fr?', time: '10:02' },
     { id: 'm2', mine: true,  text: 'Night owl 100%. You saw my quiz answers 😄', time: '10:04' },
     { id: 'm3', mine: false, text: 'Same! Which hostel are you looking at? I keep my side clean, promise 😂', time: '10:05' },
     { id: 'm4', mine: true,  text: 'Evandy or Brunei. There is a thread in the KNUST hub comparing them', time: '10:07' },
@@ -49,46 +46,36 @@ function Bubble({ msg }: { msg: ChatMessage }) {
   return (
     <View className={`max-w-[78%] mb-3 ${msg.mine ? 'self-end' : 'self-start'}`}>
       <View
-        className={`rounded-2xl px-4 py-2.5 ${
-          msg.mine ? 'bg-accent rounded-br-sm' : 'bg-surface rounded-bl-sm'
+        className={`rounded-2xl px-4 py-3 ${
+          msg.mine ? 'bg-btn-primary rounded-br-sm' : 'bg-surface rounded-bl-sm'
         }`}
       >
-        <Text
-          className={`text-sm leading-[20px] font-body ${
-            msg.mine ? 'text-white' : 'text-charcoal'
-          }`}
-        >
+        <Text className={`text-sm leading-5 font-body ${msg.mine ? 'text-white' : 'text-primary'}`}>
           {msg.text}
         </Text>
       </View>
-      <Text
-        className={`font-body-medium text-[9px] text-subtle mt-1 ${
-          msg.mine ? 'self-end' : 'self-start'
-        }`}
-      >
+      <Text className={`font-body text-[9px] text-tertxt mt-1 ${msg.mine ? 'self-end' : 'self-start'}`}>
         {msg.time}
       </Text>
     </View>
   );
 }
 
-export default function ChatThreadScreen() {
-  const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+export default function ChatRoomScreen() {
+  const router  = useRouter();
+  const { id }  = useLocalSearchParams<{ id: string }>();
   const contact = CONTACTS[id ?? ''] ?? CONTACTS['c1'];
-  const [messages, setMessages] = useState<readonly ChatMessage[]>(
+  const [messages, setMessages] = useState<ChatMessage[]>(
     SEED_MESSAGES[id ?? ''] ?? SEED_MESSAGES['c1'],
   );
-  const [draft, setDraft] = useState<string>('');
+  const [draft, setDraft]   = useState('');
+  const [focused, setFocused] = useState(false);
   const listRef = useRef<FlatListType<ChatMessage>>(null);
 
   const send = useCallback(() => {
     const text = draft.trim();
-    if (text.length === 0) return;
-    setMessages((prev) => [
-      ...prev,
-      { id: `msg-${Date.now()}`, mine: true, text, time: nowTime() },
-    ]);
+    if (!text) return;
+    setMessages((prev) => [...prev, { id: `m-${Date.now()}`, mine: true, text, time: nowTime() }]);
     setDraft('');
     requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
   }, [draft]);
@@ -96,29 +83,21 @@ export default function ChatThreadScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       {/* Header */}
-      <View className="flex-row items-center gap-3 px-5 py-3 border-b border-divider bg-white">
+      <View className="flex-row items-center gap-3 px-5 py-3 border-b border-border bg-white">
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          className="w-9 h-9 rounded-full bg-surface items-center justify-center active:opacity-75"
+          className="w-10 h-10 rounded-full bg-surface items-center justify-center active:opacity-70"
         >
-          <Text className="font-heading text-base text-charcoal">←</Text>
+          <Text className="font-heading text-base text-primary">←</Text>
         </Pressable>
-        <NBAvatar initials={contact.initials} accent={contact.accent} size="sm" />
+        <Avatar initials={contact.initials} color={contact.color} size="sm" />
         <View className="flex-1">
-          <Text className="font-body-bold text-sm text-charcoal">
-            {contact.name}
-          </Text>
-          <Text className="font-body-medium text-[10px] text-muted">
-            {contact.school}
-          </Text>
+          <Text className="font-body-semi text-sm text-primary">{contact.name}</Text>
+          <Text className="font-body text-[10px] text-tertxt">{contact.school}</Text>
         </View>
         <View className="bg-[#EFF6FF] rounded-full px-3 py-1">
-          <Text className="text-accent text-[11px] font-body-bold">
-            {contact.match} Match
-          </Text>
+          <Text className="text-blue text-[11px] font-body-semi">{contact.match} Match</Text>
         </View>
       </View>
 
@@ -128,32 +107,33 @@ export default function ChatThreadScreen() {
       >
         <FlatList
           ref={listRef}
-          data={messages as ChatMessage[]}
-          keyExtractor={(m: ChatMessage) => m.id}
-          contentContainerClassName="px-5 py-4"
+          data={messages}
+          keyExtractor={(m) => m.id}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: ChatMessage }) => (
-            <Bubble msg={item} />
-          )}
-          onContentSizeChange={() =>
-            listRef.current?.scrollToEnd({ animated: false })
-          }
+          renderItem={({ item }) => <Bubble msg={item} />}
+          onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
         />
 
         {/* Composer */}
-        <View className="flex-row items-center gap-3 px-5 py-3 border-t border-divider bg-white">
+        <View className="flex-row items-center gap-3 px-5 py-3 border-t border-border bg-white">
           <View className="flex-1">
-            <NBInput
+            <TextInput
               placeholder="Message…"
+              placeholderTextColor={COLORS.tertxt}
               value={draft}
               onChangeText={setDraft}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              className={`bg-surface rounded-full px-5 py-3 text-sm font-body text-primary border ${
+                focused ? 'border-blue' : 'border-border'
+              }`}
             />
           </View>
           <Pressable
             onPress={send}
             accessibilityRole="button"
-            accessibilityLabel="Send message"
-            className="bg-accent w-11 h-11 rounded-full items-center justify-center active:opacity-75"
+            className="bg-blue w-11 h-11 rounded-full items-center justify-center active:opacity-80"
           >
             <Text className="text-white text-base">↑</Text>
           </Pressable>
