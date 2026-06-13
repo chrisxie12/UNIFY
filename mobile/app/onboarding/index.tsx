@@ -142,7 +142,7 @@ export default function OnboardingScreen() {
         study: study as any, hostels,
       });
       setOnboarded(true);
-      router.replace('/(main)/home');
+      router.replace('/onboarding/success');
     }
   }
 

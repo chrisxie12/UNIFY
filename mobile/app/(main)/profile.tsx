@@ -40,8 +40,16 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Blue cover */}
-        <View className="bg-tertiary h-28" />
+        {/* Blue cover with settings gear */}
+        <View className="bg-tertiary h-28">
+          <Pressable
+            onPress={() => router.push('/settings')}
+            hitSlop={12}
+            className="absolute top-4 right-5 w-10 h-10 rounded-full bg-white/20 items-center justify-center active:opacity-70"
+          >
+            <Text style={{ fontSize: 18 }}>⚙️</Text>
+          </Pressable>
+        </View>
 
         {/* Avatar overlapping cover */}
         <View className="px-5 -mt-10 mb-4 flex-row items-end justify-between">

@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
 import {
-  Animated, PanResponder, Pressable, Text, View,
+  Animated, Modal, PanResponder, Pressable, Text, View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { Avatar, Badge } from '../../components/UI';
 
 const DECK = [
@@ -16,9 +18,13 @@ const DECK = [
 const CARD_W  = 320;
 const SWIPE_THRESHOLD = 100;
 
+type MatchedUser = typeof DECK[number];
+
 export default function MatchScreen() {
-  const [deck, setDeck]       = useState(DECK);
-  const [matched, setMatched] = useState<string[]>([]);
+  const router = useRouter();
+  const [deck, setDeck]             = useState(DECK);
+  const [matched, setMatched]       = useState<string[]>([]);
+  const [matchModal, setMatchModal] = useState<MatchedUser | null>(null);
   const pan    = useRef(new Animated.ValueXY()).current;
   const rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ['-12deg', '0deg', '12deg'] });
   const likeOpacity = pan.x.interpolate({ inputRange: [0, SWIPE_THRESHOLD], outputRange: [0, 1], extrapolate: 'clamp' });
@@ -44,7 +50,13 @@ export default function MatchScreen() {
 
   function next(action: 'like' | 'pass') {
     const top = deck[0];
-    if (action === 'like' && top) setMatched((m) => [...m, top.id]);
+    if (action === 'like' && top) {
+      setMatched((m) => [...m, top.id]);
+      setTimeout(() => {
+        setMatchModal(top);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }, 300);
+    }
     setDeck((d) => d.slice(1));
     pan.setValue({ x: 0, y: 0 });
   }
@@ -185,6 +197,33 @@ export default function MatchScreen() {
           </Text>
         </View>
       )}
+
+      <Modal visible={!!matchModal} transparent animationType="fade">
+        <View className="flex-1 bg-black/60 items-center justify-center px-8">
+          <View className="bg-white rounded-3xl p-8 w-full items-center">
+            <Text style={{ fontSize: 56 }}>🔥</Text>
+            <Text className="font-display text-3xl text-primary mt-4 mb-2">It's a Match!</Text>
+            <Text className="font-body text-sm text-secondary text-center mb-6">
+              You and {matchModal?.name} both want to connect.
+            </Text>
+            {matchModal && <Avatar initials={matchModal.initials} color={matchModal.color} size="xl" />}
+            <View className="gap-3 w-full mt-6">
+              <Pressable
+                onPress={() => { setMatchModal(null); router.push('/chat/c1' as any); }}
+                className="bg-btn-primary rounded-full py-4 items-center active:opacity-80"
+              >
+                <Text className="text-white font-body-semi text-base">Start Chat →</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => setMatchModal(null)}
+                className="py-3 items-center active:opacity-70"
+              >
+                <Text className="font-body-semi text-sm text-tertxt">Keep Browsing</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
