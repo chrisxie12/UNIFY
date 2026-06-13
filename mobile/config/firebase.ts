@@ -12,7 +12,6 @@ export const firebaseConfig = {
 export const firebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Get this from: Firebase Console → Authentication → Sign-in method
-// → Google → Web SDK configuration → Web client ID
 export const GOOGLE_WEB_CLIENT_ID =
-  process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
+  process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
+  '752669005350-0hsvs8o99fs6ohk4f4o2kkb268ei1e8a.apps.googleusercontent.com';
