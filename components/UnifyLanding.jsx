@@ -296,17 +296,63 @@ function CopyButton({ text }) {
   );
 }
 
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 814 1000" className="w-5 h-5 fill-white flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-52.7-75.6-98.7-194.3-98.7-307.5 0-199.3 130.8-305.7 259.4-305.7 65.8 0 120.5 43.1 162.6 43.1 40.3 0 103.7-45.4 174.5-45.4 28 0 130.3 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"/>
+    </svg>
+  );
+}
+
+function PlayStoreIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00C3FF"/>
+          <stop offset="100%" stopColor="#1976D2"/>
+        </linearGradient>
+        <linearGradient id="pg2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#FFD747"/>
+          <stop offset="100%" stopColor="#FF8C00"/>
+        </linearGradient>
+        <linearGradient id="pg3" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#00E676"/>
+          <stop offset="100%" stopColor="#00BFA5"/>
+        </linearGradient>
+        <linearGradient id="pg4" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF4081"/>
+          <stop offset="100%" stopColor="#C62828"/>
+        </linearGradient>
+      </defs>
+      <path d="M3.18 23.76c.38.21.82.23 1.22.04l12.62-7.28-2.83-2.83-11.01 10.07z" fill="url(#pg4)"/>
+      <path d="M21.6 10.27L18.9 8.72l-3.17 3.17 3.17 3.17 2.73-1.57c.78-.45.78-1.77-.03-2.22z" fill="url(#pg2)"/>
+      <path d="M3.18.24C2.77.04 2.31.08 1.93.31L13.07 11.45l2.83-2.83L3.18.24z" fill="url(#pg1)"/>
+      <path d="M1.93.31C1.54.57 1.3 1.0 1.3 1.56v20.88c0 .56.24 1.0.63 1.32L13.07 12.55 1.93.31z" fill="url(#pg3)"/>
+    </svg>
+  );
+}
+
 function DownloadButtons({ size = 'lg', center = true }) {
   const base = size === 'lg'
-    ? 'inline-flex items-center gap-2.5 bg-[#1F2937] hover:bg-[#374151] text-white font-black text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-sm'
-    : 'inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#374151] text-white font-bold text-xs px-5 py-2.5 rounded-full transition-all duration-200';
+    ? 'inline-flex items-center gap-3 bg-[#1F2937] hover:bg-[#111827] text-white px-6 py-3.5 rounded-2xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-md border border-white/10'
+    : 'inline-flex items-center gap-2.5 bg-[#1F2937] hover:bg-[#111827] text-white px-4 py-2.5 rounded-xl transition-all duration-200 border border-white/10';
+  const labelSize = size === 'lg' ? '' : 'scale-90 origin-left';
   return (
     <div className={`flex flex-wrap gap-3 ${center ? 'justify-center' : ''}`}>
       <a href="#" className={base} onClick={() => track('download_click', { store: 'ios' })}>
-        <span className="text-base">🍎</span> App Store
+        <AppleIcon />
+        <span className={`flex flex-col leading-tight ${labelSize}`}>
+          <span className="text-[10px] text-white/60 font-medium tracking-wide uppercase">Download on the</span>
+          <span className="text-[15px] font-bold tracking-tight">App Store</span>
+        </span>
       </a>
       <a href="#" className={base} onClick={() => track('download_click', { store: 'android' })}>
-        <span className="text-base">▶</span> Play Store
+        <PlayStoreIcon />
+        <span className={`flex flex-col leading-tight ${labelSize}`}>
+          <span className="text-[10px] text-white/60 font-medium tracking-wide uppercase">Get it on</span>
+          <span className="text-[15px] font-bold tracking-tight">Google Play</span>
+        </span>
       </a>
     </div>
   );
