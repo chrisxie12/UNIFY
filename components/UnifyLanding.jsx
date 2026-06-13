@@ -294,12 +294,9 @@ export default function UnifyLanding() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Wordmark */}
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#0055FF] flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 3v5a4 4 0 008 0V3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="font-bold text-lg tracking-tight text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" width={30} height={30} className="rounded-lg" />
+            <span className="font-bold text-lg text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -383,12 +380,21 @@ export default function UnifyLanding() {
             </a>
           </div>
 
-          {/* Trust badges */}
-          <div className="hero-trust flex flex-wrap gap-2 justify-center mt-8">
-            {SCHOOLS.map((s) => (
-              <span key={s} className="text-xs text-gray-400 font-medium bg-gray-50 border border-gray-100 px-3 py-1 rounded-full">
-                {s}
-              </span>
+          {/* Trust badges — university logos */}
+          <div className="hero-trust flex flex-wrap gap-3 justify-center items-center mt-8">
+            {[
+              { slug: 'knust',  name: 'KNUST'    },
+              { slug: 'ug',     name: 'UG Legon' },
+              { slug: 'ucc',    name: 'UCC'      },
+              { slug: 'upsa',   name: 'UPSA'     },
+              { slug: 'uds',    name: 'UDS'      },
+              { slug: 'gctu',   name: 'GCTU'     },
+            ].map((s) => (
+              <div key={s.slug} className="flex items-center gap-1.5 bg-white border border-gray-100 rounded-full pl-1.5 pr-3 py-1 shadow-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/logos/${s.slug}.svg`} alt={s.name} width={22} height={22} className="rounded-full" />
+                <span className="text-xs font-medium text-gray-500">{s.name}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -689,11 +695,8 @@ export default function UnifyLanding() {
       <footer className="border-t border-gray-100 py-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#0055FF] flex items-center justify-center">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2.5 2.5v4a3.5 3.5 0 007 0v-4" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" width={26} height={26} className="rounded-md" />
             <span className="font-bold text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
