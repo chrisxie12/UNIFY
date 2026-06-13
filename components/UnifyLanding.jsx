@@ -386,21 +386,21 @@ export default function UnifyLanding() {
             <p className="text-xs text-gray-400 font-medium tracking-widest uppercase mb-5">Launching at</p>
             <div className="flex flex-wrap gap-4 justify-center items-center">
               {[
-                { slug: 'knust', name: 'KNUST'    },
-                { slug: 'ug',    name: 'UG Legon' },
-                { slug: 'ucc',   name: 'UCC'      },
-                { slug: 'upsa',  name: 'UPSA'     },
-                { slug: 'uds',   name: 'UDS'      },
-                { slug: 'gctu',  name: 'GCTU'     },
+                { src: '/logos/knust.jpg', name: 'KNUST'    },
+                { src: '/logos/ug.png',    name: 'UG Legon' },
+                { src: '/logos/ucc.png',   name: 'UCC'      },
+                { src: '/logos/upsa.png',  name: 'UPSA'     },
+                { src: '/logos/uds.jpg',   name: 'UDS'      },
+                { src: '/logos/gctu.png',  name: 'GCTU'     },
               ].map((s) => (
-                <div key={s.slug} className="flex flex-col items-center gap-2 group">
+                <div key={s.name} className="flex flex-col items-center gap-2 group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/logos/${s.slug}.svg`}
+                    src={s.src}
                     alt={s.name}
-                    width={48}
-                    height={48}
-                    className="rounded-xl shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                    width={56}
+                    height={56}
+                    className="object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-sm"
                   />
                   <span className="text-[10px] font-semibold text-gray-400 tracking-wide">{s.name}</span>
                 </div>
