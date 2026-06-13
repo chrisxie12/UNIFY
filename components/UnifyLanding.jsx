@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
-
 const GHANA_PHONE_RE = /^(?:\+233|0)(20|24|50|54|55|59|23|25|26|27)\d{7}$/;
 
 function normalizePhone(raw) {
@@ -14,50 +12,16 @@ function normalizePhone(raw) {
   return s;
 }
 
-const SCHOOLS = [
-  { id: 'knust', label: 'KNUST' },
-  { id: 'ug',   label: 'UG Legon' },
-  { id: 'ucc',  label: 'UCC' },
-  { id: 'upsa', label: 'UPSA' },
-  { id: 'uds',  label: 'UDS' },
-  { id: 'gctu', label: 'GCTU' },
-];
+const SCHOOLS = ['KNUST', 'UG Legon', 'UCC', 'UPSA', 'UDS', 'GCTU'];
 
-const FAQS = [
-  {
-    q: 'How is verification done?',
-    a: 'We verify students using their university admission index number or student ID. Universities can also push verification directly via our institution dashboard.',
-  },
-  {
-    q: 'Is UNIFY free for students?',
-    a: 'Yes — completely free for students. Universities pay for the institution dashboard, announcement tools, and analytics.',
-  },
-  {
-    q: 'How is this different from WhatsApp groups?',
-    a: 'WhatsApp groups are unverified, unstructured, and unmanaged. UNIFY gives verified identity, official channels, and searchable student directories — things no group chat can provide.',
-  },
-  {
-    q: 'Which schools are supported at launch?',
-    a: 'KNUST, UG Legon, UCC, UPSA, UDS, and GCTU. We are actively onboarding more institutions.',
-  },
-  {
-    q: 'Can universities post official announcements?',
-    a: 'Yes. Verified institution accounts can push announcements directly to enrolled students — lecture changes, exam schedules, hostel allocations, and more.',
-  },
-  {
-    q: 'When will the app be available?',
-    a: 'We are running a closed beta in the coming months. Join the waitlist to be first in when your school goes live.',
-  },
-];
-
-function useScrollReveal(threshold = 0.15) {
+function useScrollReveal(threshold = 0.12) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold },
     );
     obs.observe(el);
@@ -73,9 +37,9 @@ function Reveal({ children, delay = 0, className = '' }) {
       ref={ref}
       className={className}
       style={{
-        transition: `opacity 0.55s ease ${delay}ms, transform 0.55s ease ${delay}ms`,
+        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(20px)',
+        transform: visible ? 'translateY(0)' : 'translateY(24px)',
       }}
     >
       {children}
@@ -83,198 +47,274 @@ function Reveal({ children, delay = 0, className = '' }) {
   );
 }
 
-function FAQItem({ q, a }) {
-  const [open, setOpen] = useState(false);
+/* ── Icons ── */
+function IconAnnouncement() {
   return (
-    <div className="border-b border-gray-200 last:border-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-5 text-left gap-4"
-      >
-        <span className="font-semibold text-gray-900 text-sm sm:text-base">{q}</span>
-        <ChevronDown
-          size={18}
-          className="shrink-0 text-gray-400 transition-transform duration-200"
-          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
-        />
-      </button>
-      <div
-        className="overflow-hidden transition-all duration-300"
-        style={{ maxHeight: open ? '200px' : '0px', opacity: open ? 1 : 0 }}
-      >
-        <p className="text-gray-600 text-sm leading-relaxed pb-5">{a}</p>
-      </div>
-    </div>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M16 4L4 8v4l12 4V4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M4 12v3a1 1 0 001 1h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function IconShield() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2L3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5l-7-3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M7 10l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+function IconNetwork() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="3" cy="5" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="17" cy="5" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="3" cy="15" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="17" cy="15" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M4.5 5.5L8.5 8.5M11.5 8.5L15.5 5.5M4.5 14.5L8.5 11.5M11.5 11.5L15.5 14.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function IconWarning() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M9 2L1.5 15h15L9 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M9 8v3M9 13h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function IconWhatsapp() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M6 7.5c0 3 2.5 5 5 5l.5-2-2-1-1 1c-.5-.5-1.5-1.5-1.5-2.5l1-1-1-2L6 7.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+function IconLock() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <rect x="3" y="8" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M6 8V6a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <circle cx="9" cy="12" r="1" fill="currentColor"/>
+    </svg>
+  );
+}
+function IconArrow() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
   );
 }
 
-function JoinForm() {
+/* ── Waitlist form ── */
+function WaitlistForm() {
   const [school, setSchool] = useState('');
   const [phone, setPhone]   = useState('');
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
-  const [errMsg, setErrMsg] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [err, setErr]       = useState('');
 
-  async function handleSubmit(e) {
+  async function submit(e) {
     e.preventDefault();
-    setErrMsg('');
-    if (!school) { setErrMsg('Please select your university.'); return; }
+    setErr('');
+    if (!school) { setErr('Select your university.'); return; }
     const norm = normalizePhone(phone);
-    if (!GHANA_PHONE_RE.test(norm)) { setErrMsg('Enter a valid Ghanaian phone number.'); return; }
+    if (!GHANA_PHONE_RE.test(norm)) { setErr('Enter a valid Ghanaian number.'); return; }
     setStatus('loading');
     try {
-      const body = new URLSearchParams({ school, phone: norm, ts: new Date().toISOString() });
-      await fetch(SHEET_URL, { method: 'POST', body });
+      await fetch(SHEET_URL, { method: 'POST', body: new URLSearchParams({ school, phone: norm, ts: new Date().toISOString() }) });
       setStatus('success');
     } catch {
       setStatus('error');
-      setErrMsg('Something went wrong. Try again.');
+      setErr('Something went wrong. Try again.');
     }
   }
 
   if (status === 'success') {
     return (
-      <div className="text-center py-8">
-        <div className="text-4xl mb-3">🎉</div>
-        <p className="font-bold text-white text-xl mb-1">You're on the list!</p>
-        <p className="text-blue-100 text-sm">We'll text you when UNIFY opens at your school.</p>
+      <div className="text-center py-6">
+        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11l5 5 9-9" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        <p className="font-semibold text-gray-900 text-lg">You're on the list</p>
+        <p className="text-gray-500 text-sm mt-1">We'll reach you when UNIFY opens at your school.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md mx-auto">
-      {/* School selector */}
-      <div className="flex flex-wrap gap-2 justify-center">
+    <form onSubmit={submit} className="w-full">
+      <div className="flex flex-wrap gap-2 mb-4 justify-center">
         {SCHOOLS.map((s) => (
           <button
-            key={s.id}
-            type="button"
-            onClick={() => setSchool(s.id)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
-              school === s.id
-                ? 'bg-white text-blue-600 border-white'
-                : 'bg-transparent text-white border-white/40 hover:border-white/80'
+            key={s} type="button" onClick={() => setSchool(s)}
+            className={`px-4 py-1.5 rounded-full text-sm border transition-all duration-150 ${
+              school === s
+                ? 'bg-[#0055FF] text-white border-[#0055FF]'
+                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
             }`}
           >
-            {s.label}
+            {s}
           </button>
         ))}
       </div>
-
-      {/* Phone input */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 max-w-sm mx-auto">
         <input
-          type="tel"
-          placeholder="0XX XXX XXXX"
-          value={phone}
+          type="tel" placeholder="0XX XXX XXXX" value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="flex-1 bg-white/10 border border-white/30 text-white placeholder-white/50 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-white/80 transition-colors"
+          className="flex-1 h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#0055FF] transition-colors"
         />
         <button
-          type="submit"
-          disabled={status === 'loading'}
-          className="bg-white text-blue-600 font-bold px-6 py-3.5 rounded-2xl text-sm hover:bg-blue-50 active:scale-95 transition-all disabled:opacity-60"
+          type="submit" disabled={status === 'loading'}
+          className="h-11 px-5 bg-[#0055FF] text-white text-sm font-semibold rounded-xl hover:bg-[#0044DD] active:scale-95 transition-all disabled:opacity-50"
         >
           {status === 'loading' ? '…' : 'Join'}
         </button>
       </div>
-
-      {errMsg && <p className="text-red-300 text-xs text-center">{errMsg}</p>}
+      {err && <p className="text-red-500 text-xs text-center mt-2">{err}</p>}
     </form>
   );
 }
 
+/* ── Main component ── */
 export default function UnifyLanding() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 16);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+    <div className="min-h-screen bg-white text-gray-900" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
 
       {/* ── Nav ── */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-          <span className="font-bold text-lg tracking-tight text-blue-600">UNIFY</span>
-          <div className="flex items-center gap-6">
-            <a href="#universities" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 transition-colors">
-              For Universities
-            </a>
-            <a
-              href="#waitlist"
-              className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-blue-700 active:scale-95 transition-all"
-            >
-              Get Early Access
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* ── Hero ── */}
-      <section className="max-w-5xl mx-auto px-5 pt-20 pb-24 text-center">
-        <Reveal>
-          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
-            🇬🇭 Built for Ghanaian universities
-          </div>
-        </Reveal>
-        <Reveal delay={80}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-gray-900 mb-6">
-            The Campus Identity &<br />
-            <span className="text-blue-600">Announcement Platform</span>
-          </h1>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="text-gray-500 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            UNIFY gives every student a verified campus identity and every university a direct channel to reach them — no spam groups, no missed notices.
-          </p>
-        </Reveal>
-        <Reveal delay={240}>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="#waitlist"
-              className="bg-blue-600 text-white font-bold px-8 py-4 rounded-full text-base hover:bg-blue-700 active:scale-95 transition-all"
-            >
-              Join the Waitlist
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm' : 'bg-transparent'}`}>
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <span className="font-bold text-xl tracking-tight text-gray-900">UNIFY</span>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">How it works</a>
+            <a href="#universities" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">For Universities</a>
+          </nav>
+          <div className="flex items-center gap-3">
+            <a href="#waitlist" className="hidden sm:inline-flex text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              Get access
             </a>
             <a
               href="#universities"
-              className="border border-gray-200 text-gray-700 font-semibold px-8 py-4 rounded-full text-base hover:border-gray-400 active:scale-95 transition-all"
+              className="inline-flex items-center gap-1.5 bg-gray-900 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-gray-700 active:scale-95 transition-all"
             >
-              For Universities →
+              For Universities
             </a>
           </div>
-        </Reveal>
+        </div>
+      </header>
+
+      {/* ── Hero ── */}
+      <section className="relative pt-32 pb-28 overflow-hidden">
+        {/* Gradient background */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(0,85,255,0.08) 0%, transparent 70%)',
+          }}
+        />
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{
+            backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+
+        <div className="relative max-w-4xl mx-auto px-6 text-center">
+          {/* Label */}
+          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-8 tracking-wide uppercase">
+            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+            Built for university campuses
+          </div>
+
+          {/* Headline */}
+          <h1
+            className="font-extrabold tracking-tight text-gray-900 mb-6"
+            style={{ fontSize: 'clamp(2.4rem, 6vw, 4.5rem)', lineHeight: 1.08, letterSpacing: '-0.03em' }}
+          >
+            The official identity &<br />
+            <span style={{ color: '#0055FF' }}>announcement layer</span><br />
+            for your campus.
+          </h1>
+
+          {/* Subtext */}
+          <p className="text-gray-500 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+            Every student, verified. Every notice, delivered. No more missed updates in noisy group chats.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <a
+              href="#waitlist"
+              className="inline-flex items-center gap-2 bg-[#0055FF] text-white font-semibold px-7 py-3.5 rounded-xl text-base hover:bg-[#0044DD] active:scale-95 transition-all shadow-lg shadow-blue-200"
+            >
+              Join Your University
+              <IconArrow />
+            </a>
+            <a
+              href="#universities"
+              className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 font-semibold px-7 py-3.5 rounded-xl text-base hover:border-gray-400 active:scale-95 transition-all"
+            >
+              For Universities
+            </a>
+          </div>
+
+          {/* Trust line */}
+          <p className="text-gray-400 text-sm mt-8">
+            KNUST · UG Legon · UCC · UPSA · UDS · GCTU
+          </p>
+        </div>
       </section>
 
       {/* ── Problem ── */}
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-5xl mx-auto px-5">
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-3">
-              Campus communication is broken
-            </h2>
-            <p className="text-gray-500 text-center mb-12 max-w-xl mx-auto">
-              Students miss critical updates. Universities have no reliable channel. Everyone is stuck in noisy, unverified WhatsApp groups.
-            </p>
+            <div className="text-center mb-14">
+              <p className="text-[#0055FF] text-sm font-semibold tracking-widest uppercase mb-3">The problem</p>
+              <h2 className="font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+                Campus communication is broken.
+              </h2>
+            </div>
           </Reveal>
-          <div className="grid sm:grid-cols-3 gap-6">
+
+          <div className="grid md:grid-cols-3 gap-5">
             {[
               {
-                icon: '📢',
-                title: 'Announcements get lost',
-                body: 'Lecture halls change, exams reschedule, hostel allocations open — and students find out three days late through a screenshot in a group chat.',
+                icon: <IconWarning />,
+                iconBg: 'bg-red-50 text-red-500',
+                title: 'Missed announcements',
+                body: 'Critical notices — exam changes, hostel allocations, deadlines — never reliably reach students.',
               },
               {
-                icon: '🔓',
+                icon: <IconWhatsapp />,
+                iconBg: 'bg-yellow-50 text-yellow-600',
+                title: 'Scattered group chats',
+                body: 'Hundreds of unverified WhatsApp groups flood students with noise and bury what matters.',
+              },
+              {
+                icon: <IconLock />,
+                iconBg: 'bg-purple-50 text-purple-500',
                 title: 'No verified identity',
-                body: 'Anyone can join a "KNUST students" group. Without verification, there is no way to know who you are actually talking to.',
-              },
-              {
-                icon: '🌊',
-                title: 'Group chats are unmanageable',
-                body: 'A 500-person WhatsApp group floods 400 messages a day. Important notices are buried under memes and off-topic chatter.',
+                body: 'Without institutional identity, there is no way to know who you're communicating with on campus.',
               },
             ].map((item, i) => (
-              <Reveal key={item.title} delay={i * 80}>
-                <div className="bg-white rounded-2xl p-6 border border-gray-100">
-                  <div className="text-3xl mb-4">{item.icon}</div>
-                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+              <Reveal key={item.title} delay={i * 70}>
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-200">
+                  <div className={`w-9 h-9 rounded-xl ${item.iconBg} flex items-center justify-center mb-4`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-base mb-2">{item.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{item.body}</p>
                 </div>
               </Reveal>
@@ -284,43 +324,50 @@ export default function UnifyLanding() {
       </section>
 
       {/* ── Solution ── */}
-      <section className="py-20">
-        <div className="max-w-5xl mx-auto px-5">
+      <section className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-3">
-              UNIFY is the official digital layer for your university
-            </h2>
-            <p className="text-gray-500 text-center mb-12 max-w-xl mx-auto">
-              Three things that make a campus actually work online.
-            </p>
+            <div className="text-center mb-14">
+              <p className="text-[#0055FF] text-sm font-semibold tracking-widest uppercase mb-3">The solution</p>
+              <h2 className="font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+                UNIFY is campus infrastructure.
+              </h2>
+            </div>
           </Reveal>
-          <div className="grid sm:grid-cols-3 gap-6">
+
+          <div className="grid md:grid-cols-3 gap-5">
             {[
               {
-                icon: '🪪',
-                color: 'bg-blue-50 text-blue-600',
-                title: 'Verified Campus Identity',
-                body: 'Every student gets a verified profile tied to their institution. No imposters, no ghost accounts — just real students with real credentials.',
+                icon: <IconShield />,
+                iconBg: 'bg-blue-50 text-[#0055FF]',
+                label: '01',
+                title: 'Verified identity',
+                body: 'Every student profile is tied to their institution — no ghost accounts, no imposters.',
               },
               {
-                icon: '📣',
-                color: 'bg-orange-50 text-orange-600',
-                title: 'Official Announcements',
-                body: 'Universities push critical notices directly to enrolled students — exam schedules, hostel allocations, academic updates — all in one feed.',
+                icon: <IconAnnouncement />,
+                iconBg: 'bg-indigo-50 text-indigo-600',
+                label: '02',
+                title: 'Official announcements',
+                body: 'Universities push notices directly to enrolled students — instantly and reliably.',
               },
               {
-                icon: '🗂️',
-                color: 'bg-green-50 text-green-600',
-                title: 'Structured Communication',
-                body: 'Department channels, year-group boards, and course groups — organised, searchable, and moderated. Not a 500-person free-for-all.',
+                icon: <IconNetwork />,
+                iconBg: 'bg-violet-50 text-violet-600',
+                label: '03',
+                title: 'Structured communication',
+                body: 'Department channels, year groups, and faculty boards — organised and moderated.',
               },
             ].map((item, i) => (
-              <Reveal key={item.title} delay={i * 80}>
-                <div className="bg-gray-50 rounded-2xl p-6">
-                  <div className={`w-12 h-12 rounded-2xl ${item.color} flex items-center justify-center text-2xl mb-4`}>
-                    {item.icon}
+              <Reveal key={item.title} delay={i * 70}>
+                <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-100 hover:shadow-lg hover:shadow-blue-50 transition-all duration-200">
+                  <div className="flex items-start justify-between mb-5">
+                    <div className={`w-9 h-9 rounded-xl ${item.iconBg} flex items-center justify-center`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs font-semibold text-gray-300 font-mono">{item.label}</span>
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <h3 className="font-semibold text-gray-900 text-base mb-2">{item.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{item.body}</p>
                 </div>
               </Reveal>
@@ -329,88 +376,123 @@ export default function UnifyLanding() {
         </div>
       </section>
 
-      {/* ── How It Works ── */}
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-3xl mx-auto px-5 text-center">
+      {/* ── How it works ── */}
+      <section id="how-it-works" className="py-24 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">How it works</h2>
-            <p className="text-gray-500 mb-14">Three steps. No paperwork.</p>
+            <div className="text-center mb-16">
+              <p className="text-[#0055FF] text-sm font-semibold tracking-widest uppercase mb-3">How it works</p>
+              <h2 className="font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+                Three steps. That's it.
+              </h2>
+            </div>
           </Reveal>
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-4 items-start justify-center">
-            {[
-              { step: '1', title: 'Download & join', body: 'Sign up with your phone number and select your university.' },
-              { step: '2', title: 'Verify your identity', body: 'Enter your student ID or index number. We confirm enrolment instantly.' },
-              { step: '3', title: 'Stay in the loop', body: 'Follow official channels, get announcements, and connect with classmates — all verified.' },
-            ].map((item, i) => (
-              <Reveal key={item.step} delay={i * 100} className="flex-1">
-                <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white font-bold text-lg flex items-center justify-center mb-4">
-                    {item.step}
+
+          <div className="relative">
+            {/* Connector line */}
+            <div className="hidden md:block absolute top-8 left-[calc(16.66%+1rem)] right-[calc(16.66%+1rem)] h-px bg-gray-200" />
+
+            <div className="grid md:grid-cols-3 gap-10 md:gap-6">
+              {[
+                { n: '1', title: 'Join your university', body: 'Download UNIFY and select your campus.' },
+                { n: '2', title: 'Get verified',         body: 'Confirm enrolment with your student ID or index number.' },
+                { n: '3', title: 'Receive updates',      body: 'Official announcements, departmental notices, and more — all in one place.' },
+              ].map((step, i) => (
+                <Reveal key={step.n} delay={i * 90} className="relative flex flex-col items-center text-center">
+                  <div className="relative w-16 h-16 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center mb-5 z-10">
+                    <span className="font-bold text-xl text-gray-900">{step.n}</span>
                   </div>
-                  {i < 2 && (
-                    <div className="hidden sm:block absolute translate-x-32 -translate-y-6 text-gray-300 text-2xl select-none">→</div>
-                  )}
-                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed max-w-xs">{item.body}</p>
-                </div>
-              </Reveal>
-            ))}
+                  <h3 className="font-semibold text-gray-900 text-base mb-2">{step.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed max-w-xs">{step.body}</p>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Student / University Split ── */}
-      <section id="universities" className="py-20">
-        <div className="max-w-5xl mx-auto px-5">
+      {/* ── For Students / Universities ── */}
+      <section id="universities" className="py-24">
+        <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-12">
-              Built for both sides of the campus
-            </h2>
+            <div className="text-center mb-14">
+              <h2 className="font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+                Built for both sides of campus.
+              </h2>
+            </div>
           </Reveal>
-          <div className="grid sm:grid-cols-2 gap-6">
+
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Students */}
             <Reveal>
-              <div className="bg-blue-600 text-white rounded-3xl p-8">
-                <div className="text-3xl mb-4">🎓</div>
-                <h3 className="text-xl font-bold mb-3">For Students</h3>
-                <ul className="space-y-3 text-blue-100 text-sm">
-                  {[
-                    'Verified digital student identity',
-                    'Never miss an official announcement',
-                    'Connect with coursemates in your year and department',
-                    'One platform for all your campus communities',
-                    'Free. Always.',
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="text-blue-300 mt-0.5">✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+              <div className="relative rounded-3xl overflow-hidden bg-[#0055FF] p-8 text-white min-h-80 flex flex-col justify-between">
+                <div
+                  className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
+                  style={{ background: 'radial-gradient(circle at top right, rgba(255,255,255,0.12) 0%, transparent 60%)' }}
+                />
+                <div>
+                  <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase mb-6">
+                    🎓 For Students
+                  </div>
+                  <h3 className="font-bold text-2xl mb-5 leading-tight">Your verified campus identity</h3>
+                  <ul className="space-y-3">
+                    {[
+                      'Receive official university announcements',
+                      'Stay connected to your department and year group',
+                      'One verified profile across all campus platforms',
+                      'Free — always',
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-3 text-sm text-blue-100">
+                        <svg className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M3 8l3.5 3.5 6.5-7" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <a
+                  href="#waitlist"
+                  className="mt-8 inline-flex items-center gap-2 bg-white text-[#0055FF] font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-50 active:scale-95 transition-all w-fit"
+                >
+                  Join your university <IconArrow />
+                </a>
               </div>
             </Reveal>
-            <Reveal delay={100}>
-              <div className="bg-gray-900 text-white rounded-3xl p-8">
-                <div className="text-3xl mb-4">🏛️</div>
-                <h3 className="text-xl font-bold mb-3">For Universities</h3>
-                <ul className="space-y-3 text-gray-400 text-sm">
-                  {[
-                    'Push announcements directly to enrolled students',
-                    'Verified student directory with enrolment status',
-                    'Department and faculty channel management',
-                    'Engagement analytics — open rates, reach, response',
-                    'Replace fragmented WhatsApp groups with one platform',
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="text-gray-500 mt-0.5">✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+
+            {/* Universities */}
+            <Reveal delay={80}>
+              <div className="relative rounded-3xl overflow-hidden bg-gray-900 p-8 text-white min-h-80 flex flex-col justify-between">
+                <div
+                  className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
+                  style={{ background: 'radial-gradient(circle at top right, rgba(255,255,255,0.06) 0%, transparent 60%)' }}
+                />
+                <div>
+                  <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase mb-6">
+                    🏛️ For Universities
+                  </div>
+                  <h3 className="font-bold text-2xl mb-5 leading-tight">Direct reach to every student</h3>
+                  <ul className="space-y-3">
+                    {[
+                      'Push announcements to enrolled students instantly',
+                      'Verified student directory with enrolment status',
+                      'Department and faculty channel management',
+                      'Engagement analytics — open rates and reach',
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-3 text-sm text-gray-400">
+                        <svg className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M3 8l3.5 3.5 6.5-7" stroke="#6b7280" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <a
                   href="mailto:hello@joinunify.app"
-                  className="inline-block mt-6 bg-white text-gray-900 font-semibold text-sm px-6 py-3 rounded-full hover:bg-gray-100 active:scale-95 transition-all"
+                  className="mt-8 inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold text-sm px-5 py-2.5 rounded-xl active:scale-95 transition-all w-fit border border-white/10"
                 >
-                  Partner with us →
+                  Request university access <IconArrow />
                 </a>
               </div>
             </Reveal>
@@ -419,66 +501,62 @@ export default function UnifyLanding() {
       </section>
 
       {/* ── Waitlist CTA ── */}
-      <section id="waitlist" className="bg-blue-600 py-20">
-        <div className="max-w-2xl mx-auto px-5 text-center">
+      <section id="waitlist" className="py-24 bg-gray-50">
+        <div className="max-w-2xl mx-auto px-6 text-center">
           <Reveal>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-3">
-              Be first when we launch at your school
+            <p className="text-[#0055FF] text-sm font-semibold tracking-widest uppercase mb-4">Early access</p>
+            <h2 className="font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight mb-3" style={{ letterSpacing: '-0.02em' }}>
+              Bring UNIFY to your university.
             </h2>
-            <p className="text-blue-100 mb-10 text-base">
-              Drop your number. We'll text you the moment UNIFY opens on your campus.
+            <p className="text-gray-500 text-base mb-10">
+              Join the waitlist. We'll notify you the moment your school goes live.
             </p>
           </Reveal>
-          <Reveal delay={100}>
-            <JoinForm />
+          <Reveal delay={80}>
+            <WaitlistForm />
           </Reveal>
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section className="py-20">
-        <div className="max-w-2xl mx-auto px-5">
-          <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-10 text-center">
-              Common questions
-            </h2>
-          </Reveal>
-          <div className="divide-y divide-gray-200 border-t border-gray-200">
-            {FAQS.map((faq, i) => (
-              <Reveal key={i} delay={i * 40}>
-                <FAQItem q={faq.q} a={faq.a} />
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* ── Final CTA ── */}
-      <section className="bg-gray-50 py-20 text-center">
-        <div className="max-w-xl mx-auto px-5">
+      <section className="py-24">
+        <div className="max-w-3xl mx-auto px-6 text-center">
           <Reveal>
-            <p className="text-gray-400 text-sm font-semibold tracking-wide uppercase mb-4">
-              Campus communication, fixed.
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">
-              Your campus deserves better than a WhatsApp group.
-            </h2>
-            <a
-              href="#waitlist"
-              className="inline-block bg-blue-600 text-white font-bold px-10 py-4 rounded-full text-base hover:bg-blue-700 active:scale-95 transition-all"
+            <div
+              className="rounded-3xl px-10 py-16"
+              style={{ background: 'linear-gradient(135deg, #0055FF 0%, #3B82F6 100%)' }}
             >
-              Join the Waitlist
-            </a>
+              <h2 className="font-bold text-3xl sm:text-4xl text-white tracking-tight mb-3" style={{ letterSpacing: '-0.02em' }}>
+                Ready to modernise campus communication?
+              </h2>
+              <p className="text-blue-100 text-base mb-8">
+                Join universities taking control of their communication infrastructure.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <a
+                  href="#waitlist"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-[#0055FF] font-semibold px-7 py-3.5 rounded-xl text-base hover:bg-blue-50 active:scale-95 transition-all"
+                >
+                  Get Started <IconArrow />
+                </a>
+                <a
+                  href="mailto:hello@joinunify.app"
+                  className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/20 text-white font-semibold px-7 py-3.5 rounded-xl text-base active:scale-95 transition-all border border-white/20"
+                >
+                  Request University Access
+                </a>
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
 
       {/* ── Footer ── */}
       <footer className="border-t border-gray-100 py-10">
-        <div className="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-bold text-blue-600">UNIFY</span>
-          <p className="text-gray-400 text-xs">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
-          <a href="mailto:hello@joinunify.app" className="text-gray-400 text-xs hover:text-gray-700 transition-colors">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="font-bold text-gray-900">UNIFY</span>
+          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
+          <a href="mailto:hello@joinunify.app" className="text-gray-400 text-sm hover:text-gray-700 transition-colors">
             hello@joinunify.app
           </a>
         </div>
