@@ -1,118 +1,74 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { Pressable } from 'react-native';
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+import { useEffect, useRef } from 'react';
+import { Animated, Pressable, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import * as Haptics from 'expo-haptics';
 
 export default function SplashScreen() {
-  const router    = useRouter();
-  const navigated = useRef(false);
+  const router = useRouter();
+  const fadeAnim  = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(32)).current;
+  const btnAnim   = useRef(new Animated.Value(0)).current;
 
-  // Animated values
-  const screenOpacity  = useSharedValue(1);
-  const logoOpacity    = useSharedValue(0);
-  const logoScale      = useSharedValue(0.85);
-  const logoY          = useSharedValue(20);
-  const subtextOpacity = useSharedValue(0);
-  const subtextY       = useSharedValue(10);
-
-  const SPRING = { easing: Easing.bezier(0.16, 1, 0.3, 1) } as const;
-
-  // Entrance animation
   useEffect(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    logoOpacity.value = withTiming(1, { duration: 800, ...SPRING });
-    logoScale.value   = withTiming(1, { duration: 800, ...SPRING });
-    logoY.value       = withTiming(0, { duration: 800, ...SPRING });
-
-    subtextOpacity.value = withDelay(400, withTiming(1, { duration: 600 }));
-    subtextY.value       = withDelay(400, withTiming(0, { duration: 600 }));
-
-    // Auto-advance after 2.5s
-    const timer = setTimeout(handleContinue, 2500);
-    return () => clearTimeout(timer);
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(fadeAnim,  { toValue: 1, duration: 700, useNativeDriver: true }),
+        Animated.timing(slideAnim, { toValue: 0, duration: 700, useNativeDriver: true }),
+      ]),
+      Animated.timing(btnAnim, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
+    ]).start();
   }, []);
-
-  const navigate = useCallback(() => {
-    router.replace('/get-started');
-  }, []);
-
-  const handleContinue = useCallback(() => {
-    if (navigated.current) return;
-    navigated.current = true;
-
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-
-    // Exit animation
-    screenOpacity.value = withTiming(0, { duration: 500 });
-    logoScale.value     = withTiming(
-      1.05,
-      { duration: 500 },
-      (done) => { 'worklet'; if (done) runOnJS(navigate)(); },
-    );
-  }, [navigate]);
-
-  // Animated styles
-  const screenStyle = useAnimatedStyle(() => ({
-    opacity: screenOpacity.value,
-  }));
-  const logoStyle = useAnimatedStyle(() => ({
-    opacity:   logoOpacity.value,
-    transform: [{ scale: logoScale.value }, { translateY: logoY.value }],
-  }));
-  const subtextStyle = useAnimatedStyle(() => ({
-    opacity:   subtextOpacity.value,
-    transform: [{ translateY: subtextY.value }],
-  }));
 
   return (
-    <Animated.View style={[{ flex: 1, backgroundColor: '#0A0A0A' }, screenStyle]}>
-      <Pressable
-        onPress={handleContinue}
-        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      >
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 px-8 justify-center">
         {/* Wordmark */}
-        <Animated.Text
-          style={[
-            {
-              color: '#FFFFFF',
-              fontSize: 56,
-              letterSpacing: -2,
-              fontFamily: 'ArchivoBlack',
-            },
-            logoStyle,
-          ]}
-        >
-          UNIFY
-        </Animated.Text>
+        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+          <View className="mb-2">
+            <Text className="font-display text-[56px] leading-[60px] text-primary tracking-tight">
+              UNIFY
+            </Text>
+            {/* Orange scribble underline */}
+            <View className="h-[5px] w-28 bg-orange rounded-full mt-1" />
+          </View>
 
-        {/* Subtext */}
-        <Animated.Text
-          style={[
-            {
-              position: 'absolute',
-              bottom: 48,
-              left: 0,
-              right: 0,
-              textAlign: 'center',
-              color: 'rgba(255,255,255,0.40)',
-              fontSize: 14,
-              fontFamily: 'Inter_500Medium',
-            },
-            subtextStyle,
-          ]}
-        >
-          Built for Ghana's Class of '30
-        </Animated.Text>
-      </Pressable>
-    </Animated.View>
+          <Text className="font-body-medium text-lg text-secondary mt-5 leading-7">
+            Find your people,{'\n'}find your place.
+          </Text>
+
+          <Text className="font-body text-sm text-tertxt mt-3 leading-6">
+            Match with roommates. Join your campus hub.{'\n'}
+            Built for Ghanaian students.
+          </Text>
+        </Animated.View>
+
+        {/* CTA */}
+        <Animated.View style={{ opacity: btnAnim }} className="mt-14">
+          <Pressable
+            onPress={() => router.push('/get-started')}
+            className="bg-btn-primary rounded-full py-4 items-center active:opacity-80"
+          >
+            <Text className="text-white font-body-semi text-base">Get Started</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push('/get-started')}
+            className="mt-4 items-center active:opacity-70"
+          >
+            <Text className="text-tertxt text-sm font-body">
+              Already have an account?{' '}
+              <Text className="text-blue font-body-semi">Sign in</Text>
+            </Text>
+          </Pressable>
+        </Animated.View>
+      </View>
+
+      {/* Bottom decoration */}
+      <View className="px-8 pb-8">
+        <Text className="text-[11px] font-body text-tertxt text-center">
+          By continuing you agree to our Terms of Service
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }

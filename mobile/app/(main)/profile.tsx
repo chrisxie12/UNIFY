@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, Pressable } from 'react-native';
+import { Alert, ScrollView, Text, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Avatar, Badge, Card, Btn } from '../../components/UI';
@@ -19,8 +19,27 @@ const HABIT_MAP: Record<string, string> = {
 };
 
 export default function ProfileScreen() {
-  const router  = useRouter();
-  const profile = useAppStore((s) => s.profile);
+  const router       = useRouter();
+  const profile      = useAppStore((s) => s.profile);
+  const setVerified  = useAppStore((s) => s.setVerified);
+  const setOnboarded = useAppStore((s) => s.setOnboarded);
+  const setOtpSent   = useAppStore((s) => s.setOtpSent);
+
+  function handleLogOut() {
+    Alert.alert('Log out', 'Are you sure you want to log out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Log out',
+        style: 'destructive',
+        onPress: () => {
+          setVerified(false);
+          setOnboarded(false);
+          setOtpSent(false);
+          router.replace('/');
+        },
+      },
+    ]);
+  }
 
   const displayName = profile.fullName || 'Your Profile';
   const initials    = profile.fullName
@@ -40,8 +59,16 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Blue cover */}
-        <View className="bg-tertiary h-28" />
+        {/* Blue cover with settings gear */}
+        <View className="bg-tertiary h-28">
+          <Pressable
+            onPress={() => router.push('/settings')}
+            hitSlop={12}
+            className="absolute top-4 right-5 w-10 h-10 rounded-full bg-white/20 items-center justify-center active:opacity-70"
+          >
+            <Text style={{ fontSize: 18 }}>⚙️</Text>
+          </Pressable>
+        </View>
 
         {/* Avatar overlapping cover */}
         <View className="px-5 -mt-10 mb-4 flex-row items-end justify-between">
@@ -59,6 +86,9 @@ export default function ProfileScreen() {
         {/* Name & info */}
         <View className="px-5 mb-5">
           <Text className="font-display text-2xl text-primary">{displayName}</Text>
+          {profile.displayName ? (
+            <Text className="font-body text-sm text-blue mb-0.5">@{profile.displayName}</Text>
+          ) : null}
           {profile.school ? (
             <Text className="font-body text-sm text-secondary mt-0.5">
               {profile.school}
@@ -138,6 +168,16 @@ export default function ProfileScreen() {
             <Btn label="Set up profile" onPress={() => router.push('/onboarding')} />
           </View>
         )}
+
+        {/* Log out */}
+        <View className="mx-5 mt-4 mb-2">
+          <Pressable
+            onPress={handleLogOut}
+            className="rounded-full py-3.5 items-center border border-border active:opacity-70"
+          >
+            <Text className="font-body-semi text-sm text-red">Log Out</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

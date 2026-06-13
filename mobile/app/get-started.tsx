@@ -1,156 +1,133 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
 import * as Haptics from 'expo-haptics';
-import { useAppStore } from '../store/useAppStore';
-import { GOOGLE_WEB_CLIENT_ID } from '../config/firebase';
 
-WebBrowser.maybeCompleteAuthSession();
+type Mode = 'signup' | 'login';
 
 export default function GetStartedScreen() {
-  const router        = useRouter();
-  const setGoogleUser = useAppStore((s) => s.setGoogleUser);
-  const onboarded     = useAppStore((s) => s.onboarded);
+  const router = useRouter();
+  const [mode, setMode] = useState<Mode>('signup');
+  const slideAnim = useRef(new Animated.Value(0)).current;
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  function switchMode(next: Mode) {
+    if (next === mode) return;
+    setMode(next);
+    Haptics.selectionAsync();
+    Animated.spring(slideAnim, {
+      toValue: next === 'signup' ? 0 : 1,
+      useNativeDriver: false,
+      tension: 80,
+      friction: 12,
+    }).start();
+  }
 
-  const [, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_WEB_CLIENT_ID,
+  const indicatorLeft = slideAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['2%', '50%'],
   });
-
-  // Handle Google OAuth result
-  useEffect(() => {
-    if (response?.type !== 'success') {
-      if (response?.type === 'error') {
-        setError('Sign-in failed. Please try again.');
-        setLoading(false);
-      }
-      return;
-    }
-
-    const accessToken = response.authentication?.accessToken;
-    if (!accessToken) return;
-
-    setLoading(true);
-    fetch('https://www.googleapis.com/userinfo/v2/me', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((r) => r.json())
-      .then((info) => {
-        setGoogleUser({ id: info.id, email: info.email, name: info.name, picture: info.picture });
-        useAppStore.getState().updateProfile({
-          fullName:    info.name,
-          displayName: info.given_name ?? info.name.split(' ')[0],
-        });
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        router.replace(onboarded ? '/(main)/home' : '/onboarding');
-      })
-      .catch(() => {
-        setError('Could not fetch your profile. Please try again.');
-        setLoading(false);
-      });
-  }, [response]);
-
-  async function handleGoogle() {
-    setError('');
-    setLoading(true);
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      await promptAsync();
-    } catch {
-      setError('Sign-in failed. Please try again.');
-      setLoading(false);
-    }
-  }
-
-  function handleDevBypass() {
-    setGoogleUser({ id: 'dev-001', email: 'dev@unify.gh', name: 'Dev User', picture: '' });
-    useAppStore.getState().updateProfile({ fullName: 'Dev User', displayName: 'Dev' });
-    router.replace('/onboarding');
-  }
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom']}>
-      <View className="flex-1 px-6 pt-10 pb-6 justify-between">
-        {/* Header copy */}
-        <View className="mt-4">
-          <Text className="font-display text-[32px] leading-[38px] text-primary tracking-tight">
-            Don't pull up to{'\n'}campus alone, fr.
+      <View className="flex-1 px-6 pt-8 pb-6 justify-between">
+        {/* Header */}
+        <View>
+          <Text className="font-display text-[36px] leading-[42px] text-primary tracking-tight mb-2">
+            {mode === 'signup'
+              ? "Don't pull up to\ncampus alone."
+              : 'Welcome back 👋'}
           </Text>
-          <Text className="font-body text-base text-secondary mt-4 leading-6">
-            Find your roommate, link with coursemates,{'\n'}
-            and join your school hub.
+          <Text className="font-body text-base text-secondary leading-6">
+            {mode === 'signup'
+              ? 'Find your roommate, link with coursemates, and join your campus hub.'
+              : 'Sign in to pick up where you left off.'}
           </Text>
+        </View>
+
+        {/* Login / Sign Up toggle */}
+        <View className="bg-surface rounded-2xl p-1 flex-row relative mb-2">
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: 4, bottom: 4, left: indicatorLeft, width: '48%',
+              backgroundColor: '#FFFFFF',
+              borderRadius: 14,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.08,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          />
+          <Pressable onPress={() => switchMode('signup')} className="flex-1 items-center py-3 z-10">
+            <Text className={`font-body-semi text-sm ${mode === 'signup' ? 'text-primary' : 'text-tertxt'}`}>
+              Sign Up
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => switchMode('login')} className="flex-1 items-center py-3 z-10">
+            <Text className={`font-body-semi text-sm ${mode === 'login' ? 'text-primary' : 'text-tertxt'}`}>
+              Log In
+            </Text>
+          </Pressable>
         </View>
 
         {/* Auth buttons */}
         <View className="gap-3">
-          {/* Google */}
-          <Pressable
-            onPress={handleGoogle}
-            disabled={loading}
-            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border-2 border-border shadow-card active:opacity-70"
-          >
-            {loading ? (
-              <ActivityIndicator size="small" color="#374151" />
-            ) : (
-              <>
-                {/* Google G */}
-                <View className="w-6 h-6 items-center justify-center">
-                  <Text style={{ fontFamily: 'System', fontSize: 18, color: '#4285F4', fontWeight: '700' }}>G</Text>
-                </View>
-                <Text className="font-body-semi text-base text-primary">
-                  Sign in with Google
-                </Text>
-              </>
-            )}
-          </Pressable>
-
-          {/* Apple (placeholder — wire up expo-apple-authentication for production) */}
+          {/* Apple — coming soon */}
           <Pressable
             disabled
-            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border-2 border-border opacity-40"
+            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border border-border opacity-40"
           >
             <Text style={{ fontSize: 20, color: '#111827' }}>🍎</Text>
             <Text className="font-body-semi text-base text-primary">
-              Continue with Apple
+              {mode === 'login' ? 'Continue with Apple' : 'Sign up with Apple'}
             </Text>
           </Pressable>
 
-          {/* Phone link */}
+          {/* Google — coming soon */}
           <Pressable
-            className="items-center py-2 active:opacity-70"
-            onPress={() => {/* TODO: phone auth */}}
+            disabled
+            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border border-border opacity-40"
+            style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1 }}
           >
-            <Text className="font-body-semi text-sm text-blue">
-              I'll use my phone number instead →
+            <View className="w-6 h-6 items-center justify-center">
+              <Text style={{ fontFamily: 'System', fontSize: 18, color: '#4285F4', fontWeight: '700' }}>G</Text>
+            </View>
+            <Text className="font-body-semi text-base text-primary">
+              {mode === 'login' ? 'Continue with Google' : 'Sign up with Google'}
             </Text>
           </Pressable>
 
-          {error.length > 0 && (
-            <Text className="text-red text-xs font-body-semi text-center">{error}</Text>
-          )}
+          {/* Phone — active */}
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push('/auth');
+            }}
+            className="flex-row items-center justify-center gap-3 bg-btn-primary rounded-2xl py-4 active:opacity-80"
+          >
+            <Text style={{ fontSize: 20 }}>📱</Text>
+            <Text className="font-body-semi text-base text-white">
+              {mode === 'login' ? 'Log in with Phone' : 'Sign up with Phone'}
+            </Text>
+          </Pressable>
 
-          {/* Dev bypass */}
-          {__DEV__ && (
-            <Pressable
-              onPress={handleDevBypass}
-              className="items-center py-1 active:opacity-70"
-            >
-              <Text className="font-body text-[11px] text-tertxt">Dev: skip sign-in →</Text>
-            </Pressable>
-          )}
+          {/* Email — coming soon */}
+          <View className="items-center py-2">
+            <Text className="font-body-semi text-sm text-tertxt">
+              {mode === 'login' ? 'Log in with email →' : 'Sign up with email →'}
+              {'  '}
+              <Text className="font-body text-xs">(coming soon)</Text>
+            </Text>
+          </View>
         </View>
 
         {/* Footer */}
         <Text className="font-body text-[12px] text-tertxt text-center leading-5">
           By continuing, you agree to our{' '}
-          <Text className="underline">Terms</Text> and{' '}
-          <Text className="underline">Privacy</Text>
+          <Text className="underline">Terms of Use</Text> and{' '}
+          <Text className="underline">Privacy Policy</Text>
         </Text>
       </View>
     </SafeAreaView>

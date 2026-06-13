@@ -1,17 +1,7 @@
 'use client';
 
-/**
- * UNIFY — Ghana's peer-to-peer university transition network
- * Full animation motion spec: hero stagger, scroll reveals, count-up,
- * carousel, FAQ accordion, SVG draw-on, ticker pause-on-hover.
- *
- * Dependencies:
- *   npm install lucide-react
- *   Tailwind CSS configured
- */
-
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, CheckCircle, ArrowRight, ChevronDown, Users2, GraduationCap, Building2, Sparkles, Star, MessageCircle, Bell } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyM33JowZDeb5TTU5mk_-WtS7BPXpiBdb2Xy1qhDIyUwCUt_cilKITDZ62DDwabYxy7/exec';
 
@@ -24,1993 +14,476 @@ function normalizePhone(raw) {
   return s;
 }
 
-function track(event, data) {
-  console.log('[UNIFY Analytics]', event, { ...data, ts: new Date().toISOString() });
-}
-
 const SCHOOLS = [
-  { id: 'knust', label: 'KNUST', full: 'Kwame Nkrumah University of Science & Technology' },
-  { id: 'ug',   label: 'UG Legon', full: 'University of Ghana' },
-  { id: 'ucc',  label: 'UCC', full: 'University of Cape Coast' },
-  { id: 'upsa', label: 'UPSA', full: 'University of Professional Studies' },
-  { id: 'uds',  label: 'UDS', full: 'University for Development Studies' },
-  { id: 'gctu', label: 'GCTU', full: 'Ghana Communication Technology University' },
+  { id: 'knust', label: 'KNUST' },
+  { id: 'ug',   label: 'UG Legon' },
+  { id: 'ucc',  label: 'UCC' },
+  { id: 'upsa', label: 'UPSA' },
+  { id: 'uds',  label: 'UDS' },
+  { id: 'gctu', label: 'GCTU' },
 ];
 
-const SCHOOL_CONFIG = {
-  knust: {
-    id: 'knust', name: 'KNUST',
-    full: 'Kwame Nkrumah University of Science & Technology',
-    badge: "KNUST Freshers",
-    headline: "Don't Pull Up To Kotei Alone,",
-    sub: "The fresher network built for KNUST. Find your roommate around Brunei, Kotei, or Unity Hall — link with coursemates in Engineering, CS, and Medicine before lectures even start.",
-    hostels: ['Brunei', 'Kotei', 'Unity Hall', 'Evandy', 'TF Hostel'],
-  },
-  ug: {
-    id: 'ug', name: 'UG Legon',
-    full: 'University of Ghana',
-    badge: "UG Legon Freshers",
-    headline: "Don't Walk Into Legon Alone,",
-    sub: "The fresher network built for UG Legon. Find your roommate at Volta, Limann, or Commonwealth — link with coursemates in Business, Law, and Social Sciences before orientation week.",
-    hostels: ['Volta Hall', 'Limann Hall', 'Commonwealth Hall', 'Mensah Sarbah'],
-  },
-  ucc: {
-    id: 'ucc', name: 'UCC',
-    full: 'University of Cape Coast',
-    badge: "UCC Freshers",
-    headline: "Don't Pull Up To Cape Coast Alone,",
-    sub: "The fresher network built for UCC. Find your roommate around Casford or Atlantic Hall — link with coursemates in Education, Nursing, and Sciences before matriculation day.",
-    hostels: ['Casford Hall', 'Atlantic Hall', 'Oguaa Hall'],
-  },
-  upsa: {
-    id: 'upsa', name: 'UPSA',
-    full: 'University of Professional Studies',
-    badge: "UPSA Freshers",
-    headline: "Don't Start UPSA Alone,",
-    sub: "The fresher network built for UPSA. Connect with fellow Business, Accounting, and Law freshers — find your people before the semester kicks off.",
-    hostels: ['On-campus hostel', 'Legon area'],
-  },
-  uds: {
-    id: 'uds', name: 'UDS',
-    full: 'University for Development Studies',
-    badge: "UDS Freshers",
-    headline: "Don't Pull Up To Tamale Alone,",
-    sub: "The fresher network built for UDS. Connect with Agriculture, Medicine, and Law freshers across Tamale, Wa, and Navrongo campuses.",
-    hostels: ['Tamale campus', 'Wa campus', 'Navrongo campus'],
-  },
-  gctu: {
-    id: 'gctu', name: 'GCTU',
-    full: 'Ghana Communication Technology University',
-    badge: "GCTU Freshers",
-    headline: "Don't Start GCTU Alone,",
-    sub: "The fresher network built for GCTU. Link up with Tech, Telecom, and Business freshers — find your people and secure your spot before the hub fills up.",
-    hostels: ['On-campus hostel', 'Accra area'],
-  },
-};
-
-const TICKER_ITEMS = [
-  "🔥 45 freshers from Prempeh College just claimed their handles",
-  "⚡️ 120 roomies matched for KNUST Brunei & Kotei hostels",
-  "🎓 Legon fresher hubs are officially live",
-  "🔥 32 girls just joined the Volta Hall fresher network",
-  "⚡️ Avoid the portal rush — 210 students linked up early",
-  "🏠 Evandy & TF hostel threads trending in UCC hub",
-  "🎓 KNUST Engineering Circle just hit 88 verified members",
-  "🔥 UPSA Business fresher hub is growing fast — claim your spot",
-  "⚡️ 67 Law freshers linked up at Legon before lectures even start",
-  "🏠 Katanga & Unity Hall residents dropping real hostel intel",
-  "🎓 Achimota placement group: 340 members and counting",
-  "🔥 Wesley Girls intake crew already planning Legon orientation week",
-];
-
-const TESTIMONIALS = [
+const FAQS = [
   {
-    quote: "I found my roommate on UNIFY before I even got my admission letter. We're already planning our room setup. This app is different fr.",
-    name: 'Ama K.', role: 'KNUST CS Fresher', initials: 'AK', stars: 5,
+    q: 'How is verification done?',
+    a: 'We verify students using their university admission index number or student ID. Universities can also push verification directly via our institution dashboard.',
   },
   {
-    quote: "The KNUST hub had real hostel intel nobody else was sharing. I knew which blocks had water issues before I even moved in.",
-    name: 'Yaw B.', role: 'UG Legon Fresher', initials: 'YB', stars: 5,
+    q: 'Is UNIFY free for students?',
+    a: 'Yes — completely free for students. Universities pay for the institution dashboard, announcement tools, and analytics.',
   },
   {
-    quote: "Joined the UCC hub and linked with 3 girls from my faculty. We're sharing a room in Evandy. Couldn't have done it without UNIFY.",
-    name: 'Abena M.', role: 'UCC Nursing', initials: 'AM', stars: 4,
+    q: 'How is this different from WhatsApp groups?',
+    a: 'WhatsApp groups are unverified, unstructured, and unmanaged. UNIFY gives verified identity, official channels, and searchable student directories — things no group chat can provide.',
   },
   {
-    quote: "Coming from Tamale, I was worried about finding people in Accra. UNIFY linked me with 2 other northern students before I even left home.",
-    name: 'Kwesi A.', role: 'UDS Engineering Fresher', initials: 'KA', stars: 5,
+    q: 'Which schools are supported at launch?',
+    a: 'KNUST, UG Legon, UCC, UPSA, UDS, and GCTU. We are actively onboarding more institutions.',
   },
   {
-    quote: "The hostel reviews saved me. I almost booked a place with no water and bad WiFi. The hub gave me the real intel.",
-    name: 'Efua M.', role: 'UPSA Business Fresher', initials: 'EM', stars: 4,
+    q: 'Can universities post official announcements?',
+    a: 'Yes. Verified institution accounts can push announcements directly to enrolled students — lecture changes, exam schedules, hostel allocations, and more.',
   },
   {
-    quote: "Matched with my roommate in June. By September we already knew each other's habits. Zero orientation stress.",
-    name: 'Kofi B.', role: 'KNUST Pharmacy Fresher', initials: 'KB', stars: 5,
+    q: 'When will the app be available?',
+    a: 'We are running a closed beta in the coming months. Join the waitlist to be first in when your school goes live.',
   },
 ];
-
-const FAQS_NEW = [
-  { q: 'Is UNIFY free?', a: 'Yes! Roommate matching is 100% free. You only pay for rent when you book a room.' },
-  { q: 'How does ID verification work?', a: 'Upload your student ID + verify with your university email. We approve within 24 hours. No fake accounts.' },
-  { q: "What if my university isn't listed?", a: "We have 180+ schools! If you don't see yours, message us on WhatsApp and we'll add it in 24 hours." },
-  { q: 'Can I use UNIFY if I already have a roommate?', a: 'Yes! Join the campus hub, link coursemates, and find study groups. UNIFY is for more than just roommates.' },
-  { q: 'Do I have to share my phone number?', a: "No! Chat through UNIFY first. Only share your number when you're ready to meet." },
-  { q: 'How does the matching algorithm work?', a: 'We compare your 10-question quiz answers (cleanliness, sleep schedule, budget, etc.) and show you roommates with 80%+ compatibility.' },
-  { q: 'Can I post my own room listing?', a: 'Yes! Verified students can post rooms with photos, rent (GHS), and amenities. All listings are reviewed.' },
-  { q: "What's the WhatsApp community for?", a: 'Real freshers, zero spam. Get campus intel, meet people before orientation, and ask questions. 12,400+ freshers already there.' },
-];
-
-// ─── HOOKS ───────────────────────────────────────────────────────────────────
-
-function useHeroSequence() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 50);
-    return () => clearTimeout(t);
-  }, []);
-  return visible;
-}
 
 function useScrollReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    if (!ref.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold }
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold },
     );
-    observer.observe(ref.current);
-    return () => observer.disconnect();
+    obs.observe(el);
+    return () => obs.disconnect();
   }, [threshold]);
   return [ref, visible];
 }
 
-function useCountUp(target, duration = 1500, trigger = false) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    let start = null;
-    const numTarget = typeof target === 'number' ? target : parseFloat(target);
-    const isDecimal = numTarget !== Math.floor(numTarget);
-    const step = (timestamp) => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 4);
-      setValue(isDecimal ? (eased * numTarget).toFixed(1) : Math.floor(eased * numTarget));
-      if (progress < 1) requestAnimationFrame(step);
-      else setValue(isDecimal ? numTarget.toFixed(1) : numTarget);
-    };
-    requestAnimationFrame(step);
-  }, [trigger, target, duration]);
-  return value;
-}
-
-// ─── DECORATIVE SVGs ──────────────────────────────────────────────────────────
-
-function BlueDoodle({ drawn = true }) {
-  const lineStyle = drawn ? {
-    strokeDasharray: 200,
-    animation: 'drawStroke 400ms var(--ease-out-expo) both',
-  } : { strokeDasharray: 200, strokeDashoffset: 200 };
-  return (
-    <svg viewBox="0 0 40 40" className="w-8 h-8 text-[#FF6B35]" fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="6" x2="12" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="28" y1="28" x2="34" y2="34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="34" y1="6" x2="28" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="34" x2="12" y2="28" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-    </svg>
-  );
-}
-
-function OrangeDoodle({ drawn = true }) {
-  const lineStyle = drawn ? {
-    strokeDasharray: 200,
-    animation: 'drawStroke 400ms var(--ease-out-expo) both',
-  } : { strokeDasharray: 200, strokeDashoffset: 200 };
-  return (
-    <svg viewBox="0 0 40 40" className="w-8 h-8" fill="none">
-      <line x1="20" y1="2" x2="20" y2="10" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="20" y1="30" x2="20" y2="38" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="2" y1="20" x2="10" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="6" x2="12" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="28" y1="28" x2="34" y2="34" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="34" y1="6" x2="28" y2="12" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-      <line x1="6" y1="34" x2="12" y2="28" stroke="#FF6B35" strokeWidth="2" strokeLinecap="round" style={lineStyle}/>
-    </svg>
-  );
-}
-
-function SparkDoodle({ color = '#FF6B35', size = 28, visible = true, delay = 0 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true"
-      className={visible ? 'spark-visible' : 'spark-hidden'}
-      style={visible ? { animationDelay: `${delay}ms` } : {}}>
-      <line x1="14" y1="2"  x2="14" y2="8"  stroke={color} strokeWidth="2" strokeLinecap="round"/>
-      <line x1="14" y1="20" x2="14" y2="26" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-      <line x1="2"  y1="14" x2="8"  y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-      <line x1="20" y1="14" x2="26" y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-      <line x1="5"  y1="5"  x2="9"  y2="9"  stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="19" y1="19" x2="23" y2="23" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="23" y1="5"  x2="19" y2="9"  stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="5"  y1="23" x2="9"  y2="19" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-    </svg>
-  );
-}
-
-function SquiggleUnderline({ heroVisible }) {
-  return (
-    <svg
-      viewBox="0 0 120 10"
-      className={`block w-28 h-3 mt-1${heroVisible ? ' underline-drawn' : ''}`}
-      fill="none"
-      style={heroVisible ? { transformOrigin: 'left center' } : { opacity: 0 }}
-    >
-      <path d="M0,5 C10,1 20,9 30,5 C40,1 50,9 60,5 C70,1 80,9 90,5 C100,1 110,9 120,5"
-        stroke="#FF6B35" strokeWidth="3.5" strokeLinecap="round"/>
-    </svg>
-  );
-}
-
-function BlueSwirl({ className = '', drawn = false }) {
-  return (
-    <svg viewBox="0 0 80 200" className={`w-16 h-40 text-[#FF6B35] opacity-20 ${className}`} fill="none">
-      <path
-        d="M60,10 C80,40 20,60 40,90 C60,120 80,140 40,170 C20,185 10,190 20,195"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        style={drawn ? {
-          strokeDasharray: 400,
-          animation: 'drawStroke 1200ms var(--ease-in-out-smooth) both',
-          '--path-len': 400,
-        } : { strokeDasharray: 400, strokeDashoffset: 400 }}
-      />
-    </svg>
-  );
-}
-
-// ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
-
-function CopyButton({ text }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    navigator.clipboard?.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-  return (
-    <button
-      onClick={copy}
-      className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${copied ? 'bg-[#0066FF]/10 border-[#0066FF] text-[#0066FF]' : 'bg-white border-[#E5E7EB] text-[#555] hover:border-[#0066FF] hover:text-[#0066FF]'}`}
-    >
-      {copied ? 'Copied!' : 'Copy'}
-    </button>
-  );
-}
-
-function AppleIcon() {
-  return (
-    <svg viewBox="0 0 814 1000" className="w-5 h-5 fill-white flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
-      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-52.7-75.6-98.7-194.3-98.7-307.5 0-199.3 130.8-305.7 259.4-305.7 65.8 0 120.5 43.1 162.6 43.1 40.3 0 103.7-45.4 174.5-45.4 28 0 130.3 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"/>
-    </svg>
-  );
-}
-
-function PlayStoreIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="pg1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00C3FF"/>
-          <stop offset="100%" stopColor="#1976D2"/>
-        </linearGradient>
-        <linearGradient id="pg2" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#FFD747"/>
-          <stop offset="100%" stopColor="#FF8C00"/>
-        </linearGradient>
-        <linearGradient id="pg3" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#00E676"/>
-          <stop offset="100%" stopColor="#00BFA5"/>
-        </linearGradient>
-        <linearGradient id="pg4" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF4081"/>
-          <stop offset="100%" stopColor="#C62828"/>
-        </linearGradient>
-      </defs>
-      <path d="M3.18 23.76c.38.21.82.23 1.22.04l12.62-7.28-2.83-2.83-11.01 10.07z" fill="url(#pg4)"/>
-      <path d="M21.6 10.27L18.9 8.72l-3.17 3.17 3.17 3.17 2.73-1.57c.78-.45.78-1.77-.03-2.22z" fill="url(#pg2)"/>
-      <path d="M3.18.24C2.77.04 2.31.08 1.93.31L13.07 11.45l2.83-2.83L3.18.24z" fill="url(#pg1)"/>
-      <path d="M1.93.31C1.54.57 1.3 1.0 1.3 1.56v20.88c0 .56.24 1.0.63 1.32L13.07 12.55 1.93.31z" fill="url(#pg3)"/>
-    </svg>
-  );
-}
-
-function DownloadButtons({ size = 'lg', center = true }) {
-  const base = size === 'lg'
-    ? 'inline-flex items-center gap-3 bg-[#1F2937] hover:bg-[#111827] text-white px-6 py-3.5 rounded-2xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-md border border-white/10'
-    : 'inline-flex items-center gap-2.5 bg-[#1F2937] hover:bg-[#111827] text-white px-4 py-2.5 rounded-xl transition-all duration-200 border border-white/10';
-  const labelSize = size === 'lg' ? '' : 'scale-90 origin-left';
-  return (
-    <div className={`flex flex-wrap gap-3 ${center ? 'justify-center' : ''}`}>
-      <a href="#" className={base} onClick={() => track('download_click', { store: 'ios' })}>
-        <AppleIcon />
-        <span className={`flex flex-col leading-tight ${labelSize}`}>
-          <span className="text-[10px] text-white/60 font-medium tracking-wide uppercase">Download on the</span>
-          <span className="text-[15px] font-bold tracking-tight">App Store</span>
-        </span>
-      </a>
-      <a href="#" className={base} onClick={() => track('download_click', { store: 'android' })}>
-        <PlayStoreIcon />
-        <span className={`flex flex-col leading-tight ${labelSize}`}>
-          <span className="text-[10px] text-white/60 font-medium tracking-wide uppercase">Get it on</span>
-          <span className="text-[15px] font-bold tracking-tight">Google Play</span>
-        </span>
-      </a>
-    </div>
-  );
-}
-
-function Ticker() {
-  const [paused, setPaused] = useState(false);
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
-  const [ref, visible] = useScrollReveal(0.1);
+function Reveal({ children, delay = 0, className = '' }) {
+  const [ref, visible] = useScrollReveal();
   return (
     <div
       ref={ref}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      className={className}
       style={{
+        transition: `opacity 0.55s ease ${delay}ms, transform 0.55s ease ${delay}ms`,
         opacity: visible ? 1 : 0,
-        transition: 'opacity 800ms var(--ease-out-expo)',
-        maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+        transform: visible ? 'translateY(0)' : 'translateY(20px)',
       }}
-      className="overflow-hidden border-y border-[#E5E7EB] bg-white py-3 relative"
     >
-      <div
-        className="flex gap-10 whitespace-nowrap w-max"
-        style={{ animation: 'ticker 40s linear infinite', animationPlayState: paused ? 'paused' : 'running' }}
-      >
-        {items.map((item, i) => (
-          <span key={i} className="text-[11px] font-semibold text-[#777] tracking-wide">{item}</span>
-        ))}
-      </div>
+      {children}
     </div>
   );
 }
 
-function ExitModal() {
-  const [visible, setVisible] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    const onMouseLeave = (e) => {
-      if (e.clientY <= 0 && !dismissed) setVisible(true);
-    };
-    document.addEventListener('mouseleave', onMouseLeave);
-    return () => document.removeEventListener('mouseleave', onMouseLeave);
-  }, [dismissed]);
-
-  const close = () => { setVisible(false); setDismissed(true); };
-
-  if (!visible) return null;
-
-  return (
-    <div className="hidden md:flex fixed inset-0 z-[100] items-center justify-center px-6" onClick={close}>
-      <div className="absolute inset-0 bg-black/30" />
-      <div
-        className="relative bg-white border border-[#E5E7EB] rounded-2xl max-w-lg w-full shadow-xl overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="h-1 w-full bg-gradient-to-r from-red-600 via-[#FF6B35] to-green-600" />
-        <div className="p-8">
-          <button
-            onClick={close}
-            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-[#F9FAFB] hover:bg-[#F3F4F6] text-[#777] hover:text-[#111] text-lg transition-all"
-            aria-label="Close"
-          >
-            ×
-          </button>
-          <div className="flex items-start gap-4 mb-6">
-            <span className="text-3xl">📱</span>
-            <div>
-              <h3 className="text-xl font-black text-[#111] leading-tight mb-1">
-                Don&apos;t miss your campus network.
-              </h3>
-              <p className="text-[#555] text-sm leading-relaxed">
-                Download UNIFY and find your roommate, coursemates, and campus hub before orientation.
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-[#E5E7EB] mb-6" />
-          <DownloadButtons />
-          <p className="text-[11px] text-[#777] mt-4 text-center">
-            Available for iOS and Android · Built by Ghanaians
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StickyBar() {
-  const [visible, setVisible] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 500);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  if (dismissed || !visible) return null;
-
-  return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3">
-      <div className="flex items-center gap-2 bg-white border border-[#E5E7EB] shadow-lg rounded-2xl px-4 py-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-[#111] truncate">Download UNIFY 🎓</p>
-          <p className="text-[10px] text-[#666] truncate">Ghana&apos;s campus network — iOS & Android</p>
-        </div>
-        <a
-          href="#download"
-          className="bg-[#1F2937] hover:bg-[#374151] text-white font-black text-xs px-4 py-2.5 rounded-full whitespace-nowrap flex-shrink-0 active:scale-95 transition-all"
-        >
-          Download →
-        </a>
-        <button
-          onClick={() => setDismissed(true)}
-          className="text-[#777] hover:text-[#555] text-lg leading-none flex-shrink-0 pl-1"
-          aria-label="Dismiss"
-        >
-          ×
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── PHONE MOCKUP ─────────────────────────────────────────────────────────────
-
-function PhoneMockup() {
-  return (
-    <div style={{ animation: 'phoneBob 6s ease-in-out infinite' }} className="relative w-64 h-[520px] mx-auto">
-      <div className="absolute inset-0 rounded-[40px] bg-white border border-[#E5E7EB] shadow-lg" />
-      <div className="absolute inset-[3px] rounded-[38px] overflow-hidden bg-white p-4 flex flex-col gap-3">
-        <div className="flex justify-between text-[10px] text-[#777] px-1">
-          <span>9:41</span><span>●●●</span>
-        </div>
-        <div className="text-[#111] text-sm font-bold">Find your campus fam 👋</div>
-        {[
-          { name: 'Ama O.', school: 'KNUST', tag: 'Roommate' },
-          { name: 'Kofi B.', school: 'UG Legon', tag: 'Coursemates' },
-        ].map((p) => (
-          <div key={p.name} className="bg-white border border-[#F3F4F6] rounded-xl p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#FFF7ED] flex items-center justify-center text-xs font-bold text-[#FF6B35]">
-              {p.name[0]}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[#111] text-xs font-semibold">{p.name}</p>
-              <p className="text-[#777] text-[10px]">{p.school}</p>
-            </div>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FFF7ED] text-[#FF6B35]">{p.tag}</span>
-          </div>
-        ))}
-        <div className="bg-white border border-[#F3F4F6] rounded-xl p-3">
-          <p className="text-[#777] text-[10px] mb-2">YOUR HUB</p>
-          <p className="text-[#111] text-xs font-bold">KNUST Brunei Hub</p>
-          <p className="text-[#777] text-[10px]">420 freshers · Active</p>
-          <div className="mt-2 w-full bg-[#1F2937] text-white text-[10px] font-black rounded-full py-1 text-center">Join Hub →</div>
-        </div>
-        <div className="mt-auto bg-[#FFF7ED] border border-[#FF6B35]/30 rounded-2xl p-3 text-center">
-          <p className="text-[#FF6B35] text-xs font-black">#247 on waitlist</p>
-          <p className="text-[#777] text-[10px]">Refer friends to move up</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── GHANA MAP VIZ ────────────────────────────────────────────────────────────
-
-// ─── CAMPUS COLLAGE (between hub cards and school search) ────────────────────
-const CAMPUS_TILES = [
-  { initials: 'KN', label: 'KNUST',    sub: '420 freshers', grad: '#FF6B35', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kwame_Nkrumah_University_of_Science_and_Technology_(KNUST)_%E2%80%93_Side_view_of_the_College_of_Architecture_and_Planning.JPG?width=500', delay: 0   },
-  { initials: 'UG', label: 'UG Legon', sub: '310 freshers', grad: '#FF6B35', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=500', delay: 80  },
-  { initials: 'UC', label: 'UCC',      sub: '185 freshers', grad: '#059669', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/University_of_Cape_Coast_-_Administration_block.jpg?width=500', delay: 160 },
-  { initials: 'UP', label: 'UPSA',     sub: '92 freshers',  grad: '#dc2626', photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Joshua_Alarbi_Library_(UPSA)_1.jpg?width=500', delay: 240 },
-];
-
-function CampusCollage({ animate = false }) {
-  return (
-    <div className="relative rounded-2xl overflow-hidden p-6 md:p-8 border border-[#E5E7EB]"
-         style={{ background: '#F4F4F0' }}>
-      {/* Dot grid */}
-      <div className="absolute inset-0 opacity-[0.07]"
-           style={{ backgroundImage: 'radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)', backgroundSize: '22px 22px' }} />
-
-      <div className="relative grid grid-cols-2 gap-4">
-        {CAMPUS_TILES.map((t) => (
-          <div
-            key={t.label}
-            className="rounded-xl p-5 flex flex-col justify-between overflow-hidden"
-            style={{
-              background: t.grad,
-              minHeight: 120,
-              position: 'relative',
-              borderRadius: 12,
-              animation: animate ? `revealUp 600ms var(--ease-out-expo) ${t.delay}ms both` : 'none',
-              opacity: animate ? undefined : 0,
-            }}
-          >
-            {/* Campus photo */}
-            {t.photo && (
-              <img src={t.photo} alt={t.label} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-            )}
-            {/* Dark overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.38) 100%)' }} />
-            {/* Large faded initials */}
-            <div style={{ fontSize: 52, fontWeight: 900, color: 'rgba(0,0,0,0.08)', lineHeight: 1, position: 'absolute', right: 12, top: 8, pointerEvents: 'none', userSelect: 'none' }}>
-              {t.initials}
-            </div>
-            <span style={{ position: 'relative', fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,0.9)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.label}</span>
-            <div style={{ position: 'relative' }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: 'white', lineHeight: 1 }}>{t.sub}</div>
-              <div style={{ fontSize: 10, color: '#666', fontWeight: 700, marginTop: 2 }}>waiting in hub</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Live badge */}
-      <div className="relative mt-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
-          </span>
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Live · Ghana</span>
-        </div>
-        <div style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 9999, padding: '4px 14px' }}>
-          <span style={{ fontSize: 12, fontWeight: 900, color: '#111' }}>1,074 freshers online</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── SCHOOL LOCATOR (left side of school search section) ─────────────────────
-const LOCATOR_SCHOOLS = [
-  { name: 'KNUST',    location: 'Kumasi',      freshers: 420, color: '#FF6B35', initials: 'KN', delay: 0   },
-  { name: 'UG Legon', location: 'Accra',       freshers: 310, color: '#0066FF', initials: 'UG', delay: 80  },
-  { name: 'UCC',      location: 'Cape Coast',  freshers: 185, color: '#059669', initials: 'UC', delay: 160 },
-  { name: 'UPSA',     location: 'Accra',       freshers: 92,  color: '#dc2626', initials: 'UP', delay: 240 },
-  { name: 'UDS',      location: 'Tamale',      freshers: 67,  color: '#FF6B35', initials: 'UD', delay: 320 },
-  { name: 'GCTU',     location: 'Accra',       freshers: 54,  color: '#0891b2', initials: 'GC', delay: 400 },
-];
-
-function SchoolLocatorViz({ animate = false }) {
-  return (
-    <div className="relative w-full h-full min-h-[300px] flex flex-col p-5"
-         style={{ background: '#FFFFFF', borderRadius: 16, border: '1px solid #E5E7EB' }}>
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <p style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', letterSpacing: '0.15em', textTransform: 'uppercase' }}>School Directory</p>
-          <p style={{ fontSize: 14, fontWeight: 900, color: '#111' }}>Ghana Universities</p>
-        </div>
-        <div style={{ background: '#EFF6FF', color: '#0066FF', fontSize: 10, fontWeight: 900, borderRadius: 9999, padding: '4px 10px' }}>180+ schools</div>
-      </div>
-      <div className="flex flex-col gap-2 flex-1">
-        {LOCATOR_SCHOOLS.map((s) => (
-          <div key={s.name} className="flex items-center gap-3 rounded-xl px-3 py-2"
-               style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', boxShadow: 'none',
-                        animation: animate ? `schoolCardIn 500ms var(--ease-out-expo) ${s.delay}ms both` : 'none',
-                        opacity: animate ? undefined : 0 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <span style={{ color: 'white', fontWeight: 900, fontSize: 8 }}>{s.initials}</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p style={{ fontSize: 11, fontWeight: 900, color: '#111' }}>{s.name}</p>
-              <p style={{ fontSize: 9, color: '#777', fontWeight: 600 }}>{s.location}</p>
-            </div>
-            <div style={{ background: 'white', border: `1px solid ${s.color}40`, borderRadius: 9999, padding: '2px 8px' }}>
-              <span style={{ fontSize: 9, fontWeight: 800, color: s.color }}>{s.freshers}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 flex items-center justify-center gap-1.5">
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-60" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-        </span>
-        <p style={{ fontSize: 9, color: '#666', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Updated live · 1,074 freshers joined</p>
-      </div>
-    </div>
-  );
-}
-
-// ─── FAQ ACCORDION ────────────────────────────────────────────────────────────
-
-function FAQAccordion({ items, visible }) {
-  const [open, setOpen] = useState(null);
-  return (
-    <div className="flex flex-col divide-y divide-[#E5E7EB]">
-      {items.map((faq, i) => (
-        <div
-          key={i}
-          className="py-4"
-          style={visible ? { animation: `revealUp 500ms var(--ease-out-expo) ${i * 80}ms both` } : { opacity: 0 }}
-        >
-          <button
-            aria-expanded={open === i}
-            className="w-full text-left flex items-center justify-between gap-4 group"
-            onClick={() => { setOpen(open === i ? null : i); track('faq_expand', { question: faq.q }); }}
-          >
-            <span className="font-semibold text-sm text-[#111] group-hover:text-[#0066FF] transition-colors duration-200">{faq.q}</span>
-            <span
-              className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${open === i ? 'rotate-180 bg-[#0066FF] border-[#0066FF]' : 'border-[#E5E7EB] bg-white'}`}
-            >
-              <ChevronDown className={`w-3.5 h-3.5 transition-colors duration-300 ${open === i ? 'text-white' : 'text-[#0066FF]'}`} />
-            </span>
-          </button>
-          {/* Smooth height with grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateRows: open === i ? '1fr' : '0fr',
-              transition: 'grid-template-rows 400ms var(--ease-out-expo)',
-            }}
-          >
-            <div style={{ overflow: 'hidden' }}>
-              <p
-                className="text-sm text-[#555] leading-relaxed mt-3 pr-8"
-                style={{
-                  opacity: open === i ? 1 : 0,
-                  transition: 'opacity 300ms var(--ease-out-expo) 100ms',
-                }}
-              >
-                {faq.a}
-              </p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── STAT ITEM WITH COUNT-UP ──────────────────────────────────────────────────
-
-function formatStat(n, { is12K, isDecimal, suffix }) {
-  const v = Number(n);
-  if (is12K) return `${Math.round(v / 1000)}K+`;
-  if (isDecimal) return v.toFixed(1);
-  return `${Math.floor(v)}${suffix}`;
-}
-
-function StatItem({ num, label, suffix = '', isDecimal = false, is12K = false, trigger }) {
-  const rawVal = useCountUp(num, 1400, trigger);
-  // Safety: during animation rawVal counts 0→num. If it hasn't started yet (0), show final value.
-  // This prevents flashing wrong numbers if rAF hasn't fired yet.
-  const animVal = trigger && rawVal > 0 ? rawVal : num;
-  const display = formatStat(animVal, { is12K, isDecimal, suffix });
-  return (
-    <div className="px-4" style={trigger ? { animation: 'statReveal 600ms var(--ease-out-expo) both' } : {}}>
-      <p className="text-3xl md:text-4xl font-black text-white">{display}</p>
-      <p className="text-white/70 text-sm mt-1">{label}</p>
-    </div>
-  );
-}
-
-// ─── MOBILE MENU ─────────────────────────────────────────────────────────────
-
-function MobileMenu() {
+function FAQItem({ q, a }) {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
-
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') setOpen(false); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
-
-  const links = [
-    { label: 'Home', href: '/' },
-    { label: 'Hubs', href: '/hubs' },
-    { label: 'Match', href: '/match' },
-    { label: 'Schools', href: '/schools' },
-    { label: 'FAQ', href: '/faq' },
-  ];
-
   return (
-    <>
+    <div className="border-b border-gray-200 last:border-0">
       <button
-        className="md:hidden flex flex-col gap-1.5 p-2"
-        aria-label="Open menu"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-5 text-left gap-4"
       >
-        <span className="block w-6 h-0.5 bg-[#111] rounded-full" />
-        <span className="block w-6 h-0.5 bg-[#111] rounded-full" />
-        <span className="block w-6 h-0.5 bg-[#111] rounded-full" />
-      </button>
-
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/40 z-[90]"
-          style={{ animation: 'fadeIn 200ms ease both' }}
-          onClick={() => setOpen(false)}
+        <span className="font-semibold text-gray-900 text-sm sm:text-base">{q}</span>
+        <ChevronDown
+          size={18}
+          className="shrink-0 text-gray-400 transition-transform duration-200"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
-      )}
-
+      </button>
       <div
-        className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-white border-l border-[#E5E7EB] z-[100] flex flex-col p-8 shadow-xl"
-        style={{
-          transform: open ? 'translateX(0)' : 'translateX(100%)',
-          transition: open ? 'transform 300ms cubic-bezier(0.16,1,0.3,1)' : 'transform 250ms ease-in',
-        }}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
+        className="overflow-hidden transition-all duration-300"
+        style={{ maxHeight: open ? '200px' : '0px', opacity: open ? 1 : 0 }}
       >
-        <button
-          className="self-end w-10 h-10 rounded-full border border-[#E5E7EB] bg-white flex items-center justify-center text-[#555] hover:border-[#0066FF] hover:text-[#0066FF] transition-all mb-8"
-          aria-label="Close menu"
-          onClick={() => setOpen(false)}
-        >
-          ✕
-        </button>
-
-        <nav className="flex flex-col gap-2 flex-1">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="text-2xl font-black text-[#111] py-3 border-b border-[#F3F4F6] hover:text-[#0066FF] transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex flex-col gap-3 mt-8">
-          <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-full border border-[#E5E7EB] text-sm font-semibold text-[#111] hover:border-[#0066FF] hover:text-[#0066FF] transition-colors text-center">
-            Sign In
-          </a>
-          <a href="#download" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#1F2937] text-white text-sm font-black text-center hover:bg-[#374151] transition-colors">
-            Download the app →
-          </a>
-        </div>
+        <p className="text-gray-600 text-sm leading-relaxed pb-5">{a}</p>
       </div>
-    </>
+    </div>
   );
 }
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
+function JoinForm() {
+  const [school, setSchool] = useState('');
+  const [phone, setPhone]   = useState('');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [errMsg, setErrMsg] = useState('');
 
-export default function UnifyLanding({ schoolId } = {}) {
-  const heroVisible = useHeroSequence();
-
-  const [statsRef, statsVisible] = useScrollReveal(0.05);
-  const [howRef, howVisible] = useScrollReveal();
-  const [mockupsRef, mockupsVisible] = useScrollReveal();
-  const [featuresRef, featuresVisible] = useScrollReveal();
-  const [communityRef, communityVisible] = useScrollReveal();
-  const [testimonialsRef, testimonialsVisible] = useScrollReveal();
-  const [faqRef, faqVisible] = useScrollReveal();
-  const [ctaRef, ctaVisible] = useScrollReveal();
-
-  // Testimonials carousel state
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-
-  useEffect(() => {
-    if (!testimonialsVisible) return;
-    const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [testimonialsVisible]);
-
-  // Smooth scroll
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = 'smooth';
-    return () => { document.documentElement.style.scrollBehavior = ''; };
-  }, []);
-
-  const sc = SCHOOL_CONFIG[schoolId] || null;
-  const heroHeadline = sc ? sc.headline : "Don't Pull Up To Campus Alone,";
-
-  // Hero style helper
-  function heroStyle(delay, keyframe = 'heroFadeUp', duration = '800ms') {
-    return heroVisible
-      ? { animation: `${keyframe} ${duration} var(--ease-out-expo) ${delay}ms both` }
-      : { opacity: 0 };
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setErrMsg('');
+    if (!school) { setErrMsg('Please select your university.'); return; }
+    const norm = normalizePhone(phone);
+    if (!GHANA_PHONE_RE.test(norm)) { setErrMsg('Enter a valid Ghanaian phone number.'); return; }
+    setStatus('loading');
+    try {
+      const body = new URLSearchParams({ school, phone: norm, ts: new Date().toISOString() });
+      await fetch(SHEET_URL, { method: 'POST', body });
+      setStatus('success');
+    } catch {
+      setStatus('error');
+      setErrMsg('Something went wrong. Try again.');
+    }
   }
 
-  // Section reveal helper
-  function sectionRevealStyle(visible, delay = 0) {
-    return {
-      opacity: 1,
-      transform: visible ? 'translateY(0)' : 'translateY(28px)',
-      transition: `transform 900ms var(--ease-out-expo) ${delay}ms`,
-    };
-  }
-
-  // Community avatars
-  const AVATARS = [
-    { initials: 'EO', bg: 'bg-[#FF6B35]/20', text: 'text-[#FF6B35]', top: '38%', left: '42%', order: 0 },
-    { initials: 'AA', bg: 'bg-[#FF6B35]/20', text: 'text-[#FF6B35]', top: '10%', left: '30%', order: 1 },
-    { initials: 'KB', bg: 'bg-[#0066FF]/20', text: 'text-[#0066FF]', top: '10%', left: '55%', order: 2 },
-    { initials: 'SM', bg: 'bg-[#FF6B35]/30', text: 'text-[#FF6B35]', top: '38%', left: '15%', order: 3 },
-    { initials: 'FA', bg: 'bg-[#FF6B35]/15', text: 'text-[#FF6B35]', top: '38%', left: '68%', order: 4 },
-    { initials: 'YM', bg: 'bg-cyan-100', text: 'text-cyan-700', top: '65%', left: '30%', order: 5 },
-  ];
-
-  function prevTestimonial() {
-    setActiveTestimonial((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
-  }
-  function nextTestimonial() {
-    setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
+  if (status === 'success') {
+    return (
+      <div className="text-center py-8">
+        <div className="text-4xl mb-3">🎉</div>
+        <p className="font-bold text-white text-xl mb-1">You're on the list!</p>
+        <p className="text-blue-100 text-sm">We'll text you when UNIFY opens at your school.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="relative min-h-screen antialiased"
-         style={{ background: '#FFFFFF', fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-
-      <style>{`
-        :root {
-          --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-          --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
-          --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-          --dur-fast: 200ms;
-          --dur-base: 600ms;
-          --dur-slow: 1000ms;
-          --dur-ambient: 4000ms;
-        }
-
-        /* Hero entrance */
-        @keyframes heroFadeUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes heroFadeDown {
-          from { opacity: 0; transform: translateY(-12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes heroScaleIn {
-          from { opacity: 0; transform: scale(0.8); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes heroDoodle {
-          from { opacity: 0; transform: scale(0) rotate(-10deg); }
-          to   { opacity: 1; transform: scale(1) rotate(0deg); }
-        }
-
-        /* Underline draw-on */
-        @keyframes underlineDraw {
-          from { transform: scaleX(0); }
-          to   { transform: scaleX(1); }
-        }
-        @keyframes underlineWobble {
-          0%, 100% { transform: scaleX(1) skewX(-1deg); }
-          50%       { transform: scaleX(1) skewX(1deg); }
-        }
-        .underline-drawn {
-          animation: underlineDraw 500ms var(--ease-out-expo) 600ms both,
-                     underlineWobble 3s ease-in-out 1100ms infinite;
-          transform-origin: left center;
-        }
-
-        /* Scroll reveal */
-        @keyframes revealUp {
-          from { opacity: 0; transform: translateY(60px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* SVG draw-on */
-        @keyframes drawStroke {
-          from { stroke-dashoffset: var(--path-len, 200); }
-          to   { stroke-dashoffset: 0; }
-        }
-
-        /* Map pin */
-        @keyframes pinDrop {
-          0%   { opacity: 0; transform: translateY(-30px) scale(0.5); }
-          70%  { transform: translateY(4px) scale(1.05); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes pinFloat {
-          0%, 100% { transform: translateY(0); }
-          50%       { transform: translateY(-6px); }
-        }
-
-        /* Avatar */
-        @keyframes avatarPop {
-          from { opacity: 0; transform: scale(0); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes breathe {
-          0%, 100% { transform: scale(1); }
-          50%       { transform: scale(1.03); }
-        }
-        @keyframes bubblePop {
-          from { opacity: 0; transform: scale(0.8); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-
-        /* Stats count-up shimmer */
-        @keyframes statReveal {
-          from { opacity: 0; transform: scale(0.85) translateY(12px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Testimonials */
-        @keyframes cardSlideIn {
-          from { opacity: 0; transform: translateX(60px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Ticker */
-        @keyframes ticker {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-
-        /* Phone bob */
-        @keyframes phoneBob {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33%       { transform: translateY(-8px) rotate(0.5deg); }
-          66%       { transform: translateY(-4px) rotate(-0.3deg); }
-        }
-
-        @keyframes schoolCardIn {
-          from { opacity: 0; transform: translateY(14px) scale(0.95); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Ambient drift */
-        @keyframes driftY {
-          from { transform: translateY(0); }
-          to   { transform: translateY(-12px); }
-        }
-
-        /* Spark pop-in on scroll */
-        @keyframes sparkPop {
-          from { opacity: 0; transform: scale(0) rotate(-15deg); }
-          to   { opacity: 1; transform: scale(1) rotate(0deg); }
-        }
-        .spark-visible { animation: sparkPop 400ms var(--ease-spring) both; }
-        .spark-hidden  { opacity: 0; }
-
-        /* Ambient drift dots */
-        @keyframes driftY {
-          from { transform: translateY(0); }
-          to   { transform: translateY(-12px); }
-        }
-
-        /* Fade in for backdrop */
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        /* Focus rings */
-        :focus-visible {
-          outline: 2px solid #0066FF;
-          outline-offset: 2px;
-          border-radius: 4px;
-        }
-
-        /* Skip link */
-        .skip-link {
-          position: absolute;
-          top: -100px;
-          left: 16px;
-          background: #0066FF;
-          color: white;
-          padding: 8px 16px;
-          border-radius: 9999px;
-          font-weight: 700;
-          font-size: 14px;
-          z-index: 9999;
-          text-decoration: none;
-          transition: top 200ms;
-        }
-        .skip-link:focus {
-          top: 16px;
-        }
-
-        /* Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-          }
-        }
-
-        /* Nav links */
-        .nav-link { position: relative; transition: color 200ms; }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #0066FF; border-radius: 9999px; transition: width 200ms var(--ease-out-expo); }
-        .nav-link:hover::after { width: 100%; }
-
-        /* Feature cards */
-        .feature-card { transition: transform 300ms var(--ease-out-expo), box-shadow 300ms var(--ease-out-expo), border-color 300ms; }
-        .feature-card:hover { transform: translateY(-4px); border-color: rgba(0,102,255,0.2); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.10); }
-
-        /* Footer links */
-        .footer-link { transition: opacity 150ms, transform 150ms; }
-        .footer-link:hover { opacity: 1 !important; transform: translateX(2px); }
-
-        /* Social icons */
-        .social-icon { transition: transform 200ms var(--ease-spring), background 200ms; }
-        .social-icon:hover { transform: scale(1.1); }
-
-        /* CTA button glow */
-        .btn-cta-glow { transition: transform 200ms var(--ease-out-expo), box-shadow 200ms var(--ease-out-expo); }
-        .btn-cta-glow:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -4px rgba(0,0,0,0.15); }
-        .btn-cta-glow:active { transform: scale(0.97); box-shadow: none; }
-      `}</style>
-
-      {/* Fixed ambient blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md mx-auto">
+      {/* School selector */}
+      <div className="flex flex-wrap gap-2 justify-center">
+        {SCHOOLS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setSchool(s.id)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+              school === s.id
+                ? 'bg-white text-blue-600 border-white'
+                : 'bg-transparent text-white border-white/40 hover:border-white/80'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
       </div>
 
-      {/* Browser wrapper */}
-      <div className="max-w-7xl mx-auto bg-white overflow-hidden">
-
-        {/* ── NAVIGATION ──────────────────────────────────────────────── */}
-        <nav
-          className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB]"
-          style={heroStyle(0, 'heroFadeDown', '600ms')}
+      {/* Phone input */}
+      <div className="flex gap-2">
+        <input
+          type="tel"
+          placeholder="0XX XXX XXXX"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="flex-1 bg-white/10 border border-white/30 text-white placeholder-white/50 rounded-2xl px-5 py-3.5 text-sm focus:outline-none focus:border-white/80 transition-colors"
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="bg-white text-blue-600 font-bold px-6 py-3.5 rounded-2xl text-sm hover:bg-blue-50 active:scale-95 transition-all disabled:opacity-60"
         >
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <img src="/logo-icon.png" alt="UNIFY" className="w-8 h-8 rounded-xl" />
-              <span className="text-lg font-black tracking-tight text-[#111]">UNIFY</span>
-            </div>
-            <div className="hidden md:flex items-center gap-6 text-sm text-[#666] font-medium">
-              <a href="#" className="relative text-[#0066FF] font-semibold" onClick={() => track('nav_click', { page: 'home' })}>
-                Home
-                <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full bg-[#0066FF]" />
-              </a>
-              <a href="/hubs" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'hubs' })}>Hubs</a>
-              <a href="/match" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'match' })}>Match</a>
-              <a href="#schools" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'schools' })}>Schools</a>
-              <a href="#faq" className="nav-link hover:text-[#111] transition-colors" onClick={() => track('nav_click', { page: 'faq' })}>FAQ</a>
-            </div>
-            <div className="flex items-center gap-2">
-              <a href="/login" className="hidden md:inline-flex text-sm font-semibold text-[#555] px-4 py-2 rounded-full border border-[#E5E7EB] bg-white hover:border-[#0066FF] hover:text-[#0066FF] transition-colors">
-                Sign In
-              </a>
-              <a
-                href="#download"
-                className="hidden md:inline-flex bg-[#1F2937] hover:bg-[#374151] text-white text-xs font-black px-4 py-2.5 rounded-full transition-colors"
-              >
-                Download the app
-              </a>
-              <MobileMenu />
-            </div>
-          </div>
-        </nav>
+          {status === 'loading' ? '…' : 'Join'}
+        </button>
+      </div>
 
-        {/* ── HERO — 55/45 asymmetric ─────────────────────────────────── */}
-        <section id="main-content" className="relative bg-white pt-16 md:pt-24 pb-12 md:pb-20 px-6">
+      {errMsg && <p className="text-red-300 text-xs text-center">{errMsg}</p>}
+    </form>
+  );
+}
 
-          {/* Hero glow */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'transparent' }} />
-          {/* Ambient drift dots */}
-          {[
-            { size: 10, top: '15%', left: '8%',  color: '#FF6B35', dur: '5.2s', delay: '0s'    },
-            { size: 8,  top: '70%', left: '5%',  color: '#FF6B35', dur: '4.1s', delay: '1.2s'  },
-            { size: 12, top: '30%', left: '92%', color: '#FF6B35', dur: '6.0s', delay: '0.5s'  },
-            { size: 6,  top: '80%', left: '88%', color: '#FF6B35', dur: '4.8s', delay: '2.1s'  },
-            { size: 8,  top: '55%', left: '3%',  color: '#FF6B35', dur: '5.5s', delay: '0.8s'  },
-          ].map((d, i) => (
-            <div key={i} className="absolute rounded-full pointer-events-none"
-              style={{ width: d.size, height: d.size, top: d.top, left: d.left,
-                background: d.color, opacity: 0.15,
-                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
-          ))}
-          <div className="max-w-6xl mx-auto grid md:grid-cols-[55fr_45fr] gap-10 md:gap-16 items-center">
-            {/* Left */}
-            <div>
-              <div
-                className="inline-flex items-center gap-2 bg-[#EFF6FF] border border-[#0066FF]/20 text-[#0066FF] text-xs font-bold px-3.5 py-2 rounded-full mb-7"
-                style={heroStyle(100)}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] animate-pulse" />
-                {sc ? sc.badge : "Built for Ghana's Freshers · Launching 2026"}
-              </div>
+export default function UnifyLanding() {
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
 
-              <div className="mb-6">
-                <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, lineHeight: 1, letterSpacing: '-0.01em' }} className="text-[3.2rem] md:text-[5rem] uppercase text-[#111]">
-                  <span style={heroStyle(150, 'heroFadeUp', '800ms')} className="block">
-                    {heroHeadline}
-                  </span>
-                  <span className="block relative" style={heroStyle(250, 'heroFadeUp', '800ms')}>
-                    <span className="text-[#FF6B35]">fr.</span>
-                    <span className="inline-block ml-3 align-middle" style={{ width: 48, height: 6, background: '#FF6B35', borderRadius: 9999, verticalAlign: 'middle', display: 'inline-block' }} />
-                    <SquiggleUnderline heroVisible={heroVisible} />
-                  </span>
-                </h1>
-              </div>
-
-              <p
-                className="text-base md:text-lg text-[#555] leading-relaxed mb-8 max-w-[440px] mt-5"
-                style={heroStyle(400, 'heroFadeUp', '700ms')}
-              >
-                {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
-              </p>
-
-              <div className="mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
-                <DownloadButtons center={false} />
-                <p className="text-xs text-[#777] mt-3 font-medium">Built for Ghanaian students.</p>
-              </div>
-
-              <div
-                className="flex items-center gap-3 mb-5"
-                style={heroStyle(700, 'heroScaleIn', '500ms')}
-              >
-                <div className="flex -space-x-2">
-                  {[
-                    { initials: 'KA', grad: '#FF6B35' },
-                    { initials: 'YM', grad: '#FF6B35' },
-                    { initials: 'FA', grad: '#FF6B35' },
-                    { initials: 'EB', grad: '#059669' },
-                    { initials: 'AO', grad: '#be185d' },
-                  ].map((a) => (
-                    <div
-                      key={a.initials}
-                      className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-black text-white"
-                      style={{ background: a.grad }}
-                    >
-                      {a.initials}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-[#555]">
-                  <strong className="text-[#111] font-bold">12,400+</strong> freshers already inside
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {['✓ 100% Free', '✓ Works on 2G', '✓ Verified students'].map((t) => (
-                  <span key={t} className="text-[11px] font-semibold text-[#059669] bg-[#ECFDF5] px-3 py-1.5 rounded-full">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: floating card stack */}
-            <div className="relative h-[460px] hidden md:flex items-center justify-center" style={heroStyle(300, 'heroScaleIn', '600ms')}>
-              {/* Campus photo background */}
-              <div className="absolute inset-0 rounded-none overflow-hidden" style={{ zIndex: -1 }}>
-                <img
-                  src="https://commons.wikimedia.org/wiki/Special:FilePath/Legon_Tower.JPG?width=700"
-                  alt="Ghana university campus aerial"
-                  className="w-full h-full object-cover object-center"
-                  style={{ filter: 'brightness(0.65)' }}
-                />
-                <div className="absolute inset-0" style={{ background: 'transparent' }} />
-              </div>
-              {/* Glow */}
-              <div className="absolute w-72 h-72 rounded-none pointer-events-none"
-                style={{ background: 'transparent', zIndex: 0 }} />
-
-              {/* Card 1 — Hub Preview (top-left, -5°) */}
-              <div style={{ position: 'absolute', top: '4%', left: '2%', transform: 'rotate(-5deg)', zIndex: 3 }}>
-                <div style={{ animation: 'driftY 5s ease-in-out 0s infinite alternate',
-                  background: '#FFFFFF', borderRadius: 16, width: 210,
-                  boxShadow: '0 16px 32px rgba(0,0,0,0.10)',
-                  border: '1px solid #E5E7EB', padding: '16px 18px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: '#FF6B35', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Your Hub</div>
-                    <span style={{ width: 7, height: 7, borderRadius: 9999, background: '#22c55e', display: 'inline-block' }} />
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 900, color: '#111', marginBottom: 4 }}>KNUST Brunei Hub</div>
-                  <div style={{ fontSize: 11, color: '#666', marginBottom: 12 }}>420 freshers waiting</div>
-                  <div style={{ background: '#0066FF', color: 'white', fontWeight: 700, fontSize: 11, borderRadius: 9999, padding: '6px 14px', textAlign: 'center' }}>
-                    Join Hub →
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2 — Roommate Match (center-right, +3°) */}
-              <div style={{ position: 'absolute', top: '30%', right: '0%', transform: 'rotate(3deg)', zIndex: 4 }}>
-                <div style={{ animation: 'driftY 5s ease-in-out 1.7s infinite alternate',
-                  background: '#FFFFFF', borderRadius: 16, width: 220,
-                  boxShadow: '0 16px 32px rgba(0,0,0,0.10)',
-                  border: '1px solid #E5E7EB', padding: '16px 18px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-                    <div style={{ width: 20, height: 20, borderRadius: 9999, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg viewBox="0 0 12 12" width="10" height="10" fill="none"><path d="M2 6l3 3 5-5" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    </div>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: '#16a34a' }}>Roommate Found!</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 9999, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>AK</div>
-                    <div style={{ flex: 1, height: 2, background: '#FF6B35', borderRadius: 0 }} />
-                    <div style={{ width: 36, height: 36, borderRadius: 9999, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', flexShrink: 0 }}>EB</div>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#666', textAlign: 'center' }}>Ama K. + Efua B. · Evandy Hostel</div>
-                </div>
-              </div>
-
-              {/* Card 3 — Chat Bubble (bottom, -2°) */}
-              <div style={{ position: 'absolute', bottom: '4%', left: '8%', transform: 'rotate(-2deg)', zIndex: 3 }}>
-                <div style={{ animation: 'driftY 5s ease-in-out 0.9s infinite alternate',
-                  background: '#FFFFFF', borderRadius: 16, width: 230,
-                  boxShadow: '0 16px 32px rgba(0,0,0,0.10)',
-                  border: '1px solid #E5E7EB', padding: '14px 16px' }}>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 9999, background: '#FF6B35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>YM</div>
-                    <div style={{ background: '#F3F4F6', borderRadius: '12px 12px 12px 4px', padding: '7px 11px', fontSize: 11, color: '#374151', maxWidth: 160 }}>
-                      Which hall is closer to SRC? 🏠
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 8 }}>
-                    <div style={{ background: '#0066FF', borderRadius: '12px 12px 4px 12px', padding: '7px 11px', fontSize: 11, color: 'white', maxWidth: 160 }}>
-                      Evandy! And cheaper too ✓
-                    </div>
-                    <div style={{ width: 28, height: 28, borderRadius: 9999, background: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 900, color: 'white', flexShrink: 0 }}>KA</div>
-                  </div>
-                  <div style={{ fontSize: 9, color: '#777', textAlign: 'center', fontWeight: 600 }}>2 mutual classmates · KNUST Hub</div>
-                </div>
-              </div>
-
-              {/* Decorative orange dot accent */}
-              <div style={{ position: 'absolute', top: '22%', left: '42%', width: 10, height: 10, borderRadius: 9999, background: '#FF6B35', opacity: 0.5, zIndex: 2, animation: 'driftY 4s ease-in-out 0.4s infinite alternate' }} />
-              <div style={{ position: 'absolute', bottom: '28%', right: '8%', width: 7, height: 7, borderRadius: 9999, background: '#FF6B35', opacity: 0.4, zIndex: 2, animation: 'driftY 3.5s ease-in-out 1.2s infinite alternate' }} />
-            </div>
-          </div>
-        </section>
-
-        {/* ── HOW IT WORKS ────────────────────────────────────────────── */}
-        <section
-          id="how-it-works"
-          ref={howRef}
-          className="relative bg-white py-16 md:py-24 px-6 border-t border-[#F3F4F6]"
-          style={sectionRevealStyle(howVisible)}
-        >
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF] bg-[#EFF6FF] px-4 py-2 rounded-full mb-5">
-                How UNIFY Works
-              </span>
-              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight">
-                Three Steps To Your<br />Campus Squad.
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-              {[
-                {
-                  num: '1',
-                  accent: '#FF6B35',
-                  title: 'Download the App',
-                  time: 'Ready in 30 seconds',
-                  points: [
-                    'Get UNIFY free on the App Store or Google Play',
-                    'Works on any iPhone or Android phone',
-                    'No web sign-up — everything lives in the app',
-                  ],
-                },
-                {
-                  num: '2',
-                  accent: '#0066FF',
-                  title: 'Take the Roommate Quiz',
-                  time: 'Takes 2 minutes',
-                  points: [
-                    'Answer 10 questions about your lifestyle',
-                    'Cleanliness, sleep schedule, budget, preferences',
-                    'We calculate your compatibility score',
-                  ],
-                },
-                {
-                  num: '3',
-                  accent: '#16a34a',
-                  title: 'Get Matched + Find Your Room',
-                  time: 'Before orientation',
-                  points: [
-                    'See 5–10 compatible roommates instantly',
-                    'Chat with potential roommates',
-                    'Browse verified room listings + hostel reviews',
-                    'Choose your roommate before orientation!',
-                  ],
-                },
-              ].map((step, i) => (
-                <div
-                  key={step.num}
-                  className="relative bg-white border border-[#F3F4F6] shadow-sm rounded-2xl p-7 flex flex-col hover:-translate-y-1 hover:shadow-md transition-all duration-200"
-                  style={howVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 120}ms both` } : { opacity: 0 }}
-                >
-                  <div className="flex items-center justify-between mb-5">
-                    <div
-                      className="w-12 h-12 flex items-center justify-center text-xl font-black text-white rounded-2xl"
-                      style={{ background: step.accent }}
-                    >
-                      {step.num}
-                    </div>
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#6B7280] bg-[#F9FAFB] px-2.5 py-1 rounded-full">
-                      {step.time}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-black text-[#111] leading-snug mb-4">{step.title}</h3>
-                  <ul className="flex flex-col gap-2.5">
-                    {step.points.map((p) => (
-                      <li key={p} className="flex items-start gap-2.5 text-sm text-[#333] leading-relaxed">
-                        <span className="font-black flex-shrink-0" style={{ color: step.accent }}>➜</span>
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <DownloadButtons />
-            </div>
-          </div>
-        </section>
-
-        {/* ── APP PREVIEW MOCKUPS ─────────────────────────────────────── */}
-        <section
-          id="app-preview"
-          ref={mockupsRef}
-          className="relative bg-[#F9FAFB] py-16 md:py-24 px-6 border-t border-[#F3F4F6] overflow-hidden"
-          style={sectionRevealStyle(mockupsVisible)}
-        >
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-14">
-              <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-[#FF6B35] bg-[#FFF7ED] px-4 py-2 rounded-full mb-5">
-                App Preview
-              </span>
-              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight">
-                See It Before<br />You Use It.
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-10 md:gap-8 justify-items-center">
-
-              {/* ── Phone 1: Home Feed ── */}
-              <div
-                className="w-[250px] bg-white border border-[#E5E7EB] shadow-xl rounded-[32px] p-3 hover:-translate-y-2 transition-transform duration-200"
-                style={{ transform: 'rotate(-2deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 0ms both' } : { opacity: 0 }) }}
-              >
-                <div className="bg-[#F9FAFB] rounded-[28px] p-4 min-h-[400px] flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-black text-[#111]">UNIFY</span>
-                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full bg-[#FF6B35] opacity-60" /><span className="relative inline-flex h-2 w-2 bg-[#FF6B35]" /></span>
-                  </div>
-                  <div className="bg-white border border-[#E5E7EB] rounded-xl p-3">
-                    <p className="text-[9px] font-black uppercase tracking-wide text-[#FF6B35] mb-1">Your Hub</p>
-                    <p className="text-xs font-black text-[#111]">KNUST Brunei Hub</p>
-                    <p className="text-[9px] text-[#666]">420 freshers · 12 active now</p>
-                  </div>
-                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555]">Nearby Matches</p>
-                  {[
-                    { initials: 'AK', name: 'Ama K.', tag: '94% match', color: '#FF6B35' },
-                    { initials: 'YB', name: 'Yaw B.', tag: '89% match', color: '#0066FF' },
-                  ].map((p) => (
-                    <div key={p.initials} className="bg-white border border-[#E5E7EB] rounded-xl p-2.5 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[9px] font-black text-white flex-shrink-0" style={{ background: p.color }}>{p.initials}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-black text-[#111]">{p.name}</p>
-                        <p className="text-[9px] text-[#666]">KNUST · CS</p>
-                      </div>
-                      <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded-full bg-[#FFF7ED] text-[#FF6B35]">{p.tag}</span>
-                    </div>
-                  ))}
-                  <div className="mt-auto bg-[#1F2937] rounded-2xl py-2 flex justify-around">
-                    {['🏠','🔍','💞','💬','👤'].map((icon) => (
-                      <span key={icon} className="text-sm">{icon}</span>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-center text-xs font-semibold text-[#374151] mt-3 mb-1">1 · Your Home Feed</p>
-              </div>
-
-              {/* ── Phone 2: Roommate Quiz ── */}
-              <div
-                className="w-[250px] bg-white border border-[#E5E7EB] shadow-xl rounded-[32px] p-3 hover:-translate-y-2 transition-transform duration-200 md:mt-6"
-                style={{ transform: 'rotate(1.5deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 150ms both' } : { opacity: 0 }) }}
-              >
-                <div className="bg-[#F9FAFB] rounded-[28px] p-4 min-h-[400px] flex flex-col">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-black text-[#111]">UNIFY</span>
-                    <span className="text-[9px] font-semibold text-[#0066FF] bg-[#EFF6FF] rounded-full px-1.5 py-0.5">Question 3/10</span>
-                  </div>
-                  <div className="h-1.5 bg-[#E5E7EB] rounded-full mb-5 overflow-hidden">
-                    <div className="h-full bg-[#0066FF] rounded-full" style={{ width: '30%' }} />
-                  </div>
-                  <p className="text-base font-black text-[#111] leading-snug mb-5">What's your<br />sleep schedule?</p>
-                  {[
-                    { label: 'Early Bird', selected: false },
-                    { label: 'Night Owl', selected: true },
-                    { label: 'Flexible', selected: false },
-                  ].map((opt) => (
-                    <div
-                      key={opt.label}
-                      className={`flex items-center gap-2.5 border rounded-xl px-3 py-2.5 mb-2.5 ${opt.selected ? 'bg-[#0066FF] border-[#0066FF]' : 'bg-white border-[#E5E7EB]'}`}
-                    >
-                      <span className={`w-3.5 h-3.5 border-2 rounded-full flex-shrink-0 ${opt.selected ? 'bg-white border-white' : 'bg-white border-[#D1D5DB]'}`} />
-                      <span className={`text-xs font-bold ${opt.selected ? 'text-white' : 'text-[#111]'}`}>{opt.label}</span>
-                    </div>
-                  ))}
-                  <div className="mt-auto">
-                    <div className="bg-[#0066FF] rounded-xl py-3 text-center shadow-sm">
-                      <span className="text-xs font-black text-white">Next →</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-center text-xs font-semibold text-[#374151] mt-3 mb-1">2 · 2-Minute Quiz</p>
-              </div>
-
-              {/* ── Phone 3: Matches ── */}
-              <div
-                className="w-[250px] bg-white border border-[#E5E7EB] shadow-xl rounded-[32px] p-3 hover:-translate-y-2 transition-transform duration-200"
-                style={{ transform: 'rotate(-1deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 300ms both' } : { opacity: 0 }) }}
-              >
-                <div className="bg-[#F9FAFB] rounded-[28px] p-4 min-h-[400px] flex flex-col">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-black text-[#111]">UNIFY</span>
-                    <span className="text-[9px] font-black text-white bg-[#FF007A] rounded-full px-1.5 py-0.5">2 NEW</span>
-                  </div>
-                  <p className="text-base font-black text-[#111] mb-4">Your Matches</p>
-                  {[
-                    { name: 'Ama Owusu', school: 'UG Legon', quote: '"Clean, quiet"', score: '92%', initials: 'AO', color: '#FF6B35' },
-                    { name: 'Yaw Boakye', school: 'KNUST', quote: '"Study buddy"', score: '87%', initials: 'YB', color: '#0066FF' },
-                  ].map((m) => (
-                    <div key={m.name} className="bg-white border border-[#E5E7EB] rounded-xl p-3 mb-3.5">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-white flex-shrink-0"
-                          style={{ background: m.color }}
-                        >{m.initials}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-black text-[#111] leading-tight">{m.name}</p>
-                          <p className="text-[9px] text-[#555] leading-tight">{m.school}</p>
-                        </div>
-                        <span className="text-[10px] font-semibold text-[#92400E] bg-[#FFF9C4] rounded-full px-1.5 py-0.5 flex-shrink-0">{m.score}</span>
-                      </div>
-                      <p className="text-[10px] text-[#555] italic mb-2">{m.quote}</p>
-                      <div className="bg-[#16a34a] rounded-lg py-1.5 text-center">
-                        <span className="text-[10px] font-black text-white">Chat</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-center text-xs font-semibold text-[#374151] mt-3 mb-1">3 · Match &amp; Chat</p>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* ── TICKER ──────────────────────────────────────────────────── */}
-        <Ticker />
-
-        {/* ── STATS BAR ───────────────────────────────────────────────── */}
-        <div ref={statsRef} className="relative py-10 px-6 overflow-hidden" style={{ background: '#0066FF' }}>
-          {/* Subtle dot grid overlay */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
-            style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-          <div className="max-w-5xl mx-auto grid grid-cols-3 md:grid-cols-6 gap-4 text-center divide-x divide-white/20">
-            <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
-            <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
-            <StatItem num={847} suffix="" label="Roommates Matched" trigger={statsVisible} />
-            <StatItem num={4.2} suffix="" label="Overall Rating" isDecimal={true} trigger={statsVisible} />
-            <StatItem num={15000} label="WhatsApp Members" is12K={true} trigger={statsVisible} />
-            <StatItem num={98} suffix="%" label="Would Recommend" trigger={statsVisible} />
+      {/* ── Nav ── */}
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
+          <span className="font-bold text-lg tracking-tight text-blue-600">UNIFY</span>
+          <div className="flex items-center gap-6">
+            <a href="#universities" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 transition-colors">
+              For Universities
+            </a>
+            <a
+              href="#waitlist"
+              className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-blue-700 active:scale-95 transition-all"
+            >
+              Get Early Access
+            </a>
           </div>
         </div>
+      </nav>
 
-        {/* ── FEATURES ────────────────────────────────────────────────── */}
-        <section
-          id="features"
-          ref={featuresRef}
-          className="relative py-16 md:py-28 px-6 border-t border-[#F3F4F6]"
-          style={{ ...sectionRevealStyle(featuresVisible), background: '#FFFFFF' }}
-        >
-          {/* Ambient dots */}
-          {[
-            { size: 9,  top: '12%', right: '4%',  color: '#FF6B35', dur: '5s',   delay: '0.3s'  },
-            { size: 6,  top: '60%', right: '2%',  color: '#FF6B35', dur: '4.2s', delay: '1.5s'  },
-            { size: 11, top: '80%', left:  '3%',  color: '#FF6B35', dur: '5.8s', delay: '0.7s'  },
-          ].map((d, i) => (
-            <div key={i} className="absolute rounded-full pointer-events-none"
-              style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
-                background: d.color, opacity: 0.12,
-                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
-          ))}
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start mb-14">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <BlueDoodle drawn={featuresVisible} />
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Why UNIFY</span>
-                </div>
-                <SparkDoodle visible={featuresVisible} delay={200} />
-                <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
-                  That&apos;s The Way<br />To Fresher.
-                </h2>
-                <p className="text-[#555] text-base leading-relaxed max-w-sm">
-                  Not a copy-paste Western social app. Every decision built around the real Ghanaian fresher experience.
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                {[
-                  { icon: <Users2 className="w-5 h-5 text-[#FF6B35]" />, title: '180+ Campus Hubs', body: 'Official hubs for KNUST, UG Legon, UCC, UPSA and 180+ schools across Ghana.' },
-                  { icon: <GraduationCap className="w-5 h-5 text-[#FF6B35]" />, title: 'Habit-Matched Roommates', body: 'Our matching engine pairs you with compatible freshers before orientation chaos starts.' },
-                  { icon: <Building2 className="w-5 h-5 text-[#FF6B35]" />, title: 'Verified Students Only', body: 'Every profile is ID-verified. No fake accounts, no strangers — just real Ghana freshers.' },
-                ].map((f, i) => (
-                  <div
-                    key={f.title}
-                    className="feature-card bg-white border border-[#F3F4F6] shadow-sm rounded-2xl p-6 flex items-start gap-4"
-                    style={featuresVisible ? { animation: `revealUp 600ms var(--ease-out-expo) ${i * 100}ms both` } : { opacity: 0 }}
-                  >
-                    <div className="w-11 h-11 rounded-xl bg-[#EFF6FF] flex items-center justify-center flex-shrink-0">
-                      {f.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-black text-[#111] mb-1">{f.title}</h3>
-                      <p className="text-sm text-[#555] leading-relaxed">{f.body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Campus collage */}
-            <CampusCollage animate={featuresVisible} />
+      {/* ── Hero ── */}
+      <section className="max-w-5xl mx-auto px-5 pt-20 pb-24 text-center">
+        <Reveal>
+          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
+            🇬🇭 Built for Ghanaian universities
           </div>
-        </section>
-
-        {/* ── SCHOOL SEARCH ────────────────────────────────────────────── */}
-        <section id="schools" className="relative bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-[#F3F4F6]">
-          <div className="absolute right-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 120 }}>
-            <svg viewBox="0 0 120 600" fill="none" className="h-full w-full opacity-20">
-              <path d="M100,0 C20,80 120,160 40,240 C-20,300 120,380 60,460 C20,510 80,560 100,600"
-                stroke="#FF6B35" strokeWidth="1.5" strokeLinecap="round"
-                style={{ strokeDasharray: 800, strokeDashoffset: 0 }}/>
-            </svg>
+        </Reveal>
+        <Reveal delay={80}>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-gray-900 mb-6">
+            The Campus Identity &<br />
+            <span className="text-blue-600">Announcement Platform</span>
+          </h1>
+        </Reveal>
+        <Reveal delay={160}>
+          <p className="text-gray-500 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            UNIFY gives every student a verified campus identity and every university a direct channel to reach them — no spam groups, no missed notices.
+          </p>
+        </Reveal>
+        <Reveal delay={240}>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href="#waitlist"
+              className="bg-blue-600 text-white font-bold px-8 py-4 rounded-full text-base hover:bg-blue-700 active:scale-95 transition-all"
+            >
+              Join the Waitlist
+            </a>
+            <a
+              href="#universities"
+              className="border border-gray-200 text-gray-700 font-semibold px-8 py-4 rounded-full text-base hover:border-gray-400 active:scale-95 transition-all"
+            >
+              For Universities →
+            </a>
           </div>
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="hidden md:block h-80 rounded-none overflow-hidden">
-              <SchoolLocatorViz animate={featuresVisible} />
-            </div>
-            <div className="relative">
-              <BlueSwirl className="absolute -right-4 top-0" drawn={featuresVisible} />
-              <SparkDoodle visible={featuresVisible} delay={300} />
-              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
-                Find Your Campus,<br />Find Your People.
-              </h2>
-              <p className="text-[#555] text-base leading-relaxed mb-7">
-                Browse 180+ Ghana universities. Pick your school and claim your handle before your classmates do.
-              </p>
-              <div className="flex items-center gap-2 bg-white border border-[#E5E7EB] rounded-full p-2 pl-5 mb-5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                <select className="flex-1 bg-transparent text-[#111] text-sm outline-none">
-                  <option value="">Choose your school</option>
-                  <option>KNUST</option>
-                  <option>UG Legon</option>
-                  <option>UCC</option>
-                  <option>UPSA</option>
-                  <option>UDS</option>
-                  <option>GCTU</option>
-                </select>
-                <a
-                  href="/hubs"
-                  className="btn-cta-glow bg-[#0066FF] text-white font-bold text-sm px-5 py-2 rounded-full hover:bg-[#0052CC] transition-colors whitespace-nowrap"
-                >
-                  Find Hub →
-                </a>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <a href="/hubs" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#555] hover:text-[#111] px-4 py-2 rounded-full border border-[#E5E7EB] bg-white hover:border-[#0066FF] hover:text-[#0066FF] transition-all">
-                  Browse all hubs <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-                <a href="/match" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#555] hover:text-[#111] px-4 py-2 rounded-full border border-[#E5E7EB] bg-white hover:border-[#0066FF] hover:text-[#0066FF] transition-all">
-                  Find a roommate <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+        </Reveal>
+      </section>
 
-        {/* ── COMMUNITY ────────────────────────────────────────────────── */}
-        <section
-          ref={communityRef}
-          className="relative py-16 md:py-28 px-6 border-t border-[#F3F4F6]"
-          style={{ ...sectionRevealStyle(communityVisible), background: '#FFFFFF' }}
-        >
-          {/* Ambient dots */}
-          {[
-            { size: 8,  top: '10%', left:  '5%',  color: '#FF6B35', dur: '4.5s', delay: '0s'   },
-            { size: 10, top: '70%', right: '3%',  color: '#FF6B35', dur: '5.2s', delay: '1.1s' },
-            { size: 7,  top: '40%', right: '6%',  color: '#FF6B35', dur: '3.8s', delay: '0.6s' },
-          ].map((d, i) => (
-            <div key={i} className="absolute rounded-full pointer-events-none"
-              style={{ width: d.size, height: d.size, top: d.top, left: d.left, right: d.right,
-                background: d.color, opacity: 0.12,
-                animation: `driftY ${d.dur} ease-in-out ${d.delay} infinite alternate` }} />
-          ))}
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <OrangeDoodle drawn={communityVisible} />
-                <Sparkles className="w-5 h-5 text-[#FF6B35]" />
-              </div>
-              <SparkDoodle visible={communityVisible} delay={200} />
-              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
-                Your Campus Fam<br />Is Calling.
-                <br />
-                <span className="text-[#555] text-3xl md:text-4xl font-bold">Don&apos;t Miss Orientation.</span>
-              </h2>
-              <p className="text-[#555] text-base leading-relaxed mb-8">
-                Join the official WhatsApp community for your school. Real freshers, real intel, zero spam.
-              </p>
-              <a
-                href="https://wa.me/233000000000?text=Hi%20UNIFY!%20I'm%20a%20fresher%20interested%20in%20joining%20my%20campus%20hub."
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track('whatsapp_click', { type: 'join' })}
-                className="btn-cta-glow inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ea855] text-white font-bold text-sm px-7 py-3.5 rounded-full shadow-sm"
-              >
-                <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Join Community →
-              </a>
-            </div>
-
-            <div className="relative h-72 flex items-center justify-center rounded-2xl overflow-hidden">
-              {/* Campus background photo */}
-              <img
-                src="https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_Oval_at_University_of_Ghana,_Legon.jpg?width=600"
-                alt="campus life"
-                className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
-              />
-              {AVATARS.map((a) => (
-                <div
-                  key={a.initials}
-                  className={`absolute w-12 h-12 rounded-full ${a.bg} border-2 border-white flex items-center justify-center text-xs font-black ${a.text} shadow-md`}
-                  style={{
-                    top: a.top, left: a.left,
-                    animation: communityVisible
-                      ? `avatarPop 400ms var(--ease-spring) ${a.order * 80}ms both, breathe 4s ease-in-out ${a.order * 300}ms infinite`
-                      : 'none',
-                    opacity: communityVisible ? undefined : 0,
-                  }}
-                >
-                  {a.initials}
-                </div>
-              ))}
-              <div
-                className="absolute top-2 right-0 bg-white border border-[#E5E7EB] rounded-2xl px-3 py-1.5 text-xs font-semibold text-[#111] shadow-sm"
-                style={{
-                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 400ms both' : 'none',
-                  opacity: communityVisible ? undefined : 0,
-                }}
-              >
-                Already linked! 🔥
-              </div>
-              <div className="absolute bottom-8 right-4 bg-[#EFF6FF] border border-[#0066FF]/30 rounded-2xl px-3 py-1.5 text-xs font-semibold text-[#0066FF] shadow-sm"
-                style={{
-                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 560ms both' : 'none',
-                  opacity: communityVisible ? undefined : 0,
-                }}
-              >
-                Found my roomie!
-              </div>
-              <div className="absolute bottom-2 left-0 bg-white border border-[#E5E7EB] rounded-2xl px-3 py-1.5 text-xs font-semibold text-[#111] shadow-sm"
-                style={{
-                  animation: communityVisible ? 'bubblePop 300ms var(--ease-spring) 720ms both' : 'none',
-                  opacity: communityVisible ? undefined : 0,
-                }}
-              >
-                Best app fr 🇬🇭
-              </div>
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
-                {['W', 'IG', 'X'].map((s) => (
-                  <div key={s} className="social-icon w-8 h-8 rounded-full bg-white border border-[#E5E7EB] flex items-center justify-center text-[9px] font-black text-[#666]">
-                    {s}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── TESTIMONIALS ─────────────────────────────────────────────── */}
-        <section
-          ref={testimonialsRef}
-          className="relative bg-[#F9FAFB] py-16 md:py-28 px-6 border-t border-[#F3F4F6] overflow-hidden"
-          style={sectionRevealStyle(testimonialsVisible)}
-        >
-          {/* Subtle campus photo strip on the right */}
-          <div className="absolute top-0 right-0 bottom-0 w-[280px] hidden xl:block pointer-events-none">
-            <img
-              src="https://commons.wikimedia.org/wiki/Special:FilePath/College_of_Engineering,_KNUST,_Kumasi,_Ghana.JPG?width=400"
-              alt="Accra skyline"
-              className="w-full h-full object-cover object-center opacity-[0.12]"
-            />
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, white 0%, transparent 40%)' }} />
-          </div>
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Reviews</span>
-                  <Star className="w-4 h-4 text-[#0066FF]" />
-                </div>
-                <SparkDoodle visible={testimonialsVisible} delay={200} />
-                <h2 className="text-4xl md:text-5xl font-black text-[#111]">
-                  Satisfied Freshers Are<br />Our Best Ads.
-                </h2>
-              </div>
-              <div className="hidden md:flex items-center gap-2">
-                <button
-                  aria-label="Previous testimonial"
-                  onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }}
-                  className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white hover:border-[#0066FF] hover:text-[#0066FF] flex items-center justify-center text-[#555] transition-all duration-200 hover:scale-110 active:scale-95"
-                >←</button>
-                <button
-                  aria-label="Next testimonial"
-                  onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }}
-                  className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white hover:border-[#0066FF] hover:text-[#0066FF] flex items-center justify-center text-[#555] transition-all duration-200 hover:scale-110 active:scale-95"
-                >→</button>
-              </div>
-            </div>
-
-            {/* Sliding carousel — all 3 cards in DOM, translateX to show active */}
-            <div className="relative overflow-hidden rounded-2xl">
-              <div
-                className="flex"
-                style={{
-                  transform: `translateX(-${activeTestimonial * 100}%)`,
-                  transition: 'transform 500ms cubic-bezier(0.16,1,0.3,1)',
-                }}
-              >
-                {TESTIMONIALS.map((t) => (
-                  <div key={t.name} className="w-full flex-shrink-0 px-1 md:px-3">
-                    <div className="relative overflow-hidden bg-white border border-[#F3F4F6] shadow-sm rounded-2xl p-8 md:p-10 flex flex-col min-h-[220px]">
-                      {/* Watermark quote */}
-                      <div className="absolute top-4 right-6 text-[96px] font-black leading-none pointer-events-none select-none"
-                           style={{ color: '#0066FF', opacity: 0.08 }}>&rdquo;</div>
-                      {/* Visible small quote */}
-                      <div className="text-5xl font-black text-[#0066FF] leading-none mb-4">&ldquo;</div>
-                      <p className="text-[#555] text-base leading-relaxed flex-1 mb-8">{t.quote}</p>
-                      <div className="border-t border-[#E5E7EB] pt-5 flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full bg-[#EFF6FF] flex items-center justify-center text-sm font-bold text-[#0066FF] flex-shrink-0">{t.initials}</div>
-                        <div className="flex-1">
-                          <p className="font-bold text-[#111] text-sm">{t.name}</p>
-                          <p className="text-[#777] text-xs">{t.role}</p>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          {[1,2,3,4,5].map(s => (
-                            <svg key={s} viewBox="0 0 12 12" className="w-3.5 h-3.5" fill={s <= t.stars ? '#FF6B35' : '#E5E7EB'}>
-                              <path d="M6 0.5l1.545 3.13 3.455.502-2.5 2.437.59 3.441L6 8.385 2.91 10.01l.59-3.441L1 4.132l3.455-.502z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Dot indicators + mobile arrows */}
-            <div className="md:hidden mt-6 flex items-center justify-center gap-3">
-              <button aria-label="Previous testimonial" onClick={() => { prevTestimonial(); track('carousel_nav', { direction: 'prev' }); }} className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white flex items-center justify-center text-[#555] hover:border-[#0066FF] hover:text-[#0066FF] transition-all">←</button>
-              {TESTIMONIALS.map((_, i) => (
-                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#D1D5DB] w-2'}`} />
-              ))}
-              <button aria-label="Next testimonial" onClick={() => { nextTestimonial(); track('carousel_nav', { direction: 'next' }); }} className="w-10 h-10 rounded-full border border-[#E5E7EB] bg-white flex items-center justify-center text-[#555] hover:border-[#0066FF] hover:text-[#0066FF] transition-all">→</button>
-            </div>
-            <div className="hidden md:flex mt-6 items-center justify-center gap-2">
-              {TESTIMONIALS.map((_, i) => (
-                <button key={i} onClick={() => setActiveTestimonial(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeTestimonial ? 'bg-[#0066FF] w-6' : 'bg-[#D1D5DB] w-2'}`} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── WAITLIST CTA ─────────────────────────────────────────────── */}
-        <section
-          id="download"
-          ref={ctaRef}
-          className="py-16 md:py-28 px-6 border-t border-[#F3F4F6]"
-          style={{ ...sectionRevealStyle(ctaVisible), background: '#FFFFFF' }}
-        >
-          <div className="max-w-2xl mx-auto text-center">
-            <span className="text-5xl block mb-6">🇬🇭</span>
-            <div className="inline-flex items-center gap-2 bg-[#EFF6FF] border border-[#0066FF]/30 text-[#0066FF] text-xs font-bold px-4 py-2 rounded-full mb-7">
-              <CheckCircle className="w-3.5 h-3.5" strokeWidth={2} />
-              Free forever · No spam · Built by Ghanaians
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-[#111] tracking-tight mb-5 leading-tight">
-              Your campus squad is<br />
-              <span className="text-[#0066FF]">waiting in the app.</span>
+      {/* ── Problem ── */}
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-5xl mx-auto px-5">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-3">
+              Campus communication is broken
             </h2>
-            <p className="text-[#555] text-lg mb-10 max-w-md mx-auto leading-relaxed">
-              Download UNIFY and find your roommate, link with coursemates, and tap into your official campus hub before orientation.
+            <p className="text-gray-500 text-center mb-12 max-w-xl mx-auto">
+              Students miss critical updates. Universities have no reliable channel. Everyone is stuck in noisy, unverified WhatsApp groups.
             </p>
-            <DownloadButtons />
-            <p className="text-xs text-[#777] mt-5">Built for Ghanaian students.</p>
-          </div>
-        </section>
-
-        {/* ── FAQ + CONTACT ─────────────────────────────────────────────── */}
-        <section
-          id="faq"
-          ref={faqRef}
-          className="relative bg-white py-16 md:py-28 px-6 border-t border-[#F3F4F6]"
-          style={sectionRevealStyle(faqVisible)}
-        >
-          <div className="absolute left-0 top-0 bottom-0 pointer-events-none overflow-hidden hidden lg:block" style={{ width: 80 }}>
-            <svg viewBox="0 0 80 600" fill="none" className="h-full w-full opacity-20">
-              <path d="M20,0 C80,80 -10,180 60,280 C100,340 10,420 50,520 C70,570 30,590 20,600"
-                stroke="#FF6B35" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </div>
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-start">
-            <div className="relative">
-              <BlueSwirl className="absolute -left-4 -top-4" drawn={faqVisible} />
-              <div className="flex items-center gap-3 mb-4">
-                <OrangeDoodle drawn={faqVisible} />
-                <MessageCircle className="w-5 h-5 text-[#0066FF]" />
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0066FF]">Get in touch</span>
-              </div>
-              <SparkDoodle visible={faqVisible} delay={200} />
-              <h2 className="text-4xl md:text-5xl font-black text-[#111] leading-tight mb-4">
-                Got A Question<br />For UNIFY?
-              </h2>
-              <p className="text-[#555] text-base leading-relaxed mb-7">
-                We&apos;ll answer everything. Reach out on WhatsApp or email.
-              </p>
-              <div className="flex flex-col gap-3">
-                <a
-                  href="mailto:unify@email.com"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#111] bg-white border border-[#E5E7EB] px-5 py-3 rounded-full hover:border-[#0066FF] hover:text-[#0066FF] transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-                  unify@email.com
-                </a>
-                <a
-                  href="https://wa.me/233000000000?text=Hi%20UNIFY!%20I%20have%20a%20question."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#25D366] border border-[#25D366] px-5 py-3 rounded-full hover:bg-[#1ea855] transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  Message us on WhatsApp
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-[#555] mb-4">Check if your question is already answered:</p>
-              <FAQAccordion items={FAQS_NEW} visible={faqVisible} />
-            </div>
-          </div>
-        </section>
-
-        {/* ── FOOTER ──────────────────────────────────────────────────── */}
-        <footer className="bg-[#0066FF] px-6 pt-14 pb-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-white/20">
-
-              {/* Col 1 — Brand */}
-              <div className="col-span-2 md:col-span-1">
-                <div className="flex items-center gap-2 mb-4">
-                  <img src="/logo-icon.png" alt="UNIFY" className="w-8 h-8 rounded-xl" />
-                  <span className="text-2xl font-black text-white tracking-tight">UNIFY</span>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: '📢',
+                title: 'Announcements get lost',
+                body: 'Lecture halls change, exams reschedule, hostel allocations open — and students find out three days late through a screenshot in a group chat.',
+              },
+              {
+                icon: '🔓',
+                title: 'No verified identity',
+                body: 'Anyone can join a "KNUST students" group. Without verification, there is no way to know who you are actually talking to.',
+              },
+              {
+                icon: '🌊',
+                title: 'Group chats are unmanageable',
+                body: 'A 500-person WhatsApp group floods 400 messages a day. Important notices are buried under memes and off-topic chatter.',
+              },
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={i * 80}>
+                <div className="bg-white rounded-2xl p-6 border border-gray-100">
+                  <div className="text-3xl mb-4">{item.icon}</div>
+                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.body}</p>
                 </div>
-                <p className="text-sm text-white/70 leading-relaxed max-w-[200px]">
-                  We always make our customer happy by providing as many choices as possible.
-                </p>
-              </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              {/* Col 2 — Company */}
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Company</p>
-                <div className="flex flex-col gap-2.5">
+      {/* ── Solution ── */}
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-5">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-3">
+              UNIFY is the official digital layer for your university
+            </h2>
+            <p className="text-gray-500 text-center mb-12 max-w-xl mx-auto">
+              Three things that make a campus actually work online.
+            </p>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: '🪪',
+                color: 'bg-blue-50 text-blue-600',
+                title: 'Verified Campus Identity',
+                body: 'Every student gets a verified profile tied to their institution. No imposters, no ghost accounts — just real students with real credentials.',
+              },
+              {
+                icon: '📣',
+                color: 'bg-orange-50 text-orange-600',
+                title: 'Official Announcements',
+                body: 'Universities push critical notices directly to enrolled students — exam schedules, hostel allocations, academic updates — all in one feed.',
+              },
+              {
+                icon: '🗂️',
+                color: 'bg-green-50 text-green-600',
+                title: 'Structured Communication',
+                body: 'Department channels, year-group boards, and course groups — organised, searchable, and moderated. Not a 500-person free-for-all.',
+              },
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={i * 80}>
+                <div className="bg-gray-50 rounded-2xl p-6">
+                  <div className={`w-12 h-12 rounded-2xl ${item.color} flex items-center justify-center text-2xl mb-4`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works ── */}
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-3xl mx-auto px-5 text-center">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">How it works</h2>
+            <p className="text-gray-500 mb-14">Three steps. No paperwork.</p>
+          </Reveal>
+          <div className="flex flex-col sm:flex-row gap-8 sm:gap-4 items-start justify-center">
+            {[
+              { step: '1', title: 'Download & join', body: 'Sign up with your phone number and select your university.' },
+              { step: '2', title: 'Verify your identity', body: 'Enter your student ID or index number. We confirm enrolment instantly.' },
+              { step: '3', title: 'Stay in the loop', body: 'Follow official channels, get announcements, and connect with classmates — all verified.' },
+            ].map((item, i) => (
+              <Reveal key={item.step} delay={i * 100} className="flex-1">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white font-bold text-lg flex items-center justify-center mb-4">
+                    {item.step}
+                  </div>
+                  {i < 2 && (
+                    <div className="hidden sm:block absolute translate-x-32 -translate-y-6 text-gray-300 text-2xl select-none">→</div>
+                  )}
+                  <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed max-w-xs">{item.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Student / University Split ── */}
+      <section id="universities" className="py-20">
+        <div className="max-w-5xl mx-auto px-5">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-12">
+              Built for both sides of the campus
+            </h2>
+          </Reveal>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <Reveal>
+              <div className="bg-blue-600 text-white rounded-3xl p-8">
+                <div className="text-3xl mb-4">🎓</div>
+                <h3 className="text-xl font-bold mb-3">For Students</h3>
+                <ul className="space-y-3 text-blue-100 text-sm">
                   {[
-                    { label: 'About Us', href: '#' },
-                    { label: 'Features', href: '#features' },
-                    { label: 'Blog', href: '/blog' },
-                    { label: 'FAQ', href: '#faq' },
-                  ].map((l) => (
-                    <a key={l.label} href={l.href} className="footer-link text-sm text-white/70 hover:text-white">{l.label}</a>
+                    'Verified digital student identity',
+                    'Never miss an official announcement',
+                    'Connect with coursemates in your year and department',
+                    'One platform for all your campus communities',
+                    'Free. Always.',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="text-blue-300 mt-0.5">✓</span>
+                      {item}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
-
-              {/* Col 3 — Resources */}
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Resources</p>
-                <div className="flex flex-col gap-2.5">
-                  {['Events', 'Promo', 'Req Demo'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/70 hover:text-white">{l}</a>
+            </Reveal>
+            <Reveal delay={100}>
+              <div className="bg-gray-900 text-white rounded-3xl p-8">
+                <div className="text-3xl mb-4">🏛️</div>
+                <h3 className="text-xl font-bold mb-3">For Universities</h3>
+                <ul className="space-y-3 text-gray-400 text-sm">
+                  {[
+                    'Push announcements directly to enrolled students',
+                    'Verified student directory with enrolment status',
+                    'Department and faculty channel management',
+                    'Engagement analytics — open rates, reach, response',
+                    'Replace fragmented WhatsApp groups with one platform',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="text-gray-500 mt-0.5">✓</span>
+                      {item}
+                    </li>
                   ))}
-                </div>
+                </ul>
+                <a
+                  href="mailto:hello@joinunify.app"
+                  className="inline-block mt-6 bg-white text-gray-900 font-semibold text-sm px-6 py-3 rounded-full hover:bg-gray-100 active:scale-95 transition-all"
+                >
+                  Partner with us →
+                </a>
               </div>
-
-              {/* Col 4 — Support */}
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Support</p>
-                <div className="flex flex-col gap-2.5">
-                  {['Account', 'Support Center', 'Feedback', 'Contact Us', 'Accessibility'].map((l) => (
-                    <a key={l} href="#" className="footer-link text-sm text-white/70 hover:text-white">{l}</a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Col 5 — Contact */}
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-white mb-4">Contact Info</p>
-                <a href="mailto:unify@email.com" className="footer-link text-sm text-white/70 hover:text-white block mb-5">unify@email.com</a>
-                <div className="flex gap-2">
-                  {/* Instagram */}
-                  <a href="#" className="social-icon w-9 h-9 rounded-none bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                    </svg>
-                  </a>
-                  {/* Facebook */}
-                  <a href="#" className="social-icon w-9 h-9 rounded-none bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                  </a>
-                  {/* Twitter/X */}
-                  <a href="#" className="social-icon w-9 h-9 rounded-none bg-white/15 border border-white/25 flex items-center justify-center hover:bg-white/30" aria-label="Twitter">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Bottom bar */}
-            <div className="pt-6 text-center">
-              <p className="text-xs text-white/60">Copyright © 2026 UNIFY. All rights reserved.</p>
-            </div>
-            <div className="mt-5 h-[3px] rounded-none bg-gradient-to-r from-red-600 via-amber-400 to-green-600" />
+            </Reveal>
           </div>
-        </footer>
+        </div>
+      </section>
 
-      </div>{/* end browser wrapper */}
+      {/* ── Waitlist CTA ── */}
+      <section id="waitlist" className="bg-blue-600 py-20">
+        <div className="max-w-2xl mx-auto px-5 text-center">
+          <Reveal>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-3">
+              Be first when we launch at your school
+            </h2>
+            <p className="text-blue-100 mb-10 text-base">
+              Drop your number. We'll text you the moment UNIFY opens on your campus.
+            </p>
+          </Reveal>
+          <Reveal delay={100}>
+            <JoinForm />
+          </Reveal>
+        </div>
+      </section>
 
-      <StickyBar />
-      <ExitModal />
+      {/* ── FAQ ── */}
+      <section className="py-20">
+        <div className="max-w-2xl mx-auto px-5">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-10 text-center">
+              Common questions
+            </h2>
+          </Reveal>
+          <div className="divide-y divide-gray-200 border-t border-gray-200">
+            {FAQS.map((faq, i) => (
+              <Reveal key={i} delay={i * 40}>
+                <FAQItem q={faq.q} a={faq.a} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="bg-gray-50 py-20 text-center">
+        <div className="max-w-xl mx-auto px-5">
+          <Reveal>
+            <p className="text-gray-400 text-sm font-semibold tracking-wide uppercase mb-4">
+              Campus communication, fixed.
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">
+              Your campus deserves better than a WhatsApp group.
+            </h2>
+            <a
+              href="#waitlist"
+              className="inline-block bg-blue-600 text-white font-bold px-10 py-4 rounded-full text-base hover:bg-blue-700 active:scale-95 transition-all"
+            >
+              Join the Waitlist
+            </a>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-gray-100 py-10">
+        <div className="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="font-bold text-blue-600">UNIFY</span>
+          <p className="text-gray-400 text-xs">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
+          <a href="mailto:hello@joinunify.app" className="text-gray-400 text-xs hover:text-gray-700 transition-colors">
+            hello@joinunify.app
+          </a>
+        </div>
+      </footer>
+
     </div>
   );
 }

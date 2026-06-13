@@ -108,15 +108,13 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const { updateProfile, setOnboarded } = useAppStore();
 
-  const googleUser = useAppStore((s) => s.googleUser);
-
   const [step, setStep] = useState(0);
-  // Step 0 — pre-fill name from Google
-  const [fullName, setFullName]   = useState(googleUser?.name ?? '');
+  // Step 0
+  const [fullName, setFullName]   = useState('');
+  const [handle, setHandle]       = useState('');
   const [school, setSchool]       = useState('');
   const [programme, setProgramme] = useState('');
   const [level, setLevel]         = useState('');
-  const [phone, setPhone]         = useState('');
   // Step 1
   const [hometown, setHometown] = useState('');
   const [bio, setBio]           = useState('');
@@ -128,7 +126,7 @@ export default function OnboardingScreen() {
   const [hostels, setHostels]       = useState<string[]>([]);
 
   function canAdvance(): boolean {
-    if (step === 0) return fullName.trim().length > 1 && school !== '' && level !== '';
+    if (step === 0) return fullName.trim().length > 1 && handle.trim().length > 1 && school !== '' && level !== '';
     if (step === 1) return true; // optional
     if (step === 2) return sleep !== '' && cleanliness !== '';
     return false;
@@ -139,13 +137,13 @@ export default function OnboardingScreen() {
       setStep((s) => s + 1);
     } else {
       updateProfile({
-        fullName, displayName: fullName.split(' ')[0], school,
-        programme, level, phone, hometown, bio, sleep: sleep as any,
+        fullName, displayName: handle || fullName.split(' ')[0], school,
+        programme, level, hometown, bio, sleep: sleep as any,
         cleanliness: cleanliness as any, noise: noise as any,
         study: study as any, hostels,
       });
       setOnboarded(true);
-      router.replace('/(main)/home');
+      router.replace('/onboarding/success');
     }
   }
 
@@ -206,6 +204,24 @@ export default function OnboardingScreen() {
             </View>
 
             <View>
+              <Text className="font-body-semi text-sm text-primary mb-2">
+                Username{' '}
+                <Text className="text-tertxt font-body">(your @handle)</Text>
+              </Text>
+              <View className="bg-surface rounded-2xl border border-border flex-row items-center px-5 h-14">
+                <Text className="font-body text-sm text-tertxt">@</Text>
+                <TextInput
+                  placeholder="kwame.acheampong"
+                  placeholderTextColor={COLORS.tertxt}
+                  value={handle}
+                  onChangeText={(t) => setHandle(t.toLowerCase().replace(/\s/g, ''))}
+                  autoCapitalize="none"
+                  className="flex-1 font-body text-sm text-primary ml-1"
+                />
+              </View>
+            </View>
+
+            <View>
               <Text className="font-body-semi text-sm text-primary mb-3">School</Text>
               <SchoolPicker value={school} onChange={setSchool} />
             </View>
@@ -238,21 +254,6 @@ export default function OnboardingScreen() {
                   </Pressable>
                 ))}
               </View>
-            </View>
-
-            <View>
-              <Text className="font-body-semi text-sm text-primary mb-2">
-                Phone{' '}
-                <Text className="text-tertxt font-body">(optional · for account recovery)</Text>
-              </Text>
-              <TextInput
-                placeholder="+233 XX XXX XXXX"
-                placeholderTextColor={COLORS.tertxt}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                className="bg-surface rounded-2xl border border-border px-5 h-14 font-body text-sm text-primary"
-              />
             </View>
           </View>
         )}
