@@ -345,8 +345,8 @@ export default function UnifyLanding() {
           {/* Label */}
           <div className="hero-label inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold px-2 pr-3.5 py-1.5 rounded-full mb-8 tracking-wide uppercase">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-icon.png" alt="" width={22} height={22} className="rounded-lg" />
-            Built for university campuses
+            <img src="/logos/gctu.png" alt="GCTU" width={22} height={22} className="rounded" style={{ objectFit: 'contain' }} />
+            Now launching at GCTU
           </div>
 
           {/* Headline */}
@@ -381,29 +381,19 @@ export default function UnifyLanding() {
             </a>
           </div>
 
-          {/* University logo strip */}
-          <div className="hero-trust mt-10">
-            <p className="text-xs text-gray-400 font-medium tracking-widest uppercase mb-6">Launching at</p>
-            <div className="flex flex-wrap gap-6 justify-center items-end">
-              {[
-                { src: '/logos/knust.jpg', name: 'KNUST'    },
-                { src: '/logos/ug.png',    name: 'UG Legon' },
-                { src: '/logos/ucc.png',   name: 'UCC'      },
-                { src: '/logos/upsa.png',  name: 'UPSA'     },
-                { src: '/logos/uds.jpg',   name: 'UDS'      },
-                { src: '/logos/gctu.png',  name: 'GCTU'     },
-              ].map((s) => (
-                <div key={s.name} className="flex flex-col items-center gap-2 group">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={s.src}
-                    alt={s.name}
-                    style={{ width: 72, height: 72, objectFit: 'contain' }}
-                    className="group-hover:scale-110 transition-transform duration-200 drop-shadow"
-                  />
-                  <span className="text-[10px] font-semibold text-gray-400 tracking-wide">{s.name}</span>
+          {/* GCTU launch badge */}
+          <div className="hero-trust mt-10 flex justify-center">
+            <div className="inline-flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-6 py-4 shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logos/gctu.png" alt="GCTU" style={{ width: 64, height: 64, objectFit: 'contain' }} />
+              <div className="text-left">
+                <p className="font-bold text-gray-900 text-sm">Ghana Communication Technology University</p>
+                <p className="text-gray-400 text-xs mt-0.5">GCTU · Accra, Ghana</p>
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                  <span className="text-green-600 text-[10px] font-semibold">Launch partner</span>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>

@@ -1,237 +1,207 @@
--- ============================================
--- UNIFY DATABASE SCHEMA (Ghanaian ZeeMee)
--- ============================================
+-- ============================================================
+-- UNIFY DATABASE SCHEMA — MVP (GCTU Launch)
+-- ============================================================
+-- Architecture: single-university now, multi-university ready.
+-- University is a first-class entity on every table.
+-- Adding new universities later = insert a row + update RLS.
+-- ============================================================
 
--- 1. UNIVERSITIES TABLE
+
+-- ── 1. UNIVERSITIES ──────────────────────────────────────────
+-- One row per institution. GCTU seeded below.
 CREATE TABLE universities (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    shortcode TEXT UNIQUE,
-    location TEXT NOT NULL,
-    domain_pattern TEXT,
-    logo_url TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name         TEXT NOT NULL,
+  short_name   TEXT NOT NULL,          -- "GCTU"
+  slug         TEXT UNIQUE NOT NULL,   -- "gctu" — used in URLs & lookups
+  domain       TEXT,                   -- "gctu.edu.gh"
+  logo_url     TEXT,
+  accent_color TEXT DEFAULT '#0055FF',
+  is_active    BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 2. STUDENTS TABLE
-CREATE TABLE students (
-    id UUID PRIMARY KEY REFERENCES auth.users(id),
-    university_id UUID REFERENCES universities(id),
-    email TEXT NOT NULL UNIQUE,
-    full_name TEXT NOT NULL,
-    phone_number TEXT,
-    gender TEXT CHECK (gender IN ('male', 'female', 'other')),
-    photo_url TEXT,
-    bio TEXT,
-    level_of_study TEXT,
-    department TEXT,
-    student_id_number TEXT,
-    is_verified BOOLEAN DEFAULT FALSE,
-    verification_code TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+
+-- ── 2. PROFILES ──────────────────────────────────────────────
+-- One row per auth.users account. Created on first sign-in.
+-- Role controls access: student | admin | superadmin
+CREATE TABLE profiles (
+  id             UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  university_id  UUID NOT NULL REFERENCES universities(id),
+  full_name      TEXT,
+  student_id     TEXT,                 -- index number / student ID card number
+  programme      TEXT,
+  level          TEXT CHECK (level IN ('100','200','300','400','pg','staff')),
+  phone          TEXT,
+  avatar_url     TEXT,
+  role           TEXT NOT NULL DEFAULT 'student'
+                   CHECK (role IN ('student','admin','superadmin')),
+  is_verified    BOOLEAN NOT NULL DEFAULT FALSE,
+  verified_at    TIMESTAMPTZ,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE students ENABLE ROW LEVEL SECURITY;
+-- Trigger: auto-update updated_at
+CREATE OR REPLACE FUNCTION handle_updated_at()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.updated_at = NOW(); RETURN NEW; END; $$;
 
--- 3. ROOMMATE QUIZ TABLE (ZeeMee's 10-question quiz)
-CREATE TABLE roommate_quiz (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    student_id UUID REFERENCES students(id) ON DELETE CASCADE,
+CREATE TRIGGER profiles_updated_at
+  BEFORE UPDATE ON profiles
+  FOR EACH ROW EXECUTE PROCEDURE handle_updated_at();
 
-    -- Cleanliness (1-5)
-    cleanliness_level INTEGER CHECK (cleanliness_level BETWEEN 1 AND 5),
 
-    -- Study habits
-    study_habits TEXT CHECK (study_habits IN ('quiet', 'background_music', 'group_study', 'any')),
-
-    -- Sleep schedule
-    sleep_schedule TEXT CHECK (sleep_schedule IN ('early_bird', 'night_owl', 'flexible')),
-    wake_up_time TEXT,
-    bed_time TEXT,
-
-    -- Social preference
-    social_preference TEXT CHECK (social_preference IN ('very_social', 'moderately_social', 'quiet', 'vary')),
-    hang_out_in_room BOOLEAN DEFAULT FALSE,
-
-    -- Noise tolerance
-    noise_tolerance TEXT CHECK (noise_tolerance IN ('very_quiet', 'moderate', 'loud_music_ok', 'any')),
-
-    -- Budget (GHS)
-    budget_range TEXT CHECK (budget_range IN ('budget', 'moderate', 'luxury')),
-    monthly_rent_budget INTEGER,
-
-    -- Pets
-    pet_preference TEXT CHECK (pet_preference IN ('love_pets', 'ok_with_pets', 'no_pets', 'have_pets')),
-    have_allergy_to_pets BOOLEAN DEFAULT FALSE,
-
-    -- Smoking/Drinking
-    smoking_preference TEXT CHECK (smoking_preference IN ('never', 'occasionally', 'regularly')),
-    drinking_preference TEXT CHECK (drinking_preference IN ('never', 'occasionally', 'regularly')),
-
-    -- Sharing
-    sharing_food BOOLEAN DEFAULT FALSE,
-    sharing_utilities BOOLEAN DEFAULT TRUE,
-
-    -- Gender preference
-    gender_preference TEXT CHECK (gender_preference IN ('any', 'same_gender', 'specific')),
-    preferred_gender TEXT CHECK (preferred_gender IN ('male', 'female', 'other')),
-
-    -- AC preference
-    ac_preference TEXT CHECK (ac_preference IN ('need_ac', 'fan_ok', 'no_preference')),
-    internet_importance INTEGER CHECK (internet_importance BETWEEN 1 AND 5),
-
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── 3. ANNOUNCEMENTS ─────────────────────────────────────────
+-- Created by admins, scoped to a university.
+-- is_published controls visibility to students.
+CREATE TABLE announcements (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  university_id  UUID NOT NULL REFERENCES universities(id),
+  author_id      UUID NOT NULL REFERENCES profiles(id),
+  title          TEXT NOT NULL,
+  body           TEXT NOT NULL,
+  category       TEXT NOT NULL DEFAULT 'general'
+                   CHECK (category IN ('academic','events','admin','general','urgent')),
+  is_published   BOOLEAN NOT NULL DEFAULT FALSE,
+  published_at   TIMESTAMPTZ,         -- set when is_published flips to TRUE
+  expires_at     TIMESTAMPTZ,         -- optional: auto-hide after date
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX unique_student_quiz ON roommate_quiz(student_id);
-ALTER TABLE roommate_quiz ENABLE ROW LEVEL SECURITY;
+CREATE TRIGGER announcements_updated_at
+  BEFORE UPDATE ON announcements
+  FOR EACH ROW EXECUTE PROCEDURE handle_updated_at();
 
--- 4. HOUSING LISTINGS TABLE
-CREATE TABLE housing_listings (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    student_id UUID REFERENCES students(id),
-    university_id UUID REFERENCES universities(id),
+-- Trigger: auto-set published_at when announcement is published
+CREATE OR REPLACE FUNCTION handle_announcement_publish()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.is_published = TRUE AND OLD.is_published = FALSE THEN
+    NEW.published_at = NOW();
+  END IF;
+  RETURN NEW;
+END; $$;
 
-    location TEXT NOT NULL,
-    distance_to_campus TEXT,
+CREATE TRIGGER announcements_publish_timestamp
+  BEFORE UPDATE ON announcements
+  FOR EACH ROW EXECUTE PROCEDURE handle_announcement_publish();
 
-    housing_type TEXT CHECK (housing_type IN ('hostel', 'private_room', 'shared_apartment', 'bungalow', 'studio')),
-    room_type TEXT CHECK (room_type IN ('single', 'double', 'triple')),
 
-    rent_amount INTEGER NOT NULL,
-    utilities_included BOOLEAN DEFAULT FALSE,
-    utilities_cost INTEGER,
-
-    has_ac BOOLEAN DEFAULT FALSE,
-    has_fan BOOLEAN DEFAULT TRUE,
-    has_wifi BOOLEAN DEFAULT FALSE,
-    has_water_storage BOOLEAN DEFAULT TRUE,
-    has_security BOOLEAN DEFAULT TRUE,
-    has_parking BOOLEAN DEFAULT FALSE,
-
-    available_from DATE,
-    spots_available INTEGER DEFAULT 1,
-
-    photo_urls TEXT[],
-    description TEXT,
-
-    is_active BOOLEAN DEFAULT TRUE,
-    is_verified BOOLEAN DEFAULT FALSE,
-
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── 4. ANNOUNCEMENT READS ────────────────────────────────────
+-- Tracks which student read which announcement.
+-- Used for engagement analytics (open rates, reach).
+CREATE TABLE announcement_reads (
+  announcement_id UUID NOT NULL REFERENCES announcements(id) ON DELETE CASCADE,
+  user_id         UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  read_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (announcement_id, user_id)
 );
 
-ALTER TABLE housing_listings ENABLE ROW LEVEL SECURITY;
 
--- 5. MATCHES TABLE
-CREATE TABLE matches (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    student_id UUID REFERENCES students(id),
-    matched_student_id UUID REFERENCES students(id),
+-- ============================================================
+-- ROW LEVEL SECURITY
+-- ============================================================
 
-    compatibility_score INTEGER CHECK (compatibility_score BETWEEN 0 AND 100),
+ALTER TABLE universities      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE announcements     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE announcement_reads ENABLE ROW LEVEL SECURITY;
 
-    cleanliness_match BOOLEAN,
-    schedule_match BOOLEAN,
-    budget_match BOOLEAN,
-    style_match BOOLEAN,
 
-    status TEXT CHECK (status IN ('pending', 'accepted', 'rejected', 'expired')),
+-- ── universities: public read ─────────────────────────────────
+CREATE POLICY "universities_public_read" ON universities
+  FOR SELECT USING (TRUE);
 
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+
+-- ── profiles ─────────────────────────────────────────────────
+-- Own profile: full access
+CREATE POLICY "profiles_own_read"   ON profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "profiles_own_insert" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "profiles_own_update" ON profiles FOR UPDATE USING (auth.uid() = id);
+
+-- Admins: read all profiles in their university
+CREATE POLICY "profiles_admin_read" ON profiles FOR SELECT USING (
+  EXISTS (
+    SELECT 1 FROM profiles admin_p
+    WHERE admin_p.id = auth.uid()
+      AND admin_p.role IN ('admin','superadmin')
+      AND admin_p.university_id = profiles.university_id
+  )
 );
 
-CREATE UNIQUE INDEX unique_match_pair ON matches(student_id, matched_student_id);
-ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
-
--- 6. CHATS TABLE
-CREATE TABLE chats (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    match_id UUID REFERENCES matches(id),
-    student_id UUID REFERENCES students(id),
-    message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Admins: update verification status of other students
+CREATE POLICY "profiles_admin_verify" ON profiles FOR UPDATE USING (
+  EXISTS (
+    SELECT 1 FROM profiles admin_p
+    WHERE admin_p.id = auth.uid()
+      AND admin_p.role IN ('admin','superadmin')
+      AND admin_p.university_id = profiles.university_id
+  )
 );
 
-ALTER TABLE chats ENABLE ROW LEVEL SECURITY;
 
--- 7. VERIFICATION REQUESTS TABLE
-CREATE TABLE verification_requests (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    student_id UUID REFERENCES students(id),
-    verification_code TEXT NOT NULL,
-    university_email TEXT NOT NULL,
-    student_id_photo_url TEXT,
-    status TEXT CHECK (status IN ('pending', 'approved', 'rejected')),
-    reviewed_by UUID REFERENCES auth.users(id),
-    reviewed_at TIMESTAMP WITH TIME ZONE,
-    rejection_reason TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- ── announcements ────────────────────────────────────────────
+-- Students: read published announcements from their university
+CREATE POLICY "announcements_student_read" ON announcements FOR SELECT USING (
+  is_published = TRUE
+  AND (expires_at IS NULL OR expires_at > NOW())
+  AND university_id = (
+    SELECT university_id FROM profiles WHERE id = auth.uid()
+  )
 );
 
-ALTER TABLE verification_requests ENABLE ROW LEVEL SECURITY;
+-- Admins: full CRUD on their university's announcements
+CREATE POLICY "announcements_admin_all" ON announcements FOR ALL USING (
+  EXISTS (
+    SELECT 1 FROM profiles p
+    WHERE p.id = auth.uid()
+      AND p.role IN ('admin','superadmin')
+      AND p.university_id = announcements.university_id
+  )
+);
 
--- ============================================
--- INSERT GHANAIAN UNIVERSITIES
--- ============================================
 
-INSERT INTO universities (name, shortcode, location, domain_pattern) VALUES
-    ('University of Ghana', 'ug', 'Accra', 'ug.edu.gh'),
-    ('Kwame Nkrumah University of Science and Technology', 'knust', 'Kumasi', 'knust.edu.gh'),
-    ('University of Cape Coast', 'ucc', 'Cape Coast', 'ucc.edu.gh'),
-    ('University for Development Studies', 'uds', 'Tamale', 'uds.edu.gh'),
-    ('Ashesi University', 'ashesi', 'Berekuso', 'ashesi.org'),
-    ('Ghana Communication Technology University', 'gctu', 'Accra', 'gctu.edu.gh'),
-    ('Central University', 'central', 'Accra', 'central.edu.gh'),
-    ('Christian Service University', 'csu', 'Kumasi', 'csu.edu.gh');
+-- ── announcement_reads ───────────────────────────────────────
+-- Students: insert and read their own reads
+CREATE POLICY "reads_own_insert" ON announcement_reads FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "reads_own_read"   ON announcement_reads FOR SELECT USING (user_id = auth.uid());
 
--- ============================================
--- ROW LEVEL SECURITY POLICIES
--- ============================================
+-- Admins: read all reads for their university's announcements
+CREATE POLICY "reads_admin_read" ON announcement_reads FOR SELECT USING (
+  EXISTS (
+    SELECT 1 FROM profiles p
+    JOIN announcements a ON a.university_id = p.university_id
+    WHERE p.id = auth.uid()
+      AND p.role IN ('admin','superadmin')
+      AND a.id = announcement_reads.announcement_id
+  )
+);
 
--- Students can view/update their own profile
-CREATE POLICY "Students can view own profile" ON students
-    FOR SELECT USING (auth.uid() = id);
 
-CREATE POLICY "Students can update own profile" ON students
-    FOR UPDATE USING (auth.uid() = id);
+-- ============================================================
+-- INDEXES
+-- ============================================================
 
-CREATE POLICY "Students can insert own profile" ON students
-    FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE INDEX idx_profiles_university   ON profiles(university_id);
+CREATE INDEX idx_profiles_role         ON profiles(role);
+CREATE INDEX idx_profiles_verified     ON profiles(is_verified);
+CREATE INDEX idx_announcements_uni     ON announcements(university_id);
+CREATE INDEX idx_announcements_pub     ON announcements(is_published, published_at DESC);
+CREATE INDEX idx_announcements_cat     ON announcements(category);
+CREATE INDEX idx_reads_announcement    ON announcement_reads(announcement_id);
 
--- Quiz policies
-CREATE POLICY "Students can view own quiz" ON roommate_quiz
-    FOR SELECT USING (student_id = auth.uid());
 
-CREATE POLICY "Students can update own quiz" ON roommate_quiz
-    FOR UPDATE USING (student_id = auth.uid());
+-- ============================================================
+-- SEED DATA — GCTU (launch university)
+-- ============================================================
 
-CREATE POLICY "Students can insert own quiz" ON roommate_quiz
-    FOR INSERT WITH CHECK (student_id = auth.uid());
-
--- Housing: Anyone can view active listings
-CREATE POLICY "Anyone can view active listings" ON housing_listings
-    FOR SELECT USING (is_active = TRUE);
-
-CREATE POLICY "Students can manage own listings" ON housing_listings
-    FOR ALL USING (student_id = auth.uid());
-
--- Matches: Students can view their own matches
-CREATE POLICY "Students can view own matches" ON matches
-    FOR SELECT USING (student_id = auth.uid() OR matched_student_id = auth.uid());
-
--- ============================================
--- PERFORMANCE INDEXES
--- ============================================
-
-CREATE INDEX idx_students_university ON students(university_id);
-CREATE INDEX idx_students_is_verified ON students(is_verified);
-CREATE INDEX idx_listings_university ON housing_listings(university_id);
-CREATE INDEX idx_matches_student ON matches(student_id);
+INSERT INTO universities (name, short_name, slug, domain, accent_color) VALUES
+  (
+    'Ghana Communication Technology University',
+    'GCTU',
+    'gctu',
+    'gctu.edu.gh',
+    '#003F8A'   -- GCTU navy blue
+  );
