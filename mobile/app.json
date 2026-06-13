@@ -7,13 +7,20 @@
     "scheme": "unify",
     "platforms": ["ios", "android"],
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#FFFFFF",
+    "backgroundColor": "#0A0A0A",
+    "icon": "./assets/icon.png",
     "splash": {
-      "backgroundColor": "#FFFFFF"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0A0A"
     },
     "android": {
       "package": "gh.unify.app",
-      "backgroundColor": "#FFFFFF"
+      "backgroundColor": "#0A0A0A",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0066FF"
+      }
     },
     "ios": {
       "bundleIdentifier": "gh.unify.app"

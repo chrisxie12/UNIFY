@@ -1083,9 +1083,9 @@ export default function UnifyLanding({ schoolId } = {}) {
           style={heroStyle(0, 'heroFadeDown', '600ms')}
         >
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
+              <img src="/logo-icon.png" alt="UNIFY" className="w-8 h-8 rounded-xl" />
               <span className="text-lg font-black tracking-tight text-[#111]">UNIFY</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-[#FF6B35]/10 border border-[#FF6B35]/25 text-[#FF6B35]">GH</span>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm text-[#666] font-medium">
               <a href="#" className="relative text-[#111] font-semibold" onClick={() => track('nav_click', { page: 'home' })}>
@@ -1478,8 +1478,8 @@ export default function UnifyLanding({ schoolId } = {}) {
                   </div>
                   <p className="text-base font-black text-[#111] mb-4">Your Matches</p>
                   {[
-                    { name: 'Sarah', school: 'UG Legon', quote: '"Clean, quiet"', score: '92%', initials: 'SA', color: '#FF6B35' },
-                    { name: 'Michael', school: 'KNUST', quote: '"Study buddy"', score: '87%', initials: 'MI', color: '#0066FF' },
+                    { name: 'Ama Owusu', school: 'UG Legon', quote: '"Clean, quiet"', score: '92%', initials: 'AO', color: '#FF6B35' },
+                    { name: 'Yaw Boakye', school: 'KNUST', quote: '"Study buddy"', score: '87%', initials: 'YB', color: '#0066FF' },
                   ].map((m) => (
                     <div key={m.name} className="bg-white border-2 border-black shadow-[3px_3px_0px_#000] rounded-none p-3 mb-3.5">
                       <div className="flex items-center gap-2 mb-1.5">
@@ -1926,8 +1926,8 @@ export default function UnifyLanding({ schoolId } = {}) {
               {/* Col 1 — Brand */}
               <div className="col-span-2 md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
+                  <img src="/logo-icon.png" alt="UNIFY" className="w-8 h-8 rounded-xl" />
                   <span className="text-2xl font-black text-[#111] tracking-tight">UNIFY</span>
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-none bg-white/15 border border-white/25 text-[#111]">GH</span>
                 </div>
                 <p className="text-sm text-[#555] leading-relaxed max-w-[200px]">
                   We always make our customer happy by providing as many choices as possible.

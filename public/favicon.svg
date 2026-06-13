@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <defs>
-    <radialGradient id="bg" cx="36%" cy="30%" r="78%">
-      <stop offset="0%"   stop-color="#2060d8"/>
-      <stop offset="48%"  stop-color="#082868"/>
-      <stop offset="100%" stop-color="#020b20"/>
-    </radialGradient>
-    <linearGradient id="mk" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#0052cc"/>
-      <stop offset="100%" stop-color="#38d4f5"/>
-    </linearGradient>
-  </defs>
-  <circle cx="16" cy="16" r="16" fill="url(#bg)"/>
-  <!-- Simplified U mark at 32px -->
-  <path fill="url(#mk)" d="
-    M 7,7 L 7,19 L 14,25 L 17,25 L 17,7 L 14,7 L 14,22 L 9,16 L 9,7 Z
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#0066FF"/>
+  <!-- Left head -->
+  <circle cx="32" cy="23" r="11" fill="white"/>
+  <!-- Right head -->
+  <circle cx="68" cy="23" r="11" fill="white"/>
+  <!-- Left person body: outer arch minus inner channel (evenodd) -->
+  <path fill="white" fill-rule="evenodd" d="
+    M 13 34 C 13 21 51 21 51 34
+    L 51 67 C 51 80 43 88 32 88 C 21 88 13 80 13 67 Z
+    M 24 46 C 24 33 44 33 44 46
+    L 44 67 C 44 74 39 79 32 79 C 25 79 24 74 24 67 Z
   "/>
-  <path fill="url(#mk)" d="
-    M 19,7 L 25,7 L 25,25 L 19,25 L 19,22 L 22,22 L 22,10 L 19,10 Z
+  <!-- Right person body: mirror -->
+  <path fill="white" fill-rule="evenodd" d="
+    M 87 34 C 87 21 49 21 49 34
+    L 49 67 C 49 80 57 88 68 88 C 79 88 87 80 87 67 Z
+    M 76 46 C 76 33 56 33 56 46
+    L 56 67 C 56 74 61 79 68 79 C 75 79 76 74 76 67 Z
   "/>
 </svg>
