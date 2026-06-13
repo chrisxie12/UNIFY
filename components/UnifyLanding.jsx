@@ -381,22 +381,31 @@ export default function UnifyLanding() {
             </a>
           </div>
 
-          {/* Trust badges — university logos */}
-          <div className="hero-trust flex flex-wrap gap-3 justify-center items-center mt-8">
-            {[
-              { slug: 'knust',  name: 'KNUST'    },
-              { slug: 'ug',     name: 'UG Legon' },
-              { slug: 'ucc',    name: 'UCC'      },
-              { slug: 'upsa',   name: 'UPSA'     },
-              { slug: 'uds',    name: 'UDS'      },
-              { slug: 'gctu',   name: 'GCTU'     },
-            ].map((s) => (
-              <div key={s.slug} className="flex items-center gap-1.5 bg-white border border-gray-100 rounded-full pl-1.5 pr-3 py-1 shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/logos/${s.slug}.svg`} alt={s.name} width={22} height={22} className="rounded-full" />
-                <span className="text-xs font-medium text-gray-500">{s.name}</span>
-              </div>
-            ))}
+          {/* University logo strip */}
+          <div className="hero-trust mt-10">
+            <p className="text-xs text-gray-400 font-medium tracking-widest uppercase mb-5">Launching at</p>
+            <div className="flex flex-wrap gap-4 justify-center items-center">
+              {[
+                { slug: 'knust', name: 'KNUST'    },
+                { slug: 'ug',    name: 'UG Legon' },
+                { slug: 'ucc',   name: 'UCC'      },
+                { slug: 'upsa',  name: 'UPSA'     },
+                { slug: 'uds',   name: 'UDS'      },
+                { slug: 'gctu',  name: 'GCTU'     },
+              ].map((s) => (
+                <div key={s.slug} className="flex flex-col items-center gap-2 group">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/logos/${s.slug}.svg`}
+                    alt={s.name}
+                    width={48}
+                    height={48}
+                    className="rounded-xl shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                  />
+                  <span className="text-[10px] font-semibold text-gray-400 tracking-wide">{s.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
