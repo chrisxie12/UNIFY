@@ -143,17 +143,6 @@ const FAQS_NEW = [
 
 // ─── HOOKS ───────────────────────────────────────────────────────────────────
 
-function useSignupCount() {
-  const [count, setCount] = useState(null);
-  useEffect(() => {
-    fetch(`${SHEET_URL}?ts=count`)
-      .then((r) => r.json())
-      .then((d) => { if (d.count > 0) setCount(d.count); })
-      .catch(() => {});
-  }, []);
-  return count;
-}
-
 function useHeroSequence() {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -307,133 +296,19 @@ function CopyButton({ text }) {
   );
 }
 
-function WaitlistForm({ id = 'waitlist-form', defaultSchool = '' }) {
-  const [school, setSchool] = useState(defaultSchool || '');
-  const [phone, setPhone] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const schoolLabel = SCHOOLS.find(s => s.id === school)?.label || school || 'your campus';
-
-  const waShareText = encodeURIComponent(
-    `Bro 👀 I just claimed my spot on UNIFY — Ghana's fresher network. Find roommates, link with coursemates, and join your campus hub before matriculation. It's free fr. https://unify-lake.vercel.app/`
-  );
-
-  function validatePhone(value) {
-    const norm = normalizePhone(value);
-    if (!norm) return 'Please enter a valid Ghana phone number (e.g., 0551234567)';
-    if (!GHANA_PHONE_RE.test(norm)) return 'Please enter a valid Ghana phone number (e.g., 0551234567)';
-    return '';
-  }
-
-  async function handleSubmit(e) {
-    e?.preventDefault();
-    if (!school) { alert('Please select your school first'); return; }
-    const err = validatePhone(phone);
-    if (err) { setPhoneError(err); return; }
-    setPhoneError('');
-    setLoading(true);
-    const norm = normalizePhone(phone);
-    track('cta_click', { school, phone: norm.slice(0, 4) + '******' });
-    console.log('[UNIFY Submit]', { school, phone: norm, timestamp: new Date().toISOString() });
-    try {
-      const params = new URLSearchParams({ phone: norm, school, ts: new Date().toISOString() });
-      await fetch(`${SHEET_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
-    } catch { /* silent */ }
-    setLoading(false);
-    setDone(true);
-  }
-
-  if (done) {
-    return (
-      <div
-        style={{
-          animation: 'revealUp 600ms cubic-bezier(0.16,1,0.3,1) both',
-          background: '#FFFFFF',
-          borderRadius: 0,
-          padding: '40px 32px',
-          boxShadow: '8px 8px 0px #000',
-          border: '2px solid #000',
-          textAlign: 'center',
-          maxWidth: 480,
-          margin: '0 auto',
-        }}
-      >
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔥</div>
-        <h3 style={{ fontSize: 24, fontWeight: 900, color: '#111', marginBottom: 8 }}>You&apos;re in!</h3>
-        <p style={{ color: '#666', fontSize: 15, marginBottom: 4 }}>
-          We&apos;ll text you when your <strong style={{ color: '#111' }}>{schoolLabel}</strong> hub opens.
-        </p>
-        <p style={{ color: '#777', fontSize: 13, marginBottom: 24 }}>Share with your friends so they don&apos;t miss out.</p>
-        <a
-          href={`https://wa.me/?text=${waShareText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => track('whatsapp_click', { type: 'share' })}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: '#25D366', color: 'white', fontWeight: 900, fontSize: 15,
-            borderRadius: 0, padding: '12px 28px', textDecoration: 'none',
-            boxShadow: '4px 4px 0px #000',
-          }}
-        >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          Share on WhatsApp
-        </a>
-      </div>
-    );
-  }
-
+function DownloadButtons({ size = 'lg', center = true }) {
+  const base = size === 'lg'
+    ? 'inline-flex items-center gap-2.5 bg-[#1F2937] hover:bg-[#374151] text-white font-black text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-sm'
+    : 'inline-flex items-center gap-2 bg-[#1F2937] hover:bg-[#374151] text-white font-bold text-xs px-5 py-2.5 rounded-full transition-all duration-200';
   return (
-    <form id={id} onSubmit={handleSubmit} noValidate>
-      {/* School pills */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {SCHOOLS.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            aria-pressed={school === s.id}
-            onClick={() => { setSchool(s.id); track('nav_click', { page: s.id }); }}
-            className={`text-xs font-bold px-4 py-2 rounded-none border transition-all duration-200 ${
-              school === s.id
-                ? 'bg-[#FF6B35] border-[#FF6B35] text-[#111] shadow-[2px_2px_0px_#000]'
-                : 'bg-white text-[#555] border-black/20 hover:border-[#FF6B35] hover:text-[#FF6B35]'
-            }`}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-      {/* Phone input */}
-      <div className="flex flex-col sm:flex-row items-stretch gap-3 max-w-md mx-auto mb-2">
-        <div className="flex-1 flex flex-col">
-          <input
-            type="tel"
-            aria-label="Ghana phone number"
-            placeholder="0551234567"
-            value={phone}
-            onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(''); }}
-            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-            disabled={loading}
-            className="flex-1 bg-white border border-black/20 rounded-none px-5 py-3.5 text-sm text-[#111] placeholder-[#999] outline-none focus:border-[#FF6B35]/60 focus:ring-2 focus:ring-[#FF6B35]/10 transition-all"
-            style={phoneError ? { borderColor: '#dc2626', boxShadow: '0 0 0 2px rgba(220,38,38,0.15)' } : {}}
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-6 py-3.5 rounded-none border-2 border-black shadow-[3px_3px_0px_#000] transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Claiming…' : 'Claim Your Handle →'}
-        </button>
-      </div>
-      {phoneError && (
-        <p className="text-[#dc2626] text-xs text-center mt-1">{phoneError}</p>
-      )}
-    </form>
+    <div className={`flex flex-wrap gap-3 ${center ? 'justify-center' : ''}`}>
+      <a href="#" className={base} onClick={() => track('download_click', { store: 'ios' })}>
+        <span className="text-base">🍎</span> App Store
+      </a>
+      <a href="#" className={base} onClick={() => track('download_click', { store: 'android' })}>
+        <span className="text-base">▶</span> Play Store
+      </a>
+    </div>
   );
 }
 
@@ -499,20 +374,20 @@ function ExitModal() {
             ×
           </button>
           <div className="flex items-start gap-4 mb-6">
-            <span className="text-3xl">👀</span>
+            <span className="text-3xl">📱</span>
             <div>
               <h3 className="text-xl font-black text-[#111] leading-tight mb-1">
-                Hold on — your spot isn&apos;t saved yet.
+                Don&apos;t miss your campus network.
               </h3>
               <p className="text-[#555] text-sm leading-relaxed">
-                Freshers who sign up early get 48-hour priority access before their school hub opens to everyone.
+                Download UNIFY and find your roommate, coursemates, and campus hub before orientation.
               </p>
             </div>
           </div>
           <div className="border-t border-black/20 mb-6" />
-          <WaitlistForm id="exit-form" />
+          <DownloadButtons />
           <p className="text-[11px] text-[#777] mt-4 text-center">
-            🔒 Free forever · No spam · Built by Ghanaians
+            Available for iOS and Android · Built by Ghanaians
           </p>
         </div>
       </div>
@@ -536,14 +411,14 @@ function StickyBar() {
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-5 pt-3">
       <div className="flex items-center gap-2 bg-white border border-black/20 shadow-[4px_4px_0px_#000] rounded-none px-4 py-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-black text-[#111] truncate">Secure your spot 🎓</p>
-          <p className="text-[10px] text-[#666] truncate">Join Ghana&apos;s fresher network — free</p>
+          <p className="text-xs font-black text-[#111] truncate">Download UNIFY 🎓</p>
+          <p className="text-[10px] text-[#666] truncate">Ghana&apos;s campus network — iOS & Android</p>
         </div>
         <a
-          href="#waitlist"
-          className="bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-xs px-4 py-2.5 rounded-none whitespace-nowrap flex-shrink-0 active:scale-95 transition-all shadow-[2px_2px_0px_#000]"
+          href="#download"
+          className="bg-[#1F2937] hover:bg-[#374151] text-white font-black text-xs px-4 py-2.5 rounded-full whitespace-nowrap flex-shrink-0 active:scale-95 transition-all"
         >
-          Claim Handle →
+          Download →
         </a>
         <button
           onClick={() => setDismissed(true)}
@@ -872,8 +747,8 @@ function MobileMenu() {
           <a href="/login" onClick={() => setOpen(false)} className="w-full py-3 rounded-none border border-black/20 text-sm font-semibold text-[#111] hover:border-[#FF6B35] hover:text-[#FF6B35] transition-colors text-center">
             Sign In
           </a>
-          <a href="#waitlist" onClick={() => setOpen(false)} className="w-full py-3 rounded-none bg-[#FF6B35] text-[#111] text-sm font-black text-center hover:bg-[#E55A22] transition-colors">
-            Get Early Access →
+          <a href="#download" onClick={() => setOpen(false)} className="w-full py-3 rounded-full bg-[#1F2937] text-white text-sm font-black text-center hover:bg-[#374151] transition-colors">
+            Download the app →
           </a>
         </div>
       </div>
@@ -884,11 +759,6 @@ function MobileMenu() {
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 
 export default function UnifyLanding({ schoolId } = {}) {
-  const count = useSignupCount();
-  const [faqPhone, setFaqPhone] = useState('');
-  const [faqDone, setFaqDone] = useState(false);
-  const [faqLoading, setFaqLoading] = useState(false);
-
   const heroVisible = useHeroSequence();
 
   const [statsRef, statsVisible] = useScrollReveal(0.05);
@@ -935,21 +805,6 @@ export default function UnifyLanding({ schoolId } = {}) {
       transition: `transform 900ms var(--ease-out-expo) ${delay}ms`,
     };
   }
-
-  const handleFaqSubmit = async (e) => {
-    e.preventDefault();
-    if (!faqPhone.trim()) return;
-    setFaqLoading(true);
-    try {
-      const params = new URLSearchParams({ phone: faqPhone.trim(), school: 'general', ts: new Date().toISOString() });
-      await fetch(`${SHEET_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
-      setFaqDone(true);
-    } catch {
-      // silent
-    } finally {
-      setFaqLoading(false);
-    }
-  };
 
   // Community avatars
   const AVATARS = [
@@ -1201,10 +1056,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                 Sign In
               </a>
               <a
-                href="#waitlist"
-                className="hidden md:inline-flex btn-cta-glow bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] text-xs font-black px-4 py-2.5 rounded-none border-2 border-[#FF6B35] shadow-[2px_2px_0px_#000]"
+                href="#download"
+                className="hidden md:inline-flex bg-[#1F2937] hover:bg-[#374151] text-white text-xs font-black px-4 py-2.5 rounded-full transition-colors"
               >
-                Get Early Access →
+                Download the app
               </a>
               <MobileMenu />
             </div>
@@ -1259,16 +1114,10 @@ export default function UnifyLanding({ schoolId } = {}) {
                 {sc ? sc.sub : "The ZeeMee for Ghana. Find your roommate, link with coursemates, and tap into your official campus hub before matriculation."}
               </p>
 
-              <span className="relative inline-block mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
-                <a
-                  href="#waitlist"
-                  className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-black shadow-[4px_4px_0px_#000]"
-                >
-                  Get Early Access <ArrowRight className="w-4 h-4" />
-                </a>
-                <span className="absolute -top-1 -right-2 w-2 h-2 rounded-none bg-[#FF6B35] opacity-60" />
-                <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-none bg-[#FF6B35] opacity-40" />
-              </span>
+              <div className="mb-7" style={heroStyle(550, 'heroFadeUp', '700ms')}>
+                <DownloadButtons center={false} />
+                <p className="text-xs text-[#777] mt-3 font-medium">Available for iOS and Android. Built for Ghana&apos;s Class of &apos;30.</p>
+              </div>
 
               <div
                 className="flex items-center gap-3 mb-5"
@@ -1292,7 +1141,7 @@ export default function UnifyLanding({ schoolId } = {}) {
                   ))}
                 </div>
                 <p className="text-sm text-[#555]">
-                  <strong className="text-[#111] font-bold">{count ? `${count.toLocaleString()}+` : '12,400+'}</strong> freshers already holding their spot
+                  <strong className="text-[#111] font-bold">12,400+</strong> freshers already inside
                 </p>
               </div>
 
@@ -1473,12 +1322,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             </div>
 
             <div className="text-center mt-12">
-              <a
-                href="#waitlist"
-                className="btn-cta-glow inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-base px-8 py-4 rounded-none border-2 border-black shadow-[4px_4px_0px_#000]"
-              >
-                Start Step 1 — It&apos;s Free <ArrowRight className="w-4 h-4" />
-              </a>
+              <DownloadButtons />
             </div>
           </div>
         </section>
@@ -1941,7 +1785,7 @@ export default function UnifyLanding({ schoolId } = {}) {
 
         {/* ── WAITLIST CTA ─────────────────────────────────────────────── */}
         <section
-          id="waitlist"
+          id="download"
           ref={ctaRef}
           className="py-16 md:py-28 px-6 border-t-2 border-black/20"
           style={{ ...sectionRevealStyle(ctaVisible), background: '#F4F4F0' }}
@@ -1950,17 +1794,17 @@ export default function UnifyLanding({ schoolId } = {}) {
             <span className="text-5xl block mb-6">🇬🇭</span>
             <div className="inline-flex items-center gap-2 bg-[#0066FF]/10 border border-[#0066FF] text-[#0066FF] text-xs font-bold px-4 py-2 rounded-none mb-7">
               <CheckCircle className="w-3.5 h-3.5" strokeWidth={2} />
-              100% free · No subscriptions · Ever
+              Free forever · No spam · Built by Ghanaians
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-[#111] tracking-tight mb-5 leading-tight">
-              Stop hunting for broken<br />
-              <span className="text-[#0066FF]">WhatsApp group links.</span>
+              Your campus squad is<br />
+              <span className="text-[#0066FF]">waiting in the app.</span>
             </h2>
             <p className="text-[#555] text-lg mb-10 max-w-md mx-auto leading-relaxed">
-              Secure your spot in the official Class of &apos;30 network today. Your campus people are already inside.
+              Download UNIFY and find your roommate, link with coursemates, and tap into your official campus hub before orientation.
             </p>
-            <WaitlistForm id="cta-form" defaultSchool={schoolId || ''} />
-            <p className="text-xs text-[#777] mt-5">🔒 Free forever · No spam · Built by Ghanaians in Ghana</p>
+            <DownloadButtons />
+            <p className="text-xs text-[#777] mt-5">Available for iOS and Android. Built for Ghana&apos;s Class of &apos;30.</p>
           </div>
         </section>
 
@@ -1990,32 +1834,26 @@ export default function UnifyLanding({ schoolId } = {}) {
                 Got A Question<br />For UNIFY?
               </h2>
               <p className="text-[#555] text-base leading-relaxed mb-7">
-                We&apos;ll answer everything. Drop your number and we&apos;ll reach out.
+                We&apos;ll answer everything. Reach out on WhatsApp or email.
               </p>
-              {faqDone ? (
-                <div className="flex items-center gap-3 bg-[#0066FF]/10 border border-[#0066FF] rounded-none px-5 py-4">
-                  <CheckCircle className="text-[#0066FF] w-5 h-5 flex-shrink-0" />
-                  <p className="text-[#0066FF] font-bold text-sm">Got it! We&apos;ll reach out soon. 🎉</p>
-                </div>
-              ) : (
-                <form onSubmit={handleFaqSubmit} className="flex items-center bg-white border border-black/20 rounded-none overflow-hidden pr-1.5 focus-within:border-[#FF6B35]/60">
-                  <input
-                    type="text"
-                    value={faqPhone}
-                    onChange={(e) => setFaqPhone(e.target.value)}
-                    placeholder="Your phone number..."
-                    required
-                    className="flex-1 bg-transparent px-5 py-3.5 text-sm text-[#111] placeholder-[#999] outline-none"
-                  />
-                  <button
-                    type="submit"
-                    disabled={faqLoading}
-                    className="bg-[#FF6B35] hover:bg-[#E55A22] text-[#111] font-black text-sm px-5 py-2.5 rounded-none transition-colors disabled:opacity-60 whitespace-nowrap shadow-[2px_2px_0px_#000]"
-                  >
-                    {faqLoading ? '...' : 'Submit'}
-                  </button>
-                </form>
-              )}
+              <div className="flex flex-col gap-3">
+                <a
+                  href="mailto:unify@email.com"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#111] bg-white border border-black/20 px-5 py-3 rounded-none hover:border-[#FF6B35] hover:text-[#FF6B35] transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                  unify@email.com
+                </a>
+                <a
+                  href="https://wa.me/233000000000?text=Hi%20UNIFY!%20I%20have%20a%20question."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#25D366] border border-[#25D366] px-5 py-3 rounded-none hover:bg-[#1ea855] transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  Message us on WhatsApp
+                </a>
+              </div>
             </div>
 
             <div>
