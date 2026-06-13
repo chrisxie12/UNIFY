@@ -383,8 +383,8 @@ export default function UnifyLanding() {
 
           {/* University logo strip */}
           <div className="hero-trust mt-10">
-            <p className="text-xs text-gray-400 font-medium tracking-widest uppercase mb-5">Launching at</p>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
+            <p className="text-xs text-gray-400 font-medium tracking-widest uppercase mb-6">Launching at</p>
+            <div className="flex flex-wrap gap-6 justify-center items-end">
               {[
                 { src: '/logos/knust.jpg', name: 'KNUST'    },
                 { src: '/logos/ug.png',    name: 'UG Legon' },
@@ -398,9 +398,8 @@ export default function UnifyLanding() {
                   <img
                     src={s.src}
                     alt={s.name}
-                    width={56}
-                    height={56}
-                    className="object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-sm"
+                    style={{ width: 72, height: 72, objectFit: 'contain' }}
+                    className="group-hover:scale-110 transition-transform duration-200 drop-shadow"
                   />
                   <span className="text-[10px] font-semibold text-gray-400 tracking-wide">{s.name}</span>
                 </div>
