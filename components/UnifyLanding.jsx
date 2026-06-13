@@ -1306,12 +1306,12 @@ export default function UnifyLanding({ schoolId } = {}) {
                 {
                   num: '1',
                   accent: '#FF6B35',
-                  title: 'Sign Up with Your University',
-                  time: 'Verified in 24 hours',
+                  title: 'Download the App',
+                  time: 'Ready in 30 seconds',
                   points: [
-                    'Enter your university email (UG, KNUST, UCC, etc.)',
-                    'Upload your student ID for verification',
-                    'Get verified in 24 hours',
+                    'Get UNIFY free on the App Store or Google Play',
+                    'Works on any iPhone or Android phone',
+                    'No web sign-up — everything lives in the app',
                   ],
                 },
                 {
@@ -1392,33 +1392,42 @@ export default function UnifyLanding({ schoolId } = {}) {
 
             <div className="grid md:grid-cols-3 gap-10 md:gap-8 justify-items-center">
 
-              {/* ── Phone 1: Registration ── */}
+              {/* ── Phone 1: Home Feed ── */}
               <div
                 className="w-[250px] bg-white border-[3px] border-black shadow-[8px_8px_0px_#000] rounded-none p-3 hover:-translate-y-2 transition-transform duration-200"
                 style={{ transform: 'rotate(-2deg)', ...(mockupsVisible ? { animation: 'revealUp 600ms var(--ease-out-expo) 0ms both' } : { opacity: 0 }) }}
               >
-                <div className="bg-[#F4F4F0] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col">
-                  <div className="flex items-center justify-between mb-5">
+                <div className="bg-[#F4F4F0] border-2 border-black rounded-none p-4 min-h-[400px] flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
                     <span className="text-sm font-black text-[#111]">UNIFY</span>
-                    <span className="text-[8px] font-black px-1.5 py-0.5 border border-black text-[#FF6B35] bg-white">GH</span>
+                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full bg-[#FF6B35] opacity-60" /><span className="relative inline-flex h-2 w-2 bg-[#FF6B35]" /></span>
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555] mb-1.5">Select University</p>
-                  <div className="bg-white border-2 border-black rounded-none px-3 py-2.5 mb-4 flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#111]">UG Legon</span>
-                    <span className="text-[#111] text-xs">▾</span>
+                  <div className="bg-white border-2 border-black rounded-none p-3">
+                    <p className="text-[9px] font-black uppercase tracking-wide text-[#FF6B35] mb-1">Your Hub</p>
+                    <p className="text-xs font-black text-[#111]">KNUST Brunei Hub</p>
+                    <p className="text-[9px] text-[#666]">420 freshers · 12 active now</p>
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555] mb-1.5">Email</p>
-                  <div className="bg-white border-2 border-black rounded-none px-3 py-2.5 mb-2">
-                    <span className="text-xs text-[#777]">name@st.ug.edu.gh</span>
-                  </div>
-                  <p className="text-[9px] text-[#777] mb-5">We'll verify your student ID in 24 hours</p>
-                  <div className="mt-auto">
-                    <div className="bg-[#FF6B35] border-2 border-black shadow-[3px_3px_0px_#000] rounded-none py-3 text-center">
-                      <span className="text-xs font-black text-[#111]">Continue →</span>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#555]">Nearby Matches</p>
+                  {[
+                    { initials: 'AK', name: 'Ama K.', tag: '94% match', color: '#FF6B35' },
+                    { initials: 'YB', name: 'Yaw B.', tag: '89% match', color: '#0066FF' },
+                  ].map((p) => (
+                    <div key={p.initials} className="bg-white border-2 border-black rounded-none p-2.5 flex items-center gap-2">
+                      <div className="w-8 h-8 flex items-center justify-center text-[9px] font-black text-white flex-shrink-0" style={{ background: p.color }}>{p.initials}</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] font-black text-[#111]">{p.name}</p>
+                        <p className="text-[9px] text-[#666]">KNUST · CS</p>
+                      </div>
+                      <span className="text-[8px] font-black px-1.5 py-0.5 bg-[#FF6B35]/10 border border-[#FF6B35]/40 text-[#FF6B35]">{p.tag}</span>
                     </div>
+                  ))}
+                  <div className="mt-auto bg-[#0A0A0A] rounded-none py-2 flex justify-around">
+                    {['🏠','🔍','💞','💬','👤'].map((icon) => (
+                      <span key={icon} className="text-sm">{icon}</span>
+                    ))}
                   </div>
                 </div>
-                <p className="text-center text-xs font-black text-[#111] mt-3 mb-1">1 · Sign Up &amp; Verify</p>
+                <p className="text-center text-xs font-black text-[#111] mt-3 mb-1">1 · Your Home Feed</p>
               </div>
 
               {/* ── Phone 2: Roommate Quiz ── */}
@@ -1510,7 +1519,7 @@ export default function UnifyLanding({ schoolId } = {}) {
             <StatItem num={180} suffix="+" label="Universities" trigger={statsVisible} />
             <StatItem num={12000} label="Freshers Waiting" is12K={true} trigger={statsVisible} />
             <StatItem num={847} suffix="" label="Roommates Matched" trigger={statsVisible} />
-            <StatItem num={4.8} suffix="" label="Overall Rating" isDecimal={true} trigger={statsVisible} />
+            <StatItem num={4.2} suffix="" label="Overall Rating" isDecimal={true} trigger={statsVisible} />
             <StatItem num={15000} label="WhatsApp Members" is12K={true} trigger={statsVisible} />
             <StatItem num={98} suffix="%" label="Would Recommend" trigger={statsVisible} />
           </div>
