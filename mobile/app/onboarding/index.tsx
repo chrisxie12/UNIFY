@@ -108,12 +108,15 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const { updateProfile, setOnboarded } = useAppStore();
 
+  const googleUser = useAppStore((s) => s.googleUser);
+
   const [step, setStep] = useState(0);
-  // Step 0
-  const [fullName, setFullName]   = useState('');
+  // Step 0 — pre-fill name from Google
+  const [fullName, setFullName]   = useState(googleUser?.name ?? '');
   const [school, setSchool]       = useState('');
   const [programme, setProgramme] = useState('');
   const [level, setLevel]         = useState('');
+  const [phone, setPhone]         = useState('');
   // Step 1
   const [hometown, setHometown] = useState('');
   const [bio, setBio]           = useState('');
@@ -137,7 +140,7 @@ export default function OnboardingScreen() {
     } else {
       updateProfile({
         fullName, displayName: fullName.split(' ')[0], school,
-        programme, level, hometown, bio, sleep: sleep as any,
+        programme, level, phone, hometown, bio, sleep: sleep as any,
         cleanliness: cleanliness as any, noise: noise as any,
         study: study as any, hostels,
       });
@@ -235,6 +238,21 @@ export default function OnboardingScreen() {
                   </Pressable>
                 ))}
               </View>
+            </View>
+
+            <View>
+              <Text className="font-body-semi text-sm text-primary mb-2">
+                Phone{' '}
+                <Text className="text-tertxt font-body">(optional · for account recovery)</Text>
+              </Text>
+              <TextInput
+                placeholder="+233 XX XXX XXXX"
+                placeholderTextColor={COLORS.tertxt}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                className="bg-surface rounded-2xl border border-border px-5 h-14 font-body text-sm text-primary"
+              />
             </View>
           </View>
         )}

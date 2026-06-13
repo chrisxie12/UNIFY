@@ -39,8 +39,6 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="auth/index" />
-        <Stack.Screen name="auth/verify" />
         <Stack.Screen name="onboarding/index" />
         <Stack.Screen name="(main)" />
         <Stack.Screen name="chat/[id]" />

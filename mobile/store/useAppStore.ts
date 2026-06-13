@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 
+export interface GoogleUser {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
+}
+
 export interface OnboardingProfile {
   fullName: string;
   displayName: string;
@@ -7,6 +14,7 @@ export interface OnboardingProfile {
   programme: string;
   level: string;
   hometown: string;
+  phone: string;           // optional, for account recovery only
   bio: string;
   sleep: 'early_bird' | 'night_owl' | '';
   cleanliness: 'very_tidy' | 'moderate' | 'relaxed' | '';
@@ -16,23 +24,18 @@ export interface OnboardingProfile {
 }
 
 interface AppState {
-  // Auth flow
-  phone: string;
-  verificationId: string;
-  otpSent: boolean;
+  googleUser: GoogleUser | null;
   verified: boolean;
   onboarded: boolean;
-  // Onboarding
   onboardingStep: number;
   profile: OnboardingProfile;
-  // Actions
-  setPhone: (phone: string) => void;
-  setVerificationId: (id: string) => void;
-  setOtpSent: (v: boolean) => void;
+
+  setGoogleUser: (user: GoogleUser) => void;
   setVerified: (v: boolean) => void;
   setOnboarded: (v: boolean) => void;
   setOnboardingStep: (step: number) => void;
   updateProfile: (data: Partial<OnboardingProfile>) => void;
+  signOut: () => void;
 }
 
 const EMPTY_PROFILE: OnboardingProfile = {
@@ -42,6 +45,7 @@ const EMPTY_PROFILE: OnboardingProfile = {
   programme: '',
   level: '',
   hometown: '',
+  phone: '',
   bio: '',
   sleep: '',
   cleanliness: '',
@@ -51,20 +55,18 @@ const EMPTY_PROFILE: OnboardingProfile = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
-  phone: '',
-  verificationId: '',
-  otpSent: false,
+  googleUser: null,
   verified: false,
   onboarded: false,
   onboardingStep: 0,
   profile: EMPTY_PROFILE,
 
-  setPhone: (phone) => set({ phone }),
-  setVerificationId: (verificationId) => set({ verificationId }),
-  setOtpSent: (otpSent) => set({ otpSent }),
+  setGoogleUser: (googleUser) => set({ googleUser, verified: true }),
   setVerified: (verified) => set({ verified }),
   setOnboarded: (onboarded) => set({ onboarded }),
   setOnboardingStep: (onboardingStep) => set({ onboardingStep }),
   updateProfile: (data) =>
     set((s) => ({ profile: { ...s.profile, ...data } })),
+  signOut: () =>
+    set({ googleUser: null, verified: false, onboarded: false, profile: EMPTY_PROFILE }),
 }));

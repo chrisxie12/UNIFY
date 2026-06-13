@@ -1,6 +1,4 @@
-import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import { initializeAuth, getAuth, getReactNativePersistence, type Auth } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 
 export const firebaseConfig = {
   apiKey:            'AIzaSyB5bC3Aqd_bmsnjc6RefyDb0Fr31PlRj8o',
@@ -11,26 +9,10 @@ export const firebaseConfig = {
   appId:             '1:752669005350:web:88aa322e433e0b4f18f8e7',
 };
 
-// initializeApp is safe at module level.
-// initializeAuth MUST be deferred (called inside getFirebaseAuth) —
-// calling it during Metro's module scan phase crashes with
-// "Component auth has not been registered yet".
-const _app: FirebaseApp =
+export const firebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-let _auth: Auth | null = null;
-
-export function getFirebaseAuth(): Auth {
-  if (_auth) return _auth;
-  try {
-    _auth = initializeAuth(_app, {
-      persistence: getReactNativePersistence(AsyncStorage),
-    });
-  } catch {
-    // initializeAuth throws if auth was already initialised (Fast Refresh).
-    _auth = getAuth(_app);
-  }
-  return _auth;
-}
-
-export const firebaseApp = _app;
+// Get this from: Firebase Console → Authentication → Sign-in method
+// → Google → Web SDK configuration → Web client ID
+export const GOOGLE_WEB_CLIENT_ID =
+  process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
