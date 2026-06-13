@@ -39,9 +39,12 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen name="get-started" />
         <Stack.Screen name="auth/index" />
         <Stack.Screen name="auth/verify" />
         <Stack.Screen name="onboarding/index" />
+        <Stack.Screen name="onboarding/success" options={{ animation: 'fade' }} />
+        <Stack.Screen name="settings" />
         <Stack.Screen name="(main)" />
         <Stack.Screen name="chat/[id]" />
         <Stack.Screen name="hub/[id]" />

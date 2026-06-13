@@ -45,14 +45,14 @@ export default function SplashScreen() {
         {/* CTA */}
         <Animated.View style={{ opacity: btnAnim }} className="mt-14">
           <Pressable
-            onPress={() => router.push('/auth')}
+            onPress={() => router.push('/get-started')}
             className="bg-btn-primary rounded-full py-4 items-center active:opacity-80"
           >
             <Text className="text-white font-body-semi text-base">Get Started</Text>
           </Pressable>
 
           <Pressable
-            onPress={() => router.push('/auth')}
+            onPress={() => router.push('/get-started')}
             className="mt-4 items-center active:opacity-70"
           >
             <Text className="text-tertxt text-sm font-body">

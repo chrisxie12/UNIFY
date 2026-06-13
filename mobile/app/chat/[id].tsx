@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList, KeyboardAvoidingView, Platform,
   Pressable, Text, TextInput, View,
@@ -68,8 +68,9 @@ export default function ChatRoomScreen() {
   const [messages, setMessages] = useState<ChatMessage[]>(
     SEED_MESSAGES[id ?? ''] ?? SEED_MESSAGES['c1'],
   );
-  const [draft, setDraft]   = useState('');
-  const [focused, setFocused] = useState(false);
+  const [draft, setDraft]       = useState('');
+  const [focused, setFocused]   = useState(false);
+  const [typing, setTyping]     = useState(false);
   const listRef = useRef<FlatListType<ChatMessage>>(null);
 
   const send = useCallback(() => {
@@ -78,6 +79,18 @@ export default function ChatRoomScreen() {
     setMessages((prev) => [...prev, { id: `m-${Date.now()}`, mine: true, text, time: nowTime() }]);
     setDraft('');
     requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
+    // Simulate typing reply
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      setMessages((prev) => [...prev, {
+        id: `m-auto-${Date.now()}`,
+        mine: false,
+        text: 'Got it! Let me think about that 😊',
+        time: nowTime(),
+      }]);
+      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
+    }, 2000);
   }, [draft]);
 
   return (
@@ -91,10 +104,13 @@ export default function ChatRoomScreen() {
         >
           <Text className="font-heading text-base text-primary">←</Text>
         </Pressable>
-        <Avatar initials={contact.initials} color={contact.color} size="sm" />
+        <View>
+          <Avatar initials={contact.initials} color={contact.color} size="sm" />
+          <View className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green rounded-full border-2 border-white" />
+        </View>
         <View className="flex-1">
           <Text className="font-body-semi text-sm text-primary">{contact.name}</Text>
-          <Text className="font-body text-[10px] text-tertxt">{contact.school}</Text>
+          <Text className="font-body text-[10px] text-green">Online</Text>
         </View>
         <View className="bg-[#EFF6FF] rounded-full px-3 py-1">
           <Text className="text-blue text-[11px] font-body-semi">{contact.match} Match</Text>
@@ -113,10 +129,22 @@ export default function ChatRoomScreen() {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => <Bubble msg={item} />}
           onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
+          ListFooterComponent={typing ? (
+            <View className="self-start bg-surface rounded-2xl rounded-bl-sm px-4 py-3 mb-3">
+              <Text className="font-body text-secondary text-sm">···</Text>
+            </View>
+          ) : null}
         />
 
         {/* Composer */}
-        <View className="flex-row items-center gap-3 px-5 py-3 border-t border-border bg-white">
+        <View className="flex-row items-center gap-2 px-4 py-3 border-t border-border bg-white">
+          {/* Attachment */}
+          <Pressable
+            className="w-10 h-10 rounded-full bg-surface items-center justify-center active:opacity-70"
+            onPress={() => {}}
+          >
+            <Text className="text-tertxt text-lg">📎</Text>
+          </Pressable>
           <View className="flex-1">
             <TextInput
               placeholder="Message…"
@@ -133,9 +161,10 @@ export default function ChatRoomScreen() {
           <Pressable
             onPress={send}
             accessibilityRole="button"
-            className="bg-blue w-11 h-11 rounded-full items-center justify-center active:opacity-80"
+            disabled={!draft.trim()}
+            className={`w-11 h-11 rounded-full items-center justify-center active:opacity-80 ${draft.trim() ? 'bg-blue' : 'bg-surface'}`}
           >
-            <Text className="text-white text-base">↑</Text>
+            <Text className={`text-base ${draft.trim() ? 'text-white' : 'text-tertxt'}`}>↑</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
