@@ -6,13 +6,13 @@
     "orientation": "portrait",
     "scheme": "unify",
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#F4F4F0",
+    "backgroundColor": "#FFFFFF",
     "splash": {
-      "backgroundColor": "#F4F4F0"
+      "backgroundColor": "#FFFFFF"
     },
     "android": {
       "package": "gh.unify.app",
-      "backgroundColor": "#F4F4F0"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "bundleIdentifier": "gh.unify.app"

@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { NBAvatar, NBBadge, NBButton, NBCard, NBPopBadge } from '../components/NB';
+import { NBAvatar, NBButton, NBCard } from '../components/NB';
 import { useApp } from '../context/AppContext';
 
 interface QuizAnswer {
@@ -21,68 +21,85 @@ export default function ProfileScreen() {
   const { profile, gpa, totalCredits, modules, pendingAssignments } = useApp();
 
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <View className="flex-row items-center gap-3 px-4 pt-2 pb-3">
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <View className="flex-row items-center gap-3 px-5 pt-5 pb-3">
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Go back"
+          className="w-9 h-9 rounded-full bg-surface items-center justify-center active:opacity-75"
         >
-          <Text className="font-heading text-lg text-black">←</Text>
+          <Text className="font-heading text-base text-charcoal">←</Text>
         </Pressable>
-        <Text className="font-display text-[26px] text-black uppercase tracking-tight">
-          My Profile
-        </Text>
+        <Text className="font-heading text-2xl text-charcoal">Profile</Text>
       </View>
 
-      <ScrollView contentContainerClassName="px-4 pb-12">
-        <NBCard className="mb-4 p-4 items-center">
+      <ScrollView
+        contentContainerClassName="px-5 pb-12"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Identity card */}
+        <NBCard className="mb-4 p-6 items-center">
           <View className="mb-3">
             <NBAvatar initials={profile.initials} accent="brand" size="lg" />
           </View>
-          <Text className="font-heading text-xl text-black">{profile.name}</Text>
-          <Text className="font-body-medium text-[13px] text-[#555] mb-2.5">
+          <Text className="font-heading text-xl text-charcoal">
+            {profile.name}
+          </Text>
+          <Text className="font-body-medium text-sm text-muted mb-3">
             {profile.school} · {profile.programme}
           </Text>
           <View className="flex-row gap-2">
-            {profile.verified && <NBBadge label="✓ Verified" accent="verify" />}
-            <NBBadge label={profile.level} accent="action" />
+            {profile.verified && (
+              <View className="bg-[#D1FAE5] rounded-full px-3 py-1">
+                <Text className="text-[#047857] text-[11px] font-body-bold">
+                  ✓ Verified
+                </Text>
+              </View>
+            )}
+            <View className="bg-surface rounded-full px-3 py-1">
+              <Text className="text-charcoal text-[11px] font-body-bold">
+                {profile.level}
+              </Text>
+            </View>
           </View>
         </NBCard>
 
-        {/* Academic metrics — live from the same context the dashboard uses */}
+        {/* Academic metrics */}
         <View className="flex-row gap-3 mb-4">
-          <View className="flex-1 bg-pop-yellow border-4 border-black rounded-none shadow-nb p-3">
-            <Text className="font-display text-[24px] leading-7 text-black">
+          <NBCard className="flex-1 p-4">
+            <Text className="font-display text-[26px] leading-8 text-charcoal">
               {gpa.toFixed(2)}
             </Text>
-            <Text className="font-heading text-[10px] text-black uppercase tracking-wide">
-              GPA
-            </Text>
-          </View>
-          <View className="flex-1 bg-pop-green border-4 border-black rounded-none shadow-nb p-3">
-            <Text className="font-display text-[24px] leading-7 text-black">
+            <Text className="font-body-medium text-xs text-muted mt-0.5">GPA</Text>
+          </NBCard>
+          <NBCard className="flex-1 p-4">
+            <Text className="font-display text-[26px] leading-8 text-charcoal">
               {totalCredits}
             </Text>
-            <Text className="font-heading text-[10px] text-black uppercase tracking-wide">
+            <Text className="font-body-medium text-xs text-muted mt-0.5">
               Credits
             </Text>
-          </View>
-          <View className="flex-1 bg-pop-blue border-4 border-black rounded-none shadow-nb p-3">
-            <Text className="font-display text-[24px] leading-7 text-black">
+          </NBCard>
+          <NBCard className="flex-1 p-4">
+            <Text className="font-display text-[26px] leading-8 text-charcoal">
               {modules.length}
             </Text>
-            <Text className="font-heading text-[10px] text-black uppercase tracking-wide">
+            <Text className="font-body-medium text-xs text-muted mt-0.5">
               Modules
             </Text>
-          </View>
+          </NBCard>
         </View>
 
         {pendingAssignments > 0 && (
-          <View className="flex-row items-center gap-2.5 bg-white border-4 border-black rounded-none shadow-nb-sm px-3 py-2.5 mb-4">
-            <NBPopBadge label={String(pendingAssignments)} accent="red" />
-            <Text className="font-body-bold text-[13px] text-black">
+          <View className="flex-row items-center gap-3 bg-[#FFF1F2] rounded-2xl px-4 py-3 mb-4">
+            <View className="bg-notif rounded-full w-6 h-6 items-center justify-center">
+              <Text className="text-white text-xs font-body-bold">
+                {pendingAssignments}
+              </Text>
+            </View>
+            <Text className="font-body-medium text-sm text-[#B91C1C]">
               {pendingAssignments === 1
                 ? 'assignment still due this week'
                 : 'assignments still due this week'}
@@ -90,26 +107,29 @@ export default function ProfileScreen() {
           </View>
         )}
 
-        <NBCard className="mb-4 p-4">
-          <Text className="font-heading text-sm text-black uppercase tracking-wide mb-3">
+        {/* Roommate quiz */}
+        <NBCard className="mb-5 p-5">
+          <Text className="font-heading text-base text-charcoal mb-3">
             Roommate Quiz
           </Text>
-          {QUIZ_ANSWERS.map((answer) => (
+          {QUIZ_ANSWERS.map((answer, index) => (
             <View
               key={answer.label}
-              className="flex-row justify-between py-1.5 border-b-2 border-black/10"
+              className={`flex-row justify-between py-3 ${
+                index < QUIZ_ANSWERS.length - 1 ? 'border-b border-divider' : ''
+              }`}
             >
-              <Text className="font-body-medium text-[13px] text-[#555]">
+              <Text className="font-body-medium text-[13px] text-muted">
                 {answer.label}
               </Text>
-              <Text className="font-body-bold text-[13px] text-black">
+              <Text className="font-body-bold text-[13px] text-charcoal">
                 {answer.value}
               </Text>
             </View>
           ))}
         </NBCard>
 
-        <NBButton label="Retake Quiz" onPress={() => undefined} />
+        <NBButton label="Retake Quiz" onPress={() => undefined} variant="ghost" />
       </ScrollView>
     </SafeAreaView>
   );

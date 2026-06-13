@@ -10,15 +10,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { NBAvatar, NBBadge, NBButton, NBInput } from '../../components/NB';
+import { NBAvatar, NBInput } from '../../components/NB';
 import type { Chat, ChatMessage } from '../../theme/tokens';
 
-// All contacts keyed by chat id — mirrors the list in chats.tsx.
 const CONTACTS: Readonly<Record<string, Omit<Chat, 'last' | 'time' | 'unread'>>> = {
-  c1: { id: 'c1', name: 'Sarah', school: 'UG Legon', match: '92%', initials: 'SA', accent: 'brand' },
-  c2: { id: 'c2', name: 'Michael', school: 'KNUST', match: '87%', initials: 'MI', accent: 'info' },
-  c3: { id: 'c3', name: 'Efua', school: 'UCC', match: '84%', initials: 'EF', accent: 'success' },
-  c4: { id: 'c4', name: 'Kwame', school: 'UPSA', match: '81%', initials: 'KW', accent: 'alert' },
+  c1: { id: 'c1', name: 'Sarah',   school: 'UG Legon', match: '92%', initials: 'SA', accent: 'brand'   },
+  c2: { id: 'c2', name: 'Michael', school: 'KNUST',    match: '87%', initials: 'MI', accent: 'info'    },
+  c3: { id: 'c3', name: 'Efua',    school: 'UCC',      match: '84%', initials: 'EF', accent: 'success' },
+  c4: { id: 'c4', name: 'Kwame',   school: 'UPSA',     match: '81%', initials: 'KW', accent: 'alert'   },
 };
 
 const SEED_MESSAGES: Readonly<Record<string, readonly ChatMessage[]>> = {
@@ -43,23 +42,27 @@ const SEED_MESSAGES: Readonly<Record<string, readonly ChatMessage[]>> = {
 
 function nowTime(): string {
   const d = new Date();
-  const h = String(d.getHours()).padStart(2, '0');
-  const m = String(d.getMinutes()).padStart(2, '0');
-  return `${h}:${m}`;
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
 function Bubble({ msg }: { msg: ChatMessage }) {
   return (
-    <View className={`max-w-[80%] mb-3 ${msg.mine ? 'self-end' : 'self-start'}`}>
+    <View className={`max-w-[78%] mb-3 ${msg.mine ? 'self-end' : 'self-start'}`}>
       <View
-        className={`border-2 border-black rounded-none shadow-nb-sm px-3 py-2 ${
-          msg.mine ? 'bg-action/20' : 'bg-white'
+        className={`rounded-2xl px-4 py-2.5 ${
+          msg.mine ? 'bg-accent rounded-br-sm' : 'bg-surface rounded-bl-sm'
         }`}
       >
-        <Text className="font-body text-sm leading-5 text-black">{msg.text}</Text>
+        <Text
+          className={`text-sm leading-[20px] font-body ${
+            msg.mine ? 'text-white' : 'text-charcoal'
+          }`}
+        >
+          {msg.text}
+        </Text>
       </View>
       <Text
-        className={`font-body-medium text-[9px] text-[#555] mt-1 ${
+        className={`font-body-medium text-[9px] text-subtle mt-1 ${
           msg.mine ? 'self-end' : 'self-start'
         }`}
       >
@@ -82,56 +85,63 @@ export default function ChatThreadScreen() {
   const send = useCallback(() => {
     const text = draft.trim();
     if (text.length === 0) return;
-    const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      mine: true,
-      text,
-      time: nowTime(),
-    };
-    setMessages((prev) => [...prev, newMsg]);
+    setMessages((prev) => [
+      ...prev,
+      { id: `msg-${Date.now()}`, mine: true, text, time: nowTime() },
+    ]);
     setDraft('');
-    // scroll to the new message after state flushes
-    requestAnimationFrame(() => {
-      listRef.current?.scrollToEnd({ animated: true });
-    });
+    requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
   }, [draft]);
 
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <View className="flex-row items-center gap-3 px-4 py-2.5 border-b-4 border-black bg-parchment">
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      {/* Header */}
+      <View className="flex-row items-center gap-3 px-5 py-3 border-b border-divider bg-white">
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Go back"
+          className="w-9 h-9 rounded-full bg-surface items-center justify-center active:opacity-75"
         >
-          <Text className="font-heading text-lg text-black">←</Text>
+          <Text className="font-heading text-base text-charcoal">←</Text>
         </Pressable>
         <NBAvatar initials={contact.initials} accent={contact.accent} size="sm" />
         <View className="flex-1">
-          <Text className="font-body-bold text-sm text-black">{contact.name}</Text>
-          <Text className="font-body-medium text-[10px] text-[#555]">
+          <Text className="font-body-bold text-sm text-charcoal">
+            {contact.name}
+          </Text>
+          <Text className="font-body-medium text-[10px] text-muted">
             {contact.school}
           </Text>
         </View>
-        <NBBadge label={`${contact.match} Match`} accent="action" />
+        <View className="bg-[#EFF6FF] rounded-full px-3 py-1">
+          <Text className="text-accent text-[11px] font-body-bold">
+            {contact.match} Match
+          </Text>
+        </View>
       </View>
 
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}
       >
         <FlatList
           ref={listRef}
           data={messages as ChatMessage[]}
           keyExtractor={(m: ChatMessage) => m.id}
-          contentContainerClassName="p-4"
-          renderItem={({ item }: { item: ChatMessage }) => <Bubble msg={item} />}
-          onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
+          contentContainerClassName="px-5 py-4"
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }: { item: ChatMessage }) => (
+            <Bubble msg={item} />
+          )}
+          onContentSizeChange={() =>
+            listRef.current?.scrollToEnd({ animated: false })
+          }
         />
 
-        <View className="flex-row items-center gap-2.5 px-4 py-3 border-t-4 border-black bg-parchment">
+        {/* Composer */}
+        <View className="flex-row items-center gap-3 px-5 py-3 border-t border-divider bg-white">
           <View className="flex-1">
             <NBInput
               placeholder="Message…"
@@ -139,7 +149,14 @@ export default function ChatThreadScreen() {
               onChangeText={setDraft}
             />
           </View>
-          <NBButton label="Send" size="sm" onPress={send} />
+          <Pressable
+            onPress={send}
+            accessibilityRole="button"
+            accessibilityLabel="Send message"
+            className="bg-accent w-11 h-11 rounded-full items-center justify-center active:opacity-75"
+          >
+            <Text className="text-white text-base">↑</Text>
+          </Pressable>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

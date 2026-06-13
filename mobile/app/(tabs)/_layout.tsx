@@ -2,32 +2,26 @@ import { Tabs } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { POP_BG, type PopAccent } from '../../theme/tokens';
 
 interface TabConfig {
   readonly label: string;
   readonly glyph: string;
-  readonly accent: PopAccent;
 }
 
 const TAB_CONFIG: Record<string, TabConfig> = {
-  index: { label: 'Dashboard', glyph: '📊', accent: 'yellow' },
-  schedule: { label: 'Schedule', glyph: '🗓', accent: 'blue' },
-  network: { label: 'Network', glyph: '🌐', accent: 'green' },
+  index: { label: 'Dashboard', glyph: '📊' },
+  schedule: { label: 'Schedule', glyph: '🗓' },
+  network: { label: 'Network', glyph: '🌐' },
 };
 
-// Fully custom tab bar: a parchment slab with a thick black top rule.
-// The focused tab becomes a vibrant bordered block sitting on a hard
-// shadow; unfocused tabs keep an invisible border of the same width so
-// nothing shifts when focus moves.
-function NBTabBar({ state, navigation }: BottomTabBarProps) {
+function CleanTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   return (
     <View
-      className="bg-parchment border-t-4 border-black px-3 pt-2.5"
-      style={{ paddingBottom: Math.max(insets.bottom, 10) }}
+      className="bg-white border-t border-divider px-4 pt-3"
+      style={{ paddingBottom: Math.max(insets.bottom, 12) }}
     >
-      <View className="flex-row gap-2.5">
+      <View className="flex-row gap-2">
         {state.routes.map((route, index) => {
           const config = TAB_CONFIG[route.name];
           if (!config) return null;
@@ -51,16 +45,14 @@ function NBTabBar({ state, navigation }: BottomTabBarProps) {
               accessibilityRole="button"
               accessibilityState={focused ? { selected: true } : {}}
               accessibilityLabel={config.label}
-              className={`flex-1 items-center justify-center py-2 rounded-none ${
-                focused
-                  ? `${POP_BG[config.accent]} border-4 border-black shadow-nb-sm`
-                  : 'border-4 border-transparent'
-              }`}
+              className={`flex-1 items-center justify-center py-2 rounded-full ${
+                focused ? 'bg-accent' : ''
+              } active:opacity-75`}
             >
-              <Text className="text-base">{config.glyph}</Text>
+              <Text className="text-base leading-5">{config.glyph}</Text>
               <Text
-                className={`text-[10px] font-heading uppercase tracking-tight ${
-                  focused ? 'text-black' : 'text-[#555]'
+                className={`text-[10px] font-heading mt-0.5 ${
+                  focused ? 'text-white' : 'text-muted'
                 }`}
               >
                 {config.label}
@@ -76,7 +68,7 @@ function NBTabBar({ state, navigation }: BottomTabBarProps) {
 export default function TabsLayout() {
   return (
     <Tabs
-      tabBar={(props: BottomTabBarProps) => <NBTabBar {...props} />}
+      tabBar={(props: BottomTabBarProps) => <CleanTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
       <Tabs.Screen name="index" options={{ title: 'Dashboard' }} />

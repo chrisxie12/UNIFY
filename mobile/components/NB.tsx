@@ -1,36 +1,14 @@
+// Clean Bold component library.
+// White surfaces · soft shadows · charcoal text · pill buttons
+// Blue (#0066FF) active/send only · Orange (#FF6B35) notifications only.
+
 import { Pressable, Text, TextInput, View } from 'react-native';
 import type { ReactNode } from 'react';
-import { COLORS, POP_BG, type AccentColor, type PopAccent } from '../theme/tokens';
+import { COLORS } from '../theme/tokens';
 
-// Hard 0-blur shadows (shadow-nb / shadow-nb-sm / shadow-nb-lg) require the
-// RN new-architecture boxShadow style (RN 0.76+), which NativeWind compiles
-// these utilities down to. The press interaction is purely class-driven:
-// active: shifts the element INTO its shadow footprint and drops the shadow,
-// simulating a physical block being pressed down.
+const PRESS = 'active:opacity-75';
 
-const PRESS_DEPRESSION =
-  'active:translate-x-[4px] active:translate-y-[4px] active:shadow-none';
-const PRESS_DEPRESSION_SM =
-  'active:translate-x-[2px] active:translate-y-[2px] active:shadow-none';
-
-const ACCENT_BG: Record<AccentColor, string> = {
-  action: 'bg-action',
-  brand: 'bg-brand',
-  verify: 'bg-verify',
-  alert: 'bg-alert',
-  info: 'bg-info',
-  success: 'bg-[#16a34a]',
-};
-
-// Black text on neon surfaces, white on the saturated darks — readability first.
-const ACCENT_TEXT: Record<AccentColor, string> = {
-  action: 'text-black',
-  brand: 'text-black',
-  verify: 'text-black',
-  alert: 'text-white',
-  info: 'text-white',
-  success: 'text-white',
-};
+// ─── Card ────────────────────────────────────────────────────────────────────
 
 interface NBCardProps {
   children: ReactNode;
@@ -39,9 +17,7 @@ interface NBCardProps {
 
 export function NBCard({ children, className = '' }: NBCardProps) {
   return (
-    <View
-      className={`bg-white border-4 border-black rounded-none shadow-nb ${className}`}
-    >
+    <View className={`bg-white rounded-2xl shadow-card ${className}`}>
       {children}
     </View>
   );
@@ -51,91 +27,152 @@ interface NBPressCardProps extends NBCardProps {
   onPress: () => void;
 }
 
-export function NBPressCard({ children, onPress, className = '' }: NBPressCardProps) {
+export function NBPressCard({
+  children,
+  onPress,
+  className = '',
+}: NBPressCardProps) {
   return (
     <Pressable
       onPress={onPress}
-      className={`bg-white border-4 border-black rounded-none shadow-nb ${PRESS_DEPRESSION} ${className}`}
+      className={`bg-white rounded-2xl shadow-card ${PRESS} ${className}`}
     >
       {children}
     </Pressable>
   );
 }
 
+// ─── Button ──────────────────────────────────────────────────────────────────
+
+type ButtonVariant = 'primary' | 'accent' | 'ghost';
+
 interface NBButtonProps {
   label: string;
   onPress: () => void;
-  accent?: AccentColor;
+  variant?: ButtonVariant;
   size?: 'sm' | 'md';
   className?: string;
 }
 
+const BUTTON_BG: Record<ButtonVariant, string> = {
+  primary: 'bg-charcoal',
+  accent: 'bg-accent',
+  ghost: 'bg-white border border-divider',
+};
+
+const BUTTON_TEXT: Record<ButtonVariant, string> = {
+  primary: 'text-white',
+  accent: 'text-white',
+  ghost: 'text-charcoal',
+};
+
 export function NBButton({
   label,
   onPress,
-  accent = 'action',
+  variant = 'primary',
   size = 'md',
   className = '',
 }: NBButtonProps) {
-  const pad = size === 'sm' ? 'px-4 py-2' : 'px-6 py-3.5';
-  const text = size === 'sm' ? 'text-xs' : 'text-sm';
+  const pad = size === 'sm' ? 'px-5 py-2' : 'px-7 py-3.5';
+  const textSize = size === 'sm' ? 'text-xs' : 'text-sm';
   return (
     <Pressable
       onPress={onPress}
-      className={`${ACCENT_BG[accent]} border-4 border-black rounded-none shadow-nb items-center justify-center ${pad} ${PRESS_DEPRESSION} ${className}`}
+      className={`${BUTTON_BG[variant]} rounded-full items-center justify-center ${pad} ${PRESS} ${className}`}
     >
-      <Text
-        className={`${ACCENT_TEXT[accent]} ${text} font-heading uppercase tracking-tight`}
-      >
+      <Text className={`${BUTTON_TEXT[variant]} ${textSize} font-heading`}>
         {label}
       </Text>
     </Pressable>
   );
 }
 
+// ─── Badge ───────────────────────────────────────────────────────────────────
+
+type BadgeStyle = 'default' | 'accent' | 'notif' | 'muted' | 'success';
+
 interface NBBadgeProps {
   label: string;
-  accent?: AccentColor;
+  style?: BadgeStyle;
+  // legacy accent prop kept for backward-compat — mapped to style
+  accent?: string;
   className?: string;
 }
 
-export function NBBadge({ label, accent = 'verify', className = '' }: NBBadgeProps) {
+const BADGE_BG: Record<BadgeStyle, string> = {
+  default: 'bg-surface',
+  accent: 'bg-accent',
+  notif: 'bg-notif',
+  muted: 'bg-surface',
+  success: 'bg-[#D1FAE5]',
+};
+
+const BADGE_TEXT: Record<BadgeStyle, string> = {
+  default: 'text-charcoal',
+  accent: 'text-white',
+  notif: 'text-white',
+  muted: 'text-muted',
+  success: 'text-[#047857]',
+};
+
+// Map legacy AccentColor values to the new BadgeStyle so callers that pass
+// accent="verify" / "action" / "alert" / "brand" don't break at runtime.
+function resolveStyle(accent: string | undefined, style: BadgeStyle): BadgeStyle {
+  if (accent === 'verify' || accent === 'success') return 'success';
+  if (accent === 'alert' || accent === 'brand') return 'notif';
+  if (accent === 'action' || accent === 'info') return 'accent';
+  return style;
+}
+
+export function NBBadge({
+  label,
+  style = 'default',
+  accent,
+  className = '',
+}: NBBadgeProps) {
+  const resolved = resolveStyle(accent, style);
   return (
     <View
-      className={`${ACCENT_BG[accent]} border-2 border-black rounded-none shadow-nb-sm px-2 py-0.5 ${className}`}
+      className={`${BADGE_BG[resolved]} rounded-full px-2.5 py-0.5 ${className}`}
     >
-      <Text
-        className={`${ACCENT_TEXT[accent]} text-[10px] font-body-bold uppercase tracking-wide`}
-      >
+      <Text className={`${BADGE_TEXT[resolved]} text-[10px] font-body-bold`}>
         {label}
       </Text>
     </View>
   );
 }
 
+// Pop badge kept as alias — same pill style, uses the badgeStyle system.
 interface NBPopBadgeProps {
   label: string;
-  accent?: PopAccent;
+  accent?: string;
   className?: string;
 }
 
-// Badge in the pop palette (red/blue/green/yellow) — all four surfaces
-// are light, so the text is always black.
 export function NBPopBadge({
   label,
-  accent = 'yellow',
+  accent = 'blue',
   className = '',
 }: NBPopBadgeProps) {
+  // Map slot accent names to badge styles
+  const style: BadgeStyle =
+    accent === 'red'
+      ? 'notif'
+      : accent === 'blue'
+      ? 'accent'
+      : accent === 'green'
+      ? 'success'
+      : 'default';
   return (
-    <View
-      className={`${POP_BG[accent]} border-2 border-black rounded-none shadow-nb-sm px-2 py-0.5 ${className}`}
-    >
-      <Text className="text-black text-[10px] font-body-bold uppercase tracking-wide">
+    <View className={`${BADGE_BG[style]} rounded-full px-2.5 py-0.5 ${className}`}>
+      <Text className={`${BADGE_TEXT[style]} text-[10px] font-body-bold`}>
         {label}
       </Text>
     </View>
   );
 }
+
+// ─── Input ───────────────────────────────────────────────────────────────────
 
 interface NBInputProps {
   placeholder: string;
@@ -155,32 +192,61 @@ export function NBInput({
   return (
     <TextInput
       placeholder={placeholder}
-      placeholderTextColor={COLORS.textMuted}
+      placeholderTextColor={COLORS.subtle}
       value={value}
       onChangeText={onChangeText}
       multiline={multiline}
       textAlignVertical={multiline ? 'top' : 'center'}
-      className={`bg-white border-4 border-black rounded-none shadow-nb-sm px-3.5 py-3 text-sm font-body text-black focus:bg-action/20 focus:shadow-nb ${multiline ? 'min-h-[80px]' : ''} ${className}`}
+      className={`bg-surface rounded-xl px-4 py-3 text-sm font-body text-charcoal ${
+        multiline ? 'min-h-[80px]' : ''
+      } ${className}`}
     />
   );
 }
 
+// ─── Avatar ──────────────────────────────────────────────────────────────────
+
 interface NBAvatarProps {
   initials: string;
-  accent?: AccentColor;
+  accent?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function NBAvatar({ initials, accent = 'brand', size = 'md' }: NBAvatarProps) {
-  const dims = size === 'sm' ? 'w-7 h-7' : size === 'lg' ? 'w-[72px] h-[72px]' : 'w-11 h-11';
-  const text = size === 'sm' ? 'text-[9px]' : size === 'lg' ? 'text-2xl' : 'text-xs';
+// Accent → background color (soft tint rings instead of full-saturated fills).
+const AVATAR_BG: Record<string, string> = {
+  brand: 'bg-[#FFE8DF]',
+  info: 'bg-[#DBEAFE]',
+  success: 'bg-[#D1FAE5]',
+  alert: 'bg-[#FEE2E2]',
+  action: 'bg-[#FEF3C7]',
+  verify: 'bg-[#D1FAE5]',
+};
+
+const AVATAR_TEXT: Record<string, string> = {
+  brand: 'text-notif',
+  info: 'text-accent',
+  success: 'text-[#047857]',
+  alert: 'text-[#B91C1C]',
+  action: 'text-[#B45309]',
+  verify: 'text-[#047857]',
+};
+
+export function NBAvatar({
+  initials,
+  accent = 'brand',
+  size = 'md',
+}: NBAvatarProps) {
+  const dims =
+    size === 'sm' ? 'w-8 h-8' : size === 'lg' ? 'w-[72px] h-[72px]' : 'w-11 h-11';
+  const textSize =
+    size === 'sm' ? 'text-[10px]' : size === 'lg' ? 'text-2xl' : 'text-xs';
+  const bg = AVATAR_BG[accent] ?? 'bg-surface';
+  const fg = AVATAR_TEXT[accent] ?? 'text-charcoal';
   return (
     <View
-      className={`${ACCENT_BG[accent]} ${dims} border-2 border-black rounded-none items-center justify-center`}
+      className={`${bg} ${dims} rounded-full items-center justify-center`}
     >
-      <Text className={`${ACCENT_TEXT[accent]} ${text} font-heading uppercase`}>
-        {initials}
-      </Text>
+      <Text className={`${fg} ${textSize} font-heading`}>{initials}</Text>
     </View>
   );
 }

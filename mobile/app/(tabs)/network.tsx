@@ -58,25 +58,35 @@ interface ThreadCardProps {
 
 function ThreadCard({ thread, onPress }: ThreadCardProps) {
   return (
-    <NBPressCard onPress={onPress} className="mb-4 p-3.5">
-      <View className="flex-row items-center gap-2 mb-2">
-        <NBBadge label={thread.hub} accent="brand" />
-        {thread.verified && <NBBadge label="✓ Verified" accent="verify" />}
-        <Text className="ml-auto text-[11px] font-body-medium text-[#555]">
+    <NBPressCard onPress={onPress} className="mb-3 p-4">
+      <View className="flex-row items-center gap-2 mb-2.5">
+        <View className="bg-[#EFF6FF] rounded-full px-2.5 py-0.5">
+          <Text className="text-accent text-[10px] font-body-bold">
+            {thread.hub}
+          </Text>
+        </View>
+        {thread.verified && (
+          <View className="bg-[#D1FAE5] rounded-full px-2.5 py-0.5">
+            <Text className="text-[#047857] text-[10px] font-body-bold">
+              ✓ Verified
+            </Text>
+          </View>
+        )}
+        <Text className="ml-auto text-[11px] font-body-medium text-muted">
           {thread.time}
         </Text>
       </View>
-      <Text className="text-[15px] leading-[21px] font-body-bold text-black mb-2.5">
+      <Text className="text-[15px] leading-[22px] font-body-bold text-charcoal mb-2.5">
         {thread.title}
       </Text>
       <View className="flex-row items-center gap-3">
-        <Text className="text-xs font-body-medium text-[#555]">
+        <Text className="text-xs font-body-medium text-muted">
           @{thread.author} · {thread.level}
         </Text>
-        <Text className="ml-auto text-xs font-body-bold text-black">
+        <Text className="ml-auto text-xs font-body-bold text-muted">
           ▲ {thread.upvotes}
         </Text>
-        <Text className="text-xs font-body-bold text-black">
+        <Text className="text-xs font-body-bold text-muted">
           💬 {thread.comments}
         </Text>
       </View>
@@ -87,24 +97,27 @@ function ThreadCard({ thread, onPress }: ThreadCardProps) {
 export default function NetworkScreen() {
   const router = useRouter();
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <View className="flex-row items-center px-4 pt-2 pb-3">
-        <Text className="font-display text-[26px] text-black uppercase tracking-tight">
-          Network
-        </Text>
-        <View className="ml-auto">
-          <NBButton
-            label="Chats 💬"
-            size="sm"
-            onPress={() => router.push('/chats')}
-          />
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <View className="flex-row items-end px-5 pt-5 pb-4">
+        <View className="flex-1">
+          <Text className="font-display text-[13px] text-notif uppercase tracking-widest mb-0.5">
+            UNIFY
+          </Text>
+          <Text className="font-heading text-2xl text-charcoal">Network</Text>
         </View>
+        <NBButton
+          label="Chats"
+          size="sm"
+          variant="ghost"
+          onPress={() => router.push('/chats')}
+        />
       </View>
 
       <FlatList
         data={THREADS}
         keyExtractor={(t: Thread) => t.id}
-        contentContainerClassName="px-4 pb-24"
+        contentContainerClassName="px-5 pb-24"
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }: { item: Thread }) => (
           <ThreadCard
             thread={item}
@@ -113,8 +126,8 @@ export default function NetworkScreen() {
         )}
       />
 
-      <View className="absolute bottom-5 right-4">
-        <NBButton label="Post Thread" onPress={() => undefined} />
+      <View className="absolute bottom-6 right-5">
+        <NBButton label="Post" onPress={() => undefined} variant="primary" />
       </View>
     </SafeAreaView>
   );

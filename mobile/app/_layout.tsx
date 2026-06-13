@@ -29,11 +29,11 @@ export default function RootLayout() {
 
   return (
     <AppProvider>
-      <StatusBar style="dark" backgroundColor={COLORS.parchment} />
+      <StatusBar style="dark" backgroundColor={COLORS.white} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: COLORS.parchment },
+          contentStyle: { backgroundColor: COLORS.white },
         }}
       >
         <Stack.Screen name="(tabs)" />

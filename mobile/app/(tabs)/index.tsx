@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { NBAvatar, NBCard, NBInput, NBPopBadge } from '../../components/NB';
-import { POP_BG, type PopAccent } from '../../theme/tokens';
+import { NBAvatar, NBButton, NBCard, NBInput } from '../../components/NB';
 import {
   currentWeekday,
   useApp,
@@ -12,36 +11,46 @@ import {
   type LetterGrade,
 } from '../../context/AppContext';
 
-const GRADE_ACCENT: Record<LetterGrade, PopAccent> = {
-  A: 'green',
-  'B+': 'blue',
-  B: 'blue',
-  'C+': 'yellow',
-  C: 'yellow',
-  'D+': 'red',
-  D: 'red',
-  F: 'red',
+const GRADE_COLOR: Record<LetterGrade, string> = {
+  A: 'text-[#047857]',
+  'B+': 'text-accent',
+  B: 'text-accent',
+  'C+': 'text-[#B45309]',
+  C: 'text-[#B45309]',
+  'D+': 'text-[#B91C1C]',
+  D: 'text-[#B91C1C]',
+  F: 'text-[#B91C1C]',
+};
+
+const GRADE_BG: Record<LetterGrade, string> = {
+  A: 'bg-[#D1FAE5]',
+  'B+': 'bg-[#DBEAFE]',
+  B: 'bg-[#DBEAFE]',
+  'C+': 'bg-[#FEF3C7]',
+  C: 'bg-[#FEF3C7]',
+  'D+': 'bg-[#FEE2E2]',
+  D: 'bg-[#FEE2E2]',
+  F: 'bg-[#FEE2E2]',
 };
 
 const GRADE_OPTIONS: readonly LetterGrade[] = ['A', 'B+', 'B', 'C+', 'C', 'D', 'F'];
 const CREDIT_OPTIONS: readonly number[] = [1, 2, 3, 4];
 
-const PRESS_SM =
-  'active:translate-x-[2px] active:translate-y-[2px] active:shadow-none';
-
 function ModuleRow({ module }: { module: GpaModule }) {
   return (
-    <View className="flex-row items-center gap-3 py-2 border-b-2 border-black/10">
+    <View className="flex-row items-center gap-3 py-3 border-b border-divider">
       <View
-        className={`${POP_BG[GRADE_ACCENT[module.grade]]} w-9 h-9 border-2 border-black items-center justify-center`}
+        className={`${GRADE_BG[module.grade]} w-9 h-9 rounded-full items-center justify-center`}
       >
-        <Text className="font-heading text-xs text-black">{module.grade}</Text>
+        <Text className={`${GRADE_COLOR[module.grade]} text-xs font-heading`}>
+          {module.grade}
+        </Text>
       </View>
       <View className="flex-1">
-        <Text className="font-body-bold text-[13px] text-black">
+        <Text className="font-body-bold text-[13px] text-charcoal">
           {[module.code, module.title].filter(Boolean).join(' · ')}
         </Text>
-        <Text className="font-body-medium text-[11px] text-[#555]">
+        <Text className="font-body-medium text-[11px] text-muted">
           {module.credits} {module.credits === 1 ? 'credit' : 'credits'}
         </Text>
       </View>
@@ -58,37 +67,40 @@ function AssignmentRow({ assignment, onToggle }: AssignmentRowProps) {
   return (
     <Pressable
       onPress={onToggle}
-      className={`flex-row items-center gap-3 bg-white border-4 border-black rounded-none shadow-nb-sm px-3 py-2.5 mb-2.5 ${PRESS_SM}`}
+      className="flex-row items-center gap-3 bg-white rounded-xl shadow-card px-4 py-3.5 mb-2.5 active:opacity-75"
     >
       <View
-        className={`w-6 h-6 border-2 border-black items-center justify-center ${
-          assignment.completed ? 'bg-pop-green' : 'bg-white'
+        className={`w-5 h-5 rounded-full border-2 items-center justify-center ${
+          assignment.completed
+            ? 'bg-accent border-accent'
+            : 'bg-white border-divider'
         }`}
       >
         {assignment.completed && (
-          <Text className="font-body-bold text-xs text-black">✓</Text>
+          <Text className="text-white text-[9px] font-body-bold">✓</Text>
         )}
       </View>
       <View className="flex-1">
         <Text
           className={`font-body-bold text-[13px] ${
-            assignment.completed ? 'text-[#555] line-through' : 'text-black'
+            assignment.completed ? 'text-muted line-through' : 'text-charcoal'
           }`}
         >
           {assignment.title}
         </Text>
-        <Text className="font-body-medium text-[11px] text-[#555]">
+        <Text className="font-body-medium text-[11px] text-muted">
           {assignment.course} · due {assignment.due}
         </Text>
       </View>
-      {!assignment.completed && <NBPopBadge label="Due" accent="red" />}
+      {!assignment.completed && (
+        <View className="bg-[#FEE2E2] rounded-full px-2.5 py-0.5">
+          <Text className="text-[#B91C1C] text-[10px] font-body-bold">Due</Text>
+        </View>
+      )}
     </Pressable>
   );
 }
 
-// Neubrutalist module-metrics form: course name input, grade button
-// matrix, credit stepper row, heavy green submit. Wired straight into
-// the global addModule action so the GPA hero re-derives instantly.
 function ModuleMetricsForm() {
   const { addModule } = useApp();
   const [courseName, setCourseName] = useState<string>('');
@@ -103,7 +115,7 @@ function ModuleMetricsForm() {
       return;
     }
     if (grade === null) {
-      setError('Pick a grade from the matrix.');
+      setError('Pick a grade.');
       return;
     }
     addModule({ title, credits, grade });
@@ -114,12 +126,12 @@ function ModuleMetricsForm() {
   };
 
   return (
-    <NBCard className="p-4 mb-5">
-      <Text className="font-heading text-sm text-black uppercase tracking-wide mb-3">
+    <NBCard className="mb-5 p-5">
+      <Text className="font-heading text-base text-charcoal mb-4">
         Log a Module
       </Text>
 
-      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+      <Text className="font-body-bold text-[11px] text-muted uppercase tracking-wide mb-1.5">
         Course Name
       </Text>
       <NBInput
@@ -132,7 +144,7 @@ function ModuleMetricsForm() {
         className="mb-4"
       />
 
-      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+      <Text className="font-body-bold text-[11px] text-muted uppercase tracking-wide mb-1.5">
         Grade
       </Text>
       <View className="flex-row flex-wrap gap-2 mb-4">
@@ -147,13 +159,15 @@ function ModuleMetricsForm() {
               }}
               accessibilityRole="button"
               accessibilityState={selected ? { selected: true } : {}}
-              className={`min-w-[44px] items-center px-3 py-2 rounded-none ${
-                selected
-                  ? `${POP_BG[GRADE_ACCENT[option]]} border-4 border-black shadow-nb-sm`
-                  : 'bg-white border-2 border-black'
-              } ${PRESS_SM}`}
+              className={`min-w-[44px] items-center px-3 py-2 rounded-full ${
+                selected ? 'bg-accent' : 'bg-surface'
+              } active:opacity-75`}
             >
-              <Text className="font-heading text-[13px] text-black">
+              <Text
+                className={`font-heading text-[13px] ${
+                  selected ? 'text-white' : 'text-charcoal'
+                }`}
+              >
                 {option}
               </Text>
             </Pressable>
@@ -161,10 +175,10 @@ function ModuleMetricsForm() {
         })}
       </View>
 
-      <Text className="font-body-bold text-[11px] text-black uppercase tracking-wide mb-1.5">
+      <Text className="font-body-bold text-[11px] text-muted uppercase tracking-wide mb-1.5">
         Credits
       </Text>
-      <View className="flex-row gap-2 mb-4">
+      <View className="flex-row gap-2 mb-5">
         {CREDIT_OPTIONS.map((option) => {
           const selected = option === credits;
           return (
@@ -173,13 +187,15 @@ function ModuleMetricsForm() {
               onPress={() => setCredits(option)}
               accessibilityRole="button"
               accessibilityState={selected ? { selected: true } : {}}
-              className={`flex-1 items-center py-2 rounded-none ${
-                selected
-                  ? 'bg-pop-blue border-4 border-black shadow-nb-sm'
-                  : 'bg-white border-2 border-black'
-              } ${PRESS_SM}`}
+              className={`flex-1 items-center py-2.5 rounded-full ${
+                selected ? 'bg-charcoal' : 'bg-surface'
+              } active:opacity-75`}
             >
-              <Text className="font-heading text-[13px] text-black">
+              <Text
+                className={`font-heading text-[13px] ${
+                  selected ? 'text-white' : 'text-charcoal'
+                }`}
+              >
                 {option}
               </Text>
             </Pressable>
@@ -188,20 +204,14 @@ function ModuleMetricsForm() {
       </View>
 
       {error !== null && (
-        <View className="bg-pop-red border-2 border-black rounded-none px-3 py-2 mb-3.5">
-          <Text className="font-body-bold text-xs text-black">⚠ {error}</Text>
+        <View className="bg-[#FEE2E2] rounded-lg px-3 py-2 mb-4">
+          <Text className="font-body-medium text-xs text-[#B91C1C]">
+            {error}
+          </Text>
         </View>
       )}
 
-      <Pressable
-        onPress={submit}
-        accessibilityRole="button"
-        className="bg-pop-green border-4 border-black rounded-none shadow-nb items-center py-3.5 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
-      >
-        <Text className="font-heading text-sm text-black uppercase tracking-tight">
-          Log Module Metrics
-        </Text>
-      </Pressable>
+      <NBButton label="Save Module" onPress={submit} variant="accent" />
     </NBCard>
   );
 }
@@ -224,82 +234,88 @@ export default function DashboardScreen() {
     today === null ? 0 : timetable.filter((slot) => slot.day === today).length;
 
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <ScrollView contentContainerClassName="p-4 pb-8">
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <ScrollView
+        contentContainerClassName="px-5 pb-10"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
-        <View className="flex-row items-center mb-4">
-          <View>
-            <Text className="font-display text-[26px] text-black uppercase tracking-tight">
-              Dashboard
+        <View className="flex-row items-center pt-5 pb-6">
+          <View className="flex-1">
+            <Text className="font-display text-[13px] text-notif uppercase tracking-widest mb-0.5">
+              UNIFY
             </Text>
-            <Text className="font-body-medium text-xs text-[#555]">
+            <Text className="font-heading text-2xl text-charcoal">
+              Good morning, {profile.name.split(' ')[0]}
+            </Text>
+            <Text className="font-body-medium text-sm text-muted">
               {profile.school} · {profile.level}
             </Text>
           </View>
           <Pressable
             onPress={() => router.push('/profile')}
-            className="ml-auto"
             accessibilityRole="button"
             accessibilityLabel="Open profile"
+            className="active:opacity-75"
           >
-            <NBAvatar initials={profile.initials} accent="brand" />
+            <NBAvatar initials={profile.initials} accent="brand" size="md" />
           </Pressable>
         </View>
 
-        {/* GPA hero — re-derives live whenever a module is logged */}
-        <View className="bg-pop-yellow border-4 border-black rounded-none shadow-nb p-4 mb-4">
-          <Text className="font-heading text-xs text-black uppercase tracking-wide mb-1">
+        {/* GPA hero */}
+        <NBCard className="p-5 mb-4">
+          <Text className="font-body-medium text-sm text-muted mb-1">
             Cumulative GPA
           </Text>
-          <View className="flex-row items-end gap-2">
-            <Text className="font-display text-[44px] leading-[48px] text-black">
+          <View className="flex-row items-end gap-1.5 mb-2">
+            <Text className="font-display text-[48px] leading-[52px] text-charcoal">
               {gpa.toFixed(2)}
             </Text>
-            <Text className="font-body-bold text-sm text-black mb-1.5">
+            <Text className="font-body-medium text-base text-muted mb-2">
               / 4.00
             </Text>
           </View>
-          <Text className="font-body-medium text-xs text-black mt-1">
+          <Text className="font-body-medium text-xs text-muted">
             {modules.length} modules · {totalCredits} credits this semester
           </Text>
-        </View>
+        </NBCard>
 
         {/* Quick stats */}
         <View className="flex-row gap-3 mb-5">
-          <View className="flex-1 bg-pop-red border-4 border-black rounded-none shadow-nb p-3">
-            <Text className="font-display text-[28px] leading-8 text-black">
+          <NBCard className="flex-1 p-4">
+            <Text className="font-display text-[28px] leading-8 text-[#B91C1C]">
               {pendingAssignments}
             </Text>
-            <Text className="font-heading text-[10px] text-black uppercase tracking-wide">
-              Assignments Due
+            <Text className="font-body-medium text-xs text-muted mt-0.5">
+              Due
             </Text>
-          </View>
-          <View className="flex-1 bg-pop-blue border-4 border-black rounded-none shadow-nb p-3">
-            <Text className="font-display text-[28px] leading-8 text-black">
+          </NBCard>
+          <NBCard className="flex-1 p-4">
+            <Text className="font-display text-[28px] leading-8 text-accent">
               {classesToday}
             </Text>
-            <Text className="font-heading text-[10px] text-black uppercase tracking-wide">
-              Classes Today
+            <Text className="font-body-medium text-xs text-muted mt-0.5">
+              Classes today
             </Text>
-          </View>
+          </NBCard>
         </View>
 
-        {/* Module metrics form */}
+        {/* Module form */}
         <ModuleMetricsForm />
 
         {/* Modules */}
-        <Text className="font-heading text-sm text-black uppercase tracking-wide mb-2.5">
-          Current Modules
+        <Text className="font-heading text-base text-charcoal mb-3">
+          Modules
         </Text>
-        <NBCard className="px-3.5 py-1.5 mb-5">
+        <NBCard className="px-4 mb-5">
           {modules.map((module) => (
             <ModuleRow key={module.id} module={module} />
           ))}
         </NBCard>
 
         {/* Assignments */}
-        <Text className="font-heading text-sm text-black uppercase tracking-wide mb-2.5">
-          Assignment Schedule
+        <Text className="font-heading text-base text-charcoal mb-3">
+          Assignments
         </Text>
         {assignments.map((assignment) => (
           <AssignmentRow

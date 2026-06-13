@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NBCard, NBPopBadge } from '../../components/NB';
-import { POP_BG } from '../../theme/tokens';
+import { NBCard } from '../../components/NB';
+import { SLOT_BG, SLOT_FG } from '../../theme/tokens';
 import {
   currentWeekday,
   useApp,
@@ -22,9 +22,6 @@ function toMinutes(time: string): number {
   return hours * 60 + minutes;
 }
 
-// Two slots conflict when their intervals overlap, or when they start
-// inside the same hour window (< 60 min apart) — both make the second
-// class unreachable in practice.
 function findConflicts(slots: readonly TimetableSlot[]): ConflictPair[] {
   const pairs: ConflictPair[] = [];
   for (let i = 0; i < slots.length; i += 1) {
@@ -51,45 +48,58 @@ interface SlotCardProps {
 
 function SlotCard({ slot, conflicted }: SlotCardProps) {
   return (
-    <View className="flex-row bg-white border-4 border-black rounded-none shadow-nb mb-3">
+    <NBCard className="flex-row mb-3 overflow-hidden">
+      {/* Coloured time column */}
       <View
-        className={`${POP_BG[slot.accent]} w-[76px] items-center justify-center border-r-4 border-black py-3`}
+        className={`${SLOT_BG[slot.accent]} w-[4px] rounded-l-2xl`}
+      />
+      <View
+        className={`${SLOT_BG[slot.accent]} w-[72px] items-center justify-center py-4`}
       >
-        <Text className="font-heading text-[13px] text-black">{slot.start}</Text>
-        <Text className="font-body-bold text-[10px] text-black">—</Text>
-        <Text className="font-heading text-[13px] text-black">{slot.end}</Text>
+        <Text className={`${SLOT_FG[slot.accent]} font-heading text-[12px]`}>
+          {slot.start}
+        </Text>
+        <Text className={`${SLOT_FG[slot.accent]} font-body-medium text-[10px] my-0.5`}>
+          –
+        </Text>
+        <Text className={`${SLOT_FG[slot.accent]} font-heading text-[12px]`}>
+          {slot.end}
+        </Text>
       </View>
-      <View className="flex-1 p-3 justify-center">
-        <Text className="font-body-bold text-[13.5px] text-black mb-1.5">
+      <View className="flex-1 px-4 py-4 justify-center">
+        <Text className="font-body-bold text-[13.5px] text-charcoal mb-1">
           {slot.course}
         </Text>
-        <View className="flex-row gap-2">
-          <NBPopBadge label={slot.room} accent={slot.accent} />
-          {conflicted && <NBPopBadge label="⚠ Conflict" accent="red" />}
+        <View className="flex-row items-center gap-2">
+          <Text className="font-body-medium text-xs text-muted">{slot.room}</Text>
+          {conflicted && (
+            <View className="bg-[#FEE2E2] rounded-full px-2 py-0.5">
+              <Text className="text-[#B91C1C] text-[10px] font-body-bold">
+                ⚠ Conflict
+              </Text>
+            </View>
+          )}
         </View>
       </View>
-    </View>
+    </NBCard>
   );
 }
 
-function ConflictWarning({ conflicts }: { conflicts: readonly ConflictPair[] }) {
+function ConflictAlert({ conflicts }: { conflicts: readonly ConflictPair[] }) {
   return (
-    <View className="bg-pop-red border-4 border-black rounded-none shadow-nb p-3.5 mb-4">
-      <Text className="font-display text-[15px] text-black uppercase tracking-tight mb-1.5">
-        ⚠ Schedule Overlap Detected
+    <View className="bg-[#FFF1F2] rounded-2xl p-4 mb-4 shadow-card">
+      <Text className="font-heading text-sm text-[#B91C1C] mb-1.5">
+        Schedule Conflict Detected
       </Text>
       {conflicts.map((pair) => (
         <Text
           key={`${pair.a.id}-${pair.b.id}`}
-          className="font-body-bold text-xs text-black leading-[18px]"
+          className="font-body-medium text-xs text-[#B91C1C] leading-5"
         >
-          {pair.a.course} ({pair.a.start}–{pair.a.end}) clashes with{' '}
+          {pair.a.course} ({pair.a.start}–{pair.a.end}) overlaps with{' '}
           {pair.b.course} ({pair.b.start}–{pair.b.end})
         </Text>
       ))}
-      <Text className="font-body-medium text-[11px] text-black mt-1.5">
-        Move one of these slots — you can't be in two rooms at once.
-      </Text>
     </View>
   );
 }
@@ -113,19 +123,19 @@ export default function ScheduleScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <View className="px-4 pt-2 pb-3">
-        <Text className="font-display text-[26px] text-black uppercase tracking-tight">
-          Timetable
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <View className="px-5 pt-5 pb-4">
+        <Text className="font-display text-[13px] text-notif uppercase tracking-widest mb-0.5">
+          UNIFY
         </Text>
-        <Text className="font-body-medium text-xs text-[#555]">
+        <Text className="font-heading text-2xl text-charcoal">Timetable</Text>
+        <Text className="font-body-medium text-sm text-muted">
           Semester 2 · Week 8
         </Text>
       </View>
 
-      {/* Day selector: active day = aggressive blue block, the rest stay
-          plain text so the focused slab dominates the strip */}
-      <View className="flex-row gap-2 px-4 mb-4">
+      {/* Day selector */}
+      <View className="flex-row gap-1.5 px-5 mb-5">
         {WEEKDAYS.map((weekday) => {
           const selected = weekday === day;
           return (
@@ -134,15 +144,13 @@ export default function ScheduleScreen() {
               onPress={() => setDay(weekday)}
               accessibilityRole="button"
               accessibilityState={selected ? { selected: true } : {}}
-              className={`flex-1 items-center py-2.5 rounded-none ${
-                selected
-                  ? 'bg-pop-blue border-4 border-black shadow-nb active:translate-x-[2px] active:translate-y-[2px] active:shadow-none'
-                  : 'border-4 border-transparent'
-              }`}
+              className={`flex-1 items-center py-2.5 rounded-full ${
+                selected ? 'bg-accent' : 'bg-surface'
+              } active:opacity-75`}
             >
               <Text
-                className={`font-heading text-xs uppercase ${
-                  selected ? 'text-black' : 'text-[#555]'
+                className={`font-heading text-[11px] ${
+                  selected ? 'text-white' : 'text-muted'
                 }`}
               >
                 {weekday}
@@ -152,16 +160,19 @@ export default function ScheduleScreen() {
         })}
       </View>
 
-      <ScrollView contentContainerClassName="px-4 pb-8">
-        {conflicts.length > 0 && <ConflictWarning conflicts={conflicts} />}
+      <ScrollView
+        contentContainerClassName="px-5 pb-10"
+        showsVerticalScrollIndicator={false}
+      >
+        {conflicts.length > 0 && <ConflictAlert conflicts={conflicts} />}
 
         {slots.length === 0 ? (
-          <NBCard className="p-5 items-center">
-            <Text className="font-heading text-base text-black uppercase mb-1">
+          <NBCard className="p-6 items-center">
+            <Text className="font-heading text-base text-charcoal mb-1">
               No Classes
             </Text>
-            <Text className="font-body-medium text-[13px] text-[#555]">
-              Free day — library or touch grass 📚
+            <Text className="font-body-medium text-sm text-muted">
+              Free day — use it well 📚
             </Text>
           </NBCard>
         ) : (

@@ -1,8 +1,14 @@
 import { useCallback, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, View, type ScrollView as ScrollViewType } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+  type ScrollView as ScrollViewType,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { NBBadge, NBButton, NBCard, NBInput, NBPopBadge } from '../../components/NB';
+import { NBButton, NBCard, NBInput } from '../../components/NB';
 import type { Thread, ThreadComment } from '../../theme/tokens';
 
 interface ThreadPost extends Thread {
@@ -32,7 +38,7 @@ const THREAD_DATA: Readonly<Record<string, ThreadPost>> = {
     id: 't4', hub: 'UPSA', author: 'yaw.mensah', level: 'Level 100', verified: true,
     upvotes: 51, comments: 9, time: '9h',
     title: 'Study group for Business Math — 12 spots left',
-    body: 'We are running a structured study group for Business Math 101. Sessions are twice a week, library room 4. DM to join — first session is Friday.',
+    body: 'Running a structured study group for Business Math 101. Sessions twice a week, library room 4. DM to join.',
   },
 };
 
@@ -67,47 +73,47 @@ interface CommentCardProps {
 }
 
 function CommentCard({ comment, upvoted, onUpvote, onReply }: CommentCardProps) {
+  const count = comment.upvotes + (upvoted ? 1 : 0);
   return (
     <View className="mb-3" style={{ marginLeft: comment.depth * 20 }}>
-      <View className="bg-white border-2 border-black rounded-none shadow-nb-sm p-3">
-        <View className="flex-row items-center gap-2 mb-1.5 flex-wrap">
-          <Text className="font-body-bold text-xs text-black">
+      <NBCard className="p-4">
+        <View className="flex-row items-center gap-2 mb-2 flex-wrap">
+          <Text className="font-body-bold text-xs text-charcoal">
             @{comment.author}
           </Text>
-          <NBBadge label={comment.level} accent="action" />
-          {comment.verified && <NBBadge label="✓" accent="verify" />}
+          <View className="bg-surface rounded-full px-2 py-0.5">
+            <Text className="text-muted text-[10px] font-body-bold">
+              {comment.level}
+            </Text>
+          </View>
+          {comment.verified && (
+            <View className="bg-[#D1FAE5] rounded-full px-2 py-0.5">
+              <Text className="text-[#047857] text-[10px] font-body-bold">✓</Text>
+            </View>
+          )}
         </View>
-        <Text className="font-body text-[13.5px] leading-[21px] text-black mb-2">
+        <Text className="font-body text-[13.5px] leading-[21px] text-charcoal mb-3">
           {comment.text}
         </Text>
-        <View className="flex-row gap-3.5 items-center">
+        <View className="flex-row gap-4 items-center">
           <Pressable
             onPress={onUpvote}
             accessibilityRole="button"
-            accessibilityLabel={upvoted ? 'Remove upvote' : 'Upvote'}
-            className="flex-row items-center gap-1"
+            className="flex-row items-center gap-1.5 active:opacity-75"
           >
-            <Text className={`font-body-bold text-xs ${upvoted ? 'text-brand' : 'text-black'}`}>
-              ▲ {comment.upvotes + (upvoted ? 1 : 0)}
+            <Text
+              className={`font-body-bold text-xs ${
+                upvoted ? 'text-accent' : 'text-muted'
+              }`}
+            >
+              ▲ {count}
             </Text>
           </Pressable>
-          <Pressable
-            onPress={onReply}
-            accessibilityRole="button"
-            accessibilityLabel={`Reply to ${comment.author}`}
-          >
-            <Text className="font-body-bold text-xs text-[#555] uppercase">
-              Reply
-            </Text>
+          <Pressable onPress={onReply} accessibilityRole="button" className="active:opacity-75">
+            <Text className="font-body-medium text-xs text-muted">Reply</Text>
           </Pressable>
-          {comment.depth === 0 && (
-            <NBPopBadge
-              label={`${comment.upvotes + (upvoted ? 1 : 0) >= 20 ? 'Hot' : 'New'}`}
-              accent={comment.upvotes + (upvoted ? 1 : 0) >= 20 ? 'red' : 'blue'}
-            />
-          )}
         </View>
-      </View>
+      </NBCard>
     </View>
   );
 }
@@ -131,11 +137,8 @@ export default function ThreadDetailScreen() {
   const toggleCommentUpvote = useCallback((commentId: string) => {
     setUpvotedCommentIds((prev) => {
       const next = new Set(prev);
-      if (next.has(commentId)) {
-        next.delete(commentId);
-      } else {
-        next.add(commentId);
-      }
+      if (next.has(commentId)) next.delete(commentId);
+      else next.add(commentId);
       return next;
     });
   }, []);
@@ -149,84 +152,102 @@ export default function ThreadDetailScreen() {
   const postComment = useCallback(() => {
     const text = replyText.trim();
     if (text.length === 0) return;
-    const newComment: ThreadComment = {
-      id: `c-${Date.now()}`,
-      author: 'kwame_eng',
-      level: 'Level 100',
-      verified: true,
-      upvotes: 0,
-      depth: replyingTo !== null ? 1 : 0,
-      text,
-    };
-    setComments((prev) => [...prev, newComment]);
+    setComments((prev) => [
+      ...prev,
+      {
+        id: `c-${Date.now()}`,
+        author: 'kwame_eng',
+        level: 'Level 100',
+        verified: true,
+        upvotes: 0,
+        depth: replyingTo !== null ? 1 : 0,
+        text,
+      },
+    ]);
     setReplyText('');
     setReplyingTo(null);
     requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
   }, [replyText, replyingTo]);
 
   const totalUpvotes = thread.upvotes + (threadUpvoted ? 1 : 0);
-  const totalComments = thread.comments + comments.length - (SEED_COMMENTS[thread.id]?.length ?? 0);
+  const totalComments =
+    thread.comments + comments.length - (SEED_COMMENTS[thread.id]?.length ?? 0);
 
   return (
-    <SafeAreaView className="flex-1 bg-parchment" edges={['top']}>
-      <View className="flex-row items-center gap-3 px-4 py-2.5 border-b-4 border-black">
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      {/* Header */}
+      <View className="flex-row items-center gap-3 px-5 py-3 border-b border-divider">
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Go back"
+          className="w-9 h-9 rounded-full bg-surface items-center justify-center active:opacity-75"
         >
-          <Text className="font-heading text-lg text-black">←</Text>
+          <Text className="font-heading text-base text-charcoal">←</Text>
         </Pressable>
-        <NBBadge label={thread.hub} accent="brand" />
-        <Text className="font-body-medium text-xs text-[#555] uppercase">
-          Hub Thread
-        </Text>
+        <View className="bg-[#EFF6FF] rounded-full px-2.5 py-0.5">
+          <Text className="text-accent text-[10px] font-body-bold">
+            {thread.hub}
+          </Text>
+        </View>
+        <Text className="font-body-medium text-xs text-muted">Hub Thread</Text>
       </View>
 
-      <ScrollView ref={scrollRef} contentContainerClassName="p-4 pb-8">
+      <ScrollView
+        ref={scrollRef}
+        contentContainerClassName="px-5 py-5 pb-10"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Original post */}
-        <NBCard className="mb-5 p-4">
-          <View className="flex-row items-center gap-2 mb-2.5 flex-wrap">
-            <Text className="font-body-bold text-xs text-black">
+        <NBCard className="mb-5 p-5">
+          <View className="flex-row items-center gap-2 mb-3 flex-wrap">
+            <Text className="font-body-bold text-xs text-charcoal">
               @{thread.author}
             </Text>
-            <NBBadge label={thread.level} accent="action" />
-            {thread.verified && <NBBadge label="✓ Verified" accent="verify" />}
-            <Text className="ml-auto font-body-medium text-[10px] text-[#555]">
+            <View className="bg-surface rounded-full px-2 py-0.5">
+              <Text className="text-muted text-[10px] font-body-bold">
+                {thread.level}
+              </Text>
+            </View>
+            {thread.verified && (
+              <View className="bg-[#D1FAE5] rounded-full px-2 py-0.5">
+                <Text className="text-[#047857] text-[10px] font-body-bold">
+                  ✓ Verified
+                </Text>
+              </View>
+            )}
+            <Text className="ml-auto font-body-medium text-[10px] text-muted">
               {thread.time}
             </Text>
           </View>
-          <Text className="font-heading text-lg leading-6 text-black mb-2.5">
+          <Text className="font-heading text-lg leading-[26px] text-charcoal mb-2.5">
             {thread.title}
           </Text>
-          <Text className="font-body text-sm leading-[21px] text-black mb-3">
+          <Text className="font-body text-sm leading-[22px] text-muted mb-4">
             {thread.body}
           </Text>
-          <View className="flex-row gap-4 items-center">
+          <View className="flex-row gap-4 items-center pt-1 border-t border-divider">
             <Pressable
               onPress={() => setThreadUpvoted((v) => !v)}
               accessibilityRole="button"
-              accessibilityLabel={threadUpvoted ? 'Remove upvote' : 'Upvote post'}
-              className="flex-row items-center gap-1.5"
+              className="flex-row items-center gap-1.5 active:opacity-75"
             >
               <Text
-                className={`font-body-bold text-[13px] ${threadUpvoted ? 'text-brand' : 'text-black'}`}
+                className={`font-body-bold text-sm ${
+                  threadUpvoted ? 'text-accent' : 'text-muted'
+                }`}
               >
                 ▲ {totalUpvotes}
               </Text>
             </Pressable>
-            <Text className="font-body-bold text-[13px] text-black">
+            <Text className="font-body-medium text-sm text-muted">
               💬 {totalComments}
             </Text>
-            {threadUpvoted && (
-              <NBPopBadge label="Upvoted" accent="green" className="ml-auto" />
-            )}
           </View>
         </NBCard>
 
-        {/* Comment count */}
-        <Text className="font-heading text-sm text-black uppercase tracking-wide mb-3">
+        <Text className="font-heading text-base text-charcoal mb-3">
           {totalComments} {totalComments === 1 ? 'Comment' : 'Comments'}
         </Text>
 
@@ -241,35 +262,30 @@ export default function ThreadDetailScreen() {
         ))}
 
         {/* Composer */}
-        <View className="mt-3 gap-3">
+        <View className="mt-4 gap-3">
           {replyingTo !== null && (
-            <View className="flex-row items-center gap-2 bg-white border-2 border-black rounded-none px-3 py-2">
-              <Text className="font-body-bold text-xs text-black flex-1">
+            <View className="flex-row items-center gap-2 bg-[#EFF6FF] rounded-xl px-4 py-2.5">
+              <Text className="font-body-medium text-xs text-accent flex-1">
                 Replying to @{replyingTo}
               </Text>
               <Pressable
-                onPress={() => {
-                  setReplyingTo(null);
-                  setReplyText('');
-                }}
+                onPress={() => { setReplyingTo(null); setReplyText(''); }}
                 accessibilityRole="button"
-                accessibilityLabel="Cancel reply"
+                className="active:opacity-75"
               >
-                <Text className="font-body-bold text-xs text-[#555]">✕</Text>
+                <Text className="font-body-bold text-xs text-muted">✕</Text>
               </Pressable>
             </View>
           )}
           <NBInput
             placeholder={
-              replyingTo !== null
-                ? `Reply to @${replyingTo}…`
-                : 'Add a comment…'
+              replyingTo !== null ? `Reply to @${replyingTo}…` : 'Add a comment…'
             }
             value={replyText}
             onChangeText={setReplyText}
             multiline
           />
-          <NBButton label="Post Comment" onPress={postComment} accent="verify" />
+          <NBButton label="Post Comment" onPress={postComment} variant="accent" />
         </View>
       </ScrollView>
     </SafeAreaView>
