@@ -18,6 +18,7 @@ export interface OnboardingProfile {
 interface AppState {
   // Auth flow
   phone: string;
+  verificationId: string;
   otpSent: boolean;
   verified: boolean;
   onboarded: boolean;
@@ -26,6 +27,7 @@ interface AppState {
   profile: OnboardingProfile;
   // Actions
   setPhone: (phone: string) => void;
+  setVerificationId: (id: string) => void;
   setOtpSent: (v: boolean) => void;
   setVerified: (v: boolean) => void;
   setOnboarded: (v: boolean) => void;
@@ -50,6 +52,7 @@ const EMPTY_PROFILE: OnboardingProfile = {
 
 export const useAppStore = create<AppState>((set) => ({
   phone: '',
+  verificationId: '',
   otpSent: false,
   verified: false,
   onboarded: false,
@@ -57,6 +60,7 @@ export const useAppStore = create<AppState>((set) => ({
   profile: EMPTY_PROFILE,
 
   setPhone: (phone) => set({ phone }),
+  setVerificationId: (verificationId) => set({ verificationId }),
   setOtpSent: (otpSent) => set({ otpSent }),
   setVerified: (verified) => set({ verified }),
   setOnboarded: (onboarded) => set({ onboarded }),

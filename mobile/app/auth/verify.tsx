@@ -5,34 +5,36 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import { auth, isFirebaseConfigured } from '../../config/firebase';
 import { useAppStore } from '../../store/useAppStore';
-import { COLORS } from '../../theme/tokens';
 
-const OTP_LENGTH = 6;
+const OTP_LENGTH  = 6;
 const RESEND_SECS = 45;
 
 export default function OTPScreen() {
-  const router   = useRouter();
-  const phone    = useAppStore((s) => s.phone);
-  const setVerified = useAppStore((s) => s.setVerified);
+  const router          = useRouter();
+  const phone           = useAppStore((s) => s.phone);
+  const verificationId  = useAppStore((s) => s.verificationId);
+  const setVerified     = useAppStore((s) => s.setVerified);
 
-  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
+  const [digits, setDigits]     = useState<string[]>(Array(OTP_LENGTH).fill(''));
   const [activeIdx, setActiveIdx] = useState(0);
   const [countdown, setCountdown] = useState(RESEND_SECS);
   const [verifying, setVerifying] = useState(false);
-  const [error, setError] = useState(false);
-  const inputs = useRef<(TextInputType | null)[]>([]);
+  const [error, setError]         = useState('');
+  const inputs    = useRef<(TextInputType | null)[]>([]);
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
-  // Countdown timer
+  // Countdown
   useEffect(() => {
     if (countdown <= 0) return;
     const id = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(id);
   }, [countdown]);
 
-  function shake() {
-    setError(true);
+  function shake(msg = 'Incorrect code. Please try again.') {
+    setError(msg);
     Animated.sequence([
       Animated.timing(shakeAnim, { toValue: 10,  duration: 50, useNativeDriver: true }),
       Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
@@ -41,34 +43,47 @@ export default function OTPScreen() {
       Animated.timing(shakeAnim, { toValue: 0,   duration: 50, useNativeDriver: true }),
     ]).start(() => {
       setTimeout(() => {
-        setError(false);
+        setError('');
         setDigits(Array(OTP_LENGTH).fill(''));
         inputs.current[0]?.focus();
         setActiveIdx(0);
-      }, 600);
+      }, 800);
     });
   }
 
-  const verify = useCallback((code: string) => {
+  const verify = useCallback(async (code: string) => {
     setVerifying(true);
-    setTimeout(() => {
-      // Demo: any 6-digit code starting with 1 fails; others pass
-      if (code.startsWith('1')) {
-        setVerifying(false);
-        shake();
+    setError('');
+    try {
+      if (isFirebaseConfigured) {
+        // ── Real Firebase verification ──────────────────────────────────
+        const credential = PhoneAuthProvider.credential(verificationId, code);
+        await signInWithCredential(auth, credential);
       } else {
-        setVerified(true);
-        setVerifying(false);
-        router.replace('/onboarding');
+        // ── Dev mock ────────────────────────────────────────────────────
+        if (code.startsWith('1')) throw new Error('Invalid code (dev mock)');
+        await new Promise((r) => setTimeout(r, 800)); // simulate network
       }
-    }, 1000);
-  }, []);
+      setVerified(true);
+      router.replace('/onboarding');
+    } catch (e: any) {
+      setVerifying(false);
+      const msg =
+        e?.code === 'auth/invalid-verification-code'
+          ? 'Incorrect code. Please try again.'
+          : e?.code === 'auth/code-expired'
+          ? 'Code expired. Please request a new one.'
+          : e?.message ?? 'Verification failed.';
+      shake(msg);
+    }
+  }, [verificationId]);
 
   function handleChange(text: string, idx: number) {
     const char = text.replace(/\D/g, '').slice(-1);
     const next = [...digits];
     next[idx] = char;
     setDigits(next);
+
     if (char && idx < OTP_LENGTH - 1) {
       inputs.current[idx + 1]?.focus();
       setActiveIdx(idx + 1);
@@ -87,11 +102,11 @@ export default function OTPScreen() {
   }
 
   function resend() {
-    setCountdown(RESEND_SECS);
-    setDigits(Array(OTP_LENGTH).fill(''));
-    inputs.current[0]?.focus();
-    setActiveIdx(0);
+    // Navigate back to re-trigger signInWithPhoneNumber
+    router.back();
   }
+
+  const hasError = error.length > 0;
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -117,7 +132,7 @@ export default function OTPScreen() {
         {/* OTP boxes */}
         <Animated.View
           style={{ transform: [{ translateX: shakeAnim }] }}
-          className="flex-row gap-3 justify-center mb-6"
+          className="flex-row gap-3 justify-center mb-4"
         >
           {digits.map((d, i) => (
             <TextInput
@@ -130,8 +145,9 @@ export default function OTPScreen() {
               keyboardType="numeric"
               maxLength={1}
               selectTextOnFocus
+              editable={!verifying}
               className={`w-12 h-14 rounded-2xl border text-center font-heading text-xl ${
-                error
+                hasError
                   ? 'border-red bg-[#FEF2F2] text-red'
                   : activeIdx === i
                   ? 'border-blue bg-tertiary text-primary'
@@ -143,14 +159,14 @@ export default function OTPScreen() {
           ))}
         </Animated.View>
 
-        {error && (
-          <Text className="text-red text-xs font-body-semi text-center mb-4">
-            Incorrect code. Please try again.
+        {hasError && (
+          <Text className="text-red text-xs font-body-semi text-center mb-3">
+            {error}
           </Text>
         )}
 
-        {verifying && (
-          <Text className="text-blue text-xs font-body-semi text-center mb-4">
+        {verifying && !hasError && (
+          <Text className="text-blue text-xs font-body-semi text-center mb-3">
             Verifying…
           </Text>
         )}
@@ -160,18 +176,22 @@ export default function OTPScreen() {
           {countdown > 0 ? (
             <Text className="font-body text-sm text-tertxt">
               Resend code in{' '}
-              <Text className="font-body-semi text-secondary">
-                {countdown}s
-              </Text>
+              <Text className="font-body-semi text-secondary">{countdown}s</Text>
             </Text>
           ) : (
             <Pressable onPress={resend} className="active:opacity-70">
-              <Text className="font-body-semi text-sm text-blue">
-                Resend code
-              </Text>
+              <Text className="font-body-semi text-sm text-blue">Resend code</Text>
             </Pressable>
           )}
         </View>
+
+        {!isFirebaseConfigured && (
+          <View className="mt-6 bg-[#FFF4EE] rounded-xl px-4 py-3">
+            <Text className="font-body text-xs text-orange">
+              Dev mode — enter any 6-digit code (except starting with "1") to proceed.
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

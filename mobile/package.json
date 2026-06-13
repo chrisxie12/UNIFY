@@ -28,7 +28,9 @@
     "@expo-google-fonts/archivo-black": "^0.4.1",
     "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@expo-google-fonts/inter": "^0.4.2",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.0",
+    "firebase": "^10.14.0",
+    "expo-firebase-recaptcha": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
