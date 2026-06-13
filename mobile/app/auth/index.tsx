@@ -1,20 +1,26 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { PhoneAuthProvider } from 'firebase/auth';
-import { auth, firebaseConfig, isFirebaseConfigured } from '../../config/firebase';
+import type { ApplicationVerifier } from 'firebase/auth';
 import { useAppStore } from '../../store/useAppStore';
+import { getFirebaseAuth } from '../../config/firebase';
 import { COLORS } from '../../theme/tokens';
 
-export default function PhoneAuthScreen() {
-  const router           = useRouter();
-  const setPhone         = useAppStore((s) => s.setPhone);
-  const setVerificationId = useAppStore((s) => s.setVerificationId);
-  const setOtpSent       = useAppStore((s) => s.setOtpSent);
+// expo-firebase-recaptcha requires expo-firebase-core native module which is
+// NOT bundled in Expo Go. Use a mock verifier instead — this works with
+// Firebase test phone numbers configured in the Firebase console.
+// For production builds, replace with a real RecaptchaVerifier or dev client.
+const MOCK_VERIFIER: ApplicationVerifier = {
+  type: 'recaptcha',
+  verify: () => Promise.resolve('expo-go-mock-token'),
+};
 
-  const recaptchaRef = useRef<FirebaseRecaptchaVerifierModal>(null);
+export default function PhoneAuthScreen() {
+  const router            = useRouter();
+  const setPhone          = useAppStore((s) => s.setPhone);
+  const setVerificationId = useAppStore((s) => s.setVerificationId);
+  const setOtpSent        = useAppStore((s) => s.setOtpSent);
 
   const [number, setNumber]   = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,26 +35,22 @@ export default function PhoneAuthScreen() {
     if (!canContinue) return;
     setError('');
     setLoading(true);
-
     try {
-      if (isFirebaseConfigured) {
-        // ── Real Firebase Phone Auth ──────────────────────────────────────
-        const provider      = new PhoneAuthProvider(auth);
-        const verificationId = await provider.verifyPhoneNumber(
-          fullPhone,
-          recaptchaRef.current!,
-        );
-        setVerificationId(verificationId);
-      } else {
-        // ── Dev mock (no Firebase config) ─────────────────────────────────
-        setVerificationId('dev-mock-verification-id');
-      }
-
+      const { signInWithPhoneNumber } = require('firebase/auth') as typeof import('firebase/auth');
+      const auth = getFirebaseAuth();
+      const result = await signInWithPhoneNumber(auth, fullPhone, MOCK_VERIFIER);
+      setVerificationId(result.verificationId);
       setPhone(fullPhone);
       setOtpSent(true);
       router.push('/auth/verify');
     } catch (e: any) {
-      setError(e?.message ?? 'Failed to send code. Please try again.');
+      const msg =
+        e?.code === 'auth/invalid-phone-number'
+          ? 'Invalid phone number. Include country code +233.'
+          : e?.code === 'auth/too-many-requests'
+          ? 'Too many attempts. Please wait and try again.'
+          : e?.message ?? 'Failed to send code. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -56,14 +58,6 @@ export default function PhoneAuthScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Invisible reCAPTCHA — renders a modal only when challenge needed */}
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaRef}
-        firebaseConfig={firebaseConfig}
-        attemptInvisibleVerification
-      />
-
-      {/* Header */}
       <View className="flex-row items-center px-5 pt-4 pb-2">
         <Pressable
           onPress={() => router.back()}
@@ -114,15 +108,6 @@ export default function PhoneAuthScreen() {
           </Text>
         )}
 
-        {!isFirebaseConfigured && (
-          <View className="mt-3 bg-[#FFF4EE] rounded-xl px-4 py-3">
-            <Text className="font-body text-xs text-orange">
-              Dev mode — Firebase not configured. Any code except ones starting with "1" will work.
-            </Text>
-          </View>
-        )}
-
-        {/* Continue button */}
         <Pressable
           onPress={handleContinue}
           disabled={!canContinue}
