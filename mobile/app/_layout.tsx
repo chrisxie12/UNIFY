@@ -38,7 +38,8 @@ export default function RootLayout() {
           animation: 'slide_from_right',
         }}
       >
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ animation: 'none' }} />
+        <Stack.Screen name="get-started" />
         <Stack.Screen name="onboarding/index" />
         <Stack.Screen name="(main)" />
         <Stack.Screen name="chat/[id]" />
