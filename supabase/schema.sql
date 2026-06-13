@@ -194,6 +194,31 @@ CREATE INDEX idx_reads_announcement    ON announcement_reads(announcement_id);
 
 
 -- ============================================================
+-- AUTH TRIGGER — auto-create profile on new user sign-up
+-- ============================================================
+-- Runs in the auth schema context; SECURITY DEFINER lets it
+-- write to public.profiles even without a session.
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  INSERT INTO public.profiles (id, university_id, full_name, role)
+  VALUES (
+    NEW.id,
+    (SELECT id FROM public.universities WHERE slug = 'gctu' LIMIT 1),
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    'student'
+  )
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END; $$;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+
+-- ============================================================
 -- SEED DATA — GCTU (launch university)
 -- ============================================================
 
