@@ -28,6 +28,11 @@ export default function GetStartedScreen() {
     outputRange: ['2%', '50%'],
   });
 
+  function goToAuth() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push({ pathname: '/auth', params: { mode } });
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom']}>
       <View className="flex-1 px-6 pt-8 pb-6 justify-between">
@@ -35,13 +40,13 @@ export default function GetStartedScreen() {
         <View>
           <Text className="font-display text-[36px] leading-[42px] text-primary tracking-tight mb-2">
             {mode === 'signup'
-              ? "Don't pull up to\ncampus alone."
+              ? 'Stay in the loop\non campus.'
               : 'Welcome back 👋'}
           </Text>
           <Text className="font-body text-base text-secondary leading-6">
             {mode === 'signup'
-              ? 'Find your roommate, link with coursemates, and join your campus hub.'
-              : 'Sign in to pick up where you left off.'}
+              ? 'Get announcements, updates, and connect with your campus community at GCTU.'
+              : 'Sign in to see what\'s happening on campus.'}
           </Text>
         </View>
 
@@ -99,28 +104,16 @@ export default function GetStartedScreen() {
             </Text>
           </Pressable>
 
-          {/* Phone — active */}
+          {/* Email — primary */}
           <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push('/auth');
-            }}
+            onPress={goToAuth}
             className="flex-row items-center justify-center gap-3 bg-btn-primary rounded-2xl py-4 active:opacity-80"
           >
-            <Text style={{ fontSize: 20 }}>📱</Text>
+            <Text style={{ fontSize: 20 }}>✉️</Text>
             <Text className="font-body-semi text-base text-white">
-              {mode === 'login' ? 'Log in with Phone' : 'Sign up with Phone'}
+              {mode === 'login' ? 'Log in with Email' : 'Sign up with Email'}
             </Text>
           </Pressable>
-
-          {/* Email — coming soon */}
-          <View className="items-center py-2">
-            <Text className="font-body-semi text-sm text-tertxt">
-              {mode === 'login' ? 'Log in with email →' : 'Sign up with email →'}
-              {'  '}
-              <Text className="font-body text-xs">(coming soon)</Text>
-            </Text>
-          </View>
         </View>
 
         {/* Footer */}

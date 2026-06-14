@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '../../store/useAppStore';
+import { supabase } from '../../lib/supabase';
 import { COLORS } from '../../theme/tokens';
 
 const STEPS = ['Who are you?', 'Where are you headed?', 'How do you live?'] as const;
@@ -107,6 +108,7 @@ function SchoolPicker({ value, onChange }: { value: string; onChange: (s: string
 export default function OnboardingScreen() {
   const router = useRouter();
   const { updateProfile, setOnboarded } = useAppStore();
+  const [saving, setSaving] = useState(false);
 
   const [step, setStep] = useState(0);
   // Step 0
@@ -132,19 +134,42 @@ export default function OnboardingScreen() {
     return false;
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (step < STEPS.length - 1) {
       setStep((s) => s + 1);
-    } else {
-      updateProfile({
-        fullName, displayName: handle || fullName.split(' ')[0], school,
-        programme, level, hometown, bio, sleep: sleep as any,
-        cleanliness: cleanliness as any, noise: noise as any,
-        study: study as any, hostels,
-      });
-      setOnboarded(true);
-      router.replace('/onboarding/success');
+      return;
     }
+
+    setSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const levelValue = level.replace('Level ', '').toLowerCase();
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName.trim(),
+          bio: bio.trim() || null,
+          level: levelValue || null,
+          programme: programme.trim() || null,
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        setSaving(false);
+        Alert.alert('Error', 'Could not save profile. Please try again.');
+        return;
+      }
+    }
+
+    updateProfile({
+      fullName, displayName: handle || fullName.split(' ')[0], school,
+      programme, level, hometown, bio, sleep: sleep as any,
+      cleanliness: cleanliness as any, noise: noise as any,
+      study: study as any, hostels,
+    });
+    setOnboarded(true);
+    setSaving(false);
+    router.replace('/onboarding/success');
   }
 
   return (
@@ -333,13 +358,13 @@ export default function OnboardingScreen() {
       <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-border px-6 pb-8 pt-4">
         <Pressable
           onPress={handleNext}
-          disabled={!canAdvance()}
+          disabled={!canAdvance() || saving}
           className={`rounded-full py-4 items-center ${
             canAdvance() ? 'bg-btn-primary active:opacity-80' : 'bg-surface'
           }`}
         >
           <Text className={`font-body-semi text-base ${canAdvance() ? 'text-white' : 'text-tertxt'}`}>
-            {step < STEPS.length - 1 ? 'Continue' : 'Finish setup'}
+            {saving ? 'Saving…' : step < STEPS.length - 1 ? 'Continue' : 'Finish setup'}
           </Text>
         </Pressable>
       </View>

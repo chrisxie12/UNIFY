@@ -16,18 +16,9 @@ export interface OnboardingProfile {
 }
 
 interface AppState {
-  // Auth flow
-  phone: string;
-  otpSent: boolean;
-  verified: boolean;
   onboarded: boolean;
-  // Onboarding
   onboardingStep: number;
   profile: OnboardingProfile;
-  // Actions
-  setPhone: (phone: string) => void;
-  setOtpSent: (v: boolean) => void;
-  setVerified: (v: boolean) => void;
   setOnboarded: (v: boolean) => void;
   setOnboardingStep: (step: number) => void;
   updateProfile: (data: Partial<OnboardingProfile>) => void;
@@ -49,16 +40,10 @@ const EMPTY_PROFILE: OnboardingProfile = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
-  phone: '',
-  otpSent: false,
-  verified: false,
   onboarded: false,
   onboardingStep: 0,
   profile: EMPTY_PROFILE,
 
-  setPhone: (phone) => set({ phone }),
-  setOtpSent: (otpSent) => set({ otpSent }),
-  setVerified: (verified) => set({ verified }),
   setOnboarded: (onboarded) => set({ onboarded }),
   setOnboardingStep: (onboardingStep) => set({ onboardingStep }),
   updateProfile: (data) =>

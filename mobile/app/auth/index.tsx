@@ -1,101 +1,192 @@
 import { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import {
+  Alert, KeyboardAvoidingView, Platform,
+  Pressable, ScrollView, Text, TextInput, View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { useAppStore } from '../../store/useAppStore';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { supabase } from '../../lib/supabase';
 import { COLORS } from '../../theme/tokens';
 
-export default function PhoneAuthScreen() {
-  const router  = useRouter();
-  const setPhone   = useAppStore((s) => s.setPhone);
-  const setOtpSent = useAppStore((s) => s.setOtpSent);
+type Mode = 'login' | 'signup';
 
-  const [number, setNumber] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [focused, setFocused] = useState(false);
+export default function AuthScreen() {
+  const router = useRouter();
+  const { mode: initialMode } = useLocalSearchParams<{ mode?: string }>();
 
-  const digits = number.replace(/\D/g, '');
-  const canContinue = digits.length >= 9;
+  const [mode, setMode]         = useState<Mode>((initialMode as Mode) || 'signup');
+  const [email, setEmail]       = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [loading, setLoading]   = useState(false);
 
-  function handleContinue() {
-    if (!canContinue || loading) return;
+  const canSubmit =
+    email.trim().includes('@') &&
+    password.length >= 6 &&
+    (mode === 'login' || fullName.trim().length > 1);
+
+  async function handleSubmit() {
+    if (!canSubmit || loading) return;
     setLoading(true);
-    setPhone(`+233${digits}`);
-    setTimeout(() => {
-      setOtpSent(true);
+
+    if (mode === 'login') {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
       setLoading(false);
-      router.push('/auth/verify');
-    }, 900);
+      if (error) {
+        Alert.alert('Sign in failed', error.message);
+      } else {
+        router.replace('/(main)/home');
+      }
+    } else {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim().toLowerCase(),
+        password,
+        options: {
+          data: { full_name: fullName.trim() },
+        },
+      });
+      setLoading(false);
+      if (error) {
+        Alert.alert('Sign up failed', error.message);
+      } else {
+        // Auth trigger auto-creates profile row; go to onboarding
+        router.replace('/onboarding');
+      }
+    }
   }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center px-5 pt-4 pb-2">
-        <Pressable
-          onPress={() => router.back()}
-          hitSlop={12}
-          className="w-10 h-10 rounded-full bg-surface items-center justify-center active:opacity-70"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text className="font-heading text-base text-primary">←</Text>
-        </Pressable>
-      </View>
-
-      <View className="flex-1 px-6 pt-6">
-        <Text className="font-display text-[32px] leading-9 text-primary mb-2">
-          What's your{'\n'}number?
-        </Text>
-        <Text className="font-body text-sm text-secondary mb-10 leading-5">
-          We'll send a 6-digit code to verify your identity.
-        </Text>
-
-        {/* Phone input */}
-        <View
-          className={`flex-row items-center bg-surface rounded-2xl border h-14 px-4 ${
-            focused ? 'border-blue' : 'border-border'
-          }`}
-        >
-          {/* Ghana flag + prefix */}
-          <View className="flex-row items-center gap-2 pr-3 border-r border-border mr-3">
-            <Text className="text-xl">🇬🇭</Text>
-            <Text className="font-body-semi text-sm text-primary">+233</Text>
+          {/* Header */}
+          <View className="flex-row items-center px-5 pt-4 pb-2">
+            <Pressable
+              onPress={() => router.back()}
+              hitSlop={12}
+              className="w-10 h-10 rounded-full bg-surface items-center justify-center active:opacity-70"
+            >
+              <Text className="font-heading text-base text-primary">←</Text>
+            </Pressable>
           </View>
 
-          <TextInput
-            placeholder="XX XXX XXXX"
-            placeholderTextColor={COLORS.tertxt}
-            value={number}
-            onChangeText={setNumber}
-            keyboardType="phone-pad"
-            maxLength={12}
-            autoFocus
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            className="flex-1 font-body-semi text-base text-primary"
-          />
-        </View>
+          <View className="flex-1 px-6 pt-4 pb-10">
+            <Text className="font-display text-[32px] leading-9 text-primary mb-1">
+              {mode === 'login' ? 'Welcome back' : 'Create account'}
+            </Text>
+            <Text className="font-body text-sm text-secondary mb-8 leading-5">
+              {mode === 'login'
+                ? 'Sign in to your UNIFY account.'
+                : 'Join GCTU — your campus hub awaits.'}
+            </Text>
 
-        <Text className="font-body text-xs text-tertxt mt-3">
-          Standard SMS rates may apply.
-        </Text>
+            {/* Mode toggle */}
+            <View className="bg-surface rounded-2xl p-1 flex-row mb-8">
+              {(['signup', 'login'] as Mode[]).map((m) => (
+                <Pressable
+                  key={m}
+                  onPress={() => setMode(m)}
+                  className={`flex-1 py-2.5 rounded-xl items-center ${
+                    mode === m ? 'bg-white' : ''
+                  }`}
+                  style={mode === m ? {
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 3,
+                    elevation: 2,
+                  } : undefined}
+                >
+                  <Text className={`font-body-semi text-sm ${
+                    mode === m ? 'text-primary' : 'text-tertxt'
+                  }`}>
+                    {m === 'signup' ? 'Sign Up' : 'Log In'}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
 
-        {/* Continue button */}
-        <Pressable
-          onPress={handleContinue}
-          disabled={!canContinue || loading}
-          className={`mt-10 rounded-full py-4 items-center ${
-            canContinue ? 'bg-btn-primary active:opacity-80' : 'bg-surface'
-          }`}
-        >
-          <Text
-            className={`font-body-semi text-base ${
-              canContinue ? 'text-white' : 'text-tertxt'
-            }`}
-          >
-            {loading ? 'Sending…' : 'Continue'}
-          </Text>
-        </Pressable>
-      </View>
+            {/* Fields */}
+            <View className="gap-4">
+              {mode === 'signup' && (
+                <View>
+                  <Text className="font-body-semi text-sm text-primary mb-2">Full name</Text>
+                  <TextInput
+                    placeholder="e.g. Kwame Acheampong"
+                    placeholderTextColor={COLORS.tertxt}
+                    value={fullName}
+                    onChangeText={setFullName}
+                    autoCapitalize="words"
+                    returnKeyType="next"
+                    className="bg-surface rounded-2xl border border-border px-5 h-14 font-body text-sm text-primary"
+                  />
+                </View>
+              )}
+
+              <View>
+                <Text className="font-body-semi text-sm text-primary mb-2">Email</Text>
+                <TextInput
+                  placeholder="you@students.gctu.edu.gh"
+                  placeholderTextColor={COLORS.tertxt}
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  returnKeyType="next"
+                  className="bg-surface rounded-2xl border border-border px-5 h-14 font-body text-sm text-primary"
+                />
+              </View>
+
+              <View>
+                <Text className="font-body-semi text-sm text-primary mb-2">Password</Text>
+                <TextInput
+                  placeholder={mode === 'signup' ? 'At least 6 characters' : '••••••••'}
+                  placeholderTextColor={COLORS.tertxt}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit}
+                  className="bg-surface rounded-2xl border border-border px-5 h-14 font-body text-sm text-primary"
+                />
+              </View>
+            </View>
+
+            <Pressable
+              onPress={handleSubmit}
+              disabled={!canSubmit || loading}
+              className={`mt-8 rounded-full py-4 items-center ${
+                canSubmit ? 'bg-btn-primary active:opacity-80' : 'bg-surface'
+              }`}
+            >
+              <Text className={`font-body-semi text-base ${
+                canSubmit ? 'text-white' : 'text-tertxt'
+              }`}>
+                {loading
+                  ? mode === 'login' ? 'Signing in…' : 'Creating account…'
+                  : mode === 'login' ? 'Sign In' : 'Create Account'}
+              </Text>
+            </Pressable>
+
+            {mode === 'login' && (
+              <Pressable className="mt-4 items-center active:opacity-70">
+                <Text className="font-body text-sm text-blue">Forgot password?</Text>
+              </Pressable>
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
