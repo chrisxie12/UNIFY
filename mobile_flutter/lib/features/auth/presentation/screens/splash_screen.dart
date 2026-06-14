@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../core/colors.dart';
+import '../../../../core/theme/app_colors.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _fade;
@@ -25,13 +26,17 @@ class _SplashScreenState extends State<SplashScreen>
     _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
     _ctrl.forward();
 
-    Future.delayed(const Duration(milliseconds: 1800), _navigate);
+    Future.delayed(const Duration(milliseconds: 1600), _navigate);
   }
 
   Future<void> _navigate() async {
     if (!mounted) return;
     final session = Supabase.instance.client.auth.currentSession;
-    context.go(session != null ? '/home' : '/get-started');
+    if (session != null) {
+      context.go('/app/feed');
+    } else {
+      context.go('/get-started');
+    }
   }
 
   @override
@@ -44,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(gradient: kGradient),
+        decoration: const BoxDecoration(gradient: AppColors.brandGradient),
         child: Center(
           child: FadeTransition(
             opacity: _fade,
@@ -52,11 +57,11 @@ class _SplashScreenState extends State<SplashScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(13),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: Colors.white.withOpacity(0.4),
                       width: 1.5,
@@ -67,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'U',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
+                        fontSize: 24,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -78,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen>
                   'UNIFY',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 34,
+                    fontSize: 36,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -0.5,
                   ),

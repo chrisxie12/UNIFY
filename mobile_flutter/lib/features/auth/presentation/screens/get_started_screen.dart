@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../core/colors.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
@@ -13,8 +14,10 @@ class GetStartedScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Full-screen blue gradient
-          Container(decoration: const BoxDecoration(gradient: kGradient)),
+          // Full-screen gradient background
+          Container(
+            decoration: const BoxDecoration(gradient: AppColors.brandGradient),
+          ),
 
           // White bottom sheet
           Positioned(
@@ -24,7 +27,7 @@ class GetStartedScreen extends StatelessWidget {
             height: size.height * 0.51,
             child: Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(28),
                   topRight: Radius.circular(28),
@@ -34,20 +37,14 @@ class GetStartedScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
+                  Text(
                     'Your campus,\nconnected.',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
-                      color: kDark,
-                      height: 1.2,
-                      letterSpacing: -0.5,
-                    ),
+                    style: AppTextStyles.headingXL,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     'Announcements, updates, and community — built for GCTU students.',
-                    style: TextStyle(fontSize: 14, color: kGrey2, height: 1.5),
+                    style: AppTextStyles.bodyM.copyWith(color: AppColors.grey2),
                   ),
                   const SizedBox(height: 28),
                   _PrimaryBtn(
@@ -65,7 +62,7 @@ class GetStartedScreen extends StatelessWidget {
                     child: Text(
                       'By continuing, you agree to our Terms of Service and Privacy Policy.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 11, color: kGrey3, height: 1.5),
+                      style: AppTextStyles.caption,
                     ),
                   ),
                 ],
@@ -73,7 +70,7 @@ class GetStartedScreen extends StatelessWidget {
             ),
           ),
 
-          // Logo (top-left, inside blue area)
+          // Hero area — logo + illustration
           Positioned(
             top: 0,
             left: 0,
@@ -86,6 +83,7 @@ class GetStartedScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Logo wordmark
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -123,7 +121,8 @@ class GetStartedScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // Illustration — centered in remaining hero space
+
+                    // Central frosted-circle illustration
                     Expanded(
                       child: Center(
                         child: Stack(
@@ -144,16 +143,21 @@ class GetStartedScreen extends StatelessWidget {
                                 ],
                               ),
                               child: const Center(
-                                child: Text('📢', style: TextStyle(fontSize: 68)),
+                                child: Text(
+                                  '📢',
+                                  style: TextStyle(fontSize: 68),
+                                ),
                               ),
                             ),
-                            // Sparkle top-right of circle
                             const Positioned(
                               top: 0,
                               right: 0,
                               child: Text(
                                 '✦',
-                                style: TextStyle(color: Colors.white, fontSize: 26),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                ),
                               ),
                             ),
                           ],
@@ -183,17 +187,13 @@ class _PrimaryBtn extends StatelessWidget {
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-          color: kDark,
+          color: AppColors.dark,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.buttonL,
           ),
         ),
       ),
@@ -213,17 +213,13 @@ class _SecondaryBtn extends StatelessWidget {
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-          color: kSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
-              color: kGrey1,
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.buttonL.copyWith(color: AppColors.grey1),
           ),
         ),
       ),

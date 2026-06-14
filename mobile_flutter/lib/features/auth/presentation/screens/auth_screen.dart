@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../core/colors.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../providers/auth_provider.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   final String mode;
   const AuthScreen({super.key, required this.mode});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   late String _mode;
-  final _nameCtrl  = TextEditingController();
+  final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
-  final _passCtrl  = TextEditingController();
+  final _passCtrl = TextEditingController();
   bool _loading = false;
   bool _obscure = true;
 
@@ -35,35 +38,46 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool get _canSubmit {
     final emailOk = _emailCtrl.text.contains('@');
-    final passOk  = _passCtrl.text.length >= 6;
-    final nameOk  = _mode == 'login' || _nameCtrl.text.trim().length > 1;
+    final passOk = _passCtrl.text.length >= 6;
+    final nameOk = _mode == 'login' || _nameCtrl.text.trim().length > 1;
     return emailOk && passOk && nameOk && !_loading;
   }
 
   Future<void> _submit() async {
     if (!_canSubmit) return;
     setState(() => _loading = true);
-    final sb = Supabase.instance.client;
 
     try {
       if (_mode == 'login') {
-        await sb.auth.signInWithPassword(
-          email: _emailCtrl.text.trim().toLowerCase(),
-          password: _passCtrl.text,
-        );
-        if (mounted) context.go('/home');
+        await ref.read(authNotifierProvider.notifier).signIn(
+              email: _emailCtrl.text.trim().toLowerCase(),
+              password: _passCtrl.text,
+            );
+        if (mounted) context.go('/app/feed');
       } else {
-        await sb.auth.signUp(
-          email: _emailCtrl.text.trim().toLowerCase(),
-          password: _passCtrl.text,
-          data: {'full_name': _nameCtrl.text.trim()},
-        );
+        await ref.read(authNotifierProvider.notifier).signUp(
+              email: _emailCtrl.text.trim().toLowerCase(),
+              password: _passCtrl.text,
+              fullName: _nameCtrl.text.trim(),
+            );
         if (mounted) context.go('/onboarding');
       }
     } on AuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message), backgroundColor: kRed),
+          SnackBar(
+            content: Text(e.message),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     } finally {
@@ -74,7 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -89,10 +103,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: kSurface,
+                      color: AppColors.surface,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(Icons.arrow_back, size: 20, color: kDark),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      size: 20,
+                      color: AppColors.dark,
+                    ),
                   ),
                 ),
               ),
@@ -101,25 +119,22 @@ class _AuthScreenState extends State<AuthScreen> {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       _mode == 'login' ? 'Welcome back' : 'Create account',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: kDark,
-                        letterSpacing: -0.5,
-                      ),
+                      style: AppTextStyles.displayMedium,
                     ),
                     const SizedBox(height: 6),
                     Text(
                       _mode == 'login'
                           ? 'Sign in to your UNIFY account.'
                           : 'Join GCTU — your campus hub awaits.',
-                      style: const TextStyle(fontSize: 14, color: kGrey2),
+                      style:
+                          AppTextStyles.bodyM.copyWith(color: AppColors.grey2),
                     ),
                     const SizedBox(height: 28),
 
@@ -127,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     Container(
                       height: 44,
                       decoration: BoxDecoration(
-                        color: kSurface,
+                        color: AppColors.surface,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.all(3),
@@ -188,25 +203,30 @@ class _AuthScreenState extends State<AuthScreen> {
                         duration: const Duration(milliseconds: 150),
                         height: 52,
                         decoration: BoxDecoration(
-                          color: _canSubmit ? kDark : kSurface,
+                          color:
+                              _canSubmit ? AppColors.dark : AppColors.surface,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Center(
                           child: _loading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
-                                    color: Colors.white,
+                                    color: _canSubmit
+                                        ? AppColors.white
+                                        : AppColors.grey3,
                                     strokeWidth: 2,
                                   ),
                                 )
                               : Text(
-                                  _mode == 'login' ? 'Sign In' : 'Create Account',
-                                  style: TextStyle(
-                                    color: _canSubmit ? Colors.white : kGrey3,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
+                                  _mode == 'login'
+                                      ? 'Sign In'
+                                      : 'Create Account',
+                                  style: AppTextStyles.buttonL.copyWith(
+                                    color: _canSubmit
+                                        ? AppColors.white
+                                        : AppColors.grey3,
                                   ),
                                 ),
                         ),
@@ -224,10 +244,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kDark),
-        ),
+        child: Text(text, style: AppTextStyles.labelM),
       );
 
   Widget _field({
@@ -242,17 +259,9 @@ class _AuthScreenState extends State<AuthScreen> {
         keyboardType: type,
         textCapitalization: cap,
         onChanged: onChanged,
-        style: const TextStyle(fontSize: 14, color: kDark),
+        style: AppTextStyles.bodyM.copyWith(color: AppColors.dark),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(color: kGrey3, fontSize: 14),
-          filled: true,
-          fillColor: kSurface,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       );
 
@@ -260,20 +269,19 @@ class _AuthScreenState extends State<AuthScreen> {
         controller: _passCtrl,
         obscureText: _obscure,
         onChanged: (_) => setState(() {}),
-        style: const TextStyle(fontSize: 14, color: kDark),
+        style: AppTextStyles.bodyM.copyWith(color: AppColors.dark),
         decoration: InputDecoration(
-          hintText: _mode == 'signup' ? 'At least 6 characters' : '••••••••',
-          hintStyle: TextStyle(color: kGrey3, fontSize: 14),
-          filled: true,
-          fillColor: kSurface,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          hintText:
+              _mode == 'signup' ? 'At least 6 characters' : '••••••••',
           suffixIcon: GestureDetector(
             onTap: () => setState(() => _obscure = !_obscure),
-            child: Icon(_obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: kGrey3),
+            child: Icon(
+              _obscure
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 20,
+              color: AppColors.grey3,
+            ),
           ),
         ),
       );
@@ -292,19 +300,23 @@ class _Tab extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             decoration: BoxDecoration(
-              color: active ? Colors.white : Colors.transparent,
+              color: active ? AppColors.white : Colors.transparent,
               borderRadius: BorderRadius.circular(9),
               boxShadow: active
-                  ? [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 4, offset: const Offset(0, 1))]
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      )
+                    ]
                   : null,
             ),
             child: Center(
               child: Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: active ? kDark : kGrey3,
+                style: AppTextStyles.labelM.copyWith(
+                  color: active ? AppColors.dark : AppColors.grey3,
                 ),
               ),
             ),

@@ -1,24 +1,49 @@
 name: unify
-description: GCTU campus announcements and community platform
+description: GCTU campus announcements and community platform — production scaffold
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+
+  # Backend
   supabase_flutter: ^2.8.4
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
   go_router: ^14.8.1
-  flutter_dotenv: ^5.2.1
+
+  # UI
   google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
   cupertino_icons: ^1.0.8
+
+  # Local storage / caching
+  hive_flutter: ^1.1.0
+
+  # Utilities
+  flutter_dotenv: ^5.2.1
+  intl: ^0.19.0
+  timeago: ^3.7.0
+  image_picker: ^1.1.2
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.6.4
+  custom_lint: ^0.7.4
+  riverpod_lint: ^2.6.4
 
 flutter:
   uses-material-design: true
