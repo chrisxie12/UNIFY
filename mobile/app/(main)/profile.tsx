@@ -1,29 +1,28 @@
-import { Alert, ScrollView, Text, View, Pressable } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, ScrollView, Text, View, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Avatar, Badge, Card, Btn } from '../../components/UI';
-import { useAppStore } from '../../store/useAppStore';
-
-const HABIT_MAP: Record<string, string> = {
-  early_bird: 'Early bird 🌅',
-  night_owl:  'Night owl 🦉',
-  very_tidy:  'Very tidy ✨',
-  moderate:   'Moderate 👍',
-  relaxed:    'Relaxed 😌',
-  silent:     'Silent 🤫',
-  lively:     'Lively 🎉',
-  room:       'In my room 🛏',
-  library:    'Library 📚',
-  cafe:       'Café ☕',
-  outdoor:    'Outdoors 🌳',
-};
+import { supabase, type Profile } from '../../lib/supabase';
 
 export default function ProfileScreen() {
-  const router       = useRouter();
-  const profile      = useAppStore((s) => s.profile);
-  const setVerified  = useAppStore((s) => s.setVerified);
-  const setOnboarded = useAppStore((s) => s.setOnboarded);
-  const setOtpSent   = useAppStore((s) => s.setOtpSent);
+  const router = useRouter();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadProfile = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+    if (data) setProfile(data as Profile);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { loadProfile(); }, []);
 
   function handleLogOut() {
     Alert.alert('Log out', 'Are you sure you want to log out?', [
@@ -31,27 +30,30 @@ export default function ProfileScreen() {
       {
         text: 'Log out',
         style: 'destructive',
-        onPress: () => {
-          setVerified(false);
-          setOnboarded(false);
-          setOtpSent(false);
-          router.replace('/');
+        onPress: async () => {
+          await supabase.auth.signOut();
+          router.replace('/get-started');
         },
       },
     ]);
   }
 
-  const displayName = profile.fullName || 'Your Profile';
-  const initials    = profile.fullName
-    ? profile.fullName.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-white items-center justify-center">
+        <ActivityIndicator size="large" color="#003F8A" />
+      </SafeAreaView>
+    );
+  }
+
+  const displayName = profile?.full_name || 'Your Profile';
+  const initials    = profile?.full_name
+    ? profile.full_name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
     : 'ME';
 
-  const habits = [
-    profile.sleep       && { label: 'Sleep',       value: HABIT_MAP[profile.sleep]       },
-    profile.cleanliness && { label: 'Cleanliness', value: HABIT_MAP[profile.cleanliness] },
-    profile.noise       && { label: 'Noise',       value: HABIT_MAP[profile.noise]       },
-    profile.study       && { label: 'Study',       value: HABIT_MAP[profile.study]       },
-  ].filter(Boolean) as { label: string; value: string }[];
+  const levelLabel = profile?.level
+    ? `Level ${profile.level.replace('level', '').trim()}`
+    : null;
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -86,84 +88,52 @@ export default function ProfileScreen() {
         {/* Name & info */}
         <View className="px-5 mb-5">
           <Text className="font-display text-2xl text-primary">{displayName}</Text>
-          {profile.displayName ? (
-            <Text className="font-body text-sm text-blue mb-0.5">@{profile.displayName}</Text>
-          ) : null}
-          {profile.school ? (
-            <Text className="font-body text-sm text-secondary mt-0.5">
-              {profile.school}
-              {profile.level ? ` · ${profile.level}` : ''}
+          {profile?.is_verified ? (
+            <View className="flex-row items-center gap-1 mt-1">
+              <Text className="text-xs">✅</Text>
+              <Text className="font-body text-xs text-green">Verified student</Text>
+            </View>
+          ) : (
+            <View className="flex-row items-center gap-1 mt-1">
+              <Text className="font-body text-xs text-tertxt">Verification pending</Text>
+            </View>
+          )}
+          {profile?.programme ? (
+            <Text className="font-body text-sm text-secondary mt-1">
+              {profile.programme}
+              {levelLabel ? ` · ${levelLabel}` : ''}
             </Text>
           ) : null}
-          {profile.programme ? (
-            <Text className="font-body text-xs text-tertxt mt-0.5">{profile.programme}</Text>
+          {profile?.student_id ? (
+            <Text className="font-body text-xs text-tertxt mt-0.5">
+              ID: {profile.student_id}
+            </Text>
           ) : null}
-          {profile.hometown ? (
-            <Text className="font-body text-xs text-tertxt mt-0.5">📍 {profile.hometown}</Text>
-          ) : null}
-          {profile.bio ? (
+          {profile?.bio ? (
             <Text className="font-body-medium text-sm text-secondary mt-3 leading-5">
               {profile.bio}
             </Text>
           ) : null}
         </View>
 
-        {/* Stats */}
-        <View className="flex-row gap-3 mx-5 mb-5">
-          <Card className="flex-1 p-4 items-center">
-            <Text className="font-display text-2xl text-blue">0</Text>
-            <Text className="font-body text-xs text-secondary mt-0.5">Matches</Text>
-          </Card>
-          <Card className="flex-1 p-4 items-center">
-            <Text className="font-display text-2xl text-primary">0</Text>
-            <Text className="font-body text-xs text-secondary mt-0.5">Connections</Text>
-          </Card>
-          <Card className="flex-1 p-4 items-center">
-            <Text className="font-display text-2xl text-orange">—</Text>
-            <Text className="font-body text-xs text-secondary mt-0.5">Avg match</Text>
-          </Card>
-        </View>
-
-        {/* Habits */}
-        {habits.length > 0 && (
-          <View className="mx-5 mb-5">
-            <Text className="font-heading text-base text-primary mb-3">Living habits</Text>
-            <Card className="p-4">
-              {habits.map((h, i) => (
-                <View
-                  key={h.label}
-                  className={`flex-row justify-between items-center py-3 ${
-                    i < habits.length - 1 ? 'border-b border-border' : ''
-                  }`}
-                >
-                  <Text className="font-body text-sm text-secondary">{h.label}</Text>
-                  <Text className="font-body-semi text-sm text-primary">{h.value}</Text>
-                </View>
-              ))}
-            </Card>
-          </View>
-        )}
-
-        {/* Preferred hostels */}
-        {profile.hostels.length > 0 && (
-          <View className="mx-5 mb-5">
-            <Text className="font-heading text-base text-primary mb-3">Preferred hostels</Text>
-            <View className="flex-row flex-wrap gap-2">
-              {profile.hostels.map((h) => (
-                <Badge key={h} label={h} color="blue" />
-              ))}
-            </View>
+        {/* Role badge */}
+        {profile?.role && profile.role !== 'student' && (
+          <View className="px-5 mb-5">
+            <Badge
+              label={profile.role.charAt(0).toUpperCase() + profile.role.slice(1)}
+              color="blue"
+            />
           </View>
         )}
 
         {/* Empty state */}
-        {!profile.fullName && (
+        {!profile?.full_name && (
           <View className="mx-5 mt-4 bg-tertiary rounded-2xl p-5 items-center">
             <Text className="font-heading text-base text-primary mb-1">
               Complete your profile
             </Text>
             <Text className="font-body text-sm text-secondary text-center mb-4">
-              Add your details to start matching with potential roommates.
+              Add your name, programme and year so admins can verify your account.
             </Text>
             <Btn label="Set up profile" onPress={() => router.push('/onboarding')} />
           </View>

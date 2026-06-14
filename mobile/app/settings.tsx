@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
+import { supabase } from '../lib/supabase';
 
 function SettingsRow({
   label, sub, onPress, danger = false, showArrow = true,
@@ -59,10 +60,8 @@ function Separator() {
 }
 
 export default function SettingsScreen() {
-  const router   = useRouter();
-  const setVerified  = useAppStore((s) => s.setVerified);
+  const router      = useRouter();
   const setOnboarded = useAppStore((s) => s.setOnboarded);
-  const setOtpSent   = useAppStore((s) => s.setOtpSent);
   const profile      = useAppStore((s) => s.profile);
 
   const [notifs,   setNotifs]   = useState(true);
@@ -76,11 +75,10 @@ export default function SettingsScreen() {
       {
         text: 'Log out',
         style: 'destructive',
-        onPress: () => {
-          setVerified(false);
+        onPress: async () => {
           setOnboarded(false);
-          setOtpSent(false);
-          router.replace('/');
+          await supabase.auth.signOut();
+          router.replace('/get-started');
         },
       },
     ]);

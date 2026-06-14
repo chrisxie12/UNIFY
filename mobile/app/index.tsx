@@ -1,74 +1,85 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Animated, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { supabase } from '../lib/supabase';
 
 export default function SplashScreen() {
-  const router = useRouter();
-  const fadeAnim  = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(32)).current;
-  const btnAnim   = useRef(new Animated.Value(0)).current;
+  const router   = useRouter();
+  const logoAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(fadeAnim,  { toValue: 1, duration: 700, useNativeDriver: true }),
-        Animated.timing(slideAnim, { toValue: 0, duration: 700, useNativeDriver: true }),
-      ]),
-      Animated.timing(btnAnim, { toValue: 1, duration: 400, delay: 100, useNativeDriver: true }),
-    ]).start();
+    // Fade logo in
+    Animated.timing(logoAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+
+    // After 1.8s check session and navigate
+    const timer = setTimeout(async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.replace('/(main)/home');
+      } else {
+        router.replace('/get-started');
+      }
+    }, 1800);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 px-8 justify-center">
-        {/* Wordmark */}
-        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-          <View className="mb-2">
-            <Text className="font-display text-[56px] leading-[60px] text-primary tracking-tight">
-              UNIFY
-            </Text>
-            {/* Orange scribble underline */}
-            <View className="h-[5px] w-28 bg-orange rounded-full mt-1" />
+    <>
+      <StatusBar style="light" />
+      <LinearGradient
+        colors={['#1D4ED8', '#1E3A8A']}
+        style={styles.container}
+      >
+        <Animated.View style={[styles.logoWrap, { opacity: logoAnim }]}>
+          {/* Icon mark */}
+          <View style={styles.iconCircle}>
+            <Text style={styles.iconText}>U</Text>
           </View>
-
-          <Text className="font-body-medium text-lg text-secondary mt-5 leading-7">
-            Find your people,{'\n'}find your place.
-          </Text>
-
-          <Text className="font-body text-sm text-tertxt mt-3 leading-6">
-            Match with roommates. Join your campus hub.{'\n'}
-            Built for Ghanaian students.
-          </Text>
+          <Text style={styles.wordmark}>UNIFY</Text>
         </Animated.View>
-
-        {/* CTA */}
-        <Animated.View style={{ opacity: btnAnim }} className="mt-14">
-          <Pressable
-            onPress={() => router.push('/get-started')}
-            className="bg-btn-primary rounded-full py-4 items-center active:opacity-80"
-          >
-            <Text className="text-white font-body-semi text-base">Get Started</Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => router.push('/get-started')}
-            className="mt-4 items-center active:opacity-70"
-          >
-            <Text className="text-tertxt text-sm font-body">
-              Already have an account?{' '}
-              <Text className="text-blue font-body-semi">Sign in</Text>
-            </Text>
-          </Pressable>
-        </Animated.View>
-      </View>
-
-      {/* Bottom decoration */}
-      <View className="px-8 pb-8">
-        <Text className="text-[11px] font-body text-tertxt text-center">
-          By continuing you agree to our Terms of Service
-        </Text>
-      </View>
-    </SafeAreaView>
+      </LinearGradient>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoWrap: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  iconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.4)',
+  },
+  iconText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '900',
+    letterSpacing: -0.5,
+  },
+  wordmark: {
+    color: '#FFFFFF',
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: -0.5,
+  },
+});

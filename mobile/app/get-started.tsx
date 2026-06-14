@@ -1,135 +1,220 @@
-import { useRef, useState } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import * as Haptics from 'expo-haptics';
 
-type Mode = 'signup' | 'login';
+const { height: SCREEN_H } = Dimensions.get('window');
+const HERO_HEIGHT = SCREEN_H * 0.52;
 
 export default function GetStartedScreen() {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>('signup');
-  const slideAnim = useRef(new Animated.Value(0)).current;
 
-  function switchMode(next: Mode) {
-    if (next === mode) return;
-    setMode(next);
-    Haptics.selectionAsync();
-    Animated.spring(slideAnim, {
-      toValue: next === 'signup' ? 0 : 1,
-      useNativeDriver: false,
-      tension: 80,
-      friction: 12,
-    }).start();
+  function goSignUp() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push({ pathname: '/auth', params: { mode: 'signup' } });
   }
 
-  const indicatorLeft = slideAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['2%', '50%'],
-  });
+  function goLogIn() {
+    Haptics.selectionAsync();
+    router.push({ pathname: '/auth', params: { mode: 'login' } });
+  }
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom']}>
-      <View className="flex-1 px-6 pt-8 pb-6 justify-between">
-        {/* Header */}
-        <View>
-          <Text className="font-display text-[36px] leading-[42px] text-primary tracking-tight mb-2">
-            {mode === 'signup'
-              ? "Don't pull up to\ncampus alone."
-              : 'Welcome back 👋'}
-          </Text>
-          <Text className="font-body text-base text-secondary leading-6">
-            {mode === 'signup'
-              ? 'Find your roommate, link with coursemates, and join your campus hub.'
-              : 'Sign in to pick up where you left off.'}
-          </Text>
-        </View>
-
-        {/* Login / Sign Up toggle */}
-        <View className="bg-surface rounded-2xl p-1 flex-row relative mb-2">
-          <Animated.View
-            style={{
-              position: 'absolute',
-              top: 4, bottom: 4, left: indicatorLeft, width: '48%',
-              backgroundColor: '#FFFFFF',
-              borderRadius: 14,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.08,
-              shadowRadius: 4,
-              elevation: 2,
-            }}
-          />
-          <Pressable onPress={() => switchMode('signup')} className="flex-1 items-center py-3 z-10">
-            <Text className={`font-body-semi text-sm ${mode === 'signup' ? 'text-primary' : 'text-tertxt'}`}>
-              Sign Up
-            </Text>
-          </Pressable>
-          <Pressable onPress={() => switchMode('login')} className="flex-1 items-center py-3 z-10">
-            <Text className={`font-body-semi text-sm ${mode === 'login' ? 'text-primary' : 'text-tertxt'}`}>
-              Log In
-            </Text>
-          </Pressable>
-        </View>
-
-        {/* Auth buttons */}
-        <View className="gap-3">
-          {/* Apple — coming soon */}
-          <Pressable
-            disabled
-            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border border-border opacity-40"
-          >
-            <Text style={{ fontSize: 20, color: '#111827' }}>🍎</Text>
-            <Text className="font-body-semi text-base text-primary">
-              {mode === 'login' ? 'Continue with Apple' : 'Sign up with Apple'}
-            </Text>
-          </Pressable>
-
-          {/* Google — coming soon */}
-          <Pressable
-            disabled
-            className="flex-row items-center justify-center gap-3 bg-white rounded-2xl py-4 border border-border opacity-40"
-            style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1 }}
-          >
-            <View className="w-6 h-6 items-center justify-center">
-              <Text style={{ fontFamily: 'System', fontSize: 18, color: '#4285F4', fontWeight: '700' }}>G</Text>
+    <>
+      <StatusBar style="light" />
+      <View style={styles.root}>
+        {/* ── Blue hero half ── */}
+        <LinearGradient
+          colors={['#1D4ED8', '#1E3A8A']}
+          style={styles.hero}
+        >
+          {/* Top-left logo */}
+          <SafeAreaView edges={['top']} style={styles.logoRow}>
+            <View style={styles.logoMark}>
+              <Text style={styles.logoLetter}>U</Text>
             </View>
-            <Text className="font-body-semi text-base text-primary">
-              {mode === 'login' ? 'Continue with Google' : 'Sign up with Google'}
-            </Text>
-          </Pressable>
+            <Text style={styles.logoName}>UNIFY</Text>
+          </SafeAreaView>
 
-          {/* Phone — active */}
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push('/auth');
-            }}
-            className="flex-row items-center justify-center gap-3 bg-btn-primary rounded-2xl py-4 active:opacity-80"
-          >
-            <Text style={{ fontSize: 20 }}>📱</Text>
-            <Text className="font-body-semi text-base text-white">
-              {mode === 'login' ? 'Log in with Phone' : 'Sign up with Phone'}
-            </Text>
-          </Pressable>
-
-          {/* Email — coming soon */}
-          <View className="items-center py-2">
-            <Text className="font-body-semi text-sm text-tertxt">
-              {mode === 'login' ? 'Log in with email →' : 'Sign up with email →'}
-              {'  '}
-              <Text className="font-body text-xs">(coming soon)</Text>
-            </Text>
+          {/* 3D-style hero illustration */}
+          <View style={styles.illustrationWrap}>
+            <View style={styles.illustrationCircle}>
+              <Text style={styles.illustrationEmoji}>📢</Text>
+            </View>
+            {/* Sparkle accent */}
+            <Text style={styles.sparkle}>✦</Text>
           </View>
-        </View>
+        </LinearGradient>
 
-        {/* Footer */}
-        <Text className="font-body text-[12px] text-tertxt text-center leading-5">
-          By continuing, you agree to our{' '}
-          <Text className="underline">Terms of Use</Text> and{' '}
-          <Text className="underline">Privacy Policy</Text>
-        </Text>
+        {/* ── White CTA half ── */}
+        <View style={styles.sheet}>
+          <Text style={styles.headline}>
+            Your campus,{'\n'}connected.
+          </Text>
+          <Text style={styles.sub}>
+            Announcements, updates, and community — built for GCTU students.
+          </Text>
+
+          <Pressable
+            onPress={goSignUp}
+            style={({ pressed }) => [styles.btnPrimary, pressed && { opacity: 0.85 }]}
+          >
+            <Text style={styles.btnPrimaryText}>Get Started</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={goLogIn}
+            style={({ pressed }) => [styles.btnSecondary, pressed && { opacity: 0.7 }]}
+          >
+            <Text style={styles.btnSecondaryText}>I already have an account</Text>
+          </Pressable>
+
+          <Text style={styles.fine}>
+            By continuing, you agree to our{' '}
+            <Text style={styles.fineLink}>Terms of Service</Text> and{' '}
+            <Text style={styles.fineLink}>Privacy Policy</Text>.
+          </Text>
+        </View>
       </View>
-    </SafeAreaView>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+
+  // Hero
+  hero: {
+    height: HERO_HEIGHT,
+    paddingHorizontal: 24,
+  },
+  logoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  logoMark: {
+    width: 32,
+    height: 32,
+    borderRadius: 9,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoLetter: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  logoName: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+
+  // Illustration
+  illustrationWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  illustrationCircle: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.3,
+    shadowRadius: 40,
+    elevation: 12,
+  },
+  illustrationEmoji: {
+    fontSize: 80,
+  },
+  sparkle: {
+    position: 'absolute',
+    top: '15%',
+    right: '18%',
+    fontSize: 28,
+    color: '#FFFFFF',
+    opacity: 0.9,
+  },
+
+  // White sheet
+  sheet: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    marginTop: -28,
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 20,
+  },
+  headline: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#111827',
+    lineHeight: 34,
+    letterSpacing: -0.5,
+    marginBottom: 10,
+  },
+  sub: {
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 20,
+    marginBottom: 28,
+  },
+
+  // Buttons
+  btnPrimary: {
+    backgroundColor: '#111827',
+    borderRadius: 14,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  btnPrimaryText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 0.1,
+  },
+  btnSecondary: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 14,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  btnSecondaryText: {
+    color: '#374151',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+
+  // Fine print
+  fine: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    lineHeight: 16,
+  },
+  fineLink: {
+    textDecorationLine: 'underline',
+  },
+});
