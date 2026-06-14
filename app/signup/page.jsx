@@ -1,37 +1,55 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
-export default function LoginPage() {
-  const router       = useRouter();
-  const searchParams = useSearchParams();
-  const next         = searchParams.get('next') || '/feed';
+const GCTU_SLUG = 'gctu';
 
+export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName]         = useState('');
   const [status, setStatus]     = useState('idle');
   const [error, setError]       = useState('');
 
-  async function handleLogin(e) {
+  async function handleSignup(e) {
     e.preventDefault();
     setError('');
-    if (!email.trim() || !password) {
-      setError('Please enter your email and password.');
+    if (!name.trim() || !email.trim() || password.length < 6) {
+      setError('Fill in all fields. Password must be at least 6 characters.');
       return;
     }
     setStatus('loading');
     const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-    if (authError) {
-      setError(authError.message);
-      setStatus('idle');
-      return;
-    }
-    router.push(next);
-    router.refresh();
+
+    // 1. Create auth account
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: name } },
+    });
+    if (authError) { setError(authError.message); setStatus('idle'); return; }
+
+    // 2. Fetch GCTU university id
+    const { data: uni } = await supabase
+      .from('universities')
+      .select('id')
+      .eq('slug', GCTU_SLUG)
+      .single();
+
+    // 3. Create profile row
+    await supabase.from('profiles').insert({
+      id: authData.user.id,
+      university_id: uni.id,
+      full_name: name,
+      role: 'student',
+    });
+
+    setStatus('success');
+    router.push('/onboarding');
   }
 
   return (
@@ -44,10 +62,18 @@ export default function LoginPage() {
           <span className="font-bold text-lg text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
         </div>
 
-        <h1 className="font-bold text-2xl text-gray-900 mb-1" style={{ letterSpacing: '-0.02em' }}>Welcome back</h1>
-        <p className="text-gray-500 text-sm mb-6">Sign in to your GCTU account</p>
+        <h1 className="font-bold text-2xl text-gray-900 mb-1" style={{ letterSpacing: '-0.02em' }}>Create your account</h1>
+        <p className="text-gray-500 text-sm mb-6">GCTU students only · Free forever</p>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <form onSubmit={handleSignup} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Full name</label>
+            <input
+              type="text" value={name} onChange={(e) => setName(e.target.value)}
+              placeholder="Your full name"
+              className="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#003F8A] focus:ring-2 focus:ring-blue-100 transition-all"
+            />
+          </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Email address</label>
             <input
@@ -60,7 +86,7 @@ export default function LoginPage() {
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Password</label>
             <input
               type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
+              placeholder="At least 6 characters"
               className="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#003F8A] focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
@@ -71,13 +97,13 @@ export default function LoginPage() {
             type="submit" disabled={status === 'loading'}
             className="h-11 bg-[#003F8A] text-white font-semibold rounded-xl text-sm hover:bg-[#002d6b] active:scale-95 transition-all disabled:opacity-50"
           >
-            {status === 'loading' ? 'Signing in…' : 'Sign In'}
+            {status === 'loading' ? 'Creating account…' : 'Create Account'}
           </button>
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-[#003F8A] font-semibold hover:underline">Sign up</Link>
+          Already have an account?{' '}
+          <Link href="/login" className="text-[#003F8A] font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>
