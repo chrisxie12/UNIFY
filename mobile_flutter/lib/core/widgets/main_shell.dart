@@ -1,72 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class MainShell extends StatelessWidget {
-  final Widget child;
-  const MainShell({super.key, required this.child});
+  final StatefulNavigationShell navigationShell;
+
+  const MainShell({super.key, required this.navigationShell});
 
   static const _tabs = [
-    _Tab(path: '/app/feed',         icon: Icons.home_outlined,         activeIcon: Icons.home_rounded,          label: 'Feed'),
-    _Tab(path: '/app/communities',  icon: Icons.grid_view_outlined,    activeIcon: Icons.grid_view_rounded,     label: 'Hubs'),
-    _Tab(path: '/app/messaging',    icon: Icons.chat_bubble_outline,   activeIcon: Icons.chat_bubble_rounded,   label: 'Messages'),
-    _Tab(path: '/app/profile',      icon: Icons.person_outline_rounded,activeIcon: Icons.person_rounded,        label: 'Profile'),
+    _TabItem(icon: Icons.home_outlined,        activeIcon: Icons.home_rounded,        label: 'Feed'),
+    _TabItem(icon: Icons.grid_view_outlined,   activeIcon: Icons.grid_view_rounded,   label: 'Hubs'),
+    _TabItem(icon: Icons.chat_bubble_outline,  activeIcon: Icons.chat_bubble_rounded, label: 'Messages'),
+    _TabItem(icon: Icons.person_outline_rounded,activeIcon: Icons.person_rounded,     label: 'Profile'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    final activeIdx = _tabs.indexWhere((t) => location.startsWith(t.path));
-
     return Scaffold(
-      body: child,
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          border: Border(top: BorderSide(color: AppColors.border, width: 0.5)),
+      body: navigationShell,
+      bottomNavigationBar: _UnifyBottomNav(
+        currentIndex: navigationShell.currentIndex,
+        onTap: (index) => navigationShell.goBranch(
+          index,
+          // Tap current tab again → pop to root of that branch
+          initialLocation: index == navigationShell.currentIndex,
         ),
-        child: SafeArea(
-          top: false,
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              children: List.generate(_tabs.length, (i) {
-                final tab = _tabs[i];
-                final active = i == activeIdx;
-                return Expanded(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => context.go(tab.path),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 44, height: 32,
-                          decoration: BoxDecoration(
-                            color: active ? AppColors.primaryLight.withOpacity(0.1) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Icon(
-                            active ? tab.activeIcon : tab.icon,
-                            size: 22,
-                            color: active ? AppColors.primaryLight : AppColors.grey3,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          tab.label,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-                            color: active ? AppColors.primaryLight : AppColors.grey3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
+      ),
+    );
+  }
+}
+
+class _UnifyBottomNav extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const _UnifyBottomNav({required this.currentIndex, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.white,
+        border: Border(top: BorderSide(color: AppColors.border, width: 0.5)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            children: List.generate(
+              MainShell._tabs.length,
+              (i) => _NavItem(
+                tab: MainShell._tabs[i],
+                active: currentIndex == i,
+                badge: i == 2 ? 0 : 0, // messaging badge — wire to real unread count
+                onTap: () => onTap(i),
+              ),
             ),
           ),
         ),
@@ -75,10 +65,88 @@ class MainShell extends StatelessWidget {
   }
 }
 
-class _Tab {
-  final String path;
+class _NavItem extends StatelessWidget {
+  final _TabItem tab;
+  final bool active;
+  final int badge;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.tab,
+    required this.active,
+    required this.badge,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 44,
+              height: 34,
+              decoration: BoxDecoration(
+                color: active ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Icon(
+                    active ? tab.activeIcon : tab.icon,
+                    color: active ? AppColors.primary : AppColors.grey3,
+                    size: 22,
+                  ),
+                  if (badge > 0)
+                    Positioned(
+                      top: 4,
+                      right: 6,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          color: AppColors.error,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            badge > 9 ? '9+' : '$badge',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              tab.label,
+              style: AppTextStyles.caption.copyWith(
+                color: active ? AppColors.primary : AppColors.grey3,
+                fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TabItem {
   final IconData icon;
   final IconData activeIcon;
   final String label;
-  const _Tab({required this.path, required this.icon, required this.activeIcon, required this.label});
+  const _TabItem({required this.icon, required this.activeIcon, required this.label});
 }

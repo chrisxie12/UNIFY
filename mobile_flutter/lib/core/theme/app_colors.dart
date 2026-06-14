@@ -3,49 +3,84 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // GCTU Brand
-  static const primary     = Color(0xFF003F8A);  // GCTU navy
-  static const primaryLight= Color(0xFF1D4ED8);
-  static const primaryDark = Color(0xFF1E3A8A);
+  // Brand — GCTU Navy
+  static const Color primary = Color(0xFF003F8A);
+  static const Color primaryLight = Color(0xFF1D5BB5);
+  static const Color primaryDark = Color(0xFF002D63);
 
-  // Gradient
-  static const gradientStart = Color(0xFF1D4ED8);
-  static const gradientEnd   = Color(0xFF003F8A);
-
-  // Neutrals
-  static const dark      = Color(0xFF111827);
-  static const grey1     = Color(0xFF374151);
-  static const grey2     = Color(0xFF6B7280);
-  static const grey3     = Color(0xFF9CA3AF);
-  static const border    = Color(0xFFE5E7EB);
-  static const surface   = Color(0xFFF3F4F6);
-  static const surfaceAlt= Color(0xFFF9FAFB);
-  static const white     = Color(0xFFFFFFFF);
+  // Accent
+  static const Color accent = Color(0xFF1D4ED8);
 
   // Semantic
-  static const success   = Color(0xFF10B981);
-  static const warning   = Color(0xFFF59E0B);
-  static const error     = Color(0xFFEF4444);
-  static const info      = Color(0xFF3B82F6);
+  static const Color success = Color(0xFF10B981);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
+  static const Color info = Color(0xFF3B82F6);
 
-  // Category colours (announcements)
-  static const catAcademic = Color(0xFF1D4ED8);
-  static const catEvents   = Color(0xFF8B5CF6);
-  static const catAdmin    = Color(0xFFF59E0B);
-  static const catGeneral  = Color(0xFF6B7280);
-  static const catUrgent   = Color(0xFFEF4444);
+  // Neutrals
+  static const Color dark = Color(0xFF111827);
+  static const Color grey1 = Color(0xFF374151);
+  static const Color grey2 = Color(0xFF6B7280);
+  static const Color grey3 = Color(0xFF9CA3AF);
+  static const Color grey4 = Color(0xFFD1D5DB);
+  static const Color border = Color(0xFFE5E7EB);
+  static const Color surface = Color(0xFFF3F4F6);
+  static const Color background = Color(0xFFF9FAFB);
+  static const Color white = Color(0xFFFFFFFF);
 
-  static const gradient = LinearGradient(
-    colors: [gradientStart, gradientEnd],
+  // Kept for legacy compat
+  static const Color surfaceAlt = background;
+
+  // Category colours
+  static const Color catUrgent = Color(0xFFEF4444);
+  static const Color catAcademic = Color(0xFF003F8A);
+  static const Color catEvents = Color(0xFF8B5CF6);
+  static const Color catAdmin = Color(0xFFF59E0B);
+  static const Color catGeneral = Color(0xFF6B7280);
+
+  // Gradients
+  static const LinearGradient brandGradient = LinearGradient(
+    colors: [primary, primaryDark],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
 
-  static Color categoryColor(String cat) => switch (cat) {
-    'academic' => catAcademic,
-    'events'   => catEvents,
-    'admin'    => catAdmin,
-    'urgent'   => catUrgent,
-    _          => catGeneral,
-  };
+  static const LinearGradient brandGradientDiag = LinearGradient(
+    colors: [primaryLight, primaryDark],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // Legacy alias
+  static const LinearGradient gradient = brandGradient;
+
+  static Color categoryColor(String category) {
+    switch (category) {
+      case 'urgent':
+        return catUrgent;
+      case 'academic':
+        return catAcademic;
+      case 'events':
+        return catEvents;
+      case 'admin':
+        return catAdmin;
+      default:
+        return catGeneral;
+    }
+  }
+
+  static String categoryIcon(String category) {
+    switch (category) {
+      case 'academic':
+        return '📚';
+      case 'events':
+        return '🎉';
+      case 'admin':
+        return '🏛️';
+      case 'urgent':
+        return '🚨';
+      default:
+        return '📢';
+    }
+  }
 }

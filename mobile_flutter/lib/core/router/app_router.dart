@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../providers/supabase_provider.dart';
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
@@ -13,27 +12,42 @@ import '../../features/communities/presentation/screens/communities_screen.dart'
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/admin/presentation/screens/admin_screen.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+// Notifies GoRouter whenever the Supabase auth state changes
+class _GoRouterRefreshStream extends ChangeNotifier {
+  _GoRouterRefreshStream() {
+    _sub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+      notifyListeners();
+    });
+  }
+
+  late final dynamic _sub;
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
+  }
+}
+
+final _refreshListenable = _GoRouterRefreshStream();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final notifier = _AuthNotifier(ref);
-
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
-    refreshListenable: notifier,
+    refreshListenable: _refreshListenable,
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
-      final isAuthed = session != null;
-      final loc = state.uri.path;
+      final loggedIn = session != null;
+      final loc = state.matchedLocation;
 
-      final publicRoutes = ['/', '/get-started', '/auth'];
-      final isPublic = publicRoutes.any((r) => loc == r || loc.startsWith('$r?'));
+      const authPages = ['/', '/get-started', '/auth', '/onboarding'];
+      final isAuthPage = authPages.any((p) => loc == p || loc.startsWith(p));
 
-      if (!isAuthed && !isPublic) return '/get-started';
-      if (isAuthed && isPublic) return '/app/feed';
+      if (!loggedIn && !isAuthPage) return '/get-started';
+      // Allow onboarding even when logged in
+      if (loggedIn && isAuthPage && loc != '/onboarding') return '/app/feed';
       return null;
     },
     routes: [
@@ -48,34 +62,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
-      ShellRoute(
-        navigatorKey: _shellNavigatorKey,
-        builder: (_, __, child) => MainShell(child: child),
-        routes: [
-          GoRoute(
-            path: '/app/feed',
-            pageBuilder: (_, __) => const NoTransitionPage(child: FeedScreen()),
-          ),
-          GoRoute(
-            path: '/app/communities',
-            pageBuilder: (_, __) => const NoTransitionPage(child: CommunitiesScreen()),
-          ),
-          GoRoute(
-            path: '/app/messaging',
-            pageBuilder: (_, __) => const NoTransitionPage(child: MessagingScreen()),
-          ),
-          GoRoute(
-            path: '/app/profile',
-            pageBuilder: (_, __) => const NoTransitionPage(child: ProfileScreen()),
-          ),
+      GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
+
+      // StatefulShellRoute preserves each tab's scroll & nav state independently
+      StatefulShellRoute.indexedStack(
+        builder: (_, __, shell) => MainShell(navigationShell: shell),
+        branches: [
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/feed', builder: (_, __) => const FeedScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/communities', builder: (_, __) => const CommunitiesScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/profile', builder: (_, __) => const ProfileScreen()),
+          ]),
         ],
       ),
     ],
   );
 });
-
-class _AuthNotifier extends ChangeNotifier {
-  _AuthNotifier(Ref ref) {
-    ref.listen(authStateProvider, (_, __) => notifyListeners());
-  }
-}
