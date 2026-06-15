@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/main_shell.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
@@ -37,7 +38,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     refreshListenable: _refreshListenable,
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final session = Supabase.instance.client.auth.currentSession;
       final loggedIn = session != null;
       final loc = state.matchedLocation;
@@ -46,8 +47,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthPage = authPages.any((p) => loc == p || loc.startsWith(p));
 
       if (!loggedIn && !isAuthPage) return '/get-started';
-      // Allow onboarding even when logged in
-      if (loggedIn && isAuthPage && loc != '/onboarding') return '/app/feed';
+      if (loggedIn && isAuthPage && loc != '/onboarding') {
+        try {
+          final user = await ref.read(currentAppUserProvider.future);
+          if (user != null && !user.onboardingComplete) return '/onboarding';
+        } catch (_) {}
+        return '/app/feed';
+      }
       return null;
     },
     routes: [

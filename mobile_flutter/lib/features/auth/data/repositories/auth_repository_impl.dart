@@ -11,7 +11,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<AppUser> signUp({required String email, required String password}) async {
     final res = await _client.auth.signUp(email: email, password: password);
-    if (res.user == null) throw Exception('Sign up failed');
+    if (res.user == null) throw Exception('Sign up failed — please try again.');
+    if (res.session == null) {
+      // Supabase has email confirmation enabled. The account was created but
+      // no session exists until the user clicks the link in their inbox.
+      throw Exception(
+        'Account created! Check your inbox for a confirmation link, then sign in.',
+      );
+    }
     return _fetchProfile(res.user!.id, email);
   }
 
