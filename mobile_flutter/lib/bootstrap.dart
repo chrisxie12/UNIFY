@@ -21,6 +21,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   await runZonedGuarded(
     () async {
+      WidgetsFlutterBinding.ensureInitialized();
       final widget = await builder();
       runApp(widget);
     },
