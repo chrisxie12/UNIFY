@@ -65,7 +65,7 @@ class FeedRepositoryImpl implements FeedRepository {
           .from('announcement_reads')
           .select('announcement_id')
           .eq('user_id', userId)
-          .inFilter('announcement_id', ids);
+          .in_('announcement_id', ids);
       readIds = (reads as List).map((r) => r['announcement_id'] as String).toSet();
     }
 
