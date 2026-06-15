@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
+import '../../features/auth/domain/entities/app_user.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
@@ -15,30 +16,35 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
 
-// Notifies GoRouter whenever the Supabase auth state changes
+// Notifies GoRouter on auth state changes AND when the user profile loads.
+// Keeping this synchronous avoids async-redirect issues with StatefulShellRoute.
 class _GoRouterRefreshStream extends ChangeNotifier {
-  _GoRouterRefreshStream() {
-    _sub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+  _GoRouterRefreshStream(Ref ref) {
+    _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+      notifyListeners();
+    });
+    ref.listen<AsyncValue<AppUser?>>(currentAppUserProvider, (_, __) {
       notifyListeners();
     });
   }
 
-  late final dynamic _sub;
+  late final dynamic _authSub;
 
   @override
   void dispose() {
-    _sub.cancel();
+    _authSub.cancel();
     super.dispose();
   }
 }
 
-final _refreshListenable = _GoRouterRefreshStream();
-
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final refreshListenable = _GoRouterRefreshStream(ref);
+  ref.onDispose(refreshListenable.dispose);
+
   return GoRouter(
     initialLocation: '/',
-    refreshListenable: _refreshListenable,
-    redirect: (context, state) async {
+    refreshListenable: refreshListenable,
+    redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
       final loggedIn = session != null;
       final loc = state.matchedLocation;
@@ -48,10 +54,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       if (!loggedIn && !isAuthPage) return '/get-started';
       if (loggedIn && isAuthPage && loc != '/onboarding') {
-        try {
-          final user = await ref.read(currentAppUserProvider.future);
-          if (user != null && !user.onboardingComplete) return '/onboarding';
-        } catch (_) {}
+        final userAsync = ref.read(currentAppUserProvider);
+        // While the profile is still loading, hold here; the stream will
+        // call notifyListeners() once it resolves and re-run this redirect.
+        if (userAsync.isLoading) return null;
+        final user = userAsync.valueOrNull;
+        if (user != null && !user.onboardingComplete) return '/onboarding';
         return '/app/feed';
       }
       return null;
