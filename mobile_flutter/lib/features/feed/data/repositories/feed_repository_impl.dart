@@ -46,18 +46,16 @@ class FeedRepositoryImpl implements FeedRepository {
   }) async {
     final userId = _client.auth.currentUser?.id;
 
-    var query = _client
+    var baseQuery = _client
         .from('announcements')
         .select('*, profiles(display_name, avatar_url)')
         .order('is_pinned', ascending: false)
-        .order('created_at', ascending: false)
-        .limit(limit);
+        .order('created_at', ascending: false);
 
-    if (cursor != null) {
-      query = query.lt('created_at', cursor);
-    }
-
-    final data = await query as List<dynamic>;
+    final data = await (cursor != null
+            ? baseQuery.lt('created_at', cursor).limit(limit)
+            : baseQuery.limit(limit))
+        as List<dynamic>;
 
     // Batch fetch read status
     Set<String> readIds = {};
