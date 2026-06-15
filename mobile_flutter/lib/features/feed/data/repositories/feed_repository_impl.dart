@@ -46,26 +46,25 @@ class FeedRepositoryImpl implements FeedRepository {
   }) async {
     final userId = _client.auth.currentUser?.id;
 
-    final select = _client
+    // Build query: apply cursor filter BEFORE order/limit so types stay compatible
+    final data = await _client
         .from('announcements')
-        .select('*, profiles(display_name, avatar_url)');
-
-    final filtered = cursor != null ? select.lt('created_at', cursor) : select;
-
-    final data = await filtered
+        .select('*, profiles(display_name, avatar_url)')
+        .filter('created_at', 'lt', cursor ?? '9999-12-31')
         .order('is_pinned', ascending: false)
         .order('created_at', ascending: false)
         .limit(limit) as List<dynamic>;
 
-    // Batch fetch read status
+    // Batch fetch read status using raw filter (avoids .in_ naming issues)
     Set<String> readIds = {};
     if (userId != null && data.isNotEmpty) {
-      final ids = data.map((e) => e['id']).toList();
+      final ids = data.map((e) => e['id'] as String).toList();
+      final idList = ids.join(',');
       final reads = await _client
           .from('announcement_reads')
           .select('announcement_id')
           .eq('user_id', userId)
-          .in_('announcement_id', ids);
+          .filter('announcement_id', 'in', '($idList)');
       readIds = (reads as List).map((r) => r['announcement_id'] as String).toSet();
     }
 
