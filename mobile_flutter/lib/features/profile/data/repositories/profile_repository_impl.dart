@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../domain/entities/profile_entity.dart';
+import '../../domain/entities/profile.dart';
 import '../models/profile_model.dart';
 
 class ProfileRepositoryImpl {
@@ -7,7 +7,7 @@ class ProfileRepositoryImpl {
 
   ProfileRepositoryImpl(this._client);
 
-  Future<ProfileEntity?> getProfile(String userId) async {
+  Future<Profile?> getProfile(String userId) async {
     final data = await _client
         .from('profiles')
         .select()
@@ -15,10 +15,10 @@ class ProfileRepositoryImpl {
         .maybeSingle();
     if (data == null) return null;
     final email = _client.auth.currentUser?.email;
-    return ProfileModel.fromJson(data, email: email);
+    return ProfileModel.fromJson({...data, 'email': email ?? ''});
   }
 
-  Future<ProfileEntity> updateProfile(
+  Future<Profile> updateProfile(
     String userId,
     Map<String, dynamic> updates,
   ) async {
@@ -29,7 +29,7 @@ class ProfileRepositoryImpl {
         .select()
         .single();
     final email = _client.auth.currentUser?.email;
-    return ProfileModel.fromJson(data, email: email);
+    return ProfileModel.fromJson({...data, 'email': email ?? ''});
   }
 
   Future<String?> uploadAvatar(String userId, List<int> bytes, String ext) async {
