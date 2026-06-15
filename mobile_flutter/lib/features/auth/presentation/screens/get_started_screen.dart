@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -51,22 +52,10 @@ class GetStartedScreen extends StatelessWidget {
                     color: Colors.white.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      const Icon(Icons.campaign_rounded, size: 60, color: Colors.white),
-                      Positioned(
-                        top: 18,
-                        right: 18,
-                        child: Text(
-                          '✦',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    width: 72,
+                    height: 72,
                   ),
                 ),
                 const SizedBox(height: 24),

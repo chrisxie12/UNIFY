@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -66,7 +67,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  child: const Icon(Icons.campaign_rounded, size: 44, color: Colors.white),
+                  child: SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    width: 52,
+                    height: 52,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 const Text(
