@@ -46,17 +46,14 @@ class GetStartedScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                  width: 110,
+                  height: 110,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: SvgPicture.asset(
-                    'assets/images/logo.svg',
-                    width: 72,
-                    height: 72,
-                  ),
+                  padding: const EdgeInsets.all(18),
+                  child: SvgPicture.asset('assets/images/logo.svg'),
                 ),
                 const SizedBox(height: 24),
                 const Text(

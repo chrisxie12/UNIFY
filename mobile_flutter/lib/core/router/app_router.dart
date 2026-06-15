@@ -49,8 +49,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggedIn = session != null;
       final loc = state.matchedLocation;
 
-      const authPages = ['/', '/get-started', '/auth', '/onboarding'];
-      final isAuthPage = authPages.any((p) => loc == p || loc.startsWith(p));
+      // Use explicit checks — startsWith('/') would match every path
+      final isAuthPage = loc == '/' ||
+          loc == '/get-started' ||
+          loc.startsWith('/auth') ||
+          loc.startsWith('/onboarding');
 
       if (!loggedIn && !isAuthPage) return '/get-started';
       if (loggedIn && isAuthPage && loc != '/onboarding') {

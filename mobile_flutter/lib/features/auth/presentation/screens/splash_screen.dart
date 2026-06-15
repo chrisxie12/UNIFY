@@ -61,17 +61,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 88,
+                  height: 88,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(24),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22),
                   ),
-                  child: SvgPicture.asset(
-                    'assets/images/logo.svg',
-                    width: 52,
-                    height: 52,
-                  ),
+                  padding: const EdgeInsets.all(14),
+                  child: SvgPicture.asset('assets/images/logo.svg'),
                 ),
                 const SizedBox(height: 20),
                 const Text(
