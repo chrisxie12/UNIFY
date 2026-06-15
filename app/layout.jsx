@@ -1,5 +1,5 @@
 import './globals.css';
-import { Analytics } from '@vercel/analytics/next';
+import VercelAnalytics from './analytics';
 
 export const metadata = {
   title: 'UNIFY — Campus Identity & Announcement Platform',
@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased bg-white" style={{ fontFamily: "system-ui, sans-serif" }}>
         {children}
-        <Analytics />
+        <VercelAnalytics />
       </body>
     </html>
   );
