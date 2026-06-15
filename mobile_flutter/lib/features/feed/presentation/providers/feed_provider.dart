@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../data/models/announcement_model.dart';
 import '../../data/repositories/feed_repository_impl.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/feed_repository.dart';
@@ -93,7 +94,7 @@ class FeedNotifier extends AutoDisposeAsyncNotifier<FeedState> {
   }
 
   Announcement _withRead(Announcement a) {
-    // Reconstruct with isRead=true using the model
+    if (a is AnnouncementModel) return a.copyWithRead();
     return a;
   }
 }
