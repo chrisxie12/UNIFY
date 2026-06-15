@@ -48,7 +48,7 @@ class FeedRepositoryImpl implements FeedRepository {
 
     var query = _client
         .from('announcements')
-        .select('*, profiles(display_name, avatar_url)')
+        .select('*, profiles!announcements_author_id_fkey(display_name, avatar_url)')
         .order('is_pinned', ascending: false)
         .order('created_at', ascending: false)
         .limit(limit);
