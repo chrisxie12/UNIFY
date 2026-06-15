@@ -103,7 +103,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 36),
               AppTextField(
                 label: 'Email',
-                hint: 'you@gctu.edu.gh',
+                hint: 'you@university.edu.gh',
                 controller: _emailCtrl,
                 keyboardType: TextInputType.emailAddress,
                 errorText: _emailError,

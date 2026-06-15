@@ -75,7 +75,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                       style: AppTextStyles.headingS,
                     ),
                     Text(
-                      'GCTU Campus Feed',
+                      'Campus Feed',
                       style: AppTextStyles.caption.copyWith(color: AppColors.grey2),
                     ),
                   ],

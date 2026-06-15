@@ -89,7 +89,7 @@ class AnnouncementCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              item.authorName ?? 'GCTU Admin',
+                              item.authorName ?? 'Campus Admin',
                               style: AppTextStyles.label.copyWith(fontSize: 12),
                             ),
                             Text(

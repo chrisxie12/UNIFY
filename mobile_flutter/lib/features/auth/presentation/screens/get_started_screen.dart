@@ -107,7 +107,7 @@ class GetStartedScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Welcome to\nGCTU UNIFY', style: AppTextStyles.h1),
+                  Text('Welcome to\nUNIFY', style: AppTextStyles.h1),
                   const SizedBox(height: 10),
                   Text(
                     'Stay updated with announcements, connect with peers, and never miss what matters on campus.',
