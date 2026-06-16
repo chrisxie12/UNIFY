@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 
 class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -9,10 +8,10 @@ class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
 
   static const _tabs = [
-    _TabItem(icon: Icons.home_outlined,         activeIcon: Icons.home_outlined,         label: 'Feed'),
-    _TabItem(icon: Icons.grid_view_outlined,    activeIcon: Icons.grid_view_outlined,    label: 'Hubs'),
-    _TabItem(icon: Icons.chat_bubble_outline,   activeIcon: Icons.chat_bubble_outline,   label: 'Messages'),
-    _TabItem(icon: Icons.person_outline_rounded,activeIcon: Icons.person_outline_rounded,label: 'Profile'),
+    _TabItem(icon: CupertinoIcons.house, label: 'Feed'),
+    _TabItem(icon: CupertinoIcons.square_grid_2x2, label: 'Hubs'),
+    _TabItem(icon: CupertinoIcons.chat_bubble, label: 'Messages'),
+    _TabItem(icon: CupertinoIcons.person, label: 'Profile'),
   ];
 
   @override
@@ -23,7 +22,6 @@ class MainShell extends StatelessWidget {
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(
           index,
-          // Tap current tab again → pop to root of that branch
           initialLocation: index == navigationShell.currentIndex,
         ),
       ),
@@ -37,24 +35,29 @@ class _UnifyBottomNav extends StatelessWidget {
 
   const _UnifyBottomNav({required this.currentIndex, required this.onTap});
 
+  static const Color primaryBlue = Color(0xFF0066FF);
+  static const Color gray400 = Color(0xFFA1A1AA);
+  static const Color gray200 = Color(0xFFE4E4E7);
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 64 + MediaQuery.of(context).padding.bottom,
       decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.border, width: 0.5)),
+        color: Colors.white,
+        border: Border(top: BorderSide(color: gray200, width: 1.0)),
       ),
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          padding: const EdgeInsets.only(top: 6),
           child: Row(
             children: List.generate(
               MainShell._tabs.length,
               (i) => _NavItem(
                 tab: MainShell._tabs[i],
                 active: currentIndex == i,
-                badge: i == 2 ? 0 : 0, // messaging badge — wire to real unread count
+                badge: i == 2 ? 3 : 0,
                 onTap: () => onTap(i),
               ),
             ),
@@ -65,7 +68,7 @@ class _UnifyBottomNav extends StatelessWidget {
   }
 }
 
-class _NavItem extends StatelessWidget {
+class _NavItem extends StatefulWidget {
   final _TabItem tab;
   final bool active;
   final int badge;
@@ -79,65 +82,113 @@ class _NavItem extends StatelessWidget {
   });
 
   @override
+  State<_NavItem> createState() => _NavItemState();
+}
+
+class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
+    const primaryBlue = _UnifyBottomNav.primaryBlue;
+    const gray400 = _UnifyBottomNav.gray400;
+
     return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 44,
-              height: 34,
-              decoration: BoxDecoration(
-                color: active ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Icon(
-                    active ? tab.activeIcon : tab.icon,
-                    color: active ? Theme.of(context).colorScheme.primary : AppColors.grey3,
-                    size: 22,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 60),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 100),
+            opacity: _isPressed ? 0.6 : 1.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Dot indicator
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  curve: const Cubic(0.34, 1.56, 0.64, 1),
+                  width: 4.5,
+                  height: 4.5,
+                  margin: const EdgeInsets.only(bottom: 4),
+                  decoration: BoxDecoration(
+                    color: widget.active ? primaryBlue : Colors.transparent,
+                    shape: BoxShape.circle,
                   ),
-                  if (badge > 0)
-                    Positioned(
-                      top: 4,
-                      right: 6,
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: const BoxDecoration(
-                          color: AppColors.error,
-                          shape: BoxShape.circle,
+                  transform: Matrix4.diagonal3Values(widget.active ? 1.0 : 0.0, widget.active ? 1.0 : 0.0, 1.0),
+                  transformAlignment: Alignment.center,
+                ),
+
+                // Icon with translateY + animated color
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  transform: Matrix4.translationValues(0, widget.active ? -1 : 0, 0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      TweenAnimationBuilder<Color?>(
+                        tween: ColorTween(
+                          begin: gray400,
+                          end: widget.active ? primaryBlue : gray400,
                         ),
-                        child: Center(
-                          child: Text(
-                            badge > 9 ? '9+' : '$badge',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
+                        duration: const Duration(milliseconds: 200),
+                        builder: (context, color, _) => Icon(
+                          widget.tab.icon,
+                          color: color,
+                          size: 24,
+                        ),
+                      ),
+                      if (widget.badge > 0)
+                        Positioned(
+                          top: -4,
+                          right: -4,
+                          child: Container(
+                            height: 16,
+                            constraints: const BoxConstraints(minWidth: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              color: primaryBlue,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${widget.badge}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                ],
-              ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                // Label with animated color + weight
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: widget.active ? primaryBlue : gray400,
+                    fontWeight: widget.active ? FontWeight.w600 : FontWeight.w500,
+                  ),
+                  child: Text(widget.tab.label),
+                ),
+              ],
             ),
-            const SizedBox(height: 2),
-            Text(
-              tab.label,
-              style: AppTextStyles.caption.copyWith(
-                color: active ? Theme.of(context).colorScheme.primary : AppColors.grey3,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -146,7 +197,6 @@ class _NavItem extends StatelessWidget {
 
 class _TabItem {
   final IconData icon;
-  final IconData activeIcon;
   final String label;
-  const _TabItem({required this.icon, required this.activeIcon, required this.label});
+  const _TabItem({required this.icon, required this.label});
 }
