@@ -8,6 +8,7 @@ import '../../features/auth/domain/entities/app_user.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
+import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
@@ -53,6 +54,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // Explicit checks — startsWith('/') would match every path
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
+          loc == '/welcome' ||
           loc.startsWith('/auth') ||
           loc.startsWith('/onboarding');
 
@@ -68,6 +70,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+      GoRoute(path: '/welcome', builder: (_, __) => const OnboardingCarouselScreen()),
       GoRoute(path: '/get-started', builder: (_, __) => const GetStartedScreen()),
       GoRoute(
         path: '/auth',
