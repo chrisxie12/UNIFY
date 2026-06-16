@@ -123,7 +123,36 @@ class _ProfileSliverHeader extends ConsumerWidget {
                 // Tappable avatar -> edit profile
                 GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
-                  child: _Avatar(profile: profile, radius: 44, showBorder: true),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      _Avatar(profile: profile, radius: 44, showBorder: true),
+                      Positioned(
+                        bottom: 2,
+                        right: 2,
+                        child: Container(
+                          width: 26,
+                          height: 26,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.18),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.camera_alt_rounded,
+                            size: 14,
+                            color: activeTheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 12),
                 // Name + verification badge
@@ -245,15 +274,28 @@ class _InitialsAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: AppColors.primaryLight,
-      child: Text(
-        initials,
-        style: TextStyle(
-          fontSize: radius * 0.7,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
+    final primary = Theme.of(context).colorScheme.primary;
+    final lighter = Color.alphaBlend(Colors.white.withOpacity(0.30), primary);
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [lighter, primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: TextStyle(
+            fontSize: radius * 0.65,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
         ),
       ),
     );
@@ -275,38 +317,54 @@ class _BioSection extends StatelessWidget {
     if (!hasBio) {
       return GestureDetector(
         onTap: () => context.push('/app/profile/edit'),
-        child: Row(
-          children: [
-            Icon(Icons.edit_note_outlined, size: 18, color: AppColors.grey3),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Add a bio to tell people about yourself…',
-                style: AppTextStyles.body.copyWith(color: AppColors.grey3),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.edit_note_outlined, size: 18, color: AppColors.grey2),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Add a bio to tell people about yourself…',
+                  style: AppTextStyles.body.copyWith(color: AppColors.grey2),
+                ),
               ),
-            ),
-            Icon(Icons.chevron_right, size: 18, color: AppColors.grey4),
-          ],
+              Icon(Icons.chevron_right, size: 18, color: AppColors.grey3),
+            ],
+          ),
         ),
       );
     }
 
     return GestureDetector(
       onTap: () => context.push('/app/profile/edit'),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: Text(profile.bio!, style: AppTextStyles.body)),
-          const SizedBox(width: 8),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.edit_outlined, size: 13, color: AppColors.grey3),
-              const SizedBox(width: 3),
-              Text('Edit', style: AppTextStyles.caption),
-            ],
-          ),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.border, width: 0.5),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Text(profile.bio!, style: AppTextStyles.body)),
+            const SizedBox(width: 8),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.edit_outlined, size: 13, color: AppColors.grey3),
+                const SizedBox(width: 3),
+                Text('Edit', style: AppTextStyles.caption),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -836,7 +894,9 @@ class _BadgeCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             badge.label,
-            style: AppTextStyles.caption.copyWith(
+            style: const TextStyle(
+              fontSize: 11,
+              height: 1.2,
               color: AppColors.dark,
               fontWeight: FontWeight.w600,
             ),
