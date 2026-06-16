@@ -135,7 +135,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _departmentCtrl.text = profile.department ?? '';
     _graduationYearCtrl.text =
         profile.expectedGraduationYear?.toString() ?? '';
-    // phone / hostel are new fields; may be absent from the entity
+    _phoneCtrl.text = profile.phone ?? '';
+    _hostelCtrl.text = profile.hostel ?? '';
     _instagramCtrl.text = profile.instagramUrl ?? '';
     _linkedinCtrl.text = profile.linkedinUrl ?? '';
     _twitterCtrl.text = profile.twitterUrl ?? '';
@@ -162,6 +163,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final gradYear = int.tryParse(_graduationYearCtrl.text);
     if (gradYear != p.expectedGraduationYear) return true;
     if (_yearOfStudy != p.yearOfStudy) return true;
+    if (_phoneCtrl.text != (p.phone ?? '')) return true;
+    if (_hostelCtrl.text != (p.hostel ?? '')) return true;
     if (_instagramCtrl.text != (p.instagramUrl ?? '')) return true;
     if (_linkedinCtrl.text != (p.linkedinUrl ?? '')) return true;
     if (_twitterCtrl.text != (p.twitterUrl ?? '')) return true;

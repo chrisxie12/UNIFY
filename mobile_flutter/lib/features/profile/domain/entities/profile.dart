@@ -26,6 +26,10 @@ class Profile extends Equatable {
   final String? githubUrl;
   final String? portfolioUrl;
 
+  // Contact
+  final String? phone;
+  final String? hostel;
+
   // Metadata
   final List<String> interests;
   final bool isVerified;
@@ -52,6 +56,8 @@ class Profile extends Equatable {
     this.twitterUrl,
     this.githubUrl,
     this.portfolioUrl,
+    this.phone,
+    this.hostel,
     this.interests = const [],
     this.isVerified = false,
     this.profileViews = 0,
@@ -107,6 +113,8 @@ class Profile extends Equatable {
         twitterUrl,
         githubUrl,
         portfolioUrl,
+        phone,
+        hostel,
         interests,
         isVerified,
         profileViews,
