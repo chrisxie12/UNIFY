@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/profile.dart';
 import '../models/profile_model.dart';
@@ -32,7 +34,7 @@ class ProfileRepositoryImpl {
     return ProfileModel.fromJson({...data, 'email': email ?? ''});
   }
 
-  Future<String?> uploadAvatar(String userId, List<int> bytes, String ext) async {
+  Future<String?> uploadAvatar(String userId, Uint8List bytes, String ext) async {
     final path = '$userId/avatar.$ext';
     await _client.storage.from('avatars').uploadBinary(
           path,
