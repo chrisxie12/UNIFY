@@ -30,7 +30,7 @@ class AppButton extends StatelessWidget {
 
     switch (variant) {
       case AppButtonVariant.primary:
-        bg = enabled ? AppColors.dark : AppColors.surface;
+        bg = enabled ? AppColors.primary : AppColors.surface;
         fg = enabled ? AppColors.white : AppColors.grey3;
       case AppButtonVariant.secondary:
         bg = AppColors.surface;
