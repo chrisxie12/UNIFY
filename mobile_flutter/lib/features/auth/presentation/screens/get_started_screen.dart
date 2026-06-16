@@ -70,7 +70,7 @@ class GetStartedScreen extends StatelessWidget {
                   'Your campus, connected.',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -133,7 +133,7 @@ class GetStartedScreen extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.07),
+        color: Colors.white.withValues(alpha: 0.07),
       ),
     );
   }

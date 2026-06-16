@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,7 +103,7 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
               child: TextButton(
                 onPressed: _finish,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white.withOpacity(0.80),
+                  foregroundColor: Colors.white.withValues(alpha: 0.80),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 ),
                 child: const Text(
@@ -272,9 +270,9 @@ class _RingsPainter extends CustomPainter {
     ];
 
     for (final (center, radius, alpha) in rings) {
-      paint.color = Colors.white.withOpacity(alpha);
+      paint.color = Colors.white.withValues(alpha: alpha);
       canvas.drawCircle(center, radius, paint);
-      paint.color = Colors.white.withOpacity(alpha * 0.5);
+      paint.color = Colors.white.withValues(alpha: alpha * 0.5);
       canvas.drawCircle(center, radius * 1.45, paint);
     }
   }
@@ -305,7 +303,7 @@ class _IllustrationWidget extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 blurRadius: 60,
                 spreadRadius: 20,
               ),
@@ -317,9 +315,9 @@ class _IllustrationWidget extends StatelessWidget {
           width: 140,
           height: 140,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.18),
+            color: Colors.white.withValues(alpha: 0.18),
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.5),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1.5),
           ),
           child: Center(
             child: Text(page.emoji, style: const TextStyle(fontSize: 64)),
@@ -338,7 +336,7 @@ class _IllustrationWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
+                    color: Colors.black.withValues(alpha: 0.12),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -380,9 +378,9 @@ class _FeaturePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.20), width: 0.8),
+        border: Border.all(color: color.withValues(alpha: 0.20), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -457,7 +455,7 @@ class _BottomControls extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: (isLast ? const Color(0xFFFF6B35) : const Color(0xFF0047FF))
-                      .withOpacity(0.35),
+                      .withValues(alpha: 0.35),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

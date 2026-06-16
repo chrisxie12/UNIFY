@@ -372,7 +372,7 @@ class _ActionBtn extends StatelessWidget {
       child: Container(
         width: 38, height: 38,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.90),
+          color: Colors.white.withValues(alpha: 0.90),
           shape: BoxShape.circle,
           boxShadow: const [BoxShadow(color: Color(0x25000000), blurRadius: 8)],
         ),
@@ -544,16 +544,15 @@ class _Divider extends StatelessWidget {
 
 class _Card extends StatelessWidget {
   final Widget child;
-  final EdgeInsets? padding;
   final VoidCallback? onTap;
 
-  const _Card({required this.child, this.padding, this.onTap});
+  const _Card({required this.child, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     Widget inner = Container(
       width: double.infinity,
-      padding: padding ?? const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: _kCard,
         borderRadius: BorderRadius.circular(16),
@@ -568,7 +567,7 @@ class _Card extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
-          splashColor: _kPrimary.withOpacity(0.04),
+          splashColor: _kPrimary.withValues(alpha: 0.04),
           child: inner,
         ),
       );
@@ -679,7 +678,7 @@ class _AboutCard extends StatelessWidget {
                       Container(
                         width: 28, height: 28,
                         decoration: BoxDecoration(
-                          color: _kPrimary.withOpacity(0.08),
+                          color: _kPrimary.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
@@ -724,7 +723,7 @@ class _AcademicCard extends StatelessWidget {
                 children: [
                   Container(
                     width: 36, height: 36,
-                    decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: _kPrimary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
                     child: const Icon(Icons.school_rounded, size: 18, color: _kPrimary),
                   ),
                   const SizedBox(width: 12),
@@ -882,7 +881,7 @@ class _BrandIconBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shadow = BoxShadow(
-      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withOpacity(0.22),
+      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withValues(alpha: 0.22),
       blurRadius: 8,
       offset: const Offset(0, 3),
     );
@@ -1161,9 +1160,9 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.22)),
+        border: Border.all(color: color.withValues(alpha: 0.22)),
       ),
       child: Text(
         '${prefix ?? ''}$label',
@@ -1188,7 +1187,7 @@ class _EmptyPrompt extends StatelessWidget {
           const SizedBox(width: 8),
           Container(
             width: 28, height: 28,
-            decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: _kPrimary.withValues(alpha: 0.08), shape: BoxShape.circle),
             child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
           ),
         ],
@@ -1273,9 +1272,9 @@ class _BadgePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: badge.color.withOpacity(0.08),
+        color: badge.color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: badge.color.withOpacity(0.22)),
+        border: Border.all(color: badge.color.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1367,7 +1366,7 @@ class _Tile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      splashColor: iconColor.withOpacity(0.05),
+      splashColor: iconColor.withValues(alpha: 0.05),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
         child: Row(
@@ -1375,7 +1374,7 @@ class _Tile extends StatelessWidget {
             Container(
               width: 36, height: 36,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.10),
+                color: iconColor.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: iconColor, size: 18),

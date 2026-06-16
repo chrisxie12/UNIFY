@@ -71,7 +71,7 @@ class ThemePickerSheet extends ConsumerWidget {
                     boxShadow: isActive
                         ? [
                             BoxShadow(
-                              color: preset.primary.withOpacity(0.4),
+                              color: preset.primary.withValues(alpha: 0.4),
                               blurRadius: 12,
                               offset: const Offset(0, 4),
                             )

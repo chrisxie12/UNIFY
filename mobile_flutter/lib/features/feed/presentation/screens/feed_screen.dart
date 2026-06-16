@@ -106,7 +106,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: _kPrimary.withOpacity(0.08),
+                      color: _kPrimary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -237,7 +237,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             width: 72,
                             height: 72,
                             decoration: BoxDecoration(
-                              color: _kPrimary.withOpacity(0.08),
+                              color: _kPrimary.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.campaign_outlined, size: 36, color: _kPrimary),
@@ -436,7 +436,7 @@ class _StoryBubble extends StatelessWidget {
             color: data.color,
             border: data.isUniversity
                 ? null
-                : Border.all(color: _kPrimary.withOpacity(0.3), width: 2),
+                : Border.all(color: _kPrimary.withValues(alpha: 0.3), width: 2),
             gradient: data.isUniversity
                 ? LinearGradient(
                     colors: [data.color, data.color.withBlue(200)],

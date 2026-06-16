@@ -92,7 +92,7 @@ class _NavItem extends StatelessWidget {
               width: 44,
               height: 34,
               decoration: BoxDecoration(
-                color: active ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Colors.transparent,
+                color: active ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Stack(

@@ -153,7 +153,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: active ? AppColors.primary.withOpacity(0.07) : AppColors.white,
+                    color: active ? AppColors.primary.withValues(alpha: 0.07) : AppColors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: active ? AppColors.primary : AppColors.border,
@@ -262,9 +262,9 @@ class _InfoTile extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.10),
+              color: iconColor.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: iconColor.withOpacity(0.20), width: 0.8),
+              border: Border.all(color: iconColor.withValues(alpha: 0.20), width: 0.8),
             ),
             child: Icon(icon, color: iconColor, size: 18),
           ),
