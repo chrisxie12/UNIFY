@@ -8,6 +8,7 @@ import '../providers/feed_provider.dart';
 import '../../domain/entities/announcement.dart';
 import '../widgets/announcement_card.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -72,7 +73,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
         onRefresh: () => ref.read(feedProvider.notifier).refresh(),
-        color: AppColors.primary,
+        color: context.primary,
         child: CustomScrollView(
           controller: _scrollCtrl,
           slivers: [
@@ -87,12 +88,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               toolbarHeight: 58,
               title: Row(
                 children: [
-                  const Text(
+                  Text(
                     'UNIFY',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.primary,
+                      color: context.primary,
                       letterSpacing: 3,
                     ),
                   ),
@@ -100,15 +101,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.08),
+                      color: context.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       firstName.isNotEmpty ? _greeting + ', ' + firstName : _greeting,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.primary,
+                        color: context.primary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -208,7 +209,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         FilledButton(
                           onPressed: () => ref.invalidate(feedProvider),
                           style: FilledButton.styleFrom(
-                            backgroundColor: AppColors.primary,
+                            backgroundColor: context.primary,
                             minimumSize: const Size(120, 44),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
@@ -231,10 +232,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             width: 72,
                             height: 72,
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.08),
+                              color: context.primary.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.campaign_outlined, size: 36, color: AppColors.primary),
+                            child: Icon(Icons.campaign_outlined, size: 36, color: context.primary),
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -266,14 +267,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                       ),
                     ),
                     if (feedState.isLoadingMore)
-                      const SliverToBoxAdapter(
+                      SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
                           child: Center(
                             child: SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(color: AppColors.primary, strokeWidth: 2),
+                              child: CircularProgressIndicator(color: context.primary, strokeWidth: 2),
                             ),
                           ),
                         ),
@@ -396,8 +397,8 @@ class _MyStory extends StatelessWidget {
                 child: Container(
                   width: 20,
                   height: 20,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
+                  decoration: BoxDecoration(
+                    color: context.primary,
                     shape: BoxShape.circle,
                     boxShadow: [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
                   ),
@@ -430,7 +431,7 @@ class _StoryBubble extends StatelessWidget {
             color: data.color,
             border: data.isUniversity
                 ? null
-                : Border.all(color: AppColors.primary.withValues(alpha: 0.3), width: 2),
+                : Border.all(color: context.primary.withValues(alpha: 0.3), width: 2),
             gradient: data.isUniversity
                 ? LinearGradient(
                     colors: [data.color, data.color.withBlue(200)],
@@ -552,11 +553,11 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               controller: controller,
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              labelColor: AppColors.primary,
+              labelColor: context.primary,
               unselectedLabelColor: AppColors.grey2,
               labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              indicatorColor: AppColors.primary,
+              indicatorColor: context.primary,
               indicatorWeight: 2.5,
               indicatorSize: TabBarIndicatorSize.label,
               dividerColor: Colors.transparent,

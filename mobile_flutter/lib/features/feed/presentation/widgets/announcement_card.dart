@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/announcement.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class AnnouncementCard extends StatelessWidget {
   final Announcement item;
@@ -168,7 +169,7 @@ class _Header extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(top: 4),
-            decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: context.primary, shape: BoxShape.circle),
           ),
         ],
       ],

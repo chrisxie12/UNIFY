@@ -9,6 +9,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -193,7 +194,7 @@ class _Header extends StatelessWidget {
                                 ),
                                 if (profile.isVerified) ...[
                                   const SizedBox(width: 5),
-                                  const Icon(Icons.verified_rounded, color: AppColors.primary, size: 19),
+                                  Icon(Icons.verified_rounded, color: context.primary, size: 19),
                                 ],
                               ],
                             ),
@@ -208,8 +209,8 @@ class _Header extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () => context.push('/app/profile/edit'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.primary,
-                          side: const BorderSide(color: AppColors.primary, width: 1.5),
+                          foregroundColor: context.primary,
+                          side: BorderSide(color: context.primary, width: 1.5),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
                           textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -412,7 +413,7 @@ class _Avatar extends StatelessWidget {
           child: Container(
             width: 26, height: 26,
             decoration: BoxDecoration(
-              color: AppColors.primary,
+              color: context.primary,
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2.5),
             ),
@@ -437,7 +438,7 @@ class _Initials extends StatelessWidget {
       child: Center(
         child: Text(
           initials,
-          style: TextStyle(fontSize: diameter * 0.30, fontWeight: FontWeight.w800, color: AppColors.primary),
+          style: TextStyle(fontSize: diameter * 0.30, fontWeight: FontWeight.w800, color: context.primary),
         ),
       ),
     );
@@ -506,7 +507,7 @@ class _StatCell extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 11,
-                  color: cta && isEmpty ? AppColors.primary : AppColors.grey2,
+                  color: cta && isEmpty ? context.primary : AppColors.grey2,
                   fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
@@ -554,7 +555,7 @@ class _Card extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
-          splashColor: AppColors.primary.withValues(alpha: 0.04),
+          splashColor: context.primary.withValues(alpha: 0.04),
           child: inner,
         ),
       );
@@ -580,7 +581,7 @@ class _CardHeader extends StatelessWidget {
           if (action != null)
             GestureDetector(
               onTap: onAction,
-              child: Text(action!, style: const TextStyle(fontSize: 13, color: AppColors.primary, fontWeight: FontWeight.w500)),
+              child: Text(action!, style: TextStyle(fontSize: 13, color: context.primary, fontWeight: FontWeight.w500)),
             ),
         ],
       ),
@@ -621,12 +622,12 @@ class _CompletionCard extends StatelessWidget {
                       value: val,
                       minHeight: 6,
                       backgroundColor: AppColors.border,
-                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      valueColor: AlwaysStoppedAnimation<Color>(context.primary),
                     ),
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text('$pct% complete', style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                Text('$pct% complete', style: TextStyle(fontSize: 11, color: context.primary, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -665,10 +666,10 @@ class _AboutCard extends StatelessWidget {
                       Container(
                         width: 28, height: 28,
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.08),
+                          color: context.primary.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.add_rounded, size: 16, color: AppColors.primary),
+                        child: Icon(Icons.add_rounded, size: 16, color: context.primary),
                       ),
                     ],
                   ),
@@ -710,8 +711,8 @@ class _AcademicCard extends StatelessWidget {
                 children: [
                   Container(
                     width: 36, height: 36,
-                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(Icons.school_rounded, size: 18, color: AppColors.primary),
+                    decoration: BoxDecoration(color: context.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
+                    child: Icon(Icons.school_rounded, size: 18, color: context.primary),
                   ),
                   const SizedBox(width: 12),
                   const Expanded(child: Text('Add your university details', style: TextStyle(color: AppColors.grey2, fontSize: 14))),
@@ -796,7 +797,7 @@ class _SocialCard extends StatelessWidget {
       _SocialP('GitHub', profile.githubUrl,
         solid: const Color(0xFF24292F), child: const _GitHubIcon()),
       _SocialP('Portfolio', profile.portfolioUrl,
-        solid: AppColors.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
+        solid: context.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
 
@@ -834,7 +835,7 @@ class _SocialCard extends StatelessWidget {
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/app/profile/edit'),
-              child: const Text('Add your social links →', style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w500)),
+              child: Text('Add your social links →', style: TextStyle(color: context.primary, fontSize: 13, fontWeight: FontWeight.w500)),
             ),
           ],
         ],
@@ -1071,7 +1072,7 @@ class _SocialRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(platform.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
-                Text(platform.url!, style: const TextStyle(fontSize: 11, color: AppColors.primary), overflow: TextOverflow.ellipsis),
+                Text(platform.url!, style: TextStyle(fontSize: 11, color: context.primary), overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -1101,7 +1102,7 @@ class _InterestsCard extends StatelessWidget {
               ? _EmptyPrompt('Add interests to connect with like-minded students', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.interests.map((i) => _Chip(label: i, color: AppColors.primary)).toList(),
+                  children: profile.interests.map((i) => _Chip(label: i, color: context.primary)).toList(),
                 ),
         ],
       ),
@@ -1174,8 +1175,8 @@ class _EmptyPrompt extends StatelessWidget {
           const SizedBox(width: 8),
           Container(
             width: 28, height: 28,
-            decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), shape: BoxShape.circle),
-            child: const Icon(Icons.add_rounded, size: 16, color: AppColors.primary),
+            decoration: BoxDecoration(color: context.primary.withValues(alpha: 0.08), shape: BoxShape.circle),
+            child: Icon(Icons.add_rounded, size: 16, color: context.primary),
           ),
         ],
       ),
@@ -1221,11 +1222,11 @@ class _AchievementsCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.bolt_rounded, size: 13, color: AppColors.primary),
+                    Icon(Icons.bolt_rounded, size: 13, color: context.primary),
                     const SizedBox(width: 3),
                     Text(
                       '${profile.unifyScore} pts',
-                      style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 12, color: context.primary, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -1294,7 +1295,7 @@ class _AccountCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: AppColors.primary, onTap: () => context.push('/app/profile/edit')),
+          _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: context.primary, onTap: () => context.push('/app/profile/edit')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
           const Divider(height: 1, color: AppColors.border, indent: 58),

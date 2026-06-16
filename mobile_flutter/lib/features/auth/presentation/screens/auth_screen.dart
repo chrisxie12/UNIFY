@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   final String mode; // 'signup' | 'login'
@@ -144,7 +144,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     onTap: () => setState(() => _isSignup = !_isSignup),
                     child: Text(
                       _isSignup ? 'Sign In' : 'Sign Up',
-                      style: AppTextStyles.bodySemi.copyWith(color: AppColors.primaryLight),
+                      style: AppTextStyles.bodySemi.copyWith(color: context.primaryLight),
                     ),
                   ),
                 ],

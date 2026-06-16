@@ -6,6 +6,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -117,7 +118,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         margin: EdgeInsets.only(right: i < 3 ? 8 : 0),
                         height: 48,
                         decoration: BoxDecoration(
-                          color: selected ? AppColors.primary : AppColors.surface,
+                          color: selected ? context.primary : AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
