@@ -112,8 +112,11 @@ class _ProfileSliverHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 12),
-                // Avatar
-                _Avatar(profile: profile, radius: 44),
+                // Tappable avatar -> edit profile
+                GestureDetector(
+                  onTap: () => context.push('/app/profile/edit'),
+                  child: _Avatar(profile: profile, radius: 44),
+                ),
                 const SizedBox(height: 12),
                 // Name + verification badge
                 Row(
@@ -810,15 +813,7 @@ class _AccountSection extends StatelessWidget {
                 icon: Icons.edit_outlined,
                 label: 'Edit Profile',
                 iconColor: AppColors.primary,
-                onTap: () {
-                  // Placeholder: edit profile screen not yet implemented
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Edit profile coming soon!'),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
+                onTap: () => context.push('/app/profile/edit'),
               ),
               const Divider(height: 1, indent: 56, endIndent: 0),
               _SettingsTile(

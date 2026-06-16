@@ -1,7 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/profile_model.dart';
+import '../../data/repositories/profile_repository_impl.dart';
 import '../../domain/entities/profile.dart';
+
+/// Provides a `ProfileRepositoryImpl` backed by the Supabase client.
+final profileRepositoryProvider = Provider<ProfileRepositoryImpl>((ref) {
+  return ProfileRepositoryImpl(ref.watch(supabaseProvider));
+});
 
 /// Fetches the authenticated user's full profile from Supabase.
 final profileProvider = FutureProvider.autoDispose<Profile?>((ref) async {
@@ -21,7 +27,8 @@ final profileProvider = FutureProvider.autoDispose<Profile?>((ref) async {
 });
 
 /// Post count for the authenticated user, counted from the announcements table.
-final profileStatsProvider = FutureProvider.autoDispose<_ProfileStats>((ref) async {
+final profileStatsProvider =
+    FutureProvider.autoDispose<_ProfileStats>((ref) async {
   ref.watch(authStateProvider);
   final client = ref.watch(supabaseProvider);
   final user = client.auth.currentUser;

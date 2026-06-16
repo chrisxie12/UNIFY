@@ -12,12 +12,12 @@ import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
+import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
-// Keeping this synchronous avoids async-redirect issues with StatefulShellRoute.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Ref ref) {
     _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
@@ -49,7 +49,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggedIn = session != null;
       final loc = state.matchedLocation;
 
-      // Use explicit checks — startsWith('/') would match every path
+      // Explicit checks — startsWith('/') would match every path
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
           loc.startsWith('/auth') ||
@@ -58,8 +58,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (!loggedIn && !isAuthPage) return '/get-started';
       if (loggedIn && isAuthPage && loc != '/onboarding') {
         final userAsync = ref.read(currentAppUserProvider);
-        // While the profile is still loading, hold here; the stream will
-        // call notifyListeners() once it resolves and re-run this redirect.
         if (userAsync.isLoading) return null;
         final user = userAsync.valueOrNull;
         if (user != null && !user.onboardingComplete) return '/onboarding';
@@ -81,7 +79,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
 
-      // StatefulShellRoute preserves each tab's scroll & nav state independently
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),
         branches: [
@@ -95,7 +92,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/profile', builder: (_, __) => const ProfileScreen()),
+            GoRoute(
+              path: '/app/profile',
+              builder: (_, __) => const ProfileScreen(),
+              routes: [
+                GoRoute(
+                  path: 'edit',
+                  builder: (_, __) => const EditProfileScreen(),
+                ),
+              ],
+            ),
           ]),
         ],
       ),
