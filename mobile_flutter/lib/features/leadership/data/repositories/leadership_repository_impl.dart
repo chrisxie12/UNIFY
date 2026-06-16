@@ -66,7 +66,7 @@ class LeadershipRepositoryImpl {
         .insert(data)
         .select()
         .single();
-    return CommunityRequestModel.fromJson(result as Map<String, dynamic>);
+    return CommunityRequestModel.fromJson(result);
   }
 
   Future<List<CommunityRequestModel>> getMyRequests(String userId) async {
@@ -76,7 +76,7 @@ class LeadershipRepositoryImpl {
         .eq('requester_id', userId)
         .order('created_at', ascending: false);
 
-    return data.map((row) => CommunityRequestModel.fromJson(row as Map<String, dynamic>)).toList();
+    return data.map((row) => CommunityRequestModel.fromJson(row)).toList();
   }
 
   // ── Admin ──────────────────────────────────────────────────

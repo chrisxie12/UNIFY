@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import '../extensions/theme_extensions.dart';
 
 class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -35,9 +36,8 @@ class _UnifyBottomNav extends StatelessWidget {
 
   const _UnifyBottomNav({required this.currentIndex, required this.onTap});
 
-  static const Color primaryBlue = Color(0xFF0066FF);
-  static const Color gray400 = Color(0xFFA1A1AA);
-  static const Color gray200 = Color(0xFFE4E4E7);
+  static const Color _gray400 = Color(0xFFA1A1AA);
+  static const Color _gray200 = Color(0xFFE4E4E7);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _UnifyBottomNav extends StatelessWidget {
       height: 64 + MediaQuery.of(context).padding.bottom,
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(color: gray200, width: 1.0)),
+        border: Border(top: BorderSide(color: _gray200, width: 1.0)),
       ),
       child: SafeArea(
         top: false,
@@ -90,8 +90,8 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
-    const primaryBlue = _UnifyBottomNav.primaryBlue;
-    const gray400 = _UnifyBottomNav.gray400;
+    final primary = context.primary;
+    const gray400 = _UnifyBottomNav._gray400;
 
     return Expanded(
       child: ConstrainedBox(
@@ -117,7 +117,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   height: 4.5,
                   margin: const EdgeInsets.only(bottom: 4),
                   decoration: BoxDecoration(
-                    color: widget.active ? primaryBlue : Colors.transparent,
+                    color: widget.active ? primary : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
                   transform: Matrix4.diagonal3Values(widget.active ? 1.0 : 0.0, widget.active ? 1.0 : 0.0, 1.0),
@@ -135,7 +135,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                       TweenAnimationBuilder<Color?>(
                         tween: ColorTween(
                           begin: gray400,
-                          end: widget.active ? primaryBlue : gray400,
+                          end: widget.active ? primary : gray400,
                         ),
                         duration: const Duration(milliseconds: 200),
                         builder: (context, color, _) => Icon(
@@ -153,7 +153,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                             constraints: const BoxConstraints(minWidth: 16),
                             padding: const EdgeInsets.symmetric(horizontal: 4),
                             decoration: BoxDecoration(
-                              color: primaryBlue,
+                              color: primary,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.white, width: 2),
                             ),
@@ -181,7 +181,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   duration: const Duration(milliseconds: 200),
                   style: TextStyle(
                     fontSize: 11,
-                    color: widget.active ? primaryBlue : gray400,
+                    color: widget.active ? primary : gray400,
                     fontWeight: widget.active ? FontWeight.w600 : FontWeight.w500,
                   ),
                   child: Text(widget.tab.label),
