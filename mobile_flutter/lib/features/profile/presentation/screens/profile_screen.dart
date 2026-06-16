@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/widgets/theme_picker_sheet.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../domain/entities/profile.dart';
-import '../providers/profile_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../leadership/presentation/providers/leadership_provider.dart';
+import '../../../leadership/data/models/user_badge_model.dart';
+import '../../domain/entities/profile.dart';
+import '../providers/profile_provider.dart';
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -26,6 +28,9 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(profileProvider);
     final statsAsync   = ref.watch(profileStatsProvider);
+    final badgesAsync  = ref.watch(userBadgesProvider);
+    final leadershipAsync = ref.watch(userLeadershipProvider);
+    final isLeaderAsync = ref.watch(isVerifiedLeaderProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -37,6 +42,9 @@ class ProfileScreen extends ConsumerWidget {
           return _Body(
             profile: profile,
             postCount: statsAsync.valueOrNull?.postCount ?? 0,
+            badges: badgesAsync.valueOrNull ?? [],
+            leadership: leadershipAsync.valueOrNull ?? [],
+            isLeader: isLeaderAsync.valueOrNull ?? false,
             ref: ref,
           );
         },
@@ -52,8 +60,18 @@ class ProfileScreen extends ConsumerWidget {
 class _Body extends StatefulWidget {
   final Profile profile;
   final int postCount;
+  final List<UserBadgeModel> badges;
+  final List<UserLeadershipModel> leadership;
+  final bool isLeader;
   final WidgetRef ref;
-  const _Body({required this.profile, required this.postCount, required this.ref});
+  const _Body({
+    required this.profile,
+    required this.postCount,
+    required this.badges,
+    required this.leadership,
+    required this.isLeader,
+    required this.ref,
+  });
 
   @override
   State<_Body> createState() => _BodyState();
@@ -68,7 +86,7 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
-    const n = 9;
+    final n = widget.leadership.isNotEmpty ? 11 : 10;
     _fades = List.generate(n, (i) => CurvedAnimation(
       parent: _ctrl,
       curve: Interval(i * 0.05, 0.45 + i * 0.05, curve: Curves.easeOut),
@@ -94,34 +112,52 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final p = widget.profile;
     final incomplete = p.completionScore < 80;
+    final hasLeadership = widget.leadership.isNotEmpty;
+
+    int idx = 0;
+    Widget s(int n, Widget child) => _section(n, child);
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
-          child: _section(0, _Header(profile: p, postCount: widget.postCount, ctrl: _ctrl)),
+          child: s(idx++, _Header(profile: p, postCount: widget.postCount, ctrl: _ctrl, badges: widget.badges)),
         ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 48),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               if (incomplete) ...[
-                _section(1, _CompletionCard(profile: p)),
+                s(idx++, _CompletionCard(profile: p)),
                 const SizedBox(height: 12),
               ],
-              _section(2, _AboutCard(profile: p)),
+
+              // Leadership section (if user has leadership roles)
+              if (hasLeadership) ...[
+                s(idx++, _LeadershipCard(leadership: widget.leadership)),
+                const SizedBox(height: 12),
+              ],
+
+              s(idx++, _AboutCard(profile: p)),
               const SizedBox(height: 12),
-              _section(3, _AcademicCard(profile: p)),
+              s(idx++, _AcademicCard(profile: p)),
               const SizedBox(height: 12),
-              _section(4, _SocialCard(profile: p)),
+              s(idx++, _SocialCard(profile: p)),
               const SizedBox(height: 12),
-              _section(5, _InterestsCard(profile: p)),
+
+              // Request Community Creation button (verified leaders only)
+              if (widget.isLeader) ...[
+                s(idx++, _RequestCommunityCard()),
+                const SizedBox(height: 12),
+              ],
+
+              s(idx++, _InterestsCard(profile: p)),
               const SizedBox(height: 12),
-              _section(6, _SkillsCard(profile: p)),
+              s(idx++, _SkillsCard(profile: p)),
               const SizedBox(height: 12),
-              _section(7, _AchievementsCard(profile: p)),
+              s(idx++, _AchievementsCard(profile: p, badges: widget.badges)),
               const SizedBox(height: 12),
-              _section(8, _AccountCard(ref: widget.ref)),
+              s(idx, _AccountCard(ref: widget.ref)),
             ]),
           ),
         ),
@@ -138,7 +174,8 @@ class _Header extends StatelessWidget {
   final Profile profile;
   final int postCount;
   final AnimationController ctrl;
-  const _Header({required this.profile, required this.postCount, required this.ctrl});
+  final List<UserBadgeModel> badges;
+  const _Header({required this.profile, required this.postCount, required this.ctrl, this.badges = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +233,31 @@ class _Header extends StatelessWidget {
                                   const SizedBox(width: 5),
                                   Icon(Icons.verified_rounded, color: context.primary, size: 19),
                                 ],
+                                // Leadership badges
+                                ...badges.map((b) => Padding(
+                                  padding: const EdgeInsets.only(left: 3),
+                                  child: Tooltip(
+                                    message: b.badge.name,
+                                    child: Container(
+                                      width: 22, height: 22,
+                                      decoration: BoxDecoration(
+                                        color: b.badge.category == 'leadership'
+                                            ? const Color(0xFFFF6B35).withValues(alpha: 0.15)
+                                            : context.primary.withValues(alpha: 0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        b.badge.category == 'leadership'
+                                            ? Icons.shield_rounded
+                                            : Icons.verified_rounded,
+                                        size: 13,
+                                        color: b.badge.category == 'leadership'
+                                            ? const Color(0xFFFF6B35)
+                                            : context.primary,
+                                      ),
+                                    ),
+                                  ),
+                                )),
                               ],
                             ),
                             if (profile.username?.isNotEmpty == true) ...[
@@ -1052,6 +1114,16 @@ class _OctocatPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter old) => false;
 }
 
+String _badgeEmoji(String category) {
+  switch (category) {
+    case 'leadership': return '🛡️';
+    case 'verification': return '✅';
+    case 'milestone': return '🏆';
+    case 'community': return '🌟';
+    default: return '🎖️';
+  }
+}
+
 class _SocialRow extends StatelessWidget {
   final _SocialP platform;
   const _SocialRow({required this.platform});
@@ -1190,11 +1262,12 @@ class _EmptyPrompt extends StatelessWidget {
 
 class _AchievementsCard extends StatelessWidget {
   final Profile profile;
-  const _AchievementsCard({required this.profile});
+  final List<UserBadgeModel> badges;
+  const _AchievementsCard({required this.profile, this.badges = const []});
 
   @override
   Widget build(BuildContext context) {
-    final badges = <_Badge>[
+    final localBadges = <_Badge>[
       const _Badge(emoji: '🚀', label: 'Early Adopter', color: Color(0xFF8B5CF6)),
       if (profile.isComplete)
         const _Badge(emoji: '✅', label: 'Complete Profile', color: Color(0xFF10B981)),
@@ -1203,6 +1276,17 @@ class _AchievementsCard extends StatelessWidget {
       if (profile.unifyScore >= 500)
         const _Badge(emoji: '⚡', label: 'Power User', color: Color(0xFF0066FF)),
     ];
+    // Add server badges
+    for (final ub in badges) {
+      final exists = localBadges.any((b) => b.label == ub.badge.name);
+      if (!exists) {
+        localBadges.add(_Badge(
+          emoji: _badgeEmoji(ub.badge.category),
+          label: ub.badge.name,
+          color: ub.badge.category == 'leadership' ? const Color(0xFFFF6B35) : context.primary,
+        ));
+      }
+    }
 
     return _Card(
       child: Column(
@@ -1236,7 +1320,7 @@ class _AchievementsCard extends StatelessWidget {
           const SizedBox(height: 12),
           Wrap(
             spacing: 8, runSpacing: 8,
-            children: badges.map((b) => _BadgePill(badge: b)).toList(),
+            children: localBadges.map((b) => _BadgePill(badge: b)).toList(),
           ),
         ],
       ),
@@ -1270,6 +1354,115 @@ class _BadgePill extends StatelessWidget {
           Text(badge.emoji, style: const TextStyle(fontSize: 14)),
           const SizedBox(width: 6),
           Text(badge.label, style: TextStyle(fontSize: 12, color: badge.color, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Leadership card
+// ---------------------------------------------------------------------------
+
+class _LeadershipCard extends StatelessWidget {
+  final List<UserLeadershipModel> leadership;
+  const _LeadershipCard({required this.leadership});
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.shield_rounded, size: 16, color: const Color(0xFFFF6B35)),
+              const SizedBox(width: 6),
+              const Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...leadership.map((l) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 36, height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.shield_rounded, size: 18, color: Color(0xFFFF6B35)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(l.role.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                      const SizedBox(height: 2),
+                      if (l.programme != null)
+                        Text(l.programme!, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      if (l.department != null || l.faculty != null)
+                        Text(
+                          [if (l.department != null) l.department!, if (l.faculty != null) l.faculty!].join(' · '),
+                          style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                        ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          Icon(Icons.verified_rounded, size: 11, color: context.primary),
+                          const SizedBox(width: 3),
+                          Text('Verified by UNIFY', style: TextStyle(fontSize: 10, color: context.primary, fontWeight: FontWeight.w500)),
+                          const SizedBox(width: 8),
+                          Text('AY ${l.academicYear}', style: const TextStyle(fontSize: 10, color: AppColors.grey3)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Request Community Creation card (verified leaders only)
+// ---------------------------------------------------------------------------
+
+class _RequestCommunityCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      onTap: () => context.push('/community-request'),
+      child: Row(
+        children: [
+          Container(
+            width: 42, height: 42,
+            decoration: BoxDecoration(
+              color: context.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.group_add_rounded, color: context.primary, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Request Community Creation', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                const SizedBox(height: 2),
+                Text('Create a new community for your class, department, or faculty',
+                    style: const TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
         ],
       ),
     );
