@@ -1,20 +1,35 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../core/providers/theme_provider.dart';
 import '../../../../core/widgets/theme_picker_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
 
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Design tokens
+// ---------------------------------------------------------------------------
+
+const _kPrimary = Color(0xFF0066FF);
+const _kBg      = Color(0xFFF5F7FA);
+const _kCard    = Colors.white;
+const _kText1   = Color(0xFF0A0A1A);
+const _kText2   = Color(0xFF6B7280);
+const _kBorder  = Color(0xFFE5E7EB);
+const _kGreen   = Color(0xFF10B981);
+const _kRed     = Color(0xFFEF4444);
+
+const _kShadow = [
+  BoxShadow(color: Color(0x0A000000), blurRadius: 8, offset: Offset(0, 2)),
+  BoxShadow(color: Color(0x05000000), blurRadius: 2),
+];
+
+// ---------------------------------------------------------------------------
 // Root screen
-// ===========================================================================
+// ---------------------------------------------------------------------------
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -22,16 +37,16 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(profileProvider);
-    final statsAsync = ref.watch(profileStatsProvider);
+    final statsAsync   = ref.watch(profileStatsProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: _kBg,
       body: profileAsync.when(
-        loading: () => const _GlassSkeleton(),
+        loading: () => const _Skeleton(),
         error: (e, _) => _ErrorView(message: e.toString()),
         data: (profile) {
           if (profile == null) return const _ErrorView(message: 'Profile not found.');
-          return _ProfileBody(
+          return _Body(
             profile: profile,
             postCount: statsAsync.valueOrNull?.postCount ?? 0,
             ref: ref,
@@ -42,283 +57,221 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-// ===========================================================================
-// Aurora mesh background — CustomPainter with 5 soft radial blobs
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Body
+// ---------------------------------------------------------------------------
 
-class _AuroraBg extends StatelessWidget {
-  const _AuroraBg();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(child: CustomPaint(painter: _AuroraPainter()));
-  }
-}
-
-class _AuroraPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF040B1F));
-
-    final blobs = <(Offset, double, Color, double)>[
-      (Offset(size.width * 0.05, size.height * 0.06), size.width * 0.72, const Color(0xFF0047FF), 0.38),
-      (Offset(size.width * 1.12, size.height * 0.28), size.width * 0.62, const Color(0xFF7C3AED), 0.30),
-      (Offset(size.width * 0.95, size.height * -0.06), size.width * 0.46, const Color(0xFF06B6D4), 0.22),
-      (Offset(size.width * -0.12, size.height * 0.72), size.width * 0.50, const Color(0xFFC026D3), 0.18),
-      (Offset(size.width * 0.62, size.height * 0.96), size.width * 0.40, const Color(0xFF1D4ED8), 0.22),
-    ];
-
-    for (final (center, radius, color, opacity) in blobs) {
-      canvas.drawCircle(
-        center,
-        radius,
-        Paint()
-          ..shader = RadialGradient(
-            colors: [color.withOpacity(opacity), color.withOpacity(0)],
-          ).createShader(Rect.fromCenter(center: center, width: radius * 2, height: radius * 2)),
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
-}
-
-// ===========================================================================
-// Prismatic border painter — SweepGradient stroke around a rounded rect
-// ===========================================================================
-
-class _PrismaticBorderPainter extends CustomPainter {
-  final BorderRadius borderRadius;
-  const _PrismaticBorderPainter({required this.borderRadius});
-
-  static const _colors = [
-    Colors.white,
-    Color(0xFF93C5FD),
-    Color(0xFFA5B4FC),
-    Color(0xFFC4B5FD),
-    Color(0xFFF0ABFC),
-    Color(0xFFA5B4FC),
-    Colors.white,
-  ];
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    canvas.drawRRect(
-      borderRadius.toRRect(rect),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.9
-        ..shader = SweepGradient(colors: _colors).createShader(rect),
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _PrismaticBorderPainter old) =>
-      old.borderRadius != borderRadius;
-}
-
-// ===========================================================================
-// Avatar ring painter — prismatic circle stroke
-// ===========================================================================
-
-class _AvatarRingPainter extends CustomPainter {
-  static const _colors = [
-    Colors.white,
-    Color(0xFF60A5FA),
-    Color(0xFF818CF8),
-    Color(0xFFC084FC),
-    Color(0xFFF9A8D4),
-    Color(0xFF67E8F9),
-    Colors.white,
-  ];
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final r = size.shortestSide / 2 - 1.5;
-    canvas.drawCircle(
-      center,
-      r,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5
-        ..shader = SweepGradient(colors: _colors)
-            .createShader(Offset.zero & size),
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
-}
-
-// ===========================================================================
-// Liquid glass card — the base surface for all cards
-// ===========================================================================
-
-class _LiquidCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final BorderRadius? borderRadius;
-
-  const _LiquidCard({required this.child, this.padding, this.borderRadius});
-
-  @override
-  Widget build(BuildContext context) {
-    final br = borderRadius ?? BorderRadius.circular(24);
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0x15FFFFFF), Color(0x06FFFFFF)],
-            ),
-            borderRadius: br,
-          ),
-          child: Stack(
-            children: [
-              // Content
-              Padding(
-                padding: padding ?? const EdgeInsets.all(16),
-                child: child,
-              ),
-              // Specular highlight — 1 px white line at top
-              Positioned(
-                top: 0, left: 0, right: 0,
-                child: Container(
-                  height: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.white.withOpacity(0.72),
-                        Colors.white.withOpacity(0.72),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.0, 0.18, 0.82, 1.0],
-                    ),
-                  ),
-                ),
-              ),
-              // Prismatic border overlay
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(
-                    painter: _PrismaticBorderPainter(borderRadius: br),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ===========================================================================
-// Section label — gradient left-bar accent
-// ===========================================================================
-
-class _LiquidLabel extends StatelessWidget {
-  final String title;
-  const _LiquidLabel(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 3,
-            height: 15,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: Colors.white70,
-              letterSpacing: 1.8,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ===========================================================================
-// Profile body
-// ===========================================================================
-
-class _ProfileBody extends StatelessWidget {
+class _Body extends StatelessWidget {
   final Profile profile;
   final int postCount;
   final WidgetRef ref;
 
-  const _ProfileBody({required this.profile, required this.postCount, required this.ref});
+  const _Body({required this.profile, required this.postCount, required this.ref});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const _AuroraBg(),
-        CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(child: _ProfileHeader(profile: profile)),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 48),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  _BioCard(profile: profile),
-                  const SizedBox(height: 12),
-                  _LiquidStatsRow(postCount: postCount),
-                  const SizedBox(height: 12),
-                  _AcademicCard(profile: profile),
-                  const SizedBox(height: 12),
-                  _SocialCard(profile: profile),
-                  const SizedBox(height: 12),
-                  _InterestsCard(profile: profile),
-                  const SizedBox(height: 12),
-                  _SkillsCard(profile: profile),
-                  const SizedBox(height: 12),
-                  _AchievementsSection(profile: profile),
-                  const SizedBox(height: 12),
-                  _AccountCard(ref: ref),
-                ]),
-              ),
-            ),
-          ],
+    final incomplete = profile.completionScore < 80;
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        // ── Identity block ────────────────────────────────────────
+        SliverToBoxAdapter(
+          child: _IdentityBlock(profile: profile, postCount: postCount),
+        ),
+
+        // ── Content cards ─────────────────────────────────────────
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 48),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              if (incomplete) ...[
+                _CompletionCard(profile: profile),
+                const SizedBox(height: 12),
+              ],
+              _AboutCard(profile: profile),
+              const SizedBox(height: 12),
+              _AcademicCard(profile: profile),
+              const SizedBox(height: 12),
+              _SocialCard(profile: profile),
+              const SizedBox(height: 12),
+              _InterestsCard(profile: profile),
+              const SizedBox(height: 12),
+              _SkillsCard(profile: profile),
+              const SizedBox(height: 12),
+              _AchievementsCard(profile: profile),
+              const SizedBox(height: 12),
+              _AccountCard(ref: ref),
+            ]),
+          ),
         ),
       ],
     );
   }
 }
 
-// ===========================================================================
-// Cover photo box
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Identity block — cover + avatar + name + stats
+// ---------------------------------------------------------------------------
 
-class _CoverPhotoBox extends StatelessWidget {
+class _IdentityBlock extends StatelessWidget {
   final Profile profile;
-  const _CoverPhotoBox({required this.profile});
+  final int postCount;
+  const _IdentityBlock({required this.profile, required this.postCount});
+
+  @override
+  Widget build(BuildContext context) {
+    final topPad = MediaQuery.of(context).padding.top;
+    const coverH = 170.0;
+    const avatarD = 88.0; // diameter
+
+    return Column(
+      children: [
+        // ── Cover + avatar ──────────────────────────────────────────
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Cover photo
+            SizedBox(
+              height: topPad + coverH,
+              width: double.infinity,
+              child: _CoverPhoto(profile: profile),
+            ),
+            // Action buttons (top-right)
+            Positioned(
+              top: topPad + 12,
+              right: 16,
+              child: Row(
+                children: [
+                  _ActionBtn(
+                    icon: Icons.ios_share_outlined,
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Sharing coming soon'), behavior: SnackBarBehavior.floating),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _ActionBtn(
+                    icon: Icons.tune_rounded,
+                    onTap: () => context.push('/app/profile/privacy'),
+                  ),
+                ],
+              ),
+            ),
+            // Avatar hangs below cover
+            Positioned(
+              bottom: -(avatarD / 2),
+              left: 16,
+              child: GestureDetector(
+                onTap: () => context.push('/app/profile/edit'),
+                child: _Avatar(profile: profile, diameter: avatarD),
+              ),
+            ),
+          ],
+        ),
+
+        // ── White identity card ─────────────────────────────────────
+        Container(
+          width: double.infinity,
+          color: _kCard,
+          padding: EdgeInsets.fromLTRB(16, avatarD / 2 + 10, 16, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Name row
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                profile.displayName ?? profile.email.split('@').first,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  color: _kText1,
+                                  letterSpacing: -0.3,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                            if (profile.isVerified) ...[
+                              const SizedBox(width: 5),
+                              const Icon(Icons.verified, color: _kPrimary, size: 18),
+                            ],
+                          ],
+                        ),
+                        if (profile.username?.isNotEmpty == true)
+                          Text(
+                            '@${profile.username}',
+                            style: const TextStyle(fontSize: 13, color: _kText2),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  OutlinedButton(
+                    onPressed: () => context.push('/app/profile/edit'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: _kPrimary,
+                      side: const BorderSide(color: _kPrimary, width: 1.5),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                    child: const Text('Edit'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Academic identity
+              if (profile.programme?.isNotEmpty == true) ...[
+                Text(profile.programme!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _kText1)),
+                const SizedBox(height: 2),
+              ],
+              if (profile.school?.isNotEmpty == true || profile.yearOfStudy != null)
+                Text(
+                  [
+                    if (profile.school?.isNotEmpty == true) profile.school!,
+                    if (profile.yearOfStudy != null) profile.studentStatus,
+                  ].join(' · '),
+                  style: const TextStyle(fontSize: 13, color: _kText2),
+                ),
+              if (profile.campus?.isNotEmpty == true) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on_outlined, size: 13, color: _kText2),
+                    const SizedBox(width: 3),
+                    Text(profile.campus!, style: const TextStyle(fontSize: 13, color: _kText2)),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 16),
+
+              // Stats strip
+              _StatsStrip(postCount: postCount),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Cover photo
+// ---------------------------------------------------------------------------
+
+class _CoverPhoto extends StatelessWidget {
+  final Profile profile;
+  const _CoverPhoto({required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -330,17 +283,18 @@ class _CoverPhotoBox extends StatelessWidget {
               ? CachedNetworkImage(
                   imageUrl: profile.coverPhotoUrl!,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => const _DefaultCoverGradient(),
-                  errorWidget: (_, __, ___) => const _DefaultCoverGradient(),
+                  placeholder: (_, __) => const _DefaultCover(),
+                  errorWidget: (_, __, ___) => const _DefaultCover(),
                 )
-              : const _DefaultCoverGradient(),
+              : const _DefaultCover(),
         ),
+        // Bottom fade to white
         Positioned(
-          bottom: 0, left: 0, right: 0, height: 100,
-          child: DecoratedBox(
+          bottom: 0, left: 0, right: 0, height: 40,
+          child: const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.transparent, const Color(0xFF040B1F).withOpacity(0.90)],
+                colors: [Colors.transparent, Color(0x22000000)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -352,16 +306,15 @@ class _CoverPhotoBox extends StatelessWidget {
   }
 }
 
-class _DefaultCoverGradient extends StatelessWidget {
-  const _DefaultCoverGradient();
+class _DefaultCover extends StatelessWidget {
+  const _DefaultCover();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF0D1B4B), Color(0xFF1E3A8A), Color(0xFF4C1D95)],
-          stops: [0.0, 0.55, 1.0],
+          colors: [Color(0xFF0047CC), Color(0xFF0066FF), Color(0xFF338AFF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -370,428 +323,80 @@ class _DefaultCoverGradient extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Frosted action button — circular with prismatic ring
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Action button on cover
+// ---------------------------------------------------------------------------
 
-class _GlassActionBtn extends StatelessWidget {
+class _ActionBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
-  const _GlassActionBtn({required this.icon, this.onTap});
+  const _ActionBtn({required this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: Stack(
-          children: [
-            ClipOval(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.14),
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 18),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(painter: _AvatarRingPainter()),
-              ),
-            ),
-          ],
+      child: Container(
+        width: 36, height: 36,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.92),
+          shape: BoxShape.circle,
+          boxShadow: const [BoxShadow(color: Color(0x20000000), blurRadius: 8)],
         ),
+        child: Icon(icon, size: 17, color: _kText1),
       ),
     );
   }
 }
 
-// ===========================================================================
-// Profile header
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Avatar
+// ---------------------------------------------------------------------------
 
-class _ProfileHeader extends ConsumerWidget {
+class _Avatar extends StatelessWidget {
   final Profile profile;
-  const _ProfileHeader({required this.profile});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final activeTheme = ref.watch(themeNotifierProvider);
-    final topPad = MediaQuery.of(context).padding.top;
-    const coverH = 165.0;
-    const avatarR = 52.0;
-
-    return Column(
-      children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            SizedBox(
-              height: topPad + coverH,
-              width: double.infinity,
-              child: _CoverPhotoBox(profile: profile),
-            ),
-            Positioned(
-              top: topPad + 12,
-              right: 16,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _GlassActionBtn(
-                    icon: Icons.ios_share_outlined,
-                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Profile sharing coming soon'),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  _GlassActionBtn(
-                    icon: Icons.tune_rounded,
-                    onTap: () => context.push('/app/profile/privacy'),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: -avatarR,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: GestureDetector(
-                  onTap: () => context.push('/app/profile/edit'),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      _LiquidAvatar(profile: profile, radius: avatarR),
-                      Positioned(
-                        bottom: 2, right: 2,
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.92),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(color: Colors.black.withOpacity(0.22), blurRadius: 8, offset: const Offset(0, 2)),
-                            ],
-                          ),
-                          child: Icon(Icons.camera_alt_rounded, size: 14, color: activeTheme.primary),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 68),
-
-        // Display name
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  profile.displayName ?? profile.email.split('@').first,
-                  style: const TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              if (profile.isVerified) ...[
-                const SizedBox(width: 6),
-                const Icon(Icons.verified, color: Color(0xFF60A5FA), size: 20),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: 6),
-
-        // Username / student status
-        if (profile.yearOfStudy != null)
-          Text(
-            '${profile.displayUsername} • ${profile.studentStatus}',
-            style: const TextStyle(fontSize: 13, color: Colors.white54, fontWeight: FontWeight.w500),
-          )
-        else
-          GestureDetector(
-            onTap: () => context.push('/app/profile/edit'),
-            child: Text(
-              profile.username?.isNotEmpty == true ? '@${profile.username}' : 'Set your handle',
-              style: TextStyle(
-                fontSize: 13,
-                color: profile.username?.isNotEmpty == true ? Colors.white54 : Colors.white30,
-                fontWeight: FontWeight.w500,
-                decoration: profile.username?.isNotEmpty == true ? null : TextDecoration.underline,
-                decorationColor: Colors.white30,
-              ),
-            ),
-          ),
-        const SizedBox(height: 16),
-
-        // UNIFY Score
-        _UnifyScoreChip(score: profile.unifyScore),
-        const SizedBox(height: 12),
-
-        // Completion bar
-        if (profile.completionScore < 100) ...[
-          _CompletionBar(percent: profile.completionScore),
-          const SizedBox(height: 14),
-        ],
-
-        // School / campus chips
-        if (profile.school?.isNotEmpty == true || profile.campus?.isNotEmpty == true)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              alignment: WrapAlignment.center,
-              children: [
-                if (profile.school?.isNotEmpty == true)
-                  _LiquidChip(label: profile.school!, icon: Icons.school_outlined),
-                if (profile.campus?.isNotEmpty == true)
-                  _LiquidChip(label: profile.campus!, icon: Icons.location_on_outlined),
-              ],
-            ),
-          ),
-        const SizedBox(height: 28),
-      ],
-    );
-  }
-}
-
-// ===========================================================================
-// Liquid avatar — prismatic ring + glow halos
-// ===========================================================================
-
-class _LiquidAvatar extends StatelessWidget {
-  final Profile profile;
-  final double radius;
-  const _LiquidAvatar({required this.profile, required this.radius});
+  final double diameter;
+  const _Avatar({required this.profile, required this.diameter});
 
   @override
   Widget build(BuildContext context) {
-    final total = radius * 2 + 10; // 5 px ring clearance per side
     Widget inner;
     if (profile.avatarUrl?.isNotEmpty == true) {
       inner = CachedNetworkImage(
         imageUrl: profile.avatarUrl!,
-        width: radius * 2 - 4,
-        height: radius * 2 - 4,
+        width: diameter,
+        height: diameter,
         fit: BoxFit.cover,
-        placeholder: (_, __) => _LiquidInitials(initials: profile.initials, radius: radius - 2),
-        errorWidget: (_, __, ___) => _LiquidInitials(initials: profile.initials, radius: radius - 2),
+        placeholder: (_, __) => _Initials(initials: profile.initials, diameter: diameter),
+        errorWidget: (_, __, ___) => _Initials(initials: profile.initials, diameter: diameter),
       );
     } else {
-      inner = _LiquidInitials(initials: profile.initials, radius: radius - 2);
+      inner = _Initials(initials: profile.initials, diameter: diameter);
     }
 
-    return SizedBox(
-      width: total,
-      height: total,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Glow halos
-          Container(
-            width: total,
-            height: total,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(color: const Color(0xFF60A5FA).withOpacity(0.55), blurRadius: 34, spreadRadius: 5),
-                BoxShadow(color: const Color(0xFFA78BFA).withOpacity(0.30), blurRadius: 20),
-              ],
-            ),
-          ),
-          // Prismatic ring
-          Positioned.fill(
-            child: CustomPaint(painter: _AvatarRingPainter()),
-          ),
-          // Avatar content
-          ClipOval(
-            child: SizedBox(width: radius * 2 - 4, height: radius * 2 - 4, child: inner),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LiquidInitials extends StatelessWidget {
-  final String initials;
-  final double radius;
-  const _LiquidInitials({required this.initials, required this.radius});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: radius * 2,
-      height: radius * 2,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF1E3FAE), Color(0xFF1D4ED8), Color(0xFF4338CA), Color(0xFF6D28D9)],
-                  stops: [0.0, 0.35, 0.65, 1.0],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ),
-          // Gloss sheen
-          Positioned(
-            top: radius * 0.10,
-            left: radius * 0.16,
-            child: Container(
-              width: radius * 0.95,
-              height: radius * 0.36,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius * 0.3),
-                gradient: LinearGradient(
-                  colors: [Colors.white.withOpacity(0.40), Colors.white.withOpacity(0)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: Text(
-              initials,
-              style: TextStyle(
-                fontSize: radius * 0.60,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 1.5,
-                shadows: [Shadow(color: Colors.black.withOpacity(0.25), offset: const Offset(0, 2), blurRadius: 4)],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ===========================================================================
-// UNIFY Score chip — spectral gradient + specular
-// ===========================================================================
-
-class _UnifyScoreChip extends StatelessWidget {
-  final int score;
-  const _UnifyScoreChip({required this.score});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1D4ED8), Color(0xFF4F46E5), Color(0xFF7C3AED), Color(0xFFA21CAF)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.60), blurRadius: 30),
-              BoxShadow(color: const Color(0xFF1D4ED8).withOpacity(0.40), blurRadius: 14, spreadRadius: -4),
-            ],
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.bolt_rounded, color: Color(0xFFFCD34D), size: 17),
-                  const SizedBox(width: 5),
-                  Text(
-                    'UNIFY',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white.withOpacity(0.65), letterSpacing: 1.8),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '$score',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
-                  ),
-                ],
-              ),
-              // Specular
-              Positioned(
-                top: -10, left: 16, right: 16,
-                child: Container(
-                  height: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.white.withOpacity(0.65), Colors.transparent],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ===========================================================================
-// Profile completion bar
-// ===========================================================================
-
-class _CompletionBar extends StatelessWidget {
-  final int percent;
-  const _CompletionBar({required this.percent});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      clipBehavior: Clip.none,
       children: [
-        Text(
-          'Profile $percent% complete',
-          style: const TextStyle(fontSize: 11, color: Colors.white38, fontWeight: FontWeight.w500),
+        Container(
+          width: diameter,
+          height: diameter,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 12, offset: Offset(0, 4))],
+          ),
+          child: ClipOval(child: inner),
         ),
-        const SizedBox(height: 6),
-        SizedBox(
-          width: 180,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: percent / 100,
-              minHeight: 4,
-              backgroundColor: Colors.white.withOpacity(0.10),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF60A5FA)),
+        Positioned(
+          bottom: 1, right: 1,
+          child: Container(
+            width: 24, height: 24,
+            decoration: BoxDecoration(
+              color: _kPrimary,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
             ),
+            child: const Icon(Icons.camera_alt_rounded, size: 11, color: Colors.white),
           ),
         ),
       ],
@@ -799,44 +404,23 @@ class _CompletionBar extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Liquid header chip — school / campus pill
-// ===========================================================================
-
-class _LiquidChip extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  const _LiquidChip({required this.label, this.icon});
+class _Initials extends StatelessWidget {
+  final String initials;
+  final double diameter;
+  const _Initials({required this.initials, required this.diameter});
 
   @override
   Widget build(BuildContext context) {
-    const br = BorderRadius.all(Radius.circular(20));
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.10),
-            borderRadius: br,
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (icon != null) ...[Icon(icon, size: 12, color: Colors.white70), const SizedBox(width: 5)],
-                  Text(label, style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500)),
-                ],
-              ),
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
-                ),
-              ),
-            ],
+    return Container(
+      width: diameter, height: diameter,
+      color: const Color(0xFFDDE8FF),
+      child: Center(
+        child: Text(
+          initials,
+          style: TextStyle(
+            fontSize: diameter * 0.32,
+            fontWeight: FontWeight.w700,
+            color: _kPrimary,
           ),
         ),
       ),
@@ -844,31 +428,78 @@ class _LiquidChip extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Bio card
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Stats strip
+// ---------------------------------------------------------------------------
 
-class _BioCard extends StatelessWidget {
-  final Profile profile;
-  const _BioCard({required this.profile});
+class _StatsStrip extends StatelessWidget {
+  final int postCount;
+  const _StatsStrip({required this.postCount});
 
   @override
   Widget build(BuildContext context) {
-    final hasBio = profile.bio?.isNotEmpty == true;
-    return GestureDetector(
-      onTap: () => context.push('/app/profile/edit'),
-      child: _LiquidCard(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        const Divider(height: 1, color: _kBorder),
+        const SizedBox(height: 12),
+        Row(
           children: [
-            Expanded(
-              child: Text(
-                hasBio ? profile.bio! : 'Add a bio to tell people about yourself…',
-                style: TextStyle(fontSize: 14, height: 1.60, color: hasBio ? Colors.white.withOpacity(0.90) : Colors.white54),
+            _StatCell(value: '$postCount', label: 'Posts'),
+            _StatDivider(),
+            _StatCell(
+              value: '0',
+              label: 'Connections',
+              onTap: () {},
+              cta: true,
+            ),
+            _StatDivider(),
+            _StatCell(
+              value: '0',
+              label: 'Communities',
+              onTap: () => context.go('/app/communities'),
+              cta: true,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+}
+
+class _StatCell extends StatelessWidget {
+  final String value;
+  final String label;
+  final bool cta;
+  final VoidCallback? onTap;
+  const _StatCell({required this.value, required this.label, this.cta = false, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isEmpty = value == '0';
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: isEmpty && !cta ? const Color(0xFFD1D5DB) : _kText1,
+                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(width: 10),
-            Icon(hasBio ? Icons.edit_outlined : Icons.chevron_right, size: 16, color: Colors.white30),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: cta && isEmpty ? _kPrimary : _kText2,
+                fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
           ],
         ),
       ),
@@ -876,96 +507,152 @@ class _BioCard extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Stats row — 4 individual liquid orbs
-// ===========================================================================
+class _StatDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) =>
+      Container(width: 1, height: 32, color: _kBorder);
+}
 
-class _LiquidStatsRow extends StatelessWidget {
-  final int postCount;
-  const _LiquidStatsRow({required this.postCount});
+// ---------------------------------------------------------------------------
+// Base clean card
+// ---------------------------------------------------------------------------
+
+class _Card extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? padding;
+  final VoidCallback? onTap;
+
+  const _Card({required this.child, this.padding, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _StatOrb(value: '$postCount', label: 'Posts', color: const Color(0xFF60A5FA)),
-        const SizedBox(width: 8),
-        _StatOrb(
-          value: '0',
-          label: 'Clubs',
-          color: const Color(0xFFA78BFA),
-          ctaLabel: 'Join',
-          onTap: () => context.go('/app/communities'),
-        ),
-        const SizedBox(width: 8),
-        const _StatOrb(value: '0', label: 'Friends', color: Color(0xFF34D399), ctaLabel: 'Find'),
-        const SizedBox(width: 8),
-        const _StatOrb(value: '0', label: 'Views', color: Color(0xFFFBBF24)),
-      ],
+    Widget inner = Container(
+      width: double.infinity,
+      padding: padding ?? const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _kBorder, width: 0.5),
+        boxShadow: _kShadow,
+      ),
+      child: child,
     );
+    if (onTap != null) return GestureDetector(onTap: onTap, child: inner);
+    return inner;
   }
 }
 
-class _StatOrb extends StatelessWidget {
-  final String value;
-  final String label;
-  final Color color;
-  final String? ctaLabel;
-  final VoidCallback? onTap;
-
-  const _StatOrb({required this.value, required this.label, required this.color, this.ctaLabel, this.onTap});
+class _CardTitle extends StatelessWidget {
+  final String title;
+  final String? action;
+  final VoidCallback? onAction;
+  const _CardTitle(this.title, {this.action, this.onAction});
 
   @override
   Widget build(BuildContext context) {
-    final isEmpty = value == '0';
-    final isCta = isEmpty && ctaLabel != null;
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: _LiquidCard(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Column(
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: isEmpty ? color.withOpacity(0.28) : color,
-                  shape: BoxShape.circle,
-                  boxShadow: isEmpty ? null : [BoxShadow(color: color.withOpacity(0.55), blurRadius: 7)],
-                ),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: isEmpty ? Colors.white24 : Colors.white,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                isCta ? ctaLabel! : label,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: isCta ? color : Colors.white38,
-                  fontWeight: isCta ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kText1)),
+          if (action != null)
+            GestureDetector(
+              onTap: onAction,
+              child: Text(action!, style: const TextStyle(fontSize: 13, color: _kPrimary, fontWeight: FontWeight.w500)),
+            ),
+        ],
       ),
     );
   }
 }
 
-// ===========================================================================
-// Academic card
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Profile completion card
+// ---------------------------------------------------------------------------
+
+class _CompletionCard extends StatelessWidget {
+  final Profile profile;
+  const _CompletionCard({required this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    final pct = profile.completionScore;
+    return _Card(
+      onTap: () => context.push('/app/profile/edit'),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Complete your profile',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _kText1),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'A complete profile helps students and employers find you.',
+                  style: const TextStyle(fontSize: 12, color: _kText2, height: 1.4),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: pct / 100,
+                    minHeight: 5,
+                    backgroundColor: const Color(0xFFE5E7EB),
+                    valueColor: const AlwaysStoppedAnimation<Color>(_kPrimary),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text('$pct% complete', style: const TextStyle(fontSize: 11, color: _kPrimary, fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: _kText2),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// About / Bio card
+// ---------------------------------------------------------------------------
+
+class _AboutCard extends StatelessWidget {
+  final Profile profile;
+  const _AboutCard({required this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasBio = profile.bio?.isNotEmpty == true;
+    return _Card(
+      onTap: hasBio ? null : () => context.push('/app/profile/edit'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CardTitle('About', action: hasBio ? 'Edit' : null, onAction: () => context.push('/app/profile/edit')),
+          hasBio
+              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: _kText1, height: 1.60))
+              : Row(
+                  children: [
+                    const Text('Add a bio', style: TextStyle(fontSize: 14, color: _kText2)),
+                    const Spacer(),
+                    const Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Academic info card
+// ---------------------------------------------------------------------------
 
 class _AcademicCard extends StatelessWidget {
   final Profile profile;
@@ -974,47 +661,47 @@ class _AcademicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = <_KV>[];
-    if (profile.school?.isNotEmpty == true) rows.add(_KV('School', profile.school!));
-    if (profile.faculty?.isNotEmpty == true) rows.add(_KV('Faculty', profile.faculty!));
-    if (profile.department?.isNotEmpty == true) rows.add(_KV('Department', profile.department!));
-    if (profile.programme?.isNotEmpty == true) rows.add(_KV('Programme', profile.programme!));
-    if (profile.yearOfStudy != null) rows.add(_KV('Year of Study', 'Year ${profile.yearOfStudy}'));
-    if (profile.expectedGraduationYear != null) {
-      rows.add(_KV('Expected Graduation', 'Class of ${profile.expectedGraduationYear}'));
-    }
+    if (profile.school?.isNotEmpty == true)      rows.add(_KV('University', profile.school!));
+    if (profile.programme?.isNotEmpty == true)   rows.add(_KV('Programme', profile.programme!));
+    if (profile.faculty?.isNotEmpty == true)     rows.add(_KV('Faculty', profile.faculty!));
+    if (profile.department?.isNotEmpty == true)  rows.add(_KV('Department', profile.department!));
+    if (profile.yearOfStudy != null)             rows.add(_KV('Year', 'Year ${profile.yearOfStudy} · ${profile.studentStatus}'));
+    if (profile.expectedGraduationYear != null)  rows.add(_KV('Graduating', 'Class of ${profile.expectedGraduationYear}'));
+    if (profile.campus?.isNotEmpty == true)      rows.add(_KV('Campus', profile.campus!));
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Academic'),
-        _LiquidCard(
-          padding: EdgeInsets.zero,
-          child: rows.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: GestureDetector(
-                    onTap: () => context.push('/app/profile/edit'),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.school_outlined, color: Colors.white38, size: 18),
-                        const SizedBox(width: 8),
-                        const Expanded(child: Text('Add your academic info', style: TextStyle(color: Colors.white38, fontSize: 14))),
-                        Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
-                      ],
-                    ),
-                  ),
-                )
-              : Column(
-                  children: [
-                    for (int i = 0; i < rows.length; i++) ...[
-                      _InfoRow(label: rows[i].label, value: rows[i].value),
-                      if (i < rows.length - 1)
-                        Divider(height: 1, color: Colors.white.withOpacity(0.07), indent: 16, endIndent: 16),
-                    ],
-                  ],
-                ),
-        ),
-      ],
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CardTitle(
+            'Academic Info',
+            action: 'Edit',
+            onAction: () => context.push('/app/profile/edit'),
+          ),
+          if (rows.isEmpty)
+            GestureDetector(
+              onTap: () => context.push('/app/profile/edit'),
+              child: const Row(
+                children: [
+                  Icon(Icons.school_outlined, size: 16, color: _kText2),
+                  SizedBox(width: 8),
+                  Text('Add your university details', style: TextStyle(color: _kText2, fontSize: 14)),
+                  Spacer(),
+                  Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
+                ],
+              ),
+            )
+          else
+            Column(
+              children: [
+                for (int i = 0; i < rows.length; i++) ...[
+                  _DataRow(label: rows[i].label, value: rows[i].value),
+                  if (i < rows.length - 1) const Divider(height: 1, color: _kBorder),
+                ],
+              ],
+            ),
+        ],
+      ),
     );
   }
 }
@@ -1025,25 +712,26 @@ class _KV {
   const _KV(this.label, this.value);
 }
 
-class _InfoRow extends StatelessWidget {
+class _DataRow extends StatelessWidget {
   final String label;
   final String value;
-  const _InfoRow({required this.label, required this.value});
+  const _DataRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
-          const SizedBox(width: 16),
-          Flexible(
+          SizedBox(
+            width: 100,
+            child: Text(label, style: const TextStyle(fontSize: 13, color: _kText2)),
+          ),
+          Expanded(
             child: Text(
               value,
-              style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kText1),
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -1055,9 +743,9 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Social card
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Social links card
+// ---------------------------------------------------------------------------
 
 class _SocialCard extends StatelessWidget {
   final Profile profile;
@@ -1066,168 +754,119 @@ class _SocialCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final platforms = [
-      _SocialPlatform('Instagram', Icons.camera_alt_outlined, const Color(0xFFE1306C), profile.instagramUrl),
-      _SocialPlatform('TikTok', Icons.music_note_rounded, const Color(0xFFFF0050), profile.tiktokUrl),
-      _SocialPlatform('Snapchat', Icons.chat_bubble_outline_rounded, const Color(0xFFFFE921), profile.snapchatUrl),
-      _SocialPlatform('LinkedIn', Icons.work_outline, const Color(0xFF0A66C2), profile.linkedinUrl),
-      _SocialPlatform('Twitter', Icons.alternate_email, const Color(0xFF1DA1F2), profile.twitterUrl),
-      _SocialPlatform('GitHub', Icons.code, const Color(0xFFE2E8F0), profile.githubUrl),
-      _SocialPlatform('Portfolio', Icons.language, const Color(0xFF34D399), profile.portfolioUrl),
+      _SocialP('Instagram', Icons.camera_alt_outlined, const Color(0xFFE1306C), profile.instagramUrl),
+      _SocialP('TikTok', Icons.music_note_rounded, const Color(0xFF010101), profile.tiktokUrl),
+      _SocialP('Snapchat', Icons.chat_bubble_outline_rounded, const Color(0xFFFFBC00), profile.snapchatUrl),
+      _SocialP('LinkedIn', Icons.work_outline, const Color(0xFF0A66C2), profile.linkedinUrl),
+      _SocialP('Twitter', Icons.alternate_email, const Color(0xFF1DA1F2), profile.twitterUrl),
+      _SocialP('GitHub', Icons.code, const Color(0xFF24292F), profile.githubUrl),
+      _SocialP('Portfolio', Icons.language, _kGreen, profile.portfolioUrl),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
+    final hasActive = active.isNotEmpty;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Social'),
-        _LiquidCard(
-          child: active.isEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Wrap(
-                      spacing: 8, runSpacing: 8,
-                      children: platforms
-                          .map((p) => _SocialIconBtn(platform: p, active: false, onTap: () => context.push('/app/profile/edit')))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 12),
-                    GestureDetector(
-                      onTap: () => context.push('/app/profile/edit'),
-                      child: const Row(
-                        children: [
-                          Text('Add social links', style: TextStyle(color: Color(0xFF60A5FA), fontSize: 13, fontWeight: FontWeight.w500)),
-                          SizedBox(width: 4),
-                          Icon(Icons.arrow_forward_rounded, size: 13, color: Color(0xFF60A5FA)),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    Wrap(
-                      spacing: 8, runSpacing: 8,
-                      children: platforms
-                          .map((p) => _SocialIconBtn(platform: p, active: p.url?.isNotEmpty == true))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 14),
-                    for (int i = 0; i < active.length; i++) ...[
-                      _SocialRow(platform: active[i]),
-                      if (i < active.length - 1)
-                        Divider(height: 1, color: Colors.white.withOpacity(0.07)),
-                    ],
-                  ],
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SocialPlatform {
-  final String label;
-  final IconData icon;
-  final Color color;
-  final String? url;
-  const _SocialPlatform(this.label, this.icon, this.color, this.url);
-}
-
-class _SocialIconBtn extends StatelessWidget {
-  final _SocialPlatform platform;
-  final bool active;
-  final VoidCallback? onTap;
-  const _SocialIconBtn({required this.platform, required this.active, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    const size = 46.0;
-    const br = BorderRadius.all(Radius.circular(14));
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: br,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: size, height: size,
-            decoration: BoxDecoration(
-              color: platform.color.withOpacity(active ? 0.14 : 0.05),
-              borderRadius: br,
-            ),
-            child: Stack(
-              children: [
-                Center(child: Icon(platform.icon, color: platform.color.withOpacity(active ? 1.0 : 0.28), size: 20)),
-                // Specular
-                Positioned(
-                  top: 0, left: 4, right: 4,
-                  child: Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.white.withOpacity(0.55), Colors.transparent],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: CustomPaint(
-                      painter: _PrismaticBorderPainter(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SocialRow extends StatelessWidget {
-  final _SocialPlatform platform;
-  const _SocialRow({required this.platform});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 32, height: 32,
-            decoration: BoxDecoration(
-              color: platform.color.withOpacity(0.14),
-              borderRadius: BorderRadius.circular(9),
-              border: Border.all(color: platform.color.withOpacity(0.28), width: 0.8),
-            ),
-            child: Icon(platform.icon, color: platform.color, size: 15),
+          _CardTitle(
+            'Social & Links',
+            action: 'Edit',
+            onAction: () => context.push('/app/profile/edit'),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Icon row
+          Wrap(
+            spacing: 8, runSpacing: 8,
+            children: platforms.map((p) {
+              final isActive = p.url?.isNotEmpty == true;
+              return GestureDetector(
+                onTap: isActive ? null : () => context.push('/app/profile/edit'),
+                child: Container(
+                  width: 44, height: 44,
+                  decoration: BoxDecoration(
+                    color: p.color.withOpacity(isActive ? 0.10 : 0.04),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: p.color.withOpacity(isActive ? 0.30 : 0.10),
+                    ),
+                  ),
+                  child: Icon(p.icon, color: p.color.withOpacity(isActive ? 1.0 : 0.30), size: 20),
+                ),
+              );
+            }).toList(),
+          ),
+          if (hasActive) ...[
+            const SizedBox(height: 14),
+            Column(
               children: [
-                Text(platform.label, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                Text(platform.url!, style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 11), overflow: TextOverflow.ellipsis),
+                for (int i = 0; i < active.length; i++) ...[
+                  _SocialRow(platform: active[i]),
+                  if (i < active.length - 1) const Divider(height: 1, color: _kBorder),
+                ],
               ],
             ),
-          ),
-          Icon(Icons.open_in_new_rounded, color: Colors.white.withOpacity(0.2), size: 14),
+          ] else ...[
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => context.push('/app/profile/edit'),
+              child: const Text(
+                'Add your social links',
+                style: TextStyle(color: _kPrimary, fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
-// ===========================================================================
+class _SocialP {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final String? url;
+  const _SocialP(this.label, this.icon, this.color, this.url);
+}
+
+class _SocialRow extends StatelessWidget {
+  final _SocialP platform;
+  const _SocialRow({required this.platform});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      child: Row(
+        children: [
+          Container(
+            width: 32, height: 32,
+            decoration: BoxDecoration(
+              color: platform.color.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(platform.icon, color: platform.color, size: 16),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(platform.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kText1)),
+                Text(platform.url!, style: const TextStyle(fontSize: 11, color: _kPrimary), overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+          const Icon(Icons.open_in_new_rounded, size: 14, color: _kText2),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Interests card
-// ===========================================================================
+// ---------------------------------------------------------------------------
 
 class _InterestsCard extends StatelessWidget {
   final Profile profile;
@@ -1235,70 +874,35 @@ class _InterestsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Interests'),
-        _LiquidCard(
-          child: profile.interests.isEmpty
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CardTitle('Interests', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
+          profile.interests.isEmpty
               ? GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
-                  child: Row(
+                  child: const Row(
                     children: [
-                      const Icon(Icons.interests_outlined, color: Colors.white38, size: 18),
-                      const SizedBox(width: 8),
-                      const Expanded(child: Text('Add interests', style: TextStyle(color: Colors.white38, fontSize: 14))),
-                      Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
+                      Text('Add interests to connect with students', style: TextStyle(color: _kText2, fontSize: 14)),
+                      Spacer(),
+                      Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
                     ],
                   ),
                 )
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.interests.map((i) => _InterestChip(label: i)).toList(),
+                  children: profile.interests.map((i) => _Chip(label: i, color: _kPrimary)).toList(),
                 ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InterestChip extends StatelessWidget {
-  final String label;
-  const _InterestChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    const br = BorderRadius.all(Radius.circular(20));
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.10),
-            borderRadius: br,
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
 }
 
-// ===========================================================================
+// ---------------------------------------------------------------------------
 // Skills card
-// ===========================================================================
+// ---------------------------------------------------------------------------
 
 class _SkillsCard extends StatelessWidget {
   final Profile profile;
@@ -1306,173 +910,158 @@ class _SkillsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Skills'),
-        _LiquidCard(
-          child: profile.skills.isEmpty
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CardTitle('Skills', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
+          profile.skills.isEmpty
               ? GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
-                  child: Row(
+                  child: const Row(
                     children: [
-                      const Icon(Icons.psychology_outlined, color: Colors.white38, size: 18),
-                      const SizedBox(width: 8),
-                      const Expanded(child: Text('Add your skills', style: TextStyle(color: Colors.white38, fontSize: 14))),
-                      Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
+                      Text('Showcase your skills', style: TextStyle(color: _kText2, fontSize: 14)),
+                      Spacer(),
+                      Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
                     ],
                   ),
                 )
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.skills.map((s) => _SkillChip(label: s)).toList(),
+                  children: profile.skills.map((s) => _Chip(label: s, color: _kGreen, prefix: '• ')).toList(),
                 ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SkillChip extends StatelessWidget {
-  final String label;
-  const _SkillChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    const br = BorderRadius.all(Radius.circular(20));
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0xFF10B981).withOpacity(0.11),
-            borderRadius: br,
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.code_rounded, color: Color(0xFF10B981), size: 11),
-                  const SizedBox(width: 4),
-                  Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
-                ],
-              ),
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
 }
 
-// ===========================================================================
-// Achievements
-// ===========================================================================
+class _Chip extends StatelessWidget {
+  final String label;
+  final Color color;
+  final String? prefix;
+  const _Chip({required this.label, required this.color, this.prefix});
 
-class _AchievementsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.20)),
+      ),
+      child: Text(
+        '${prefix ?? ''}$label',
+        style: TextStyle(fontSize: 13, color: color.darken(0.1), fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+}
+
+extension _ColorX on Color {
+  Color darken(double amount) {
+    final hsl = HSLColor.fromColor(this);
+    return hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0)).toColor();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Achievements card
+// ---------------------------------------------------------------------------
+
+class _AchievementsCard extends StatelessWidget {
   final Profile profile;
-  const _AchievementsSection({required this.profile});
+  const _AchievementsCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
     final badges = <_Badge>[
-      const _Badge(icon: Icons.rocket_launch_outlined, label: 'Early Adopter', color: Color(0xFF8B5CF6)),
+      const _Badge(emoji: '🚀', label: 'Early Adopter', color: Color(0xFF8B5CF6)),
       if (profile.isComplete)
-        const _Badge(icon: Icons.verified_user_outlined, label: 'Verified Student', color: Color(0xFF10B981)),
+        const _Badge(emoji: '✅', label: 'Complete Profile', color: Color(0xFF10B981)),
       if (profile.isVerified)
-        const _Badge(icon: Icons.star_outline_rounded, label: 'Verified', color: Color(0xFFF59E0B)),
+        const _Badge(emoji: '⭐', label: 'Verified Student', color: Color(0xFFF59E0B)),
       if (profile.unifyScore >= 500)
-        const _Badge(icon: Icons.bolt_rounded, label: 'Power User', color: Color(0xFF60A5FA)),
+        const _Badge(emoji: '⚡', label: 'Power User', color: Color(0xFF0066FF)),
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Achievements'),
-        Wrap(
-          spacing: 10, runSpacing: 10,
-          children: badges.map((b) => _BadgeCapsule(badge: b)).toList(),
-        ),
-      ],
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kText1)),
+              // Clean UNIFY Score — text only, no glow
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF4FF),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFBFD4FF)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.bolt_rounded, size: 13, color: _kPrimary),
+                    const SizedBox(width: 3),
+                    Text(
+                      '${profile.unifyScore} pts',
+                      style: const TextStyle(fontSize: 12, color: _kPrimary, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8, runSpacing: 8,
+            children: badges.map((b) => _BadgePill(badge: b)).toList(),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _Badge {
-  final IconData icon;
+  final String emoji;
   final String label;
   final Color color;
-  const _Badge({required this.icon, required this.label, required this.color});
+  const _Badge({required this.emoji, required this.label, required this.color});
 }
 
-class _BadgeCapsule extends StatelessWidget {
+class _BadgePill extends StatelessWidget {
   final _Badge badge;
-  const _BadgeCapsule({required this.badge});
+  const _BadgePill({required this.badge});
 
   @override
   Widget build(BuildContext context) {
-    const br = BorderRadius.all(Radius.circular(24));
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: badge.color.withOpacity(0.14),
-            borderRadius: br,
-            boxShadow: [
-              BoxShadow(color: badge.color.withOpacity(0.30), blurRadius: 18, spreadRadius: 0),
-            ],
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(badge.icon, color: badge.color, size: 15),
-                  const SizedBox(width: 6),
-                  Text(badge.label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              // Specular
-              Positioned(
-                top: -10, left: 12, right: 12,
-                child: Container(
-                  height: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.transparent, Colors.white.withOpacity(0.55), Colors.transparent],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(24))),
-                ),
-              ),
-            ],
-          ),
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: badge.color.withOpacity(0.07),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: badge.color.withOpacity(0.20)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(badge.emoji, style: const TextStyle(fontSize: 13)),
+          const SizedBox(width: 6),
+          Text(badge.label, style: TextStyle(fontSize: 12, color: badge.color.darken(0.05), fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }
 }
 
-// ===========================================================================
+// ---------------------------------------------------------------------------
 // Account card
-// ===========================================================================
+// ---------------------------------------------------------------------------
 
 class _AccountCard extends StatelessWidget {
   final WidgetRef ref;
@@ -1480,53 +1069,73 @@ class _AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LiquidLabel('Account'),
-        _LiquidCard(
-          padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: const Color(0xFF60A5FA), onTap: () => context.push('/app/profile/edit')),
-              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
-              _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: const Color(0xFF34D399), onTap: () => context.push('/app/profile/privacy')),
-              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
-              _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFFA78BFA), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
-              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
-              _Tile(
-                icon: Icons.logout_rounded,
-                label: 'Sign Out',
-                iconColor: const Color(0xFFF87171),
-                labelColor: const Color(0xFFF87171),
-                showChevron: false,
-                onTap: () async {
-                  final confirmed = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      backgroundColor: const Color(0xFF0E1527),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      title: const Text('Sign out?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17)),
-                      content: const Text(
-                        "You'll need to sign in again to access your account.",
-                        style: TextStyle(color: Colors.white60, fontSize: 14, height: 1.5),
-                      ),
-                      actions: [
-                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
-                        TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: Color(0xFFF87171), fontWeight: FontWeight.w600))),
-                      ],
-                    ),
-                  );
-                  if (confirmed == true) {
-                    await ref.read(authNotifierProvider.notifier).signOut();
-                    if (context.mounted) context.go('/get-started');
-                  }
-                },
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: _kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _kBorder, width: 0.5),
+        boxShadow: _kShadow,
+      ),
+      child: Column(
+        children: [
+          _Tile(
+            icon: Icons.edit_outlined,
+            label: 'Edit Profile',
+            iconColor: _kPrimary,
+            onTap: () => context.push('/app/profile/edit'),
           ),
-        ),
-      ],
+          const Divider(height: 1, color: _kBorder, indent: 56),
+          _Tile(
+            icon: Icons.lock_outline,
+            label: 'Privacy',
+            iconColor: _kGreen,
+            onTap: () => context.push('/app/profile/privacy'),
+          ),
+          const Divider(height: 1, color: _kBorder, indent: 56),
+          _Tile(
+            icon: Icons.palette_outlined,
+            label: 'Appearance',
+            iconColor: const Color(0xFF8B5CF6),
+            showChevron: false,
+            onTap: () => ThemePickerSheet.show(context),
+          ),
+          const Divider(height: 1, color: _kBorder, indent: 56),
+          _Tile(
+            icon: Icons.logout_rounded,
+            label: 'Sign Out',
+            iconColor: _kRed,
+            labelColor: _kRed,
+            showChevron: false,
+            onTap: () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  title: const Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: _kText1)),
+                  content: const Text(
+                    "You'll need to sign in again to access your account.",
+                    style: TextStyle(color: _kText2, fontSize: 14, height: 1.5),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Cancel', style: TextStyle(color: _kText2)),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Sign Out', style: TextStyle(color: _kRed, fontWeight: FontWeight.w600)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed == true) {
+                await ref.read(authNotifierProvider.notifier).signOut();
+                if (context.mounted) context.go('/get-started');
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1552,30 +1161,27 @@ class _Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      splashColor: Colors.white.withOpacity(0.04),
-      highlightColor: Colors.white.withOpacity(0.02),
+      borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
         child: Row(
           children: [
             Container(
               width: 36, height: 36,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [iconColor.withOpacity(0.22), iconColor.withOpacity(0.10)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: iconColor.withOpacity(0.10),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: iconColor.withOpacity(0.28), width: 0.8),
               ),
-              child: Icon(icon, color: iconColor, size: 17),
+              child: Icon(icon, color: iconColor, size: 18),
             ),
             const SizedBox(width: 13),
             Expanded(
-              child: Text(label, style: TextStyle(color: labelColor ?? Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+              child: Text(
+                label,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? _kText1),
+              ),
             ),
-            if (showChevron) Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
+            if (showChevron) const Icon(Icons.chevron_right, size: 18, color: _kText2),
           ],
         ),
       ),
@@ -1583,52 +1189,55 @@ class _Tile extends StatelessWidget {
   }
 }
 
-// ===========================================================================
-// Skeleton loading
-// ===========================================================================
+// ---------------------------------------------------------------------------
+// Loading skeleton
+// ---------------------------------------------------------------------------
 
-class _GlassSkeleton extends StatelessWidget {
-  const _GlassSkeleton();
+class _Skeleton extends StatelessWidget {
+  const _Skeleton();
 
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    return Stack(
-      children: [
-        const _AuroraBg(),
-        Shimmer.fromColors(
-          baseColor: Colors.white.withOpacity(0.05),
-          highlightColor: Colors.white.withOpacity(0.13),
-          child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(height: topPad + 165, color: Colors.white),
-                const SizedBox(height: 68),
-                Center(child: _SBox(h: 22, w: 190, r: 6)),
-                const SizedBox(height: 8),
-                Center(child: _SBox(h: 14, w: 120, r: 6)),
-                const SizedBox(height: 20),
-                Center(child: _SBox(h: 38, w: 140, r: 19)),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      _SBox(h: 64, w: double.infinity, r: 24),
-                      const SizedBox(height: 12),
-                      _SBox(h: 90, w: double.infinity, r: 24),
-                      const SizedBox(height: 12),
-                      _SBox(h: 210, w: double.infinity, r: 24),
-                    ],
-                  ),
-                ),
-              ],
+    return Shimmer.fromColors(
+      baseColor: const Color(0xFFE5E7EB),
+      highlightColor: const Color(0xFFF9FAFB),
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cover
+            Container(height: topPad + 170, color: Colors.white),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(16, 52, 16, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _SBox(h: 22, w: 180, r: 6),
+                  const SizedBox(height: 8),
+                  _SBox(h: 14, w: 120, r: 6),
+                  const SizedBox(height: 6),
+                  _SBox(h: 14, w: 200, r: 6),
+                ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Column(
+                children: [
+                  _SBox(h: 72, w: double.infinity, r: 16),
+                  const SizedBox(height: 12),
+                  _SBox(h: 160, w: double.infinity, r: 16),
+                  const SizedBox(height: 12),
+                  _SBox(h: 120, w: double.infinity, r: 16),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -1642,9 +1251,9 @@ class _SBox extends StatelessWidget {
       Container(height: h, width: w, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(r)));
 }
 
-// ===========================================================================
+// ---------------------------------------------------------------------------
 // Error view
-// ===========================================================================
+// ---------------------------------------------------------------------------
 
 class _ErrorView extends StatelessWidget {
   final String message;
@@ -1652,23 +1261,21 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const _AuroraBg(),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Color(0xFFF87171)),
-                const SizedBox(height: 12),
-                Text(message, style: const TextStyle(color: Colors.white60, fontSize: 14), textAlign: TextAlign.center),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: _kBg,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: _kRed),
+              const SizedBox(height: 12),
+              Text(message, style: const TextStyle(color: _kText2, fontSize: 14), textAlign: TextAlign.center),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
