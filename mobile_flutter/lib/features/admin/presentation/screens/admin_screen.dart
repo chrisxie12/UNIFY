@@ -4,7 +4,9 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../leadership/data/models/community_request_model.dart';
+import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
+import '../../../verification/data/models/verification_request_model.dart';
 
 // ── Admin Local Providers ────────────────────────────────────
 
@@ -14,6 +16,18 @@ final _allRequestsProvider = FutureProvider.autoDispose<List<CommunityRequestMod
 
 final _pendingRequestsProvider = FutureProvider.autoDispose<List<CommunityRequestModel>>((ref) async {
   return ref.read(leadershipRepositoryProvider).getAllRequests(statuses: ['pending']);
+});
+
+final _allVerificationProvider = FutureProvider.autoDispose<List<VerificationRequestModel>>((ref) async {
+  final client = ref.read(supabaseProvider);
+  final data = await client.from('verification_requests').select('*, profiles!verification_requests_user_id_fkey(full_name, avatar_url, programme)').order('created_at', ascending: false);
+  return (data as List).map((row) => VerificationRequestModel.fromJson(row as Map<String, dynamic>)).toList();
+});
+
+final _pendingVerificationProvider = FutureProvider.autoDispose<List<VerificationRequestModel>>((ref) async {
+  final client = ref.read(supabaseProvider);
+  final data = await client.from('verification_requests').select('*, profiles!verification_requests_user_id_fkey(full_name, avatar_url, programme)').eq('status', 'pending').order('created_at', ascending: false);
+  return (data as List).map((row) => VerificationRequestModel.fromJson(row as Map<String, dynamic>)).toList();
 });
 
 class _AdminStats {
@@ -34,6 +48,28 @@ final _adminStatsProvider = FutureProvider.autoDispose<_AdminStats>((ref) async 
   );
 });
 
+final _verificationStatsProvider = FutureProvider.autoDispose<_AdminStats>((ref) async {
+  final client = ref.read(supabaseProvider);
+  final all = await client.from('verification_requests').select('status');
+  final list = (all as List);
+  return _AdminStats(
+    list.length,
+    list.where((r) => r['status'] == 'pending').length,
+    list.where((r) => r['status'] == 'approved').length,
+    list.where((r) => r['status'] == 'rejected').length,
+  );
+});
+
+final _announcementStatsProvider = FutureProvider.autoDispose<_AdminStats>((ref) async {
+  final all = await ref.read(leadershipRepositoryProvider).getAllAnnouncementRequests();
+  return _AdminStats(
+    all.length,
+    all.where((r) => r.status == 'pending').length,
+    all.where((r) => r.status == 'approved').length,
+    all.where((r) => r.status == 'rejected').length,
+  );
+});
+
 // ── Screen ───────────────────────────────────────────────────
 
 class AdminScreen extends ConsumerWidget {
@@ -42,14 +78,16 @@ class AdminScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 2,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Admin Dashboard'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Requests'),
-              Tab(text: 'All History'),
+              Tab(text: 'Communities'),
+              Tab(text: 'Verification'),
+              Tab(text: 'Announcements'),
+              Tab(text: 'History'),
             ],
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.grey3,
@@ -59,6 +97,8 @@ class AdminScreen extends ConsumerWidget {
         body: TabBarView(
           children: [
             _PendingRequestsTab(),
+            _VerificationTab(),
+            _AnnouncementRequestsTab(),
             _AllRequestsTab(),
           ],
         ),
@@ -459,6 +499,591 @@ class _RequestCard extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(status == 'approved' ? 'Community created successfully!' : 'Request rejected.'),
+            backgroundColor: status == 'approved' ? AppColors.success : AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
+        );
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ANNOUNCEMENT REQUESTS TAB
+// ═══════════════════════════════════════════════════════════════
+
+class _AnnouncementRequestsTab extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pendingAsync = ref.watch(pendingAnnouncementRequestsProvider);
+    final statsAsync = ref.watch(_announcementStatsProvider);
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(pendingAnnouncementRequestsProvider);
+        ref.invalidate(allAnnouncementRequestsProvider);
+        ref.invalidate(_announcementStatsProvider);
+      },
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          statsAsync.when(
+            data: (stats) => _StatsGrid(stats: stats),
+            error: (_, __) => const SizedBox.shrink(),
+            loading: () => const SizedBox(height: 80),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(Icons.campaign_rounded, size: 16, color: context.primary),
+              const SizedBox(width: 6),
+              Text('Pending Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          pendingAsync.when(
+            data: (requests) {
+              if (requests.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                        SizedBox(height: 12),
+                        Text('All caught up!', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                        SizedBox(height: 4),
+                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Column(
+                children: requests.map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _AnnouncementRequestCard(request: r),
+                )).toList(),
+              );
+            },
+            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnnouncementRequestCard extends ConsumerWidget {
+  final AnnouncementRequestModel request;
+  const _AnnouncementRequestCard({required this.request});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final catIcon = switch (request.category) {
+      'lecture' => Icons.menu_book_rounded,
+      'quiz' => Icons.quiz_rounded,
+      'assignment' => Icons.assignment_rounded,
+      'project' => Icons.build_rounded,
+      'seminar' => Icons.groups_rounded,
+      'workshop' => Icons.handyman_rounded,
+      'exam' => Icons.fact_check_rounded,
+      'emergency' => Icons.warning_amber_rounded,
+      _ => Icons.campaign_rounded,
+    };
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 42, height: 42,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(catIcon, color: const Color(0xFF8B5CF6), size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(request.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      const SizedBox(height: 2),
+                      Text(request.category[0].toUpperCase() + request.category.substring(1), style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                    ],
+                  ),
+                ),
+                if (request.isUrgent)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    margin: const EdgeInsets.only(right: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text('URGENT', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.error)),
+                  ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text('PENDING', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.warning)),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (request.targetAudience != null)
+                  _infoRow('Audience', request.targetAudience!),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(request.body, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.5)),
+                ),
+                const SizedBox(height: 12),
+                Text(_timeAgo(request.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.border),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _handleAction(context, ref, 'rejected'),
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    label: const Text('Reject'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                      side: const BorderSide(color: AppColors.error),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => _handleAction(context, ref, 'approved'),
+                    icon: const Icon(Icons.check_rounded, size: 16),
+                    label: const Text('Approve'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      children: [
+        SizedBox(width: 80, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2))),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark))),
+      ],
+    ),
+  );
+
+  String _timeAgo(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    return '${dt.day}/${dt.month}/${dt.year}';
+  }
+
+  Future<void> _handleAction(BuildContext context, WidgetRef ref, String status) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(status == 'approved' ? 'Approve Announcement?' : 'Reject Announcement?'),
+        content: Text(status == 'approved'
+            ? 'This will publish the announcement to the feed.'
+            : 'The requester will be notified.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(status == 'approved' ? 'Approve' : 'Reject',
+                style: TextStyle(color: status == 'approved' ? AppColors.success : AppColors.error, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
+    try {
+      final client = ref.read(supabaseProvider);
+      final admin = client.auth.currentUser;
+      if (admin == null) return;
+
+      final repo = ref.read(leadershipRepositoryProvider);
+
+      await repo.updateAnnouncementRequestStatus(
+        requestId: request.id,
+        status: status,
+        reviewedBy: admin.id,
+      );
+
+      ref.invalidate(pendingAnnouncementRequestsProvider);
+      ref.invalidate(allAnnouncementRequestsProvider);
+      ref.invalidate(_announcementStatsProvider);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(status == 'approved' ? 'Announcement published!' : 'Announcement rejected.'),
+            backgroundColor: status == 'approved' ? AppColors.success : AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
+        );
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VERIFICATION MODERATION TAB
+// ═══════════════════════════════════════════════════════════════
+
+class _VerificationTab extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pendingAsync = ref.watch(_pendingVerificationProvider);
+    final statsAsync = ref.watch(_verificationStatsProvider);
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(_pendingVerificationProvider);
+        ref.invalidate(_allVerificationProvider);
+        ref.invalidate(_verificationStatsProvider);
+      },
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          statsAsync.when(
+            data: (stats) => _StatsGrid(stats: stats),
+            error: (_, __) => const SizedBox.shrink(),
+            loading: () => const SizedBox(height: 80),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(Icons.verified_user_rounded, size: 16, color: context.primary),
+              const SizedBox(width: 6),
+              Text('Pending Verifications', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          pendingAsync.when(
+            data: (requests) {
+              if (requests.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                        SizedBox(height: 12),
+                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Column(
+                children: requests.map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _VerificationCard(request: r),
+                )).toList(),
+              );
+            },
+            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VerificationCard extends ConsumerWidget {
+  final VerificationRequestModel request;
+  const _VerificationCard({required this.request});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 42, height: 42,
+                  decoration: BoxDecoration(
+                    color: context.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(Icons.verified_user_rounded, color: context.primary, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(request.position, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      const SizedBox(height: 2),
+                      if (request.classRepresented != null)
+                        Text(request.classRepresented!, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text('PENDING', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.warning)),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Column(
+              children: [
+                if (request.department != null)
+                  _infoRow('Department', request.department!),
+                _infoRow('Academic Year', request.academicYear),
+                if (request.evidenceUrl != null) ...[
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () => _viewEvidence(context, request.evidenceUrl!),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFF4FF),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.visibility_rounded, size: 16, color: AppColors.primary),
+                          const SizedBox(width: 8),
+                          Text('View Evidence', style: TextStyle(fontSize: 13, color: context.primary, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12),
+                Text('Submitted ${_timeAgo(request.createdAt)}', style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.border),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _handleVerification(context, ref, 'rejected'),
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    label: const Text('Reject'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                      side: const BorderSide(color: AppColors.error),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => _handleVerification(context, ref, 'approved'),
+                    icon: const Icon(Icons.check_rounded, size: 16),
+                    label: const Text('Approve'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      children: [
+        SizedBox(width: 100, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2))),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark))),
+      ],
+    ),
+  );
+
+  String _timeAgo(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    return '${dt.day}/${dt.month}/${dt.year}';
+  }
+
+  void _viewEvidence(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Evidence'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(url, fit: BoxFit.contain, errorBuilder: (_, __, ___) => const Text('Could not load image')),
+          ),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],
+      ),
+    );
+  }
+
+  Future<void> _handleVerification(BuildContext context, WidgetRef ref, String status) async {
+    final notesCtrl = TextEditingController();
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(status == 'approved' ? 'Approve Verification?' : 'Reject Verification?'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(status == 'approved'
+                ? 'This will mark the user as a verified leader.'
+                : 'The user will be notified of the rejection.'),
+            const SizedBox(height: 12),
+            TextField(
+              controller: notesCtrl,
+              decoration: InputDecoration(
+                hintText: 'Admin notes (optional)',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(status == 'approved' ? 'Approve' : 'Reject',
+                style: TextStyle(color: status == 'approved' ? AppColors.success : AppColors.error, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
+    try {
+      final client = ref.read(supabaseProvider);
+      final admin = client.auth.currentUser;
+      if (admin == null) return;
+
+      await client.from('verification_requests').update({
+        'status': status,
+        'admin_notes': notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim(),
+        'reviewed_by': admin.id,
+        'reviewed_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('id', request.id);
+
+      if (status == 'approved') {
+        await client.from('profiles').update({
+          'is_verified_leader': true,
+          'leadership_role': request.position,
+          'represented_class': request.classRepresented,
+          'represented_department': request.department,
+          'verification_status': 'verified',
+        }).eq('id', request.userId);
+      } else {
+        await client.from('profiles').update({
+          'verification_status': 'rejected',
+        }).eq('id', request.userId);
+      }
+
+      await client.from('verification_log').insert({
+        'target_user_id': request.userId,
+        'action': status == 'approved' ? 'approved' : 'rejected',
+        'performed_by': admin.id,
+        'notes': notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim(),
+      });
+
+      ref.invalidate(_pendingVerificationProvider);
+      ref.invalidate(_allVerificationProvider);
+      ref.invalidate(_verificationStatsProvider);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(status == 'approved' ? 'Leader verified!' : 'Request rejected.'),
             backgroundColor: status == 'approved' ? AppColors.success : AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),

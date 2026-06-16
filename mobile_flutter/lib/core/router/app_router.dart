@@ -19,6 +19,9 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
 import '../../features/leadership/presentation/screens/community_request_screen.dart';
+import '../../features/leadership/presentation/screens/class_rep_dashboard_screen.dart';
+import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
+import '../../features/verification/presentation/screens/verification_request_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -84,6 +87,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
       GoRoute(path: '/community-request', builder: (_, __) => const CommunityRequestScreen()),
+      GoRoute(path: '/verification-request', builder: (_, __) => const VerificationRequestScreen()),
+      GoRoute(path: '/announcement-request', builder: (_, __) => const AnnouncementRequestScreen()),
+      GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
 
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),

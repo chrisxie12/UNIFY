@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../data/models/announcement_request_model.dart';
 import '../../data/models/community_request_model.dart';
 import '../../data/models/user_badge_model.dart';
 import '../../data/repositories/leadership_repository_impl.dart';
@@ -46,4 +47,22 @@ final otherUserBadgesProvider = FutureProvider.autoDispose.family<List<UserBadge
 
 final otherUserLeadershipProvider = FutureProvider.autoDispose.family<List<UserLeadershipModel>, String>((ref, userId) async {
   return ref.read(leadershipRepositoryProvider).getUserLeadership(userId);
+});
+
+// ── Announcement Requests ────────────────────────────────────
+
+final myAnnouncementRequestsProvider = FutureProvider.autoDispose<List<AnnouncementRequestModel>>((ref) async {
+  ref.watch(authStateProvider);
+  final client = ref.watch(supabaseProvider);
+  final user = client.auth.currentUser;
+  if (user == null) return [];
+  return ref.read(leadershipRepositoryProvider).getMyAnnouncementRequests(user.id);
+});
+
+final allAnnouncementRequestsProvider = FutureProvider.autoDispose<List<AnnouncementRequestModel>>((ref) async {
+  return ref.read(leadershipRepositoryProvider).getAllAnnouncementRequests();
+});
+
+final pendingAnnouncementRequestsProvider = FutureProvider.autoDispose<List<AnnouncementRequestModel>>((ref) async {
+  return ref.read(leadershipRepositoryProvider).getAllAnnouncementRequests(statuses: ['pending']);
 });

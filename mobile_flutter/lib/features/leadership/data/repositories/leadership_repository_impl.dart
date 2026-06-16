@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../models/announcement_request_model.dart';
 import '../models/badge_model.dart';
 import '../models/community_request_model.dart';
 import '../models/user_badge_model.dart';
@@ -141,6 +142,138 @@ class LeadershipRepositoryImpl {
     });
 
     await _client.from('communities').update({'member_count': 1}).eq('id', community['id']);
+  }
+
+  // ── Community Managers ─────────────────────────────────────
+
+  Future<List<CommunityManagerModel>> getCommunityManagers(String communityId) async {
+    final data = await _client
+        .from('community_managers')
+        .select('*, profiles!community_managers_user_id_fkey(full_name, avatar_url)')
+        .eq('community_id', communityId)
+        .eq('is_active', true);
+
+    return (data as List).map((row) => CommunityManagerModel.fromJson(row as Map<String, dynamic>)).toList();
+  }
+
+  Future<void> addCommunityManager({
+    required String communityId,
+    required String userId,
+    required String role,
+    required String assignedBy,
+  }) async {
+    await _client.from('community_managers').insert({
+      'community_id': communityId,
+      'user_id': userId,
+      'role': role,
+      'assigned_by': assignedBy,
+    });
+  }
+
+  // ── Announcement Requests ──────────────────────────────────
+
+  Future<AnnouncementRequestModel> createAnnouncementRequest(Map<String, dynamic> data) async {
+    final result = await _client
+        .from('announcement_requests')
+        .insert(data)
+        .select()
+        .single();
+    return AnnouncementRequestModel.fromJson(result as Map<String, dynamic>); // ignore: unnecessary_cast
+  }
+
+  Future<List<AnnouncementRequestModel>> getMyAnnouncementRequests(String userId) async {
+    final data = await _client
+        .from('announcement_requests')
+        .select()
+        .eq('requester_id', userId)
+        .order('created_at', ascending: false);
+
+    return (data as List).map((row) => AnnouncementRequestModel.fromJson(row as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<AnnouncementRequestModel>> getAllAnnouncementRequests({List<String>? statuses}) async {
+    var query = _client
+        .from('announcement_requests')
+        .select('*, profiles!announcement_requests_requester_id_fkey(full_name, avatar_url, programme)');
+
+    final data = await query.order('created_at', ascending: false);
+
+    if (statuses != null && statuses.isNotEmpty) {
+      return (data as List)
+          .map((row) => AnnouncementRequestModel.fromJson(row as Map<String, dynamic>))
+          .where((r) => statuses.contains(r.status))
+          .toList();
+    }
+    return (data as List).map((row) => AnnouncementRequestModel.fromJson(row as Map<String, dynamic>)).toList();
+  }
+
+  Future<void> updateAnnouncementRequestStatus({
+    required String requestId,
+    required String status,
+    String? adminNotes,
+    required String reviewedBy,
+  }) async {
+    await _client.from('announcement_requests').update({
+      'status': status,
+      'admin_notes': adminNotes,
+      'reviewed_by': reviewedBy,
+      'reviewed_at': DateTime.now().toUtc().toIso8601String(),
+    }).eq('id', requestId);
+
+    if (status == 'approved') {
+      // Fetch the request to create the actual announcement
+      final req = await _client.from('announcement_requests').select().eq('id', requestId).single();
+      await _client.from('announcements').insert({
+        'author_id': req['requester_id'],
+        'university_id': req['university_id'],
+        'title': req['title'],
+        'body': req['body'],
+        'category': req['category'],
+        'is_urgent': req['is_urgent'],
+        'is_published': true,
+        'published_at': DateTime.now().toUtc().toIso8601String(),
+        'community_id': req['community_id'],
+      });
+    }
+  }
+
+  // ── My Communities (as manager/owner) ──────────────────────
+
+  // ── My Communities (as owner/moderator) ────────────────────
+
+  Future<List<Map<String, dynamic>>> getMyManagedCommunities(String userId) async {
+    final data = await _client
+        .from('community_members')
+        .select('*, communities(*)')
+        .eq('user_id', userId);
+    // Filter in Dart for compatibility with current Supabase client version
+    return (data as List)
+        .where((r) => (r['role'] as String) == 'owner' || (r['role'] as String) == 'moderator')
+        .cast<Map<String, dynamic>>()
+        .toList();
+  }
+
+  // ── Duplicate Check ────────────────────────────────────────
+
+  Future<bool> communitySlugExists(String slug) async {
+    final data = await _client.from('communities').select('id').eq('slug', slug).maybeSingle();
+    return data != null;
+  }
+
+  Future<bool> duplicateRequestExists({
+    required String userId,
+    required String communityName,
+    required String communityType,
+  }) async {
+    final data = await _client
+        .from('community_requests')
+        .select('id, status')
+        .eq('requester_id', userId)
+        .eq('community_name', communityName)
+        .eq('community_type', communityType);
+    // Filter in Dart for compatibility with current Supabase client version
+    final list = (data as List);
+    return list.any((r) => (r['status'] as String) == 'pending' || (r['status'] as String) == 'approved');
   }
 
   // ── Community Members ──────────────────────────────────────

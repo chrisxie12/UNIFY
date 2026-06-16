@@ -1,17 +1,21 @@
 class SupabaseTables {
   SupabaseTables._();
 
-  static const String profiles            = 'profiles';
-  static const String universities        = 'universities';
-  static const String announcements       = 'announcements';
-  static const String announcementReads   = 'announcement_reads';
-  static const String badges              = 'badges';
-  static const String userBadges          = 'user_badges';
-  static const String leadershipRoles     = 'leadership_roles';
-  static const String userLeadership      = 'user_leadership';
-  static const String communityRequests   = 'community_requests';
-  static const String communities         = 'communities';
-  static const String communityMembers    = 'community_members';
+  static const String profiles              = 'profiles';
+  static const String universities          = 'universities';
+  static const String announcements         = 'announcements';
+  static const String announcementReads     = 'announcement_reads';
+  static const String badges                = 'badges';
+  static const String userBadges            = 'user_badges';
+  static const String leadershipRoles       = 'leadership_roles';
+  static const String userLeadership        = 'user_leadership';
+  static const String communityRequests     = 'community_requests';
+  static const String communities           = 'communities';
+  static const String communityMembers      = 'community_members';
+  static const String communityManagers     = 'community_managers';
+  static const String verificationRequests  = 'verification_requests';
+  static const String verificationLog       = 'verification_log';
+  static const String announcementRequests  = 'announcement_requests';
 }
 
 class SupabaseColumns {
@@ -74,6 +78,24 @@ class SupabaseColumns {
   static const String communityId   = 'community_id';
   static const String userId        = 'user_id';
   static const String joinedAt      = 'joined_at';
+
+  // community managers
+  static const String assignedBy    = 'assigned_by';
+  static const String assignedAt    = 'assigned_at';
+
+  // announcement requests
+  static const String requesterId   = 'requester_id';
+  static const String isUrgent      = 'is_urgent';
+  static const String targetAudience = 'target_audience';
+  static const String adminNotes    = 'admin_notes';
+
+  // profile extensions
+  static const String faculty       = 'faculty';
+  static const String department    = 'department';
+
+  // verification requests
+  static const String evidenceUrl   = 'evidence_url';
+  static const String evidenceType  = 'evidence_type';
 
   // universities
   static const String shortName     = 'short_name';

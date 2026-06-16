@@ -129,11 +129,21 @@ class _Header extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                item.authorName ?? 'Campus Admin',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      item.authorName ?? 'Campus Admin',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (item.authorIsVerifiedLeader == true) ...[
+                    const SizedBox(width: 4),
+                    Icon(Icons.verified_rounded, size: 14, color: context.primary),
+                  ],
+                ],
               ),
               const SizedBox(height: 2),
               Text(

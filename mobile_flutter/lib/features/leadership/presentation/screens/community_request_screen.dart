@@ -26,13 +26,32 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
   String? _academicYear;
   bool _submitting = false;
 
-  static const _types = [
-    ('class', 'Class Community'),
-    ('level', 'Level-based Community'),
-    ('department', 'Department Community'),
-    ('faculty', 'Faculty Community'),
+  // Organized by category with headers
+  static const _typeCategories = [
+    ('── Academic ──', null),
+    ('class', 'Class'),
+    ('level', 'Level'),
+    ('course', 'Course'),
+    ('programme', 'Programme'),
+    ('department', 'Department'),
+    ('faculty', 'Faculty'),
+    ('university', 'University'),
+    ('── Residential ──', null),
+    ('hostel', 'Hostel'),
+    ('hall', 'Hall'),
+    ('residence', 'Residence'),
+    ('── Student Life ──', null),
+    ('church', 'Church'),
+    ('sports', 'Sports'),
+    ('entrepreneurship', 'Entrepreneurship'),
+    ('technology', 'Technology'),
+    ('gaming', 'Gaming'),
+    ('photography', 'Photography'),
+    ('music', 'Music'),
+    ('── Other ──', null),
+    ('campus_jobs', 'Campus Jobs'),
+    ('scholarships', 'Scholarships'),
     ('club', 'Club'),
-    ('university', 'University Community'),
   ];
 
   static const _levels = ['100', '200', '300', '400', 'pg'];
@@ -123,12 +142,62 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
             DropdownButtonFormField<String>(
               initialValue: _type,
               decoration: _input(null),
-              items: _types.map((t) => DropdownMenuItem(value: t.$1, child: Text(t.$2))).toList(),
-              onChanged: (v) => setState(() => _type = v ?? 'class'),
+              items: _typeCategories.map((t) {
+                if (t.$2 == null) {
+                  return DropdownMenuItem<String>(
+                    value: '__header__${t.$1}',
+                    enabled: false,
+                    child: Text(t.$1, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.grey2, letterSpacing: 0.5)),
+                  );
+                }
+                return DropdownMenuItem(value: t.$1, child: Text(t.$2!));
+              }).toList(),
+              onChanged: (v) {
+                if (v != null && !v.startsWith('__header__')) {
+                  setState(() => _type = v);
+                }
+              },
             ),
             const SizedBox(height: 20),
 
-            if (_type == 'class' || _type == 'level' || _type == 'department' || _type == 'faculty') ...[
+            if (_type == 'class' || _type == 'level' || _type == 'course' || _type == 'programme' || _type == 'department' || _type == 'faculty') ...[
+              _SectionLabel(_type == 'faculty' ? 'Faculty' : 'Faculty (optional)'),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: _input('e.g. Faculty of Computing'),
+                onChanged: (v) => _faculty = v.isEmpty ? null : v,
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (_type == 'class' || _type == 'level' || _type == 'course' || _type == 'programme' || _type == 'department') ...[
+              _SectionLabel(_type == 'department' ? 'Department' : 'Department (optional)'),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: _input('e.g. Information Technology'),
+                onChanged: (v) => _department = v.isEmpty ? null : v,
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (_type == 'class' || _type == 'level' || _type == 'course') ...[
+              _SectionLabel('Programme (optional)'),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: _input('e.g. BSc Information Technology'),
+                onChanged: (v) => _programme = v.isEmpty ? null : v,
+              ),
+              const SizedBox(height: 16),
+              _SectionLabel('Level'),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                initialValue: _level,
+                decoration: _input(null),
+                hint: const Text('Select level'),
+                items: _levels.map((l) => DropdownMenuItem(value: l, child: Text('Level $l'))).toList(),
+                onChanged: (v) => setState(() => _level = v),
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (_type != 'club' && _type != 'church' && _type != 'sports' && _type != 'gaming' && _type != 'photography' && _type != 'music' && _type != 'campus_jobs' && _type != 'scholarships' && _type != 'technology' && _type != 'entrepreneurship' && _type != 'hostel' && _type != 'hall' && _type != 'residence') ...[
               _SectionLabel(_type == 'faculty' ? 'Faculty' : 'Faculty (optional)'),
               const SizedBox(height: 8),
               TextFormField(

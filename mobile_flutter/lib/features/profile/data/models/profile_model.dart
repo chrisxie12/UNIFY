@@ -32,6 +32,11 @@ class ProfileModel extends Profile {
     super.isVerified,
     super.profileViews,
     super.privacyLevel,
+    super.isVerifiedLeader,
+    super.leadershipRole,
+    super.representedClass,
+    super.representedDepartment,
+    super.verificationStatus,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -66,6 +71,11 @@ class ProfileModel extends Profile {
       isVerified: json['is_verified'] as bool? ?? false,
       profileViews: json['profile_views'] as int? ?? 0,
       privacyLevel: json['privacy_level'] as String? ?? 'public',
+      isVerifiedLeader: json['is_verified_leader'] as bool? ?? false,
+      leadershipRole: json['leadership_role'] as String?,
+      representedClass: json['represented_class'] as String?,
+      representedDepartment: json['represented_department'] as String?,
+      verificationStatus: json['verification_status'] as String? ?? 'none',
     );
   }
 
@@ -99,6 +109,11 @@ class ProfileModel extends Profile {
       'is_verified': isVerified,
       'profile_views': profileViews,
       'privacy_level': privacyLevel,
+      'is_verified_leader': isVerifiedLeader,
+      'leadership_role': leadershipRole,
+      'represented_class': representedClass,
+      'represented_department': representedDepartment,
+      'verification_status': verificationStatus,
     };
   }
 }

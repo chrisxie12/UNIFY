@@ -138,6 +138,12 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
                 const SizedBox(height: 12),
               ],
 
+              // Verification status card (shown when not yet verified)
+              if (p.verificationStatus == 'none' || p.verificationStatus == 'pending' || p.verificationStatus == 'rejected') ...[
+                s(idx++, _VerificationStatusCard(status: p.verificationStatus)),
+                const SizedBox(height: 12),
+              ],
+
               s(idx++, _AboutCard(profile: p)),
               const SizedBox(height: 12),
               s(idx++, _AcademicCard(profile: p)),
@@ -176,6 +182,16 @@ class _Header extends StatelessWidget {
   final AnimationController ctrl;
   final List<UserBadgeModel> badges;
   const _Header({required this.profile, required this.postCount, required this.ctrl, this.badges = const []});
+
+  static Color _badgeColor(String slug) {
+    switch (slug) {
+      case 'verified_student': return const Color(0xFF0066FF);
+      case 'class_rep':        return const Color(0xFFFFD700);
+      case 'src_executive':    return const Color(0xFF7C3AED);
+      case 'admin':            return const Color(0xFFDC2626);
+      default:                 return const Color(0xFF0066FF);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +249,7 @@ class _Header extends StatelessWidget {
                                   const SizedBox(width: 5),
                                   Icon(Icons.verified_rounded, color: context.primary, size: 19),
                                 ],
-                                // Leadership badges
+                                // Role-based badges (with colors)
                                 ...badges.map((b) => Padding(
                                   padding: const EdgeInsets.only(left: 3),
                                   child: Tooltip(
@@ -241,19 +257,13 @@ class _Header extends StatelessWidget {
                                     child: Container(
                                       width: 22, height: 22,
                                       decoration: BoxDecoration(
-                                        color: b.badge.category == 'leadership'
-                                            ? const Color(0xFFFF6B35).withValues(alpha: 0.15)
-                                            : context.primary.withValues(alpha: 0.1),
+                                        color: _badgeColor(b.badge.slug).withValues(alpha: 0.15),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Icon(
-                                        b.badge.category == 'leadership'
-                                            ? Icons.shield_rounded
-                                            : Icons.verified_rounded,
+                                        b.badge.slug == 'admin' ? Icons.shield_rounded : Icons.verified_rounded,
                                         size: 13,
-                                        color: b.badge.category == 'leadership'
-                                            ? const Color(0xFFFF6B35)
-                                            : context.primary,
+                                        color: _badgeColor(b.badge.slug),
                                       ),
                                     ),
                                   ),
@@ -1404,6 +1414,8 @@ class _LeadershipCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       if (l.programme != null)
                         Text(l.programme!, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      if (l.level != null)
+                        Text('Level ${l.level}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
                       if (l.department != null || l.faculty != null)
                         Text(
                           [if (l.department != null) l.department!, if (l.faculty != null) l.faculty!].join(' · '),
@@ -1425,6 +1437,123 @@ class _LeadershipCard extends StatelessWidget {
               ],
             ),
           )),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => context.push('/dashboard'),
+              icon: const Icon(Icons.dashboard_rounded, size: 16),
+              label: const Text('Open Leadership Dashboard'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFFF6B35),
+                side: const BorderSide(color: Color(0xFFFF6B35)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Verification Status card (get verified / pending / rejected)
+// ---------------------------------------------------------------------------
+
+class _VerificationStatusCard extends StatelessWidget {
+  final String status; // 'none' | 'pending' | 'rejected'
+  const _VerificationStatusCard({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    if (status == 'pending') {
+      return _Card(
+        child: Row(
+          children: [
+            Container(
+              width: 42, height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.warning.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.access_time_rounded, color: AppColors.warning, size: 22),
+            ),
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Verification Pending', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                  SizedBox(height: 2),
+                  Text('Your request is being reviewed by an admin',
+                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (status == 'rejected') {
+      return _Card(
+        child: Row(
+          children: [
+            Container(
+              width: 42, height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.cancel_rounded, color: AppColors.error, size: 22),
+            ),
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Verification Rejected', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.error)),
+                  SizedBox(height: 2),
+                  Text('Your request was not approved. You can reapply.',
+                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
+          ],
+        ),
+        onTap: () => context.push('/verification-request'),
+      );
+    }
+
+    // status == 'none'
+    return _Card(
+      onTap: () => context.push('/verification-request'),
+      child: Row(
+        children: [
+          Container(
+            width: 42, height: 42,
+            decoration: BoxDecoration(
+              color: context.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.verified_user_rounded, color: context.primary, size: 22),
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Get Verified', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                SizedBox(height: 2),
+                Text('Apply for student leader verification',
+                    style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
         ],
       ),
     );

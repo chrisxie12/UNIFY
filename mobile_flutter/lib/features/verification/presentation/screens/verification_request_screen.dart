@@ -1,0 +1,286 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/verification_request_model.dart';
+class VerificationRequestScreen extends ConsumerStatefulWidget {
+  const VerificationRequestScreen({super.key});
+
+  @override
+  ConsumerState<VerificationRequestScreen> createState() => _VerificationRequestScreenState();
+}
+
+class _VerificationRequestScreenState extends ConsumerState<VerificationRequestScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _positionCtrl = TextEditingController();
+  final _classCtrl = TextEditingController();
+  final _deptCtrl = TextEditingController();
+
+  String _academicYear = '2025/2026';
+  String _evidenceType = 'appointment_letter';
+  File? _evidenceFile;
+  bool _submitting = false;
+
+  static const _academicYears = ['2024/2025', '2025/2026', '2026/2027'];
+  static const _positions = [
+    'Class Representative',
+    'Assistant Class Representative',
+    'Course Representative',
+    'Department Representative',
+    'Faculty Representative',
+    'SRC Executive',
+    'Hall Representative',
+    'Club President',
+    'Department Executive',
+  ];
+  static const _evidenceTypes = [
+    ('appointment_letter', 'Appointment Letter'),
+    ('screenshot', 'Screenshot from Class Group'),
+    ('official_doc', 'Official Document'),
+  ];
+
+  @override
+  void dispose() {
+    _positionCtrl.dispose();
+    _classCtrl.dispose();
+    _deptCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickFile() async {
+    final picker = ImagePicker();
+    final file = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1200);
+    if (file != null) {
+      setState(() => _evidenceFile = File(file.path));
+    }
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_evidenceFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please upload evidence to support your application'), behavior: SnackBarBehavior.floating),
+      );
+      return;
+    }
+
+    setState(() => _submitting = true);
+
+    try {
+      final client = ref.read(supabaseProvider);
+      final user = client.auth.currentUser;
+      if (user == null) throw Exception('Not logged in');
+
+      final profile = await client
+          .from('profiles')
+          .select('university_id')
+          .eq('id', user.id)
+          .maybeSingle();
+      if (profile == null) throw Exception('Profile not found');
+
+      // Upload evidence
+      final ext = _evidenceFile!.path.split('.').last;
+      final fileBytes = await _evidenceFile!.readAsBytes();
+      final storagePath = 'verification/${user.id}/${DateTime.now().millisecondsSinceEpoch}.$ext';
+      await client.storage.from('verification_evidence').uploadBinary(
+        storagePath,
+        fileBytes,
+        fileOptions: const FileOptions(upsert: true),
+      );
+      final evidenceUrl = client.storage.from('verification_evidence').getPublicUrl(storagePath);
+
+      // Create request
+      final request = VerificationRequestModel(
+        id: '',
+        userId: user.id,
+        universityId: profile['university_id'] as String,
+        position: _positionCtrl.text.trim(),
+        classRepresented: _classCtrl.text.trim().isEmpty ? null : _classCtrl.text.trim(),
+        department: _deptCtrl.text.trim().isEmpty ? null : _deptCtrl.text.trim(),
+        academicYear: _academicYear,
+        evidenceUrl: evidenceUrl,
+        evidenceType: _evidenceType,
+        createdAt: DateTime.now(),
+      );
+
+      await client.from('verification_requests').insert(request.toInsertJson());
+
+      // Update profile verification status
+      await client.from('profiles').update({
+        'verification_status': 'pending',
+      }).eq('id', user.id);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verification request submitted! An admin will review it shortly.'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Request Verification'), centerTitle: true),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Info banner
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF4FF),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFBFD4FF)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_rounded, color: AppColors.primary, size: 20),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Submit your leadership evidence to get verified. Only verified leaders can create official communities.',
+                      style: TextStyle(fontSize: 12, color: AppColors.primary.withValues(alpha: 0.9), height: 1.5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            _label('Position'),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: _positionCtrl.text.isEmpty ? null : _positionCtrl.text,
+              decoration: _input(),
+              hint: const Text('Select your position'),
+              items: _positions.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+              onChanged: (v) => _positionCtrl.text = v ?? '',
+              validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+            ),
+            const SizedBox(height: 20),
+
+            _label('Class / Group Represented (optional)'),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _classCtrl,
+              decoration: _input(hint: 'e.g. BSc IT Level 200'),
+            ),
+            const SizedBox(height: 20),
+
+            _label('Department (optional)'),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _deptCtrl,
+              decoration: _input(hint: 'e.g. Information Technology'),
+            ),
+            const SizedBox(height: 20),
+
+            _label('Academic Year'),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: _academicYear,
+              decoration: _input(),
+              items: _academicYears.map((y) => DropdownMenuItem(value: y, child: Text(y))).toList(),
+              onChanged: (v) => setState(() => _academicYear = v ?? '2025/2026'),
+            ),
+            const SizedBox(height: 24),
+
+            // Evidence upload
+            _label('Evidence Upload'),
+            const SizedBox(height: 8),
+            ..._evidenceTypes.map((t) => RadioListTile<String>(
+              title: Text(t.$2, style: const TextStyle(fontSize: 14)),
+              value: t.$1,
+              groupValue: _evidenceType,
+              onChanged: (v) => setState(() => _evidenceType = v!),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            )),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: _pickFile,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                decoration: BoxDecoration(
+                  color: _evidenceFile != null ? const Color(0xFFEFF4FF) : AppColors.background,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _evidenceFile != null ? AppColors.primary : AppColors.border,
+                    width: _evidenceFile != null ? 1.5 : 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      _evidenceFile != null ? Icons.check_circle_rounded : Icons.upload_file_rounded,
+                      size: 32,
+                      color: _evidenceFile != null ? AppColors.primary : AppColors.grey3,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _evidenceFile != null ? _evidenceFile!.path.split('/').last : 'Tap to upload evidence',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: _evidenceFile != null ? AppColors.primary : AppColors.grey2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (_evidenceFile != null) ...[
+                      const SizedBox(height: 4),
+                      Text('Tap to change', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Submit
+            FilledButton(
+              onPressed: _submitting ? null : _submit,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(double.infinity, 52),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              child: _submitting
+                  ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white))
+                  : const Text('Submit for Verification', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _label(String text) => Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark));
+
+  InputDecoration _input({String? hint}) => InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    filled: true,
+    fillColor: AppColors.white,
+  );
+}
