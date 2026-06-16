@@ -203,7 +203,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
-                              color: Colors.white.withOpacity(0.62),
+                              color: Colors.white.withValues(alpha: 0.62),
                               letterSpacing: 0.2,
                             ),
                             textAlign: TextAlign.center,
@@ -253,7 +253,7 @@ class _Background extends StatelessWidget {
               gradient: RadialGradient(
                 center: Alignment.center,
                 radius: 1.5,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.35)],
+                colors: [Colors.transparent, Colors.black.withValues(alpha: 0.35)],
               ),
             ),
           ),
@@ -270,7 +270,7 @@ class _Background extends StatelessWidget {
                 center: Alignment.topCenter,
                 radius: 1.0,
                 colors: [
-                  const Color(0xFFFF6B35).withOpacity(0.08),
+                  const Color(0xFFFF6B35).withValues(alpha: 0.08),
                   Colors.transparent,
                 ],
               ),
@@ -302,12 +302,12 @@ class _LogoWidget extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0066FF).withOpacity(0.55),
+                color: const Color(0xFF0066FF).withValues(alpha: 0.55),
                 blurRadius: 52,
                 spreadRadius: 10,
               ),
               BoxShadow(
-                color: Colors.white.withOpacity(0.10),
+                color: Colors.white.withValues(alpha: 0.10),
                 blurRadius: 28,
                 spreadRadius: 5,
               ),
@@ -322,7 +322,7 @@ class _LogoWidget extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF60A5FA).withOpacity(0.30),
+                color: const Color(0xFF60A5FA).withValues(alpha: 0.30),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -338,7 +338,7 @@ class _LogoWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.18),
+                color: Colors.black.withValues(alpha: 0.18),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -408,7 +408,7 @@ class _NetworkPainter extends CustomPainter {
         final dist = (pos[i] - pos[j]).distance;
         if (dist < threshold) {
           final a = (1.0 - dist / threshold) * lineOpacity * 0.65;
-          linePaint.color = const Color(0xFF60A5FA).withOpacity(a.clamp(0, 1));
+          linePaint.color = const Color(0xFF60A5FA).withValues(alpha: a.clamp(0, 1));
           canvas.drawLine(pos[i], pos[j], linePaint);
         }
       }
@@ -423,17 +423,17 @@ class _NetworkPainter extends CustomPainter {
       final p = particles[i];
 
       // Glow — three concentric translucent rings (no MaskFilter for perf)
-      fillPaint.color = const Color(0xFF93C5FD).withOpacity(0.10);
+      fillPaint.color = const Color(0xFF93C5FD).withValues(alpha: 0.10);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius, fillPaint);
 
-      fillPaint.color = const Color(0xFF93C5FD).withOpacity(0.18);
+      fillPaint.color = const Color(0xFF93C5FD).withValues(alpha: 0.18);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius * 0.55, fillPaint);
 
-      fillPaint.color = const Color(0xFFBAE6FD).withOpacity(0.28);
+      fillPaint.color = const Color(0xFFBAE6FD).withValues(alpha: 0.28);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius * 0.25, fillPaint);
 
       // Core dot — bright white
-      fillPaint.color = Colors.white.withOpacity(0.94);
+      fillPaint.color = Colors.white.withValues(alpha: 0.94);
       canvas.drawCircle(pos, p.dotRadius, fillPaint);
     }
   }

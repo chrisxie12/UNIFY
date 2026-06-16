@@ -2,12 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/announcement.dart';
-
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const _kPrimary = Color(0xFF0066FF);
-const _kText1   = Color(0xFF0A0A1A);
-const _kText2   = Color(0xFF6B7280);
-const _kBorder  = Color(0xFFE5E7EB);
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class AnnouncementCard extends StatelessWidget {
   final Announcement item;
@@ -65,11 +61,11 @@ class _PinnedBanner extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
         children: const [
-          Icon(Icons.push_pin_rounded, size: 12, color: _kText2),
+          Icon(Icons.push_pin_rounded, size: 12, color: AppColors.grey2),
           SizedBox(width: 5),
           Text(
             'Pinned announcement',
-            style: TextStyle(fontSize: 11, color: _kText2, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 11, color: AppColors.grey2, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -115,7 +111,7 @@ class _Header extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: const Color(0xFFF5F7FA),
-            border: Border.all(color: _kBorder),
+            border: Border.all(color: AppColors.border),
           ),
           child: item.authorAvatar != null
               ? ClipOval(
@@ -135,14 +131,14 @@ class _Header extends StatelessWidget {
             children: [
               Text(
                 item.authorName ?? 'Campus Admin',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _kText1),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 2),
               Text(
                 _timeLabel(item.createdAt),
-                style: const TextStyle(fontSize: 12, color: _kText2),
+                style: const TextStyle(fontSize: 12, color: AppColors.grey2),
               ),
             ],
           ),
@@ -173,7 +169,7 @@ class _Header extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(top: 4),
-            decoration: const BoxDecoration(color: _kPrimary, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: context.primary, shape: BoxShape.circle),
           ),
         ],
       ],
@@ -189,7 +185,7 @@ class _AuthorInitial extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       name?.isNotEmpty == true ? name![0].toUpperCase() : 'U',
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: _kText1),
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.dark),
     ),
   );
 }
@@ -205,7 +201,7 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: icon != null ? 5 : 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
@@ -236,7 +232,7 @@ class _Content extends StatelessWidget {
         Text(
           item.title,
           style: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w700, color: _kText1, height: 1.35,
+            fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark, height: 1.35,
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -244,7 +240,7 @@ class _Content extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           item.body,
-          style: const TextStyle(fontSize: 13.5, color: _kText2, height: 1.5),
+          style: const TextStyle(fontSize: 13.5, color: AppColors.grey2, height: 1.5),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
@@ -286,11 +282,11 @@ class _Footer extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
       child: Row(
         children: [
-          const Icon(Icons.remove_red_eye_outlined, size: 13, color: _kText2),
+          const Icon(Icons.remove_red_eye_outlined, size: 13, color: AppColors.grey2),
           const SizedBox(width: 4),
           Text(
             '${item.viewCount}',
-            style: const TextStyle(fontSize: 12, color: _kText2),
+            style: const TextStyle(fontSize: 12, color: AppColors.grey2),
           ),
           const Spacer(),
           _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),
@@ -311,10 +307,10 @@ class _FooterBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 15, color: _kText2),
+        Icon(icon, size: 15, color: AppColors.grey2),
         const SizedBox(width: 4),
         Text(label,
-            style: const TextStyle(fontSize: 12, color: _kText2, fontWeight: FontWeight.w500)),
+            style: const TextStyle(fontSize: 12, color: AppColors.grey2, fontWeight: FontWeight.w500)),
       ],
     );
   }

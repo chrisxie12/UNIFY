@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../theme/app_colors.dart';
+import '../../core/extensions/theme_extensions.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool loading;
@@ -14,12 +15,12 @@ class LoadingOverlay extends StatelessWidget {
       children: [
         child,
         if (loading)
-          const Positioned.fill(
+          Positioned.fill(
             child: ColoredBox(
-              color: Color(0x80FFFFFF),
+              color: const Color(0x80FFFFFF),
               child: Center(
                 child: CircularProgressIndicator(
-                  color: AppColors.primary,
+                  color: context.primary,
                   strokeWidth: 2.5,
                 ),
               ),

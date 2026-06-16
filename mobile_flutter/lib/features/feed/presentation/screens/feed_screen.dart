@@ -7,13 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/feed_provider.dart';
 import '../../domain/entities/announcement.dart';
 import '../widgets/announcement_card.dart';
-
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const _kPrimary = Color(0xFF0066FF);
-const _kBg      = Color(0xFFF5F7FA);
-const _kText1   = Color(0xFF0A0A1A);
-const _kText2   = Color(0xFF6B7280);
-const _kBorder  = Color(0xFFE5E7EB);
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -75,10 +70,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     final avatarUrl = user?.userMetadata?['avatar_url'] as String?;
 
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: AppColors.background,
       body: RefreshIndicator(
         onRefresh: () => ref.read(feedProvider.notifier).refresh(),
-        color: _kPrimary,
+        color: context.primary,
         child: CustomScrollView(
           controller: _scrollCtrl,
           slivers: [
@@ -89,16 +84,16 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0.6,
-              shadowColor: _kBorder,
+              shadowColor: AppColors.border,
               toolbarHeight: 58,
               title: Row(
                 children: [
-                  const Text(
+                  Text(
                     'UNIFY',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
-                      color: _kPrimary,
+                      color: context.primary,
                       letterSpacing: 3,
                     ),
                   ),
@@ -106,15 +101,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: _kPrimary.withOpacity(0.08),
+                      color: context.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       firstName.isNotEmpty ? _greeting + ', ' + firstName : _greeting,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: _kPrimary,
+                        color: context.primary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -123,7 +118,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.search_rounded, color: _kText1, size: 22),
+                  icon: const Icon(Icons.search_rounded, color: AppColors.dark, size: 22),
                   onPressed: () {},
                   tooltip: 'Search',
                 ),
@@ -131,7 +126,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   alignment: Alignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.notifications_outlined, color: _kText1, size: 22),
+                      icon: const Icon(Icons.notifications_outlined, color: AppColors.dark, size: 22),
                       onPressed: () => context.push('/notifications'),
                       tooltip: 'Notifications',
                     ),
@@ -153,7 +148,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ],
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(1),
-                child: Container(height: 1, color: _kBorder),
+                child: Container(height: 1, color: AppColors.border),
               ),
             ),
 
@@ -200,12 +195,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         const SizedBox(height: 16),
                         const Text(
                           'Could not load feed',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: _kText1),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.dark),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           e.toString(),
-                          style: const TextStyle(fontSize: 13, color: _kText2),
+                          style: const TextStyle(fontSize: 13, color: AppColors.grey2),
                           textAlign: TextAlign.center,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
@@ -214,7 +209,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         FilledButton(
                           onPressed: () => ref.invalidate(feedProvider),
                           style: FilledButton.styleFrom(
-                            backgroundColor: _kPrimary,
+                            backgroundColor: context.primary,
                             minimumSize: const Size(120, 44),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
@@ -237,20 +232,20 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             width: 72,
                             height: 72,
                             decoration: BoxDecoration(
-                              color: _kPrimary.withOpacity(0.08),
+                              color: context.primary.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.campaign_outlined, size: 36, color: _kPrimary),
+                            child: Icon(Icons.campaign_outlined, size: 36, color: context.primary),
                           ),
                           const SizedBox(height: 16),
                           const Text(
                             'Nothing here yet',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: _kText1),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.dark),
                           ),
                           const SizedBox(height: 6),
                           const Text(
                             'Check back soon for campus updates.',
-                            style: TextStyle(fontSize: 13, color: _kText2),
+                            style: TextStyle(fontSize: 13, color: AppColors.grey2),
                           ),
                         ],
                       ),
@@ -272,14 +267,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                       ),
                     ),
                     if (feedState.isLoadingMore)
-                      const SliverToBoxAdapter(
+                      SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
                           child: Center(
                             child: SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(color: _kPrimary, strokeWidth: 2),
+                              child: CircularProgressIndicator(color: context.primary, strokeWidth: 2),
                             ),
                           ),
                         ),
@@ -290,15 +285,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                           padding: const EdgeInsets.fromLTRB(24, 24, 24, 56),
                           child: Row(
                             children: [
-                              const Expanded(child: Divider(color: _kBorder)),
+                              const Expanded(child: Divider(color: AppColors.border)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
                                 child: Text(
                                   "You're all caught up",
-                                  style: const TextStyle(fontSize: 12, color: _kText2),
+                                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
                                 ),
                               ),
-                              const Expanded(child: Divider(color: _kBorder)),
+                              const Expanded(child: Divider(color: AppColors.border)),
                             ],
                           ),
                         ),
@@ -383,7 +378,7 @@ class _MyStory extends StatelessWidget {
                 height: 54,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: _kBorder, width: 2),
+                  border: Border.all(color: AppColors.border, width: 2),
                   color: const Color(0xFFF5F7FA),
                 ),
                 child: avatarUrl != null
@@ -402,8 +397,8 @@ class _MyStory extends StatelessWidget {
                 child: Container(
                   width: 20,
                   height: 20,
-                  decoration: const BoxDecoration(
-                    color: _kPrimary,
+                  decoration: BoxDecoration(
+                    color: context.primary,
                     shape: BoxShape.circle,
                     boxShadow: [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
                   ),
@@ -414,7 +409,7 @@ class _MyStory extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const Text('Your Story', style: TextStyle(fontSize: 10, color: _kText2, fontWeight: FontWeight.w500)),
+        const Text('Your Story', style: TextStyle(fontSize: 10, color: AppColors.grey2, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -436,7 +431,7 @@ class _StoryBubble extends StatelessWidget {
             color: data.color,
             border: data.isUniversity
                 ? null
-                : Border.all(color: _kPrimary.withOpacity(0.3), width: 2),
+                : Border.all(color: context.primary.withValues(alpha: 0.3), width: 2),
             gradient: data.isUniversity
                 ? LinearGradient(
                     colors: [data.color, data.color.withBlue(200)],
@@ -461,7 +456,7 @@ class _StoryBubble extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           data.name.split(' ').first,
-          style: const TextStyle(fontSize: 10, color: _kText1, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 10, color: AppColors.dark, fontWeight: FontWeight.w500),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -477,7 +472,7 @@ class _Initials extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       letter,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: _kText1),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.dark),
     ),
   );
 }
@@ -499,16 +494,16 @@ class _ComposerBar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
           decoration: BoxDecoration(
-            color: _kBg,
+            color: AppColors.background,
             borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: _kBorder),
+            border: Border.all(color: AppColors.border),
           ),
           child: Row(
             children: [
               Container(
                 width: 30,
                 height: 30,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: _kBorder),
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.border),
                 child: avatarUrl != null
                     ? ClipOval(
                         child: CachedNetworkImage(
@@ -523,10 +518,10 @@ class _ComposerBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Share an update, idea or question...',
-                  style: const TextStyle(fontSize: 13, color: _kText2),
+                  style: const TextStyle(fontSize: 13, color: AppColors.grey2),
                 ),
               ),
-              const Icon(Icons.photo_camera_outlined, color: _kText2, size: 19),
+              const Icon(Icons.photo_camera_outlined, color: AppColors.grey2, size: 19),
             ],
           ),
         ),
@@ -558,11 +553,11 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               controller: controller,
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              labelColor: _kPrimary,
-              unselectedLabelColor: _kText2,
+              labelColor: context.primary,
+              unselectedLabelColor: AppColors.grey2,
               labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              indicatorColor: _kPrimary,
+              indicatorColor: context.primary,
               indicatorWeight: 2.5,
               indicatorSize: TabBarIndicatorSize.label,
               dividerColor: Colors.transparent,
@@ -570,7 +565,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               tabs: tabs.map((t) => Tab(text: t, height: 43)).toList(),
             ),
           ),
-          Container(height: 1, color: _kBorder),
+          Container(height: 1, color: AppColors.border),
         ],
       ),
     );

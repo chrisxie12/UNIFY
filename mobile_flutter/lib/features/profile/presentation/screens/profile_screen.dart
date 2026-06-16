@@ -8,24 +8,12 @@ import '../../../../core/widgets/theme_picker_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Design tokens
 // ---------------------------------------------------------------------------
-
-const _kPrimary = Color(0xFF0066FF);
-const _kBg      = Color(0xFFF5F7FA);
-const _kCard    = Colors.white;
-const _kText1   = Color(0xFF0A0A1A);
-const _kText2   = Color(0xFF6B7280);
-const _kBorder  = Color(0xFFE5E7EB);
-const _kGreen   = Color(0xFF10B981);
-const _kRed     = Color(0xFFEF4444);
-
-const _kShadow = [
-  BoxShadow(color: Color(0x09000000), blurRadius: 12, offset: Offset(0, 3)),
-  BoxShadow(color: Color(0x05000000), blurRadius: 4),
-];
 
 // ---------------------------------------------------------------------------
 // Root screen
@@ -40,7 +28,7 @@ class ProfileScreen extends ConsumerWidget {
     final statsAsync   = ref.watch(profileStatsProvider);
 
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: AppColors.background,
       body: profileAsync.when(
         loading: () => const _Skeleton(),
         error: (e, _) => _ErrorView(message: e.toString()),
@@ -175,7 +163,7 @@ class _Header extends StatelessWidget {
             ),
             // White identity block — paddingTop makes room for avatar bottom half
             Container(
-              color: _kCard,
+              color: AppColors.white,
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(16, avatarR + 14, 16, 0),
               child: Column(
@@ -197,7 +185,7 @@ class _Header extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w800,
-                                      color: _kText1,
+                                      color: AppColors.dark,
                                       letterSpacing: -0.3,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -206,13 +194,13 @@ class _Header extends StatelessWidget {
                                 ),
                                 if (profile.isVerified) ...[
                                   const SizedBox(width: 5),
-                                  const Icon(Icons.verified_rounded, color: _kPrimary, size: 19),
+                                  Icon(Icons.verified_rounded, color: context.primary, size: 19),
                                 ],
                               ],
                             ),
                             if (profile.username?.isNotEmpty == true) ...[
                               const SizedBox(height: 2),
-                              Text('@${profile.username}', style: const TextStyle(fontSize: 13, color: _kText2)),
+                              Text('@${profile.username}', style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
                             ],
                           ],
                         ),
@@ -221,8 +209,8 @@ class _Header extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () => context.push('/app/profile/edit'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: _kPrimary,
-                          side: const BorderSide(color: _kPrimary, width: 1.5),
+                          foregroundColor: context.primary,
+                          side: BorderSide(color: context.primary, width: 1.5),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
                           textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -238,7 +226,7 @@ class _Header extends StatelessWidget {
                   if (profile.programme?.isNotEmpty == true) ...[
                     Text(
                       profile.programme!,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _kText1),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
                     ),
                     const SizedBox(height: 3),
                   ],
@@ -250,7 +238,7 @@ class _Header extends StatelessWidget {
                         if (profile.school?.isNotEmpty == true) profile.school!,
                         if (profile.yearOfStudy != null) profile.studentStatus,
                       ].join(' · '),
-                      style: const TextStyle(fontSize: 13, color: _kText2),
+                      style: const TextStyle(fontSize: 13, color: AppColors.grey2),
                     ),
 
                   // Campus
@@ -258,9 +246,9 @@ class _Header extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_rounded, size: 13, color: _kText2),
+                        const Icon(Icons.location_on_rounded, size: 13, color: AppColors.grey2),
                         const SizedBox(width: 3),
-                        Text(profile.campus!, style: const TextStyle(fontSize: 13, color: _kText2)),
+                        Text(profile.campus!, style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
                       ],
                     ),
                   ],
@@ -372,11 +360,11 @@ class _ActionBtn extends StatelessWidget {
       child: Container(
         width: 38, height: 38,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.90),
+          color: Colors.white.withValues(alpha: 0.90),
           shape: BoxShape.circle,
           boxShadow: const [BoxShadow(color: Color(0x25000000), blurRadius: 8)],
         ),
-        child: Icon(icon, size: 18, color: _kText1),
+        child: Icon(icon, size: 18, color: AppColors.dark),
       ),
     );
   }
@@ -425,7 +413,7 @@ class _Avatar extends StatelessWidget {
           child: Container(
             width: 26, height: 26,
             decoration: BoxDecoration(
-              color: _kPrimary,
+              color: context.primary,
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2.5),
             ),
@@ -450,7 +438,7 @@ class _Initials extends StatelessWidget {
       child: Center(
         child: Text(
           initials,
-          style: TextStyle(fontSize: diameter * 0.30, fontWeight: FontWeight.w800, color: _kPrimary),
+          style: TextStyle(fontSize: diameter * 0.30, fontWeight: FontWeight.w800, color: context.primary),
         ),
       ),
     );
@@ -469,7 +457,7 @@ class _StatsStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(height: 1, color: _kBorder),
+        const Divider(height: 1, color: AppColors.border),
         const SizedBox(height: 14),
         Row(
           children: [
@@ -510,7 +498,7 @@ class _StatCell extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: isEmpty && !cta ? const Color(0xFFD1D5DB) : _kText1,
+                  color: isEmpty && !cta ? const Color(0xFFD1D5DB) : AppColors.dark,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -519,7 +507,7 @@ class _StatCell extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 11,
-                  color: cta && isEmpty ? _kPrimary : _kText2,
+                  color: cta && isEmpty ? context.primary : AppColors.grey2,
                   fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
@@ -535,7 +523,7 @@ class _StatCell extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      Container(width: 1, height: 36, color: _kBorder);
+      Container(width: 1, height: 36, color: AppColors.border);
 }
 
 // ---------------------------------------------------------------------------
@@ -544,21 +532,20 @@ class _Divider extends StatelessWidget {
 
 class _Card extends StatelessWidget {
   final Widget child;
-  final EdgeInsets? padding;
   final VoidCallback? onTap;
 
-  const _Card({required this.child, this.padding, this.onTap});
+  const _Card({required this.child, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     Widget inner = Container(
       width: double.infinity,
-      padding: padding ?? const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _kCard,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kBorder, width: 0.5),
-        boxShadow: _kShadow,
+        border: Border.all(color: AppColors.border, width: 0.5),
+        boxShadow: AppColors.cardShadow,
       ),
       child: child,
     );
@@ -568,7 +555,7 @@ class _Card extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
-          splashColor: _kPrimary.withOpacity(0.04),
+          splashColor: context.primary.withValues(alpha: 0.04),
           child: inner,
         ),
       );
@@ -590,11 +577,11 @@ class _CardHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kText1)),
+          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
           if (action != null)
             GestureDetector(
               onTap: onAction,
-              child: Text(action!, style: const TextStyle(fontSize: 13, color: _kPrimary, fontWeight: FontWeight.w500)),
+              child: Text(action!, style: TextStyle(fontSize: 13, color: context.primary, fontWeight: FontWeight.w500)),
             ),
         ],
       ),
@@ -621,9 +608,9 @@ class _CompletionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Complete your profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _kText1)),
+                const Text('Complete your profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
                 const SizedBox(height: 3),
-                const Text('A complete profile helps students and employers find you.', style: TextStyle(fontSize: 12, color: _kText2, height: 1.4)),
+                const Text('A complete profile helps students and employers find you.', style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
                 const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -634,18 +621,18 @@ class _CompletionCard extends StatelessWidget {
                     builder: (_, val, __) => LinearProgressIndicator(
                       value: val,
                       minHeight: 6,
-                      backgroundColor: _kBorder,
-                      valueColor: const AlwaysStoppedAnimation<Color>(_kPrimary),
+                      backgroundColor: AppColors.border,
+                      valueColor: AlwaysStoppedAnimation<Color>(context.primary),
                     ),
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text('$pct% complete', style: const TextStyle(fontSize: 11, color: _kPrimary, fontWeight: FontWeight.w600)),
+                Text('$pct% complete', style: TextStyle(fontSize: 11, color: context.primary, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: _kText2),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
         ],
       ),
     );
@@ -669,20 +656,20 @@ class _AboutCard extends StatelessWidget {
         children: [
           _CardHeader('About', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           hasBio
-              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: _kText1, height: 1.65))
+              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: AppColors.dark, height: 1.65))
               : GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
                   child: Row(
                     children: [
-                      const Text('Add a bio to introduce yourself', style: TextStyle(fontSize: 14, color: _kText2)),
+                      const Text('Add a bio to introduce yourself', style: TextStyle(fontSize: 14, color: AppColors.grey2)),
                       const Spacer(),
                       Container(
                         width: 28, height: 28,
                         decoration: BoxDecoration(
-                          color: _kPrimary.withOpacity(0.08),
+                          color: context.primary.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
+                        child: Icon(Icons.add_rounded, size: 16, color: context.primary),
                       ),
                     ],
                   ),
@@ -724,12 +711,12 @@ class _AcademicCard extends StatelessWidget {
                 children: [
                   Container(
                     width: 36, height: 36,
-                    decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(Icons.school_rounded, size: 18, color: _kPrimary),
+                    decoration: BoxDecoration(color: context.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
+                    child: Icon(Icons.school_rounded, size: 18, color: context.primary),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(child: Text('Add your university details', style: TextStyle(color: _kText2, fontSize: 14))),
-                  const Icon(Icons.chevron_right_rounded, size: 18, color: _kText2),
+                  const Expanded(child: Text('Add your university details', style: TextStyle(color: AppColors.grey2, fontSize: 14))),
+                  const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.grey2),
                 ],
               ),
             )
@@ -738,7 +725,7 @@ class _AcademicCard extends StatelessWidget {
               children: [
                 for (int i = 0; i < rows.length; i++) ...[
                   _DataRow(label: rows[i].label, value: rows[i].value),
-                  if (i < rows.length - 1) const Divider(height: 1, color: _kBorder),
+                  if (i < rows.length - 1) const Divider(height: 1, color: AppColors.border),
                 ],
               ],
             ),
@@ -768,12 +755,12 @@ class _DataRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 100,
-            child: Text(label, style: const TextStyle(fontSize: 13, color: _kText2)),
+            child: Text(label, style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kText1),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark),
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -810,7 +797,7 @@ class _SocialCard extends StatelessWidget {
       _SocialP('GitHub', profile.githubUrl,
         solid: const Color(0xFF24292F), child: const _GitHubIcon()),
       _SocialP('Portfolio', profile.portfolioUrl,
-        solid: _kPrimary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
+        solid: context.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
 
@@ -840,7 +827,7 @@ class _SocialCard extends StatelessWidget {
               children: [
                 for (int i = 0; i < active.length; i++) ...[
                   _SocialRow(platform: active[i]),
-                  if (i < active.length - 1) const Divider(height: 1, color: _kBorder),
+                  if (i < active.length - 1) const Divider(height: 1, color: AppColors.border),
                 ],
               ],
             ),
@@ -848,7 +835,7 @@ class _SocialCard extends StatelessWidget {
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/app/profile/edit'),
-              child: const Text('Add your social links →', style: TextStyle(color: _kPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
+              child: Text('Add your social links →', style: TextStyle(color: context.primary, fontSize: 13, fontWeight: FontWeight.w500)),
             ),
           ],
         ],
@@ -882,7 +869,7 @@ class _BrandIconBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shadow = BoxShadow(
-      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withOpacity(0.22),
+      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withValues(alpha: 0.22),
       blurRadius: 8,
       offset: const Offset(0, 3),
     );
@@ -1084,12 +1071,12 @@ class _SocialRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(platform.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kText1)),
-                Text(platform.url!, style: const TextStyle(fontSize: 11, color: _kPrimary), overflow: TextOverflow.ellipsis),
+                Text(platform.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                Text(platform.url!, style: TextStyle(fontSize: 11, color: context.primary), overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
-          const Icon(Icons.open_in_new_rounded, size: 14, color: _kText2),
+          const Icon(Icons.open_in_new_rounded, size: 14, color: AppColors.grey2),
         ],
       ),
     );
@@ -1115,7 +1102,7 @@ class _InterestsCard extends StatelessWidget {
               ? _EmptyPrompt('Add interests to connect with like-minded students', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.interests.map((i) => _Chip(label: i, color: _kPrimary)).toList(),
+                  children: profile.interests.map((i) => _Chip(label: i, color: context.primary)).toList(),
                 ),
         ],
       ),
@@ -1142,7 +1129,7 @@ class _SkillsCard extends StatelessWidget {
               ? _EmptyPrompt('Showcase your technical and soft skills', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.skills.map((s) => _Chip(label: s, color: _kGreen, prefix: '✦ ')).toList(),
+                  children: profile.skills.map((s) => _Chip(label: s, color: AppColors.success, prefix: '✦ ')).toList(),
                 ),
         ],
       ),
@@ -1161,9 +1148,9 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.22)),
+        border: Border.all(color: color.withValues(alpha: 0.22)),
       ),
       child: Text(
         '${prefix ?? ''}$label',
@@ -1184,12 +1171,12 @@ class _EmptyPrompt extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, color: _kText2))),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, color: AppColors.grey2))),
           const SizedBox(width: 8),
           Container(
             width: 28, height: 28,
-            decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), shape: BoxShape.circle),
-            child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
+            decoration: BoxDecoration(color: context.primary.withValues(alpha: 0.08), shape: BoxShape.circle),
+            child: Icon(Icons.add_rounded, size: 16, color: context.primary),
           ),
         ],
       ),
@@ -1224,7 +1211,7 @@ class _AchievementsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kText1)),
+              const Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
@@ -1235,11 +1222,11 @@ class _AchievementsCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.bolt_rounded, size: 13, color: _kPrimary),
+                    Icon(Icons.bolt_rounded, size: 13, color: context.primary),
                     const SizedBox(width: 3),
                     Text(
                       '${profile.unifyScore} pts',
-                      style: const TextStyle(fontSize: 12, color: _kPrimary, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 12, color: context.primary, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -1273,9 +1260,9 @@ class _BadgePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: badge.color.withOpacity(0.08),
+        color: badge.color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: badge.color.withOpacity(0.22)),
+        border: Border.all(color: badge.color.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1301,35 +1288,35 @@ class _AccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: _kCard,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kBorder, width: 0.5),
-        boxShadow: _kShadow,
+        border: Border.all(color: AppColors.border, width: 0.5),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         children: [
-          _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: _kPrimary, onTap: () => context.push('/app/profile/edit')),
-          const Divider(height: 1, color: _kBorder, indent: 58),
-          _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: _kGreen, onTap: () => context.push('/app/profile/privacy')),
-          const Divider(height: 1, color: _kBorder, indent: 58),
+          _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: context.primary, onTap: () => context.push('/app/profile/edit')),
+          const Divider(height: 1, color: AppColors.border, indent: 58),
+          _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
+          const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
-          const Divider(height: 1, color: _kBorder, indent: 58),
+          const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,
             label: 'Sign Out',
-            iconColor: _kRed,
-            labelColor: _kRed,
+            iconColor: AppColors.error,
+            labelColor: AppColors.error,
             showChevron: false,
             onTap: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  title: const Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: _kText1)),
-                  content: const Text("You'll need to sign in again to access your account.", style: TextStyle(color: _kText2, fontSize: 14, height: 1.5)),
+                  title: const Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: AppColors.dark)),
+                  content: const Text("You'll need to sign in again to access your account.", style: TextStyle(color: AppColors.grey2, fontSize: 14, height: 1.5)),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: _kText2))),
-                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: _kRed, fontWeight: FontWeight.w600))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: AppColors.grey2))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600))),
                   ],
                 ),
               );
@@ -1367,7 +1354,7 @@ class _Tile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      splashColor: iconColor.withOpacity(0.05),
+      splashColor: iconColor.withValues(alpha: 0.05),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
         child: Row(
@@ -1375,16 +1362,16 @@ class _Tile extends StatelessWidget {
             Container(
               width: 36, height: 36,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.10),
+                color: iconColor.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: iconColor, size: 18),
             ),
             const SizedBox(width: 13),
             Expanded(
-              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? _kText1)),
+              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? AppColors.dark)),
             ),
-            if (showChevron) const Icon(Icons.chevron_right_rounded, size: 20, color: _kText2),
+            if (showChevron) const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.grey2),
           ],
         ),
       ),
@@ -1469,9 +1456,9 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline_rounded, size: 48, color: _kRed),
+            const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
             const SizedBox(height: 12),
-            Text(message, style: const TextStyle(color: _kText2, fontSize: 14), textAlign: TextAlign.center),
+            Text(message, style: const TextStyle(color: AppColors.grey2, fontSize: 14), textAlign: TextAlign.center),
           ],
         ),
       ),

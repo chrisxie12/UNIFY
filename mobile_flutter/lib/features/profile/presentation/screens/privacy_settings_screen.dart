@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../providers/profile_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class PrivacySettingsScreen extends ConsumerStatefulWidget {
   const PrivacySettingsScreen({super.key});
@@ -105,7 +106,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                     onPressed: _save,
                     child: Text(
                       'Save',
-                      style: AppTextStyles.bodySemi.copyWith(color: AppColors.primary),
+                      style: AppTextStyles.bodySemi.copyWith(color: context.primary),
                     ),
                   ),
           ),
@@ -153,10 +154,10 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: active ? AppColors.primary.withOpacity(0.07) : AppColors.white,
+                    color: active ? context.primary.withValues(alpha: 0.07) : AppColors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: active ? AppColors.primary : AppColors.border,
+                      color: active ? context.primary : AppColors.border,
                       width: active ? 1.5 : 0.5,
                     ),
                   ),
@@ -178,7 +179,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                         ),
                       ),
                       if (active)
-                        Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 22),
+                        Icon(Icons.check_circle_rounded, color: context.primary, size: 22),
                     ],
                   ),
                 ),
@@ -262,9 +263,9 @@ class _InfoTile extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.10),
+              color: iconColor.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: iconColor.withOpacity(0.20), width: 0.8),
+              border: Border.all(color: iconColor.withValues(alpha: 0.20), width: 0.8),
             ),
             child: Icon(icon, color: iconColor, size: 18),
           ),

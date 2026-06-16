@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../../core/extensions/theme_extensions.dart';
 
 enum AppButtonVariant { primary, secondary, outlined, danger }
 
@@ -30,7 +31,7 @@ class AppButton extends StatelessWidget {
 
     switch (variant) {
       case AppButtonVariant.primary:
-        bg = enabled ? AppColors.dark : AppColors.surface;
+        bg = enabled ? context.primary : AppColors.surface;
         fg = enabled ? AppColors.white : AppColors.grey3;
       case AppButtonVariant.secondary:
         bg = AppColors.surface;

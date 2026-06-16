@@ -11,6 +11,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -359,10 +360,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: context.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.camera_alt_outlined, color: AppColors.primary),
+                    child: Icon(Icons.camera_alt_outlined, color: context.primary),
                   ),
                   title: Text('Take Photo', style: AppTextStyles.bodySemi),
                   onTap: onCamera,
@@ -372,10 +373,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: context.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.photo_library_outlined, color: AppColors.primary),
+                    child: Icon(Icons.photo_library_outlined, color: context.primary),
                   ),
                   title: Text('Choose from Gallery', style: AppTextStyles.bodySemi),
                   onTap: onGallery,
@@ -526,7 +527,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: Text(
                         'Save',
                         style: AppTextStyles.bodySemi.copyWith(
-                          color: _hasChanges ? AppColors.primary : AppColors.grey3,
+                          color: _hasChanges ? context.primary : AppColors.grey3,
                         ),
                       ),
                     ),
@@ -843,15 +844,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.black.withOpacity(0.22),
+                color: Colors.black.withValues(alpha: 0.22),
               ),
               child: Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.45),
+                    color: Colors.black.withValues(alpha: 0.45),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 0.8),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 0.8),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -881,7 +882,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               height: 96,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 3),
+                border: Border.all(color: context.primary.withValues(alpha: 0.2), width: 3),
               ),
               child: ClipOval(
                 child: avatarUrl != null && avatarUrl.isNotEmpty
@@ -900,7 +901,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: context.primary,
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.white, width: 2),
                 ),
@@ -977,13 +978,13 @@ class _UsernameField extends StatelessWidget {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.none,
           style: const TextStyle(fontSize: 14, color: AppColors.dark),
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'yourhandle',
             prefixText: '@',
             prefixStyle: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+              color: context.primary,
             ),
           ),
         ),
@@ -1024,7 +1025,7 @@ class _SocialField extends StatelessWidget {
               width: 22,
               height: 22,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.12),
+                color: iconColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(icon, color: iconColor, size: 13),
@@ -1074,16 +1075,16 @@ class _YearSelector extends StatelessWidget {
                 duration: const Duration(milliseconds: 150),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color: active ? AppColors.primary : AppColors.primary.withOpacity(0.06),
+                  color: active ? context.primary : context.primary.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: active ? AppColors.primary : AppColors.primary.withOpacity(0.25),
+                    color: active ? context.primary : context.primary.withValues(alpha: 0.25),
                   ),
                 ),
                 child: Text(
                   'Year $year',
                   style: AppTextStyles.label.copyWith(
-                    color: active ? Colors.white : AppColors.primary,
+                    color: active ? Colors.white : context.primary,
                   ),
                 ),
               ),
@@ -1114,7 +1115,7 @@ class _ToggleChipGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = activeColor ?? AppColors.primary;
+    final color = activeColor ?? context.primary;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1133,10 +1134,10 @@ class _ToggleChipGrid extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: active ? color : color.withOpacity(0.06),
+                color: active ? color : color.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: active ? color : color.withOpacity(0.3),
+                  color: active ? color : color.withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
@@ -1197,10 +1198,10 @@ class _PrivacySelector extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: active ? AppColors.primary.withOpacity(0.07) : AppColors.white,
+              color: active ? context.primary.withValues(alpha: 0.07) : AppColors.white,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: active ? AppColors.primary : AppColors.border,
+                color: active ? context.primary : AppColors.border,
                 width: active ? 1.5 : 0.5,
               ),
             ),
@@ -1219,7 +1220,7 @@ class _PrivacySelector extends StatelessWidget {
                   ),
                 ),
                 if (active)
-                  Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 20),
+                  Icon(Icons.check_circle_rounded, color: context.primary, size: 20),
               ],
             ),
           ),
@@ -1240,7 +1241,7 @@ class _AvatarInitials extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primaryLight,
+      color: context.primaryLight,
       alignment: Alignment.center,
       child: Text(
         initials,
