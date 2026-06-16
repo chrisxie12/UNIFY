@@ -907,7 +907,7 @@ class _VerificationCard extends ConsumerWidget {
               children: [
                 if (request.department != null)
                   _infoRow('Department', request.department!),
-                _infoRow('Academic Year', request.academicYear),
+                _infoRow('Academic Year', request.academicYear ?? '—'),
                 if (request.evidenceUrl != null) ...[
                   const SizedBox(height: 8),
                   GestureDetector(

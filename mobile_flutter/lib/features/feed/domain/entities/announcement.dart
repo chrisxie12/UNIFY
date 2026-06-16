@@ -8,8 +8,6 @@ class Announcement extends Equatable {
   final String authorId;
   final String? authorName;
   final String? authorAvatar;
-  final bool? authorIsVerifiedLeader;
-  final String? authorLeadershipRole;
   final String universityId;
   final bool isPinned;
   final bool isUrgent;
@@ -17,6 +15,8 @@ class Announcement extends Equatable {
   final int viewCount;
   final DateTime createdAt;
   final bool isRead;
+  final bool authorIsVerifiedLeader;
+  final String? authorLeadershipRole;
 
   const Announcement({
     required this.id,
@@ -26,7 +26,7 @@ class Announcement extends Equatable {
     required this.authorId,
     this.authorName,
     this.authorAvatar,
-    this.authorIsVerifiedLeader,
+    this.authorIsVerifiedLeader = false,
     this.authorLeadershipRole,
     required this.universityId,
     this.isPinned = false,
@@ -38,5 +38,5 @@ class Announcement extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, title, isRead, viewCount];
+  List<Object?> get props => [id, title, isRead, viewCount, authorIsVerifiedLeader];
 }

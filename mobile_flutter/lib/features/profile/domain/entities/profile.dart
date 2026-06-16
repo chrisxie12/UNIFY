@@ -40,7 +40,7 @@ class Profile extends Equatable {
   final int profileViews;
   final String privacyLevel; // 'public' | 'university' | 'friends'
 
-  // Leader verification
+  // Leadership / verification
   final bool isVerifiedLeader;
   final String? leadershipRole;
   final String? representedClass;

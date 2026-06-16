@@ -12,6 +12,7 @@ import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
+import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/privacy_settings_screen.dart';
@@ -87,6 +88,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
+      GoRoute(
+        path: '/community/:id',
+        builder: (_, state) => CommunityDetailScreen(
+          communityId: state.pathParameters['id']!,
+        ),
+      ),
       GoRoute(path: '/community-request', builder: (_, __) => const CommunityRequestScreen()),
       GoRoute(path: '/verification-request', builder: (_, __) => const VerificationRequestScreen()),
       GoRoute(path: '/announcement-request', builder: (_, __) => const AnnouncementRequestScreen()),
@@ -105,7 +112,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/app/feed', builder: (_, __) => const FeedScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/communities', builder: (_, __) => const CommunitiesScreen()),
+            GoRoute(
+              path: '/app/communities',
+              builder: (_, __) => const CommunitiesScreen(),
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
