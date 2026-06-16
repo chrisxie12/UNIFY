@@ -23,8 +23,8 @@ const _kGreen   = Color(0xFF10B981);
 const _kRed     = Color(0xFFEF4444);
 
 const _kShadow = [
-  BoxShadow(color: Color(0x0A000000), blurRadius: 8, offset: Offset(0, 2)),
-  BoxShadow(color: Color(0x05000000), blurRadius: 2),
+  BoxShadow(color: Color(0x09000000), blurRadius: 12, offset: Offset(0, 3)),
+  BoxShadow(color: Color(0x05000000), blurRadius: 4),
 ];
 
 // ---------------------------------------------------------------------------
@@ -58,49 +58,82 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Body
+// Animated body — staggered entrance for each section
 // ---------------------------------------------------------------------------
 
-class _Body extends StatelessWidget {
+class _Body extends StatefulWidget {
   final Profile profile;
   final int postCount;
   final WidgetRef ref;
-
   const _Body({required this.profile, required this.postCount, required this.ref});
 
   @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> with TickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final List<Animation<double>> _fades;
+  late final List<Animation<Offset>> _slides;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+    const n = 9;
+    _fades = List.generate(n, (i) => CurvedAnimation(
+      parent: _ctrl,
+      curve: Interval(i * 0.05, 0.45 + i * 0.05, curve: Curves.easeOut),
+    ));
+    _slides = _fades.map((f) =>
+      Tween<Offset>(begin: const Offset(0, 0.10), end: Offset.zero).animate(f),
+    ).toList();
+    _ctrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  Widget _section(int idx, Widget child) => FadeTransition(
+    opacity: _fades[idx],
+    child: SlideTransition(position: _slides[idx], child: child),
+  );
+
+  @override
   Widget build(BuildContext context) {
-    final incomplete = profile.completionScore < 80;
+    final p = widget.profile;
+    final incomplete = p.completionScore < 80;
+
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // ── Identity block ────────────────────────────────────────
         SliverToBoxAdapter(
-          child: _IdentityBlock(profile: profile, postCount: postCount),
+          child: _section(0, _Header(profile: p, postCount: widget.postCount, ctrl: _ctrl)),
         ),
-
-        // ── Content cards ─────────────────────────────────────────
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 48),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               if (incomplete) ...[
-                _CompletionCard(profile: profile),
+                _section(1, _CompletionCard(profile: p)),
                 const SizedBox(height: 12),
               ],
-              _AboutCard(profile: profile),
+              _section(2, _AboutCard(profile: p)),
               const SizedBox(height: 12),
-              _AcademicCard(profile: profile),
+              _section(3, _AcademicCard(profile: p)),
               const SizedBox(height: 12),
-              _SocialCard(profile: profile),
+              _section(4, _SocialCard(profile: p)),
               const SizedBox(height: 12),
-              _InterestsCard(profile: profile),
+              _section(5, _InterestsCard(profile: p)),
               const SizedBox(height: 12),
-              _SkillsCard(profile: profile),
+              _section(6, _SkillsCard(profile: p)),
               const SizedBox(height: 12),
-              _AchievementsCard(profile: profile),
+              _section(7, _AchievementsCard(profile: p)),
               const SizedBox(height: 12),
-              _AccountCard(ref: ref),
+              _section(8, _AccountCard(ref: widget.ref)),
             ]),
           ),
         ),
@@ -110,25 +143,29 @@ class _Body extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Identity block — cover + avatar + name + stats
+// Header — fixes avatar z-order with outer Stack
 // ---------------------------------------------------------------------------
 
-class _IdentityBlock extends StatelessWidget {
+class _Header extends StatelessWidget {
   final Profile profile;
   final int postCount;
-  const _IdentityBlock({required this.profile, required this.postCount});
+  final AnimationController ctrl;
+  const _Header({required this.profile, required this.postCount, required this.ctrl});
 
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
     const coverH = 170.0;
-    const avatarD = 88.0; // diameter
+    const avatarD = 88.0;
+    const avatarR = avatarD / 2; // 44
 
-    return Column(
+    // ── Outer Stack: Column + avatar Positioned on top (fixes z-order) ──────
+    return Stack(
+      clipBehavior: Clip.none,
       children: [
-        // ── Cover + avatar ──────────────────────────────────────────
-        Stack(
-          clipBehavior: Clip.none,
+        // ── Background column ──────────────────────────────────────────────
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Cover photo
             SizedBox(
@@ -136,127 +173,142 @@ class _IdentityBlock extends StatelessWidget {
               width: double.infinity,
               child: _CoverPhoto(profile: profile),
             ),
-            // Action buttons (top-right)
-            Positioned(
-              top: topPad + 12,
-              right: 16,
-              child: Row(
+            // White identity block — paddingTop makes room for avatar bottom half
+            Container(
+              color: _kCard,
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(16, avatarR + 14, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ActionBtn(
-                    icon: Icons.ios_share_outlined,
-                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Sharing coming soon'), behavior: SnackBarBehavior.floating),
+                  // Name + Edit button
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    profile.displayName ?? profile.email.split('@').first,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      color: _kText1,
+                                      letterSpacing: -0.3,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                                if (profile.isVerified) ...[
+                                  const SizedBox(width: 5),
+                                  const Icon(Icons.verified_rounded, color: _kPrimary, size: 19),
+                                ],
+                              ],
+                            ),
+                            if (profile.username?.isNotEmpty == true) ...[
+                              const SizedBox(height: 2),
+                              Text('@${profile.username}', style: const TextStyle(fontSize: 13, color: _kText2)),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      OutlinedButton(
+                        onPressed: () => context.push('/app/profile/edit'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: _kPrimary,
+                          side: const BorderSide(color: _kPrimary, width: 1.5),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+                          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                          minimumSize: Size.zero,
+                        ),
+                        child: const Text('Edit'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Programme
+                  if (profile.programme?.isNotEmpty == true) ...[
+                    Text(
+                      profile.programme!,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _kText1),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  _ActionBtn(
-                    icon: Icons.tune_rounded,
-                    onTap: () => context.push('/app/profile/privacy'),
-                  ),
+                    const SizedBox(height: 3),
+                  ],
+
+                  // University · Year
+                  if (profile.school?.isNotEmpty == true || profile.yearOfStudy != null)
+                    Text(
+                      [
+                        if (profile.school?.isNotEmpty == true) profile.school!,
+                        if (profile.yearOfStudy != null) profile.studentStatus,
+                      ].join(' · '),
+                      style: const TextStyle(fontSize: 13, color: _kText2),
+                    ),
+
+                  // Campus
+                  if (profile.campus?.isNotEmpty == true) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on_rounded, size: 13, color: _kText2),
+                        const SizedBox(width: 3),
+                        Text(profile.campus!, style: const TextStyle(fontSize: 13, color: _kText2)),
+                      ],
+                    ),
+                  ],
+
+                  const SizedBox(height: 16),
+
+                  // Stats strip
+                  _StatsStrip(postCount: postCount),
+                  const SizedBox(height: 4),
                 ],
-              ),
-            ),
-            // Avatar hangs below cover
-            Positioned(
-              bottom: -(avatarD / 2),
-              left: 16,
-              child: GestureDetector(
-                onTap: () => context.push('/app/profile/edit'),
-                child: _Avatar(profile: profile, diameter: avatarD),
               ),
             ),
           ],
         ),
 
-        // ── White identity card ─────────────────────────────────────
-        Container(
-          width: double.infinity,
-          color: _kCard,
-          padding: EdgeInsets.fromLTRB(16, avatarD / 2 + 10, 16, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        // ── Avatar — rendered ABOVE the Column (z-order fix) ──────────────
+        Positioned(
+          top: topPad + coverH - avatarR,
+          left: 16,
+          child: ScaleTransition(
+            scale: CurvedAnimation(
+              parent: ctrl,
+              curve: const Interval(0, 0.5, curve: Curves.easeOutBack),
+            ),
+            child: GestureDetector(
+              onTap: () => context.push('/app/profile/edit'),
+              child: _Avatar(profile: profile, diameter: avatarD),
+            ),
+          ),
+        ),
+
+        // ── Action buttons on cover ────────────────────────────────────────
+        Positioned(
+          top: topPad + 12,
+          right: 16,
+          child: Row(
             children: [
-              // Name row
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                profile.displayName ?? profile.email.split('@').first,
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w800,
-                                  color: _kText1,
-                                  letterSpacing: -0.3,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                            ),
-                            if (profile.isVerified) ...[
-                              const SizedBox(width: 5),
-                              const Icon(Icons.verified, color: _kPrimary, size: 18),
-                            ],
-                          ],
-                        ),
-                        if (profile.username?.isNotEmpty == true)
-                          Text(
-                            '@${profile.username}',
-                            style: const TextStyle(fontSize: 13, color: _kText2),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  OutlinedButton(
-                    onPressed: () => context.push('/app/profile/edit'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: _kPrimary,
-                      side: const BorderSide(color: _kPrimary, width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                    ),
-                    child: const Text('Edit'),
-                  ),
-                ],
+              _ActionBtn(
+                icon: Icons.ios_share_outlined,
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sharing coming soon'), behavior: SnackBarBehavior.floating),
+                ),
               ),
-              const SizedBox(height: 10),
-
-              // Academic identity
-              if (profile.programme?.isNotEmpty == true) ...[
-                Text(profile.programme!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _kText1)),
-                const SizedBox(height: 2),
-              ],
-              if (profile.school?.isNotEmpty == true || profile.yearOfStudy != null)
-                Text(
-                  [
-                    if (profile.school?.isNotEmpty == true) profile.school!,
-                    if (profile.yearOfStudy != null) profile.studentStatus,
-                  ].join(' · '),
-                  style: const TextStyle(fontSize: 13, color: _kText2),
-                ),
-              if (profile.campus?.isNotEmpty == true) ...[
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on_outlined, size: 13, color: _kText2),
-                    const SizedBox(width: 3),
-                    Text(profile.campus!, style: const TextStyle(fontSize: 13, color: _kText2)),
-                  ],
-                ),
-              ],
-              const SizedBox(height: 16),
-
-              // Stats strip
-              _StatsStrip(postCount: postCount),
-              const SizedBox(height: 4),
+              const SizedBox(width: 8),
+              _ActionBtn(
+                icon: Icons.settings_outlined,
+                onTap: () => context.push('/app/profile/privacy'),
+              ),
             ],
           ),
         ),
@@ -276,33 +328,14 @@ class _CoverPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasPhoto = profile.coverPhotoUrl?.isNotEmpty == true;
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: hasPhoto
-              ? CachedNetworkImage(
-                  imageUrl: profile.coverPhotoUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => const _DefaultCover(),
-                  errorWidget: (_, __, ___) => const _DefaultCover(),
-                )
-              : const _DefaultCover(),
-        ),
-        // Bottom fade to white
-        Positioned(
-          bottom: 0, left: 0, right: 0, height: 40,
-          child: const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.transparent, Color(0x22000000)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    return hasPhoto
+        ? CachedNetworkImage(
+            imageUrl: profile.coverPhotoUrl!,
+            fit: BoxFit.cover,
+            placeholder: (_, __) => const _DefaultCover(),
+            errorWidget: (_, __, ___) => const _DefaultCover(),
+          )
+        : const _DefaultCover();
   }
 }
 
@@ -314,7 +347,7 @@ class _DefaultCover extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF0047CC), Color(0xFF0066FF), Color(0xFF338AFF)],
+          colors: [Color(0xFF003EB3), Color(0xFF0066FF), Color(0xFF4DA3FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -337,20 +370,20 @@ class _ActionBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 36, height: 36,
+        width: 38, height: 38,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.92),
+          color: Colors.white.withOpacity(0.90),
           shape: BoxShape.circle,
-          boxShadow: const [BoxShadow(color: Color(0x20000000), blurRadius: 8)],
+          boxShadow: const [BoxShadow(color: Color(0x25000000), blurRadius: 8)],
         ),
-        child: Icon(icon, size: 17, color: _kText1),
+        child: Icon(icon, size: 18, color: _kText1),
       ),
     );
   }
 }
 
 // ---------------------------------------------------------------------------
-// Avatar
+// Avatar — white border + camera badge + initials fallback
 // ---------------------------------------------------------------------------
 
 class _Avatar extends StatelessWidget {
@@ -360,43 +393,43 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget inner;
+    Widget content;
     if (profile.avatarUrl?.isNotEmpty == true) {
-      inner = CachedNetworkImage(
+      content = CachedNetworkImage(
         imageUrl: profile.avatarUrl!,
-        width: diameter,
-        height: diameter,
+        width: diameter, height: diameter,
         fit: BoxFit.cover,
         placeholder: (_, __) => _Initials(initials: profile.initials, diameter: diameter),
         errorWidget: (_, __, ___) => _Initials(initials: profile.initials, diameter: diameter),
       );
     } else {
-      inner = _Initials(initials: profile.initials, diameter: diameter);
+      content = _Initials(initials: profile.initials, diameter: diameter);
     }
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          width: diameter,
-          height: diameter,
+          width: diameter, height: diameter,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-            boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 12, offset: Offset(0, 4))],
+            border: Border.all(color: Colors.white, width: 3.5),
+            boxShadow: const [
+              BoxShadow(color: Color(0x20000000), blurRadius: 16, offset: Offset(0, 6)),
+            ],
           ),
-          child: ClipOval(child: inner),
+          child: ClipOval(child: content),
         ),
         Positioned(
-          bottom: 1, right: 1,
+          bottom: 2, right: 2,
           child: Container(
-            width: 24, height: 24,
+            width: 26, height: 26,
             decoration: BoxDecoration(
               color: _kPrimary,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+              border: Border.all(color: Colors.white, width: 2.5),
             ),
-            child: const Icon(Icons.camera_alt_rounded, size: 11, color: Colors.white),
+            child: const Icon(Icons.camera_alt_rounded, size: 12, color: Colors.white),
           ),
         ),
       ],
@@ -417,11 +450,7 @@ class _Initials extends StatelessWidget {
       child: Center(
         child: Text(
           initials,
-          style: TextStyle(
-            fontSize: diameter * 0.32,
-            fontWeight: FontWeight.w700,
-            color: _kPrimary,
-          ),
+          style: TextStyle(fontSize: diameter * 0.30, fontWeight: FontWeight.w800, color: _kPrimary),
         ),
       ),
     );
@@ -441,34 +470,24 @@ class _StatsStrip extends StatelessWidget {
     return Column(
       children: [
         const Divider(height: 1, color: _kBorder),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         Row(
           children: [
-            _StatCell(value: '$postCount', label: 'Posts'),
-            _StatDivider(),
-            _StatCell(
-              value: '0',
-              label: 'Connections',
-              onTap: () {},
-              cta: true,
-            ),
-            _StatDivider(),
-            _StatCell(
-              value: '0',
-              label: 'Communities',
-              onTap: () => context.go('/app/communities'),
-              cta: true,
-            ),
+            _StatCell(value: postCount, label: 'Posts'),
+            _Divider(),
+            _StatCell(value: 0, label: 'Connections', cta: true),
+            _Divider(),
+            _StatCell(value: 0, label: 'Communities', cta: true, onTap: () => context.go('/app/communities')),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
       ],
     );
   }
 }
 
 class _StatCell extends StatelessWidget {
-  final String value;
+  final int value;
   final String label;
   final bool cta;
   final VoidCallback? onTap;
@@ -476,45 +495,51 @@ class _StatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEmpty = value == '0';
+    final isEmpty = value == 0;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: isEmpty && !cta ? const Color(0xFFD1D5DB) : _kText1,
-                letterSpacing: -0.5,
+        child: TweenAnimationBuilder<int>(
+          tween: IntTween(begin: 0, end: value),
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutCubic,
+          builder: (context, val, _) => Column(
+            children: [
+              Text(
+                '$val',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isEmpty && !cta ? const Color(0xFFD1D5DB) : _kText1,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: cta && isEmpty ? _kPrimary : _kText2,
-                fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: cta && isEmpty ? _kPrimary : _kText2,
+                  fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _StatDivider extends StatelessWidget {
+class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      Container(width: 1, height: 32, color: _kBorder);
+      Container(width: 1, height: 36, color: _kBorder);
 }
 
 // ---------------------------------------------------------------------------
-// Base clean card
+// Base card
 // ---------------------------------------------------------------------------
 
 class _Card extends StatelessWidget {
@@ -537,16 +562,26 @@ class _Card extends StatelessWidget {
       ),
       child: child,
     );
-    if (onTap != null) return GestureDetector(onTap: onTap, child: inner);
+    if (onTap != null) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          splashColor: _kPrimary.withOpacity(0.04),
+          child: inner,
+        ),
+      );
+    }
     return inner;
   }
 }
 
-class _CardTitle extends StatelessWidget {
+class _CardHeader extends StatelessWidget {
   final String title;
   final String? action;
   final VoidCallback? onAction;
-  const _CardTitle(this.title, {this.action, this.onAction});
+  const _CardHeader(this.title, {this.action, this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -568,7 +603,7 @@ class _CardTitle extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Profile completion card
+// Completion card
 // ---------------------------------------------------------------------------
 
 class _CompletionCard extends StatelessWidget {
@@ -586,32 +621,31 @@ class _CompletionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Complete your profile',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _kText1),
-                ),
+                const Text('Complete your profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _kText1)),
                 const SizedBox(height: 3),
-                Text(
-                  'A complete profile helps students and employers find you.',
-                  style: const TextStyle(fontSize: 12, color: _kText2, height: 1.4),
-                ),
+                const Text('A complete profile helps students and employers find you.', style: TextStyle(fontSize: 12, color: _kText2, height: 1.4)),
                 const SizedBox(height: 10),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: pct / 100,
-                    minHeight: 5,
-                    backgroundColor: const Color(0xFFE5E7EB),
-                    valueColor: const AlwaysStoppedAnimation<Color>(_kPrimary),
+                  borderRadius: BorderRadius.circular(6),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: pct / 100),
+                    duration: const Duration(milliseconds: 900),
+                    curve: Curves.easeOutCubic,
+                    builder: (_, val, __) => LinearProgressIndicator(
+                      value: val,
+                      minHeight: 6,
+                      backgroundColor: _kBorder,
+                      valueColor: const AlwaysStoppedAnimation<Color>(_kPrimary),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 5),
                 Text('$pct% complete', style: const TextStyle(fontSize: 11, color: _kPrimary, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: _kText2),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: _kText2),
         ],
       ),
     );
@@ -619,7 +653,7 @@ class _CompletionCard extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// About / Bio card
+// About card
 // ---------------------------------------------------------------------------
 
 class _AboutCard extends StatelessWidget {
@@ -630,19 +664,28 @@ class _AboutCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasBio = profile.bio?.isNotEmpty == true;
     return _Card(
-      onTap: hasBio ? null : () => context.push('/app/profile/edit'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CardTitle('About', action: hasBio ? 'Edit' : null, onAction: () => context.push('/app/profile/edit')),
+          _CardHeader('About', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           hasBio
-              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: _kText1, height: 1.60))
-              : Row(
-                  children: [
-                    const Text('Add a bio', style: TextStyle(fontSize: 14, color: _kText2)),
-                    const Spacer(),
-                    const Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
-                  ],
+              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: _kText1, height: 1.65))
+              : GestureDetector(
+                  onTap: () => context.push('/app/profile/edit'),
+                  child: Row(
+                    children: [
+                      const Text('Add a bio to introduce yourself', style: TextStyle(fontSize: 14, color: _kText2)),
+                      const Spacer(),
+                      Container(
+                        width: 28, height: 28,
+                        decoration: BoxDecoration(
+                          color: _kPrimary.withOpacity(0.08),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
+                      ),
+                    ],
+                  ),
                 ),
         ],
       ),
@@ -651,7 +694,7 @@ class _AboutCard extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Academic info card
+// Academic card
 // ---------------------------------------------------------------------------
 
 class _AcademicCard extends StatelessWidget {
@@ -661,33 +704,32 @@ class _AcademicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = <_KV>[];
-    if (profile.school?.isNotEmpty == true)      rows.add(_KV('University', profile.school!));
-    if (profile.programme?.isNotEmpty == true)   rows.add(_KV('Programme', profile.programme!));
-    if (profile.faculty?.isNotEmpty == true)     rows.add(_KV('Faculty', profile.faculty!));
-    if (profile.department?.isNotEmpty == true)  rows.add(_KV('Department', profile.department!));
-    if (profile.yearOfStudy != null)             rows.add(_KV('Year', 'Year ${profile.yearOfStudy} · ${profile.studentStatus}'));
-    if (profile.expectedGraduationYear != null)  rows.add(_KV('Graduating', 'Class of ${profile.expectedGraduationYear}'));
-    if (profile.campus?.isNotEmpty == true)      rows.add(_KV('Campus', profile.campus!));
+    if (profile.school?.isNotEmpty == true)     rows.add(_KV('University', profile.school!));
+    if (profile.programme?.isNotEmpty == true)  rows.add(_KV('Programme', profile.programme!));
+    if (profile.faculty?.isNotEmpty == true)    rows.add(_KV('Faculty', profile.faculty!));
+    if (profile.department?.isNotEmpty == true) rows.add(_KV('Department', profile.department!));
+    if (profile.yearOfStudy != null)            rows.add(_KV('Year', 'Year ${profile.yearOfStudy} · ${profile.studentStatus}'));
+    if (profile.expectedGraduationYear != null) rows.add(_KV('Graduating', 'Class of ${profile.expectedGraduationYear}'));
+    if (profile.campus?.isNotEmpty == true)     rows.add(_KV('Campus', profile.campus!));
 
     return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CardTitle(
-            'Academic Info',
-            action: 'Edit',
-            onAction: () => context.push('/app/profile/edit'),
-          ),
+          _CardHeader('Academic Info', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           if (rows.isEmpty)
             GestureDetector(
               onTap: () => context.push('/app/profile/edit'),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.school_outlined, size: 16, color: _kText2),
-                  SizedBox(width: 8),
-                  Text('Add your university details', style: TextStyle(color: _kText2, fontSize: 14)),
-                  Spacer(),
-                  Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
+                  Container(
+                    width: 36, height: 36,
+                    decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.school_rounded, size: 18, color: _kPrimary),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(child: Text('Add your university details', style: TextStyle(color: _kText2, fontSize: 14))),
+                  const Icon(Icons.chevron_right_rounded, size: 18, color: _kText2),
                 ],
               ),
             )
@@ -720,7 +762,7 @@ class _DataRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 11),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -744,7 +786,7 @@ class _DataRow extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Social links card
+// Social links card — real brand icons
 // ---------------------------------------------------------------------------
 
 class _SocialCard extends StatelessWidget {
@@ -753,50 +795,47 @@ class _SocialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final platforms = [
-      _SocialP('Instagram', Icons.camera_alt_outlined, const Color(0xFFE1306C), profile.instagramUrl),
-      _SocialP('TikTok', Icons.music_note_rounded, const Color(0xFF010101), profile.tiktokUrl),
-      _SocialP('Snapchat', Icons.chat_bubble_outline_rounded, const Color(0xFFFFBC00), profile.snapchatUrl),
-      _SocialP('LinkedIn', Icons.work_outline, const Color(0xFF0A66C2), profile.linkedinUrl),
-      _SocialP('Twitter', Icons.alternate_email, const Color(0xFF1DA1F2), profile.twitterUrl),
-      _SocialP('GitHub', Icons.code, const Color(0xFF24292F), profile.githubUrl),
-      _SocialP('Portfolio', Icons.language, _kGreen, profile.portfolioUrl),
+    final platforms = <_SocialP>[
+      _SocialP('Instagram', profile.instagramUrl,
+        bgStart: const Color(0xFFF9ED32), bgEnd: const Color(0xFF833AB4),
+        isGradient: true, child: const _IgIcon()),
+      _SocialP('TikTok', profile.tiktokUrl,
+        solid: const Color(0xFF010101), child: const _TikTokIcon()),
+      _SocialP('Snapchat', profile.snapchatUrl,
+        solid: const Color(0xFFFFFC00), child: const _SnapchatIcon()),
+      _SocialP('LinkedIn', profile.linkedinUrl,
+        solid: const Color(0xFF0A66C2), child: const _LinkedInIcon()),
+      _SocialP('X (Twitter)', profile.twitterUrl,
+        solid: const Color(0xFF000000), child: const _XIcon()),
+      _SocialP('GitHub', profile.githubUrl,
+        solid: const Color(0xFF24292F), child: const _GitHubIcon()),
+      _SocialP('Portfolio', profile.portfolioUrl,
+        solid: _kPrimary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
-    final hasActive = active.isNotEmpty;
 
     return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CardTitle(
-            'Social & Links',
-            action: 'Edit',
-            onAction: () => context.push('/app/profile/edit'),
-          ),
-          // Icon row
+          _CardHeader('Social & Links', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
+          // Brand icon grid
           Wrap(
-            spacing: 8, runSpacing: 8,
+            spacing: 10, runSpacing: 10,
             children: platforms.map((p) {
               final isActive = p.url?.isNotEmpty == true;
-              return GestureDetector(
-                onTap: isActive ? null : () => context.push('/app/profile/edit'),
-                child: Container(
-                  width: 44, height: 44,
-                  decoration: BoxDecoration(
-                    color: p.color.withOpacity(isActive ? 0.10 : 0.04),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: p.color.withOpacity(isActive ? 0.30 : 0.10),
-                    ),
-                  ),
-                  child: Icon(p.icon, color: p.color.withOpacity(isActive ? 1.0 : 0.30), size: 20),
+              return AnimatedOpacity(
+                opacity: isActive ? 1.0 : 0.35,
+                duration: const Duration(milliseconds: 300),
+                child: GestureDetector(
+                  onTap: isActive ? null : () => context.push('/app/profile/edit'),
+                  child: _BrandIconBox(platform: p),
                 ),
               );
             }).toList(),
           ),
-          if (hasActive) ...[
-            const SizedBox(height: 14),
+          if (active.isNotEmpty) ...[
+            const SizedBox(height: 16),
             Column(
               children: [
                 for (int i = 0; i < active.length; i++) ...[
@@ -806,13 +845,10 @@ class _SocialCard extends StatelessWidget {
               ],
             ),
           ] else ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/app/profile/edit'),
-              child: const Text(
-                'Add your social links',
-                style: TextStyle(color: _kPrimary, fontSize: 13, fontWeight: FontWeight.w500),
-              ),
+              child: const Text('Add your social links →', style: TextStyle(color: _kPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
             ),
           ],
         ],
@@ -823,10 +859,210 @@ class _SocialCard extends StatelessWidget {
 
 class _SocialP {
   final String label;
-  final IconData icon;
-  final Color color;
   final String? url;
-  const _SocialP(this.label, this.icon, this.color, this.url);
+  final Color? solid;
+  final Color? bgStart;
+  final Color? bgEnd;
+  final bool isGradient;
+  final Widget child;
+
+  const _SocialP(this.label, this.url, {
+    this.solid,
+    this.bgStart,
+    this.bgEnd,
+    this.isGradient = false,
+    required this.child,
+  });
+}
+
+class _BrandIconBox extends StatelessWidget {
+  final _SocialP platform;
+  const _BrandIconBox({required this.platform});
+
+  @override
+  Widget build(BuildContext context) {
+    final shadow = BoxShadow(
+      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withOpacity(0.22),
+      blurRadius: 8,
+      offset: const Offset(0, 3),
+    );
+
+    return Container(
+      width: 50, height: 50,
+      decoration: BoxDecoration(
+        color: platform.isGradient ? null : platform.solid,
+        gradient: platform.isGradient
+            ? LinearGradient(
+                colors: [platform.bgStart!, platform.bgEnd!],
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+              )
+            : null,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [shadow],
+      ),
+      child: Center(child: platform.child),
+    );
+  }
+}
+
+// ── Brand icon widgets ─────────────────────────────────────────────────────
+
+class _IgIcon extends StatelessWidget {
+  const _IgIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 22, height: 22,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(7),
+            border: Border.all(color: Colors.white, width: 1.8),
+          ),
+        ),
+        Container(
+          width: 10, height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 1.8),
+          ),
+        ),
+        const Positioned(
+          top: 3, right: 3,
+          child: CircleAvatar(radius: 1.5, backgroundColor: Colors.white),
+        ),
+      ],
+    );
+  }
+}
+
+class _TikTokIcon extends StatelessWidget {
+  const _TikTokIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'TT',
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1),
+    );
+  }
+}
+
+class _SnapchatIcon extends StatelessWidget {
+  const _SnapchatIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(24, 24),
+      painter: _GhostPainter(),
+    );
+  }
+}
+
+class _GhostPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF333333)
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+
+    // Simple ghost body
+    path.moveTo(cx - 8, cy + 8);
+    path.lineTo(cx - 8, cy - 2);
+    path.quadraticBezierTo(cx - 8, cy - 10, cx, cy - 10);
+    path.quadraticBezierTo(cx + 8, cy - 10, cx + 8, cy - 2);
+    path.lineTo(cx + 8, cy + 8);
+    path.lineTo(cx + 4, cy + 5);
+    path.lineTo(cx, cy + 8);
+    path.lineTo(cx - 4, cy + 5);
+    path.close();
+
+    canvas.drawPath(path, paint);
+
+    // Eyes
+    paint.color = Colors.white;
+    canvas.drawCircle(Offset(cx - 3, cy - 2), 1.5, paint);
+    canvas.drawCircle(Offset(cx + 3, cy - 2), 1.5, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
+}
+
+class _LinkedInIcon extends StatelessWidget {
+  const _LinkedInIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'in',
+      style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Colors.white, fontStyle: FontStyle.italic),
+    );
+  }
+}
+
+class _XIcon extends StatelessWidget {
+  const _XIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'X',
+      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white),
+    );
+  }
+}
+
+class _GitHubIcon extends StatelessWidget {
+  const _GitHubIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(24, 24),
+      painter: _OctocatPainter(),
+    );
+  }
+}
+
+class _OctocatPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+    final cx = size.width / 2;
+    final cy = size.height / 2 - 1;
+
+    // Head circle
+    canvas.drawCircle(Offset(cx, cy), 9, paint);
+
+    // Ears
+    final earPaint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx - 6, cy - 7), width: 6, height: 5), earPaint);
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx + 6, cy - 7), width: 6, height: 5), earPaint);
+
+    // Inner ear (dark)
+    final darkPaint = Paint()..color = const Color(0xFF24292F)..style = PaintingStyle.fill;
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx - 6, cy - 7), width: 3, height: 2.5), darkPaint);
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx + 6, cy - 7), width: 3, height: 2.5), darkPaint);
+
+    // Eyes
+    canvas.drawCircle(Offset(cx - 3, cy), 1.8, darkPaint);
+    canvas.drawCircle(Offset(cx + 3, cy), 1.8, darkPaint);
+
+    // Nose
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx, cy + 3), width: 3, height: 2), darkPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }
 
 class _SocialRow extends StatelessWidget {
@@ -836,16 +1072,12 @@ class _SocialRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 9),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Container(
-            width: 32, height: 32,
-            decoration: BoxDecoration(
-              color: platform.color.withOpacity(0.10),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(platform.icon, color: platform.color, size: 16),
+          SizedBox(
+            width: 36, height: 36,
+            child: _BrandIconBox(platform: platform),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -878,18 +1110,9 @@ class _InterestsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CardTitle('Interests', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
+          _CardHeader('Interests', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           profile.interests.isEmpty
-              ? GestureDetector(
-                  onTap: () => context.push('/app/profile/edit'),
-                  child: const Row(
-                    children: [
-                      Text('Add interests to connect with students', style: TextStyle(color: _kText2, fontSize: 14)),
-                      Spacer(),
-                      Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
-                    ],
-                  ),
-                )
+              ? _EmptyPrompt('Add interests to connect with like-minded students', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
                   children: profile.interests.map((i) => _Chip(label: i, color: _kPrimary)).toList(),
@@ -914,21 +1137,12 @@ class _SkillsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CardTitle('Skills', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
+          _CardHeader('Skills', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           profile.skills.isEmpty
-              ? GestureDetector(
-                  onTap: () => context.push('/app/profile/edit'),
-                  child: const Row(
-                    children: [
-                      Text('Showcase your skills', style: TextStyle(color: _kText2, fontSize: 14)),
-                      Spacer(),
-                      Icon(Icons.add_circle_outline_rounded, size: 18, color: _kPrimary),
-                    ],
-                  ),
-                )
+              ? _EmptyPrompt('Showcase your technical and soft skills', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.skills.map((s) => _Chip(label: s, color: _kGreen, prefix: '• ')).toList(),
+                  children: profile.skills.map((s) => _Chip(label: s, color: _kGreen, prefix: '✦ ')).toList(),
                 ),
         ],
       ),
@@ -949,20 +1163,37 @@ class _Chip extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.20)),
+        border: Border.all(color: color.withOpacity(0.22)),
       ),
       child: Text(
         '${prefix ?? ''}$label',
-        style: TextStyle(fontSize: 13, color: color.darken(0.1), fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 13, color: color, fontWeight: FontWeight.w600),
       ),
     );
   }
 }
 
-extension _ColorX on Color {
-  Color darken(double amount) {
-    final hsl = HSLColor.fromColor(this);
-    return hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0)).toColor();
+class _EmptyPrompt extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+  const _EmptyPrompt(this.text, {required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, color: _kText2))),
+          const SizedBox(width: 8),
+          Container(
+            width: 28, height: 28,
+            decoration: BoxDecoration(color: _kPrimary.withOpacity(0.08), shape: BoxShape.circle),
+            child: const Icon(Icons.add_rounded, size: 16, color: _kPrimary),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -994,9 +1225,8 @@ class _AchievementsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kText1)),
-              // Clean UNIFY Score — text only, no glow
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEFF4FF),
                   borderRadius: BorderRadius.circular(8),
@@ -1043,16 +1273,16 @@ class _BadgePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: badge.color.withOpacity(0.07),
+        color: badge.color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: badge.color.withOpacity(0.20)),
+        border: Border.all(color: badge.color.withOpacity(0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(badge.emoji, style: const TextStyle(fontSize: 13)),
+          Text(badge.emoji, style: const TextStyle(fontSize: 14)),
           const SizedBox(width: 6),
-          Text(badge.label, style: TextStyle(fontSize: 12, color: badge.color.darken(0.05), fontWeight: FontWeight.w600)),
+          Text(badge.label, style: TextStyle(fontSize: 12, color: badge.color, fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -1078,28 +1308,12 @@ class _AccountCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _Tile(
-            icon: Icons.edit_outlined,
-            label: 'Edit Profile',
-            iconColor: _kPrimary,
-            onTap: () => context.push('/app/profile/edit'),
-          ),
-          const Divider(height: 1, color: _kBorder, indent: 56),
-          _Tile(
-            icon: Icons.lock_outline,
-            label: 'Privacy',
-            iconColor: _kGreen,
-            onTap: () => context.push('/app/profile/privacy'),
-          ),
-          const Divider(height: 1, color: _kBorder, indent: 56),
-          _Tile(
-            icon: Icons.palette_outlined,
-            label: 'Appearance',
-            iconColor: const Color(0xFF8B5CF6),
-            showChevron: false,
-            onTap: () => ThemePickerSheet.show(context),
-          ),
-          const Divider(height: 1, color: _kBorder, indent: 56),
+          _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: _kPrimary, onTap: () => context.push('/app/profile/edit')),
+          const Divider(height: 1, color: _kBorder, indent: 58),
+          _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: _kGreen, onTap: () => context.push('/app/profile/privacy')),
+          const Divider(height: 1, color: _kBorder, indent: 58),
+          _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
+          const Divider(height: 1, color: _kBorder, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,
             label: 'Sign Out',
@@ -1112,19 +1326,10 @@ class _AccountCard extends StatelessWidget {
                 builder: (ctx) => AlertDialog(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   title: const Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: _kText1)),
-                  content: const Text(
-                    "You'll need to sign in again to access your account.",
-                    style: TextStyle(color: _kText2, fontSize: 14, height: 1.5),
-                  ),
+                  content: const Text("You'll need to sign in again to access your account.", style: TextStyle(color: _kText2, fontSize: 14, height: 1.5)),
                   actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx, false),
-                      child: const Text('Cancel', style: TextStyle(color: _kText2)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx, true),
-                      child: const Text('Sign Out', style: TextStyle(color: _kRed, fontWeight: FontWeight.w600)),
-                    ),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: _kText2))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: _kRed, fontWeight: FontWeight.w600))),
                   ],
                 ),
               );
@@ -1162,6 +1367,7 @@ class _Tile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
+      splashColor: iconColor.withOpacity(0.05),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
         child: Row(
@@ -1176,12 +1382,9 @@ class _Tile extends StatelessWidget {
             ),
             const SizedBox(width: 13),
             Expanded(
-              child: Text(
-                label,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? _kText1),
-              ),
+              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? _kText1)),
             ),
-            if (showChevron) const Icon(Icons.chevron_right, size: 18, color: _kText2),
+            if (showChevron) const Icon(Icons.chevron_right_rounded, size: 20, color: _kText2),
           ],
         ),
       ),
@@ -1190,7 +1393,7 @@ class _Tile extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Loading skeleton
+// Skeleton
 // ---------------------------------------------------------------------------
 
 class _Skeleton extends StatelessWidget {
@@ -1207,19 +1410,18 @@ class _Skeleton extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Cover
             Container(height: topPad + 170, color: Colors.white),
             Container(
               color: Colors.white,
-              padding: const EdgeInsets.fromLTRB(16, 52, 16, 20),
+              padding: const EdgeInsets.fromLTRB(16, 58, 16, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _SBox(h: 22, w: 180, r: 6),
+                  _SBox(h: 22, w: 190, r: 6),
                   const SizedBox(height: 8),
-                  _SBox(h: 14, w: 120, r: 6),
+                  _SBox(h: 14, w: 130, r: 6),
                   const SizedBox(height: 6),
-                  _SBox(h: 14, w: 200, r: 6),
+                  _SBox(h: 14, w: 210, r: 6),
                 ],
               ),
             ),
@@ -1227,11 +1429,11 @@ class _Skeleton extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Column(
                 children: [
-                  _SBox(h: 72, w: double.infinity, r: 16),
+                  _SBox(h: 70, w: double.infinity, r: 16),
                   const SizedBox(height: 12),
                   _SBox(h: 160, w: double.infinity, r: 16),
                   const SizedBox(height: 12),
-                  _SBox(h: 120, w: double.infinity, r: 16),
+                  _SBox(h: 130, w: double.infinity, r: 16),
                 ],
               ),
             ),
@@ -1261,19 +1463,16 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _kBg,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.error_outline, size: 48, color: _kRed),
-              const SizedBox(height: 12),
-              Text(message, style: const TextStyle(color: _kText2, fontSize: 14), textAlign: TextAlign.center),
-            ],
-          ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline_rounded, size: 48, color: _kRed),
+            const SizedBox(height: 12),
+            Text(message, style: const TextStyle(color: _kText2, fontSize: 14), textAlign: TextAlign.center),
+          ],
         ),
       ),
     );
