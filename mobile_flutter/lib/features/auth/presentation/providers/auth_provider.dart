@@ -43,6 +43,7 @@ class AuthNotifier extends AsyncNotifier<void> {
 
   Future<void> completeOnboarding({
     required String displayName,
+    required String school,
     required String programme,
     required int yearOfStudy,
   }) async {
@@ -50,6 +51,7 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = await AsyncValue.guard(
       () => _repo.completeOnboarding(
         displayName: displayName,
+        school: school,
         programme: programme,
         yearOfStudy: yearOfStudy,
       ),

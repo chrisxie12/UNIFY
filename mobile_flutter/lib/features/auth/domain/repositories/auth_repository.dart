@@ -8,6 +8,7 @@ abstract class AuthRepository {
   Stream<AppUser?> watchCurrentUser();
   Future<void> completeOnboarding({
     required String displayName,
+    required String school,
     required String programme,
     required int yearOfStudy,
   });

@@ -51,6 +51,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> completeOnboarding({
     required String displayName,
+    required String school,
     required String programme,
     required int yearOfStudy,
   }) async {
@@ -59,6 +60,7 @@ class AuthRepositoryImpl implements AuthRepository {
     await _client.from('profiles').upsert({
       'id': userId,
       'display_name': displayName,
+      'school': school,
       'programme': programme,
       'year_of_study': yearOfStudy,
       'onboarding_complete': true,

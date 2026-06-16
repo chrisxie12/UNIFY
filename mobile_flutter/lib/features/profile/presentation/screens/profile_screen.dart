@@ -20,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {}, // TODO: settings screen
+            onPressed: () {},
           ),
         ],
       ),
@@ -41,41 +41,65 @@ class ProfileScreen extends ConsumerWidget {
                     : null,
                 child: profile?.avatarUrl == null
                     ? Text(
-                        (profile?.displayName?.isNotEmpty == true)
-                            ? profile!.displayName![0].toUpperCase()
-                            : 'U',
+                        profile?.initials ?? 'U',
                         style: AppTextStyles.h1.copyWith(color: AppColors.primaryLight),
                       )
                     : null,
               ),
               const SizedBox(height: 16),
+
+              // Name
               Text(
-                profile?.displayName ?? 'Unknown Student',
+                profile?.displayName ?? profile?.email.split('@').first ?? 'No name set',
                 style: AppTextStyles.h2,
               ),
               const SizedBox(height: 4),
               Text(profile?.email ?? '', style: AppTextStyles.body),
+
+              // Incomplete profile prompt
+              if (profile != null && !profile.isComplete) ...[
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () => context.go('/onboarding'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.primaryLight.withOpacity(0.3)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.edit_outlined, size: 16, color: AppColors.primaryLight),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Complete your profile',
+                          style: AppTextStyles.caption.copyWith(color: AppColors.primaryLight),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+
               const SizedBox(height: 24),
 
-              // Info cards
+              // Info card
               _InfoCard(
                 children: [
-                  _InfoRow(
-                    label: 'Programme',
-                    value: profile?.programme ?? '—',
-                  ),
+                  if (profile?.school != null) ...[
+                    _InfoRow(label: 'School', value: profile!.school!),
+                    const Divider(height: 1),
+                  ],
+                  _InfoRow(label: 'Programme', value: profile?.programme ?? '—'),
                   const Divider(height: 1),
                   _InfoRow(
                     label: 'Year of Study',
-                    value: profile?.yearOfStudy != null
-                        ? 'Year ${profile!.yearOfStudy}'
-                        : '—',
+                    value: profile?.yearOfStudy != null ? 'Year ${profile!.yearOfStudy}' : '—',
                   ),
                   const Divider(height: 1),
-                  _InfoRow(
-                    label: 'Role',
-                    value: profile?.role ?? 'student',
-                  ),
+                  _InfoRow(label: 'Role', value: profile?.role ?? 'student'),
                 ],
               ),
 
@@ -104,6 +128,7 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -127,7 +152,13 @@ class _InfoRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTextStyles.body),
-          Text(value, style: AppTextStyles.bodySemi),
+          Flexible(
+            child: Text(
+              value,
+              style: AppTextStyles.bodySemi,
+              textAlign: TextAlign.end,
+            ),
+          ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -15,34 +16,41 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _nameCtrl = TextEditingController();
+  final _schoolCtrl = TextEditingController();
   final _progCtrl = TextEditingController();
   int _year = 1;
   String? _nameError;
+  String? _schoolError;
   String? _progError;
 
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _schoolCtrl.dispose();
     _progCtrl.dispose();
     super.dispose();
   }
 
   bool _validate() {
     String? nameErr;
+    String? schoolErr;
     String? progErr;
     if (_nameCtrl.text.trim().length < 2) nameErr = 'Enter your full name';
+    if (_schoolCtrl.text.trim().isEmpty) schoolErr = 'Enter your school / university';
     if (_progCtrl.text.trim().isEmpty) progErr = 'Enter your programme';
     setState(() {
       _nameError = nameErr;
+      _schoolError = schoolErr;
       _progError = progErr;
     });
-    return nameErr == null && progErr == null;
+    return nameErr == null && schoolErr == null && progErr == null;
   }
 
   Future<void> _submit() async {
     if (!_validate()) return;
     await ref.read(authNotifierProvider.notifier).completeOnboarding(
           displayName: _nameCtrl.text.trim(),
+          school: _schoolCtrl.text.trim(),
           programme: _progCtrl.text.trim(),
           yearOfStudy: _year,
         );
@@ -80,6 +88,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
               const SizedBox(height: 20),
               AppTextField(
+                label: 'School / University',
+                hint: 'Ghana Communication Technology University',
+                controller: _schoolCtrl,
+                capitalization: TextCapitalization.words,
+                errorText: _schoolError,
+              ),
+              const SizedBox(height: 20),
+              AppTextField(
                 label: 'Programme',
                 hint: 'BSc Computer Science',
                 controller: _progCtrl,
@@ -101,9 +117,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         margin: EdgeInsets.only(right: i < 3 ? 8 : 0),
                         height: 48,
                         decoration: BoxDecoration(
-                          color: selected
-                              ? const Color(0xFF1D4ED8)
-                              : const Color(0xFFF3F4F6),
+                          color: selected ? AppColors.primary : const Color(0xFFF3F4F6),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
