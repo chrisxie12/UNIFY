@@ -544,6 +544,7 @@ class _FloatingItem {
 }
 
 abstract class _PageData {
+  const _PageData();
   String get emoji;
   String get headline;
   String get body;
@@ -602,7 +603,7 @@ class _Page2 extends _PageData {
 
   @override String get body =>
       'From housing tips to hidden study spots — get the insider guide to your '
-      'campus from students who've been there. No more orientation surprises.';
+      'campus from students who\'ve been there. No more orientation surprises.';
 
   @override List<(String, String)> get pills => [
     ('🗺️', 'Campus Map'),
