@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/providers/theme_provider.dart';
 
 class UnifyApp extends ConsumerWidget {
   const UnifyApp({super.key});
@@ -9,10 +10,11 @@ class UnifyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final theme = ref.watch(themeNotifierProvider);
     return MaterialApp.router(
       title: 'UNIFY',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.buildFrom(theme),
       routerConfig: router,
     );
   }

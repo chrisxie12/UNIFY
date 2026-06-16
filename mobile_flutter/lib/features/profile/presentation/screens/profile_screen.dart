@@ -6,6 +6,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/providers/theme_provider.dart';
+import '../../../../core/widgets/theme_picker_sheet.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
@@ -87,25 +89,22 @@ class _ProfileBody extends StatelessWidget {
 // Collapsing header
 // ---------------------------------------------------------------------------
 
-class _ProfileSliverHeader extends StatelessWidget {
+class _ProfileSliverHeader extends ConsumerWidget {
   final Profile profile;
   const _ProfileSliverHeader({required this.profile});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeTheme = ref.watch(themeNotifierProvider);
     return SliverAppBar(
       expandedHeight: 260,
       pinned: true,
-      backgroundColor: AppColors.primaryDark,
+      backgroundColor: activeTheme.primaryDark,
       iconTheme: const IconThemeData(color: Colors.white),
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.primaryLight, AppColors.primaryDark],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+          decoration: BoxDecoration(
+            gradient: activeTheme.gradient,
           ),
           child: SafeArea(
             child: Column(
@@ -257,20 +256,23 @@ class _BioSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasBio = profile.bio != null && profile.bio!.isNotEmpty;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            hasBio ? profile.bio! : 'Add a bio to tell people about yourself…',
-            style: hasBio
-                ? AppTextStyles.body
-                : AppTextStyles.body.copyWith(color: AppColors.grey3),
+    return GestureDetector(
+      onTap: () => context.push('/app/profile/edit'),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              hasBio ? profile.bio! : 'Add a bio to tell people about yourself…',
+              style: hasBio
+                  ? AppTextStyles.body
+                  : AppTextStyles.body.copyWith(color: AppColors.grey3),
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Icon(Icons.edit_outlined, size: 16, color: AppColors.grey3),
-      ],
+          const SizedBox(width: 8),
+          Icon(Icons.edit_outlined, size: 16, color: AppColors.grey3),
+        ],
+      ),
     );
   }
 }
@@ -330,7 +332,8 @@ class _StatBox extends StatelessWidget {
         children: [
           Text(
             value,
-            style: AppTextStyles.h3.copyWith(color: AppColors.primary),
+            style: AppTextStyles.h3
+                .copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: 2),
           Text(
@@ -669,16 +672,17 @@ class _InterestChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.06),
+        color: primary.withOpacity(0.06),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: primary.withOpacity(0.3)),
       ),
       child: Text(
         label,
-        style: AppTextStyles.label.copyWith(color: AppColors.primary),
+        style: AppTextStyles.label.copyWith(color: primary),
       ),
     );
   }
@@ -814,6 +818,13 @@ class _AccountSection extends StatelessWidget {
                 label: 'Edit Profile',
                 iconColor: AppColors.primary,
                 onTap: () => context.push('/app/profile/edit'),
+              ),
+              const Divider(height: 1, indent: 56, endIndent: 0),
+              _SettingsTile(
+                icon: Icons.palette_outlined,
+                label: 'Appearance',
+                iconColor: const Color(0xFF8B5CF6),
+                onTap: () => ThemePickerSheet.show(context),
               ),
               const Divider(height: 1, indent: 56, endIndent: 0),
               _SettingsTile(
