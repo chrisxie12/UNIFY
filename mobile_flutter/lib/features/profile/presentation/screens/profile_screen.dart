@@ -12,9 +12,9 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Root screen
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -42,88 +42,243 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Full-screen mesh gradient background
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Aurora mesh background — CustomPainter with 5 soft radial blobs
+// ===========================================================================
 
-class _GradientBg extends StatelessWidget {
-  const _GradientBg();
+class _AuroraBg extends StatelessWidget {
+  const _AuroraBg();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF09142B),
-                  Color(0xFF0D2F7A),
-                  Color(0xFF130D4D),
-                  Color(0xFF2B0857),
-                ],
-                stops: [0.0, 0.3, 0.65, 1.0],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+    return Positioned.fill(child: CustomPaint(painter: _AuroraPainter()));
+  }
+}
+
+class _AuroraPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF040B1F));
+
+    final blobs = <(Offset, double, Color, double)>[
+      (Offset(size.width * 0.05, size.height * 0.06), size.width * 0.72, const Color(0xFF0047FF), 0.38),
+      (Offset(size.width * 1.12, size.height * 0.28), size.width * 0.62, const Color(0xFF7C3AED), 0.30),
+      (Offset(size.width * 0.95, size.height * -0.06), size.width * 0.46, const Color(0xFF06B6D4), 0.22),
+      (Offset(size.width * -0.12, size.height * 0.72), size.width * 0.50, const Color(0xFFC026D3), 0.18),
+      (Offset(size.width * 0.62, size.height * 0.96), size.width * 0.40, const Color(0xFF1D4ED8), 0.22),
+    ];
+
+    for (final (center, radius, color, opacity) in blobs) {
+      canvas.drawCircle(
+        center,
+        radius,
+        Paint()
+          ..shader = RadialGradient(
+            colors: [color.withOpacity(opacity), color.withOpacity(0)],
+          ).createShader(Rect.fromCenter(center: center, width: radius * 2, height: radius * 2)),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
+}
+
+// ===========================================================================
+// Prismatic border painter — SweepGradient stroke around a rounded rect
+// ===========================================================================
+
+class _PrismaticBorderPainter extends CustomPainter {
+  final BorderRadius borderRadius;
+  const _PrismaticBorderPainter({required this.borderRadius});
+
+  static const _colors = [
+    Colors.white,
+    Color(0xFF93C5FD),
+    Color(0xFFA5B4FC),
+    Color(0xFFC4B5FD),
+    Color(0xFFF0ABFC),
+    Color(0xFFA5B4FC),
+    Colors.white,
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    canvas.drawRRect(
+      borderRadius.toRRect(rect),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..shader = SweepGradient(colors: _colors).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _PrismaticBorderPainter old) =>
+      old.borderRadius != borderRadius;
+}
+
+// ===========================================================================
+// Avatar ring painter — prismatic circle stroke
+// ===========================================================================
+
+class _AvatarRingPainter extends CustomPainter {
+  static const _colors = [
+    Colors.white,
+    Color(0xFF60A5FA),
+    Color(0xFF818CF8),
+    Color(0xFFC084FC),
+    Color(0xFFF9A8D4),
+    Color(0xFF67E8F9),
+    Colors.white,
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final r = size.shortestSide / 2 - 1.5;
+    canvas.drawCircle(
+      center,
+      r,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5
+        ..shader = SweepGradient(colors: _colors)
+            .createShader(Offset.zero & size),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
+}
+
+// ===========================================================================
+// Liquid glass card — the base surface for all cards
+// ===========================================================================
+
+class _LiquidCard extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? padding;
+  final BorderRadius? borderRadius;
+
+  const _LiquidCard({required this.child, this.padding, this.borderRadius});
+
+  @override
+  Widget build(BuildContext context) {
+    final br = borderRadius ?? BorderRadius.circular(24);
+    return ClipRRect(
+      borderRadius: br,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0x15FFFFFF), Color(0x06FFFFFF)],
             ),
+            borderRadius: br,
+          ),
+          child: Stack(
+            children: [
+              // Content
+              Padding(
+                padding: padding ?? const EdgeInsets.all(16),
+                child: child,
+              ),
+              // Specular highlight — 1 px white line at top
+              Positioned(
+                top: 0, left: 0, right: 0,
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.white.withOpacity(0.72),
+                        Colors.white.withOpacity(0.72),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.18, 0.82, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+              // Prismatic border overlay
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: _PrismaticBorderPainter(borderRadius: br),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        Positioned.fill(
-          child: Container(
+      ),
+    );
+  }
+}
+
+// ===========================================================================
+// Section label — gradient left-bar accent
+// ===========================================================================
+
+class _LiquidLabel extends StatelessWidget {
+  final String title;
+  const _LiquidLabel(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Container(
+            width: 3,
+            height: 15,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF7C3AED).withOpacity(0.2),
-                  Colors.transparent,
-                  Colors.transparent,
-                ],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ),
-            ),
-          ),
-        ),
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.transparent,
-                  const Color(0xFF1D4ED8).withOpacity(0.10),
-                ],
+              borderRadius: BorderRadius.circular(2),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 8),
+          Text(
+            title.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.white70,
+              letterSpacing: 1.8,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Profile body
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 class _ProfileBody extends StatelessWidget {
   final Profile profile;
   final int postCount;
   final WidgetRef ref;
 
-  const _ProfileBody({
-    required this.profile,
-    required this.postCount,
-    required this.ref,
-  });
+  const _ProfileBody({required this.profile, required this.postCount, required this.ref});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const _GradientBg(),
+        const _AuroraBg(),
         CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
@@ -132,21 +287,21 @@ class _ProfileBody extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 48),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _GlassBioSection(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassStatsRow(postCount: postCount),
-                  const SizedBox(height: 14),
-                  _GlassAcademicCard(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassSocialCard(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassInterestsSection(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassSkillsSection(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassAchievementsSection(profile: profile),
-                  const SizedBox(height: 14),
-                  _GlassAccountSection(ref: ref),
+                  _BioCard(profile: profile),
+                  const SizedBox(height: 12),
+                  _LiquidStatsRow(postCount: postCount),
+                  const SizedBox(height: 12),
+                  _AcademicCard(profile: profile),
+                  const SizedBox(height: 12),
+                  _SocialCard(profile: profile),
+                  const SizedBox(height: 12),
+                  _InterestsCard(profile: profile),
+                  const SizedBox(height: 12),
+                  _SkillsCard(profile: profile),
+                  const SizedBox(height: 12),
+                  _AchievementsSection(profile: profile),
+                  const SizedBox(height: 12),
+                  _AccountCard(ref: ref),
                 ]),
               ),
             ),
@@ -157,9 +312,9 @@ class _ProfileBody extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Cover photo box
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 class _CoverPhotoBox extends StatelessWidget {
   final Profile profile;
@@ -170,7 +325,6 @@ class _CoverPhotoBox extends StatelessWidget {
     final hasPhoto = profile.coverPhotoUrl?.isNotEmpty == true;
     return Stack(
       children: [
-        // Photo or default gradient
         Positioned.fill(
           child: hasPhoto
               ? CachedNetworkImage(
@@ -181,16 +335,12 @@ class _CoverPhotoBox extends StatelessWidget {
                 )
               : const _DefaultCoverGradient(),
         ),
-        // Bottom fade into background
         Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 80,
+          bottom: 0, left: 0, right: 0, height: 100,
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.transparent, Colors.black.withOpacity(0.55)],
+                colors: [Colors.transparent, const Color(0xFF040B1F).withOpacity(0.90)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -210,8 +360,8 @@ class _DefaultCoverGradient extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF0D2F7A), Color(0xFF4338CA), Color(0xFF6D28D9)],
-          stops: [0.0, 0.5, 1.0],
+          colors: [Color(0xFF0D1B4B), Color(0xFF1E3A8A), Color(0xFF4C1D95)],
+          stops: [0.0, 0.55, 1.0],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -220,9 +370,9 @@ class _DefaultCoverGradient extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Frosted glass action button (overlaid on cover photo)
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Frosted action button — circular with prismatic ring
+// ===========================================================================
 
 class _GlassActionBtn extends StatelessWidget {
   final IconData icon;
@@ -233,29 +383,40 @@ class _GlassActionBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(13),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.30),
-              borderRadius: BorderRadius.circular(13),
-              border: Border.all(color: Colors.white.withOpacity(0.25), width: 0.8),
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: Stack(
+          children: [
+            ClipOval(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.14),
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 18),
+                ),
+              ),
             ),
-            child: Icon(icon, color: Colors.white, size: 18),
-          ),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(painter: _AvatarRingPainter()),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ---------------------------------------------------------------------------
-// Header — cover photo hero + overlapping avatar + identity
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Profile header
+// ===========================================================================
 
 class _ProfileHeader extends ConsumerWidget {
   final Profile profile;
@@ -265,38 +426,33 @@ class _ProfileHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeTheme = ref.watch(themeNotifierProvider);
     final topPad = MediaQuery.of(context).padding.top;
-    const coverH = 160.0;
-    const avatarR = 50.0;
+    const coverH = 165.0;
+    const avatarR = 52.0;
 
     return Column(
       children: [
-        // ── Cover photo + avatar overlap ──────────────────────────────────
         Stack(
           clipBehavior: Clip.none,
           children: [
-            // Cover photo (fills top area including status bar)
             SizedBox(
               height: topPad + coverH,
               width: double.infinity,
               child: _CoverPhotoBox(profile: profile),
             ),
-            // Top-right action buttons (share + settings)
             Positioned(
-              top: topPad + 10,
-              right: 14,
+              top: topPad + 12,
+              right: 16,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _GlassActionBtn(
                     icon: Icons.ios_share_outlined,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Profile sharing coming soon'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    },
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Profile sharing coming soon'),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   _GlassActionBtn(
@@ -306,7 +462,6 @@ class _ProfileHeader extends ConsumerWidget {
                 ],
               ),
             ),
-            // Avatar hanging below cover photo
             Positioned(
               bottom: -avatarR,
               left: 0,
@@ -317,10 +472,9 @@ class _ProfileHeader extends ConsumerWidget {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      _GlassAvatar(profile: profile, radius: avatarR),
+                      _LiquidAvatar(profile: profile, radius: avatarR),
                       Positioned(
-                        bottom: 2,
-                        right: 2,
+                        bottom: 2, right: 2,
                         child: Container(
                           width: 28,
                           height: 28,
@@ -328,11 +482,7 @@ class _ProfileHeader extends ConsumerWidget {
                             color: Colors.white.withOpacity(0.92),
                             shape: BoxShape.circle,
                             boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.25),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
+                              BoxShadow(color: Colors.black.withOpacity(0.22), blurRadius: 8, offset: const Offset(0, 2)),
                             ],
                           ),
                           child: Icon(Icons.camera_alt_rounded, size: 14, color: activeTheme.primary),
@@ -346,10 +496,9 @@ class _ProfileHeader extends ConsumerWidget {
           ],
         ),
 
-        // ── Space for avatar bottom half ──────────────────────────────────
-        const SizedBox(height: 64), // avatarR(50) + gap(14)
+        const SizedBox(height: 68),
 
-        // ── Display name + verified ───────────────────────────────────────
+        // Display name
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
@@ -359,10 +508,10 @@ class _ProfileHeader extends ConsumerWidget {
                 child: Text(
                   profile.displayName ?? profile.email.split('@').first,
                   style: const TextStyle(
-                    fontSize: 26,
+                    fontSize: 27,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
-                    letterSpacing: -0.4,
+                    letterSpacing: -0.5,
                   ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
@@ -378,7 +527,7 @@ class _ProfileHeader extends ConsumerWidget {
         ),
         const SizedBox(height: 6),
 
-        // ── Username + student status ─────────────────────────────────────
+        // Username / student status
         if (profile.yearOfStudy != null)
           Text(
             '${profile.displayUsername} • ${profile.studentStatus}',
@@ -388,9 +537,7 @@ class _ProfileHeader extends ConsumerWidget {
           GestureDetector(
             onTap: () => context.push('/app/profile/edit'),
             child: Text(
-              profile.username != null && profile.username!.isNotEmpty
-                  ? '@${profile.username}'
-                  : 'Set your handle',
+              profile.username?.isNotEmpty == true ? '@${profile.username}' : 'Set your handle',
               style: TextStyle(
                 fontSize: 13,
                 color: profile.username?.isNotEmpty == true ? Colors.white54 : Colors.white30,
@@ -400,19 +547,19 @@ class _ProfileHeader extends ConsumerWidget {
               ),
             ),
           ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
 
-        // ── UNIFY Score capsule ───────────────────────────────────────────
+        // UNIFY Score
         _UnifyScoreChip(score: profile.unifyScore),
         const SizedBox(height: 12),
 
-        // ── Profile completion bar (hidden when 100%) ─────────────────────
+        // Completion bar
         if (profile.completionScore < 100) ...[
           _CompletionBar(percent: profile.completionScore),
           const SizedBox(height: 14),
         ],
 
-        // ── School + campus chips ─────────────────────────────────────────
+        // School / campus chips
         if (profile.school?.isNotEmpty == true || profile.campus?.isNotEmpty == true)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -422,9 +569,9 @@ class _ProfileHeader extends ConsumerWidget {
               alignment: WrapAlignment.center,
               children: [
                 if (profile.school?.isNotEmpty == true)
-                  _GlassHeaderChip(label: profile.school!, icon: Icons.school_outlined),
+                  _LiquidChip(label: profile.school!, icon: Icons.school_outlined),
                 if (profile.campus?.isNotEmpty == true)
-                  _GlassHeaderChip(label: profile.campus!, icon: Icons.location_on_outlined),
+                  _LiquidChip(label: profile.campus!, icon: Icons.location_on_outlined),
               ],
             ),
           ),
@@ -434,9 +581,126 @@ class _ProfileHeader extends ConsumerWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// UNIFY Score capsule
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Liquid avatar — prismatic ring + glow halos
+// ===========================================================================
+
+class _LiquidAvatar extends StatelessWidget {
+  final Profile profile;
+  final double radius;
+  const _LiquidAvatar({required this.profile, required this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    final total = radius * 2 + 10; // 5 px ring clearance per side
+    Widget inner;
+    if (profile.avatarUrl?.isNotEmpty == true) {
+      inner = CachedNetworkImage(
+        imageUrl: profile.avatarUrl!,
+        width: radius * 2 - 4,
+        height: radius * 2 - 4,
+        fit: BoxFit.cover,
+        placeholder: (_, __) => _LiquidInitials(initials: profile.initials, radius: radius - 2),
+        errorWidget: (_, __, ___) => _LiquidInitials(initials: profile.initials, radius: radius - 2),
+      );
+    } else {
+      inner = _LiquidInitials(initials: profile.initials, radius: radius - 2);
+    }
+
+    return SizedBox(
+      width: total,
+      height: total,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Glow halos
+          Container(
+            width: total,
+            height: total,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: const Color(0xFF60A5FA).withOpacity(0.55), blurRadius: 34, spreadRadius: 5),
+                BoxShadow(color: const Color(0xFFA78BFA).withOpacity(0.30), blurRadius: 20),
+              ],
+            ),
+          ),
+          // Prismatic ring
+          Positioned.fill(
+            child: CustomPaint(painter: _AvatarRingPainter()),
+          ),
+          // Avatar content
+          ClipOval(
+            child: SizedBox(width: radius * 2 - 4, height: radius * 2 - 4, child: inner),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LiquidInitials extends StatelessWidget {
+  final String initials;
+  final double radius;
+  const _LiquidInitials({required this.initials, required this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: radius * 2,
+      height: radius * 2,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF1E3FAE), Color(0xFF1D4ED8), Color(0xFF4338CA), Color(0xFF6D28D9)],
+                  stops: [0.0, 0.35, 0.65, 1.0],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+          ),
+          // Gloss sheen
+          Positioned(
+            top: radius * 0.10,
+            left: radius * 0.16,
+            child: Container(
+              width: radius * 0.95,
+              height: radius * 0.36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(radius * 0.3),
+                gradient: LinearGradient(
+                  colors: [Colors.white.withOpacity(0.40), Colors.white.withOpacity(0)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              initials,
+              style: TextStyle(
+                fontSize: radius * 0.60,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                letterSpacing: 1.5,
+                shadows: [Shadow(color: Colors.black.withOpacity(0.25), offset: const Offset(0, 2), blurRadius: 4)],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ===========================================================================
+// UNIFY Score chip — spectral gradient + specular
+// ===========================================================================
 
 class _UnifyScoreChip extends StatelessWidget {
   final int score;
@@ -445,48 +709,52 @@ class _UnifyScoreChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(30),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF1D4ED8), Color(0xFF6D28D9)],
+              colors: [Color(0xFF1D4ED8), Color(0xFF4F46E5), Color(0xFF7C3AED), Color(0xFFA21CAF)],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.30), width: 0.8),
+            borderRadius: BorderRadius.circular(30),
             boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF3B82F6).withOpacity(0.40),
-                blurRadius: 18,
-                spreadRadius: 0,
-              ),
+              BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.60), blurRadius: 30),
+              BoxShadow(color: const Color(0xFF1D4ED8).withOpacity(0.40), blurRadius: 14, spreadRadius: -4),
             ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              const Icon(Icons.bolt_rounded, color: Color(0xFFFCD34D), size: 16),
-              const SizedBox(width: 4),
-              Text(
-                'UNIFY',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white.withOpacity(0.65),
-                  letterSpacing: 1.4,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.bolt_rounded, color: Color(0xFFFCD34D), size: 17),
+                  const SizedBox(width: 5),
+                  Text(
+                    'UNIFY',
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white.withOpacity(0.65), letterSpacing: 1.8),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '$score',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                  ),
+                ],
               ),
-              const SizedBox(width: 5),
-              Text(
-                '$score',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+              // Specular
+              Positioned(
+                top: -10, left: 16, right: 16,
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.white.withOpacity(0.65), Colors.transparent],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -497,9 +765,9 @@ class _UnifyScoreChip extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Profile completion progress bar
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Profile completion bar
+// ===========================================================================
 
 class _CompletionBar extends StatelessWidget {
   final int percent;
@@ -531,38 +799,42 @@ class _CompletionBar extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Glass header chip
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Liquid header chip — school / campus pill
+// ===========================================================================
 
-class _GlassHeaderChip extends StatelessWidget {
+class _LiquidChip extends StatelessWidget {
   final String label;
   final IconData? icon;
-  const _GlassHeaderChip({required this.label, this.icon});
+  const _LiquidChip({required this.label, this.icon});
 
   @override
   Widget build(BuildContext context) {
+    const br = BorderRadius.all(Radius.circular(20));
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: br,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.3), width: 0.8),
+            color: Colors.white.withOpacity(0.10),
+            borderRadius: br,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              if (icon != null) ...[
-                Icon(icon, size: 12, color: Colors.white70),
-                const SizedBox(width: 5),
-              ],
-              Text(
-                label,
-                style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[Icon(icon, size: 12, color: Colors.white70), const SizedBox(width: 5)],
+                  Text(label, style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500)),
+                ],
+              ),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
+                ),
               ),
             ],
           ),
@@ -572,217 +844,31 @@ class _GlassHeaderChip extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Avatar — liquid gradient initials with gloss
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Bio card
+// ===========================================================================
 
-class _GlassAvatar extends StatelessWidget {
+class _BioCard extends StatelessWidget {
   final Profile profile;
-  final double radius;
-  const _GlassAvatar({required this.profile, required this.radius});
+  const _BioCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
-    Widget inner;
-    if (profile.avatarUrl != null && profile.avatarUrl!.isNotEmpty) {
-      inner = CachedNetworkImage(
-        imageUrl: profile.avatarUrl!,
-        width: radius * 2,
-        height: radius * 2,
-        fit: BoxFit.cover,
-        placeholder: (_, __) => _LiquidInitials(initials: profile.initials, radius: radius),
-        errorWidget: (_, __, ___) => _LiquidInitials(initials: profile.initials, radius: radius),
-      );
-    } else {
-      inner = _LiquidInitials(initials: profile.initials, radius: radius);
-    }
-
-    return Container(
-      width: radius * 2,
-      height: radius * 2,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.55), width: 2.5),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF3B82F6).withOpacity(0.45),
-            blurRadius: 24,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: const Color(0xFF7C3AED).withOpacity(0.2),
-            blurRadius: 16,
-            spreadRadius: -2,
-          ),
-        ],
-      ),
-      child: ClipOval(child: inner),
-    );
-  }
-}
-
-class _LiquidInitials extends StatelessWidget {
-  final String initials;
-  final double radius;
-  const _LiquidInitials({required this.initials, required this.radius});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: radius * 2,
-      height: radius * 2,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF1E3FAE),
-                    Color(0xFF1D4ED8),
-                    Color(0xFF4338CA),
-                    Color(0xFF6D28D9),
-                  ],
-                  stops: [0.0, 0.35, 0.65, 1.0],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: radius * 0.12,
-            left: radius * 0.18,
-            child: Container(
-              width: radius * 0.9,
-              height: radius * 0.38,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius * 0.3),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.38),
-                    Colors.white.withOpacity(0.0),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: Text(
-              initials,
-              style: TextStyle(
-                fontSize: radius * 0.60,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 1.5,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.25),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Base glass card
-// ---------------------------------------------------------------------------
-
-class _GlassCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final BorderRadius? borderRadius;
-
-  const _GlassCard({required this.child, this.padding, this.borderRadius});
-
-  @override
-  Widget build(BuildContext context) {
-    final br = borderRadius ?? BorderRadius.circular(20);
-    return ClipRRect(
-      borderRadius: br,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.07),
-            borderRadius: br,
-            border: Border.all(
-              color: Colors.white.withOpacity(0.20),
-              width: 0.8,
-            ),
-          ),
-          padding: padding ?? const EdgeInsets.all(16),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassSectionLabel extends StatelessWidget {
-  final String title;
-  const _GlassSectionLabel(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10, left: 2),
-      child: Text(
-        title.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: Colors.white54,
-          letterSpacing: 1.5,
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Bio section
-// ---------------------------------------------------------------------------
-
-class _GlassBioSection extends StatelessWidget {
-  final Profile profile;
-  const _GlassBioSection({required this.profile});
-
-  @override
-  Widget build(BuildContext context) {
-    final hasBio = profile.bio != null && profile.bio!.isNotEmpty;
+    final hasBio = profile.bio?.isNotEmpty == true;
     return GestureDetector(
       onTap: () => context.push('/app/profile/edit'),
-      child: _GlassCard(
+      child: _LiquidCard(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Text(
                 hasBio ? profile.bio! : 'Add a bio to tell people about yourself…',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.55,
-                  color: hasBio ? Colors.white.withOpacity(0.88) : Colors.white54,
-                ),
+                style: TextStyle(fontSize: 14, height: 1.60, color: hasBio ? Colors.white.withOpacity(0.90) : Colors.white54),
               ),
             ),
             const SizedBox(width: 10),
-            Icon(
-              hasBio ? Icons.edit_outlined : Icons.chevron_right,
-              size: 16,
-              color: Colors.white30,
-            ),
+            Icon(hasBio ? Icons.edit_outlined : Icons.chevron_right, size: 16, color: Colors.white30),
           ],
         ),
       ),
@@ -790,92 +876,100 @@ class _GlassBioSection extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Stats row
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Stats row — 4 individual liquid orbs
+// ===========================================================================
 
-class _GlassStatsRow extends StatelessWidget {
+class _LiquidStatsRow extends StatelessWidget {
   final int postCount;
-  const _GlassStatsRow({required this.postCount});
+  const _LiquidStatsRow({required this.postCount});
 
   @override
   Widget build(BuildContext context) {
-    return _GlassCard(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: [
-          _GlassStatBox(value: '$postCount', label: 'Posts'),
-          _GlassDivider(),
-          _GlassStatBox(
-            value: '0',
-            label: 'Communities',
-            zeroLabel: 'Join',
-            onTap: () => context.go('/app/communities'),
-          ),
-          _GlassDivider(),
-          const _GlassStatBox(value: '0', label: 'Friends', zeroLabel: 'Find'),
-          _GlassDivider(),
-          const _GlassStatBox(value: '0', label: 'Views'),
-        ],
-      ),
+    return Row(
+      children: [
+        _StatOrb(value: '$postCount', label: 'Posts', color: const Color(0xFF60A5FA)),
+        const SizedBox(width: 8),
+        _StatOrb(
+          value: '0',
+          label: 'Clubs',
+          color: const Color(0xFFA78BFA),
+          ctaLabel: 'Join',
+          onTap: () => context.go('/app/communities'),
+        ),
+        const SizedBox(width: 8),
+        const _StatOrb(value: '0', label: 'Friends', color: Color(0xFF34D399), ctaLabel: 'Find'),
+        const SizedBox(width: 8),
+        const _StatOrb(value: '0', label: 'Views', color: Color(0xFFFBBF24)),
+      ],
     );
   }
 }
 
-class _GlassDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) =>
-      Container(width: 0.5, height: 40, color: Colors.white.withOpacity(0.15));
-}
-
-class _GlassStatBox extends StatelessWidget {
+class _StatOrb extends StatelessWidget {
   final String value;
   final String label;
-  final String? zeroLabel;
+  final Color color;
+  final String? ctaLabel;
   final VoidCallback? onTap;
-  const _GlassStatBox({required this.value, required this.label, this.zeroLabel, this.onTap});
+
+  const _StatOrb({required this.value, required this.label, required this.color, this.ctaLabel, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final isEmpty = value == '0';
-    final isCta = isEmpty && zeroLabel != null;
+    final isCta = isEmpty && ctaLabel != null;
+
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                color: isEmpty ? Colors.white24 : Colors.white,
-                letterSpacing: -0.5,
+        child: _LiquidCard(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Column(
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isEmpty ? color.withOpacity(0.28) : color,
+                  shape: BoxShape.circle,
+                  boxShadow: isEmpty ? null : [BoxShadow(color: color.withOpacity(0.55), blurRadius: 7)],
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              isCta ? zeroLabel! : label,
-              style: TextStyle(
-                fontSize: 11,
-                color: isCta ? const Color(0xFF60A5FA) : Colors.white38,
-                fontWeight: isCta ? FontWeight.w600 : FontWeight.w400,
+              const SizedBox(height: 7),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isEmpty ? Colors.white24 : Colors.white,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 3),
+              Text(
+                isCta ? ctaLabel! : label,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isCta ? color : Colors.white38,
+                  fontWeight: isCta ? FontWeight.w600 : FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Academic card
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-class _GlassAcademicCard extends StatelessWidget {
+class _AcademicCard extends StatelessWidget {
   final Profile profile;
-  const _GlassAcademicCard({required this.profile});
+  const _AcademicCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -892,8 +986,8 @@ class _GlassAcademicCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _GlassSectionLabel('Academic'),
-        _GlassCard(
+        const _LiquidLabel('Academic'),
+        _LiquidCard(
           padding: EdgeInsets.zero,
           child: rows.isEmpty
               ? Padding(
@@ -904,12 +998,7 @@ class _GlassAcademicCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.school_outlined, color: Colors.white38, size: 18),
                         const SizedBox(width: 8),
-                        const Expanded(
-                          child: Text(
-                            'Add your academic info',
-                            style: TextStyle(color: Colors.white38, fontSize: 14),
-                          ),
-                        ),
+                        const Expanded(child: Text('Add your academic info', style: TextStyle(color: Colors.white38, fontSize: 14))),
                         Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
                       ],
                     ),
@@ -918,14 +1007,9 @@ class _GlassAcademicCard extends StatelessWidget {
               : Column(
                   children: [
                     for (int i = 0; i < rows.length; i++) ...[
-                      _GlassInfoRow(label: rows[i].label, value: rows[i].value),
+                      _InfoRow(label: rows[i].label, value: rows[i].value),
                       if (i < rows.length - 1)
-                        Divider(
-                          height: 1,
-                          color: Colors.white.withOpacity(0.08),
-                          indent: 16,
-                          endIndent: 16,
-                        ),
+                        Divider(height: 1, color: Colors.white.withOpacity(0.07), indent: 16, endIndent: 16),
                     ],
                   ],
                 ),
@@ -941,10 +1025,10 @@ class _KV {
   const _KV(this.label, this.value);
 }
 
-class _GlassInfoRow extends StatelessWidget {
+class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
-  const _GlassInfoRow({required this.label, required this.value});
+  const _InfoRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -959,11 +1043,7 @@ class _GlassInfoRow extends StatelessWidget {
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -975,13 +1055,13 @@ class _GlassInfoRow extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Social card — 7 platforms with Wrap icon strip
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Social card
+// ===========================================================================
 
-class _GlassSocialCard extends StatelessWidget {
+class _SocialCard extends StatelessWidget {
   final Profile profile;
-  const _GlassSocialCard({required this.profile});
+  const _SocialCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -994,27 +1074,21 @@ class _GlassSocialCard extends StatelessWidget {
       _SocialPlatform('GitHub', Icons.code, const Color(0xFFE2E8F0), profile.githubUrl),
       _SocialPlatform('Portfolio', Icons.language, const Color(0xFF34D399), profile.portfolioUrl),
     ];
-
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _GlassSectionLabel('Social'),
-        _GlassCard(
+        const _LiquidLabel('Social'),
+        _LiquidCard(
           child: active.isEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 8, runSpacing: 8,
                       children: platforms
-                          .map((p) => _GlassSocialIcon(
-                                platform: p,
-                                active: false,
-                                onTap: () => context.push('/app/profile/edit'),
-                              ))
+                          .map((p) => _SocialIconBtn(platform: p, active: false, onTap: () => context.push('/app/profile/edit')))
                           .toList(),
                     ),
                     const SizedBox(height: 12),
@@ -1022,14 +1096,7 @@ class _GlassSocialCard extends StatelessWidget {
                       onTap: () => context.push('/app/profile/edit'),
                       child: const Row(
                         children: [
-                          Text(
-                            'Add social links',
-                            style: TextStyle(
-                              color: Color(0xFF60A5FA),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text('Add social links', style: TextStyle(color: Color(0xFF60A5FA), fontSize: 13, fontWeight: FontWeight.w500)),
                           SizedBox(width: 4),
                           Icon(Icons.arrow_forward_rounded, size: 13, color: Color(0xFF60A5FA)),
                         ],
@@ -1040,20 +1107,16 @@ class _GlassSocialCard extends StatelessWidget {
               : Column(
                   children: [
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 8, runSpacing: 8,
                       children: platforms
-                          .map((p) => _GlassSocialIcon(
-                                platform: p,
-                                active: p.url?.isNotEmpty == true,
-                              ))
+                          .map((p) => _SocialIconBtn(platform: p, active: p.url?.isNotEmpty == true))
                           .toList(),
                     ),
                     const SizedBox(height: 14),
                     for (int i = 0; i < active.length; i++) ...[
-                      _GlassSocialRow(platform: active[i]),
+                      _SocialRow(platform: active[i]),
                       if (i < active.length - 1)
-                        Divider(height: 1, color: Colors.white.withOpacity(0.08)),
+                        Divider(height: 1, color: Colors.white.withOpacity(0.07)),
                     ],
                   ],
                 ),
@@ -1071,32 +1134,54 @@ class _SocialPlatform {
   const _SocialPlatform(this.label, this.icon, this.color, this.url);
 }
 
-class _GlassSocialIcon extends StatelessWidget {
+class _SocialIconBtn extends StatelessWidget {
   final _SocialPlatform platform;
   final bool active;
   final VoidCallback? onTap;
-  const _GlassSocialIcon({required this.platform, required this.active, this.onTap});
+  const _SocialIconBtn({required this.platform, required this.active, this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    const size = 46.0;
+    const br = BorderRadius.all(Radius.circular(14));
     return GestureDetector(
       onTap: onTap,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: br,
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            width: 42,
-            height: 42,
+            width: size, height: size,
             decoration: BoxDecoration(
-              color: platform.color.withOpacity(active ? 0.15 : 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: platform.color.withOpacity(active ? 0.40 : 0.12),
-                width: 0.8,
-              ),
+              color: platform.color.withOpacity(active ? 0.14 : 0.05),
+              borderRadius: br,
             ),
-            child: Icon(platform.icon, color: platform.color.withOpacity(active ? 1.0 : 0.30), size: 19),
+            child: Stack(
+              children: [
+                Center(child: Icon(platform.icon, color: platform.color.withOpacity(active ? 1.0 : 0.28), size: 20)),
+                // Specular
+                Positioned(
+                  top: 0, left: 4, right: 4,
+                  child: Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, Colors.white.withOpacity(0.55), Colors.transparent],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: _PrismaticBorderPainter(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -1104,9 +1189,9 @@ class _GlassSocialIcon extends StatelessWidget {
   }
 }
 
-class _GlassSocialRow extends StatelessWidget {
+class _SocialRow extends StatelessWidget {
   final _SocialPlatform platform;
-  const _GlassSocialRow({required this.platform});
+  const _SocialRow({required this.platform});
 
   @override
   Widget build(BuildContext context) {
@@ -1115,12 +1200,11 @@ class _GlassSocialRow extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 30,
-            height: 30,
+            width: 32, height: 32,
             decoration: BoxDecoration(
-              color: platform.color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: platform.color.withOpacity(0.25), width: 0.8),
+              color: platform.color.withOpacity(0.14),
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(color: platform.color.withOpacity(0.28), width: 0.8),
             ),
             child: Icon(platform.icon, color: platform.color, size: 15),
           ),
@@ -1129,15 +1213,8 @@ class _GlassSocialRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  platform.label,
-                  style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  platform.url!,
-                  style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 11),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(platform.label, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                Text(platform.url!, style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 11), overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -1148,21 +1225,21 @@ class _GlassSocialRow extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Interests
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Interests card
+// ===========================================================================
 
-class _GlassInterestsSection extends StatelessWidget {
+class _InterestsCard extends StatelessWidget {
   final Profile profile;
-  const _GlassInterestsSection({required this.profile});
+  const _InterestsCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _GlassSectionLabel('Interests'),
-        _GlassCard(
+        const _LiquidLabel('Interests'),
+        _LiquidCard(
           child: profile.interests.isEmpty
               ? GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
@@ -1170,17 +1247,14 @@ class _GlassInterestsSection extends StatelessWidget {
                     children: [
                       const Icon(Icons.interests_outlined, color: Colors.white38, size: 18),
                       const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text('Add interests', style: TextStyle(color: Colors.white38, fontSize: 14)),
-                      ),
+                      const Expanded(child: Text('Add interests', style: TextStyle(color: Colors.white38, fontSize: 14))),
                       Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
                     ],
                   ),
                 )
               : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: profile.interests.map((i) => _GlassInterestChip(label: i)).toList(),
+                  spacing: 8, runSpacing: 8,
+                  children: profile.interests.map((i) => _InterestChip(label: i)).toList(),
                 ),
         ),
       ],
@@ -1188,93 +1262,32 @@ class _GlassInterestsSection extends StatelessWidget {
   }
 }
 
-class _GlassInterestChip extends StatelessWidget {
+class _InterestChip extends StatelessWidget {
   final String label;
-  const _GlassInterestChip({required this.label});
+  const _InterestChip({required this.label});
 
   @override
   Widget build(BuildContext context) {
+    const br = BorderRadius.all(Radius.circular(20));
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: br,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.10),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.22), width: 0.8),
+            borderRadius: br,
           ),
-          child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Skills section
-// ---------------------------------------------------------------------------
-
-class _GlassSkillsSection extends StatelessWidget {
-  final Profile profile;
-  const _GlassSkillsSection({required this.profile});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _GlassSectionLabel('Skills'),
-        _GlassCard(
-          child: profile.skills.isEmpty
-              ? GestureDetector(
-                  onTap: () => context.push('/app/profile/edit'),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.psychology_outlined, color: Colors.white38, size: 18),
-                      const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text('Add your skills', style: TextStyle(color: Colors.white38, fontSize: 14)),
-                      ),
-                      Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
-                    ],
-                  ),
-                )
-              : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: profile.skills.map((s) => _GlassSkillChip(label: s)).toList(),
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class _GlassSkillChip extends StatelessWidget {
-  final String label;
-  const _GlassSkillChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0xFF10B981).withOpacity(0.12),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFF10B981).withOpacity(0.35), width: 0.8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              const Icon(Icons.code_rounded, color: Color(0xFF10B981), size: 11),
-              const SizedBox(width: 4),
               Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
+                ),
+              ),
             ],
           ),
         ),
@@ -1283,13 +1296,91 @@ class _GlassSkillChip extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Achievements — glowing glass capsules
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Skills card
+// ===========================================================================
 
-class _GlassAchievementsSection extends StatelessWidget {
+class _SkillsCard extends StatelessWidget {
   final Profile profile;
-  const _GlassAchievementsSection({required this.profile});
+  const _SkillsCard({required this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _LiquidLabel('Skills'),
+        _LiquidCard(
+          child: profile.skills.isEmpty
+              ? GestureDetector(
+                  onTap: () => context.push('/app/profile/edit'),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.psychology_outlined, color: Colors.white38, size: 18),
+                      const SizedBox(width: 8),
+                      const Expanded(child: Text('Add your skills', style: TextStyle(color: Colors.white38, fontSize: 14))),
+                      Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
+                    ],
+                  ),
+                )
+              : Wrap(
+                  spacing: 8, runSpacing: 8,
+                  children: profile.skills.map((s) => _SkillChip(label: s)).toList(),
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SkillChip extends StatelessWidget {
+  final String label;
+  const _SkillChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    const br = BorderRadius.all(Radius.circular(20));
+    return ClipRRect(
+      borderRadius: br,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF10B981).withOpacity(0.11),
+            borderRadius: br,
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.code_rounded, color: Color(0xFF10B981), size: 11),
+                  const SizedBox(width: 4),
+                  Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
+                ],
+              ),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(20))),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ===========================================================================
+// Achievements
+// ===========================================================================
+
+class _AchievementsSection extends StatelessWidget {
+  final Profile profile;
+  const _AchievementsSection({required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -1306,11 +1397,10 @@ class _GlassAchievementsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _GlassSectionLabel('Achievements'),
+        const _LiquidLabel('Achievements'),
         Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: badges.map((b) => _GlassBadgeCapsule(badge: b)).toList(),
+          spacing: 10, runSpacing: 10,
+          children: badges.map((b) => _BadgeCapsule(badge: b)).toList(),
         ),
       ],
     );
@@ -1324,38 +1414,53 @@ class _Badge {
   const _Badge({required this.icon, required this.label, required this.color});
 }
 
-class _GlassBadgeCapsule extends StatelessWidget {
+class _BadgeCapsule extends StatelessWidget {
   final _Badge badge;
-  const _GlassBadgeCapsule({required this.badge});
+  const _BadgeCapsule({required this.badge});
 
   @override
   Widget build(BuildContext context) {
+    const br = BorderRadius.all(Radius.circular(24));
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: br,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: badge.color.withOpacity(0.16),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: badge.color.withOpacity(0.42), width: 0.8),
+            color: badge.color.withOpacity(0.14),
+            borderRadius: br,
             boxShadow: [
-              BoxShadow(
-                color: badge.color.withOpacity(0.18),
-                blurRadius: 12,
-                spreadRadius: 0,
-              ),
+              BoxShadow(color: badge.color.withOpacity(0.30), blurRadius: 18, spreadRadius: 0),
             ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              Icon(badge.icon, color: badge.color, size: 15),
-              const SizedBox(width: 6),
-              Text(
-                badge.label,
-                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(badge.icon, color: badge.color, size: 15),
+                  const SizedBox(width: 6),
+                  Text(badge.label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              // Specular
+              Positioned(
+                top: -10, left: 12, right: 12,
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.white.withOpacity(0.55), Colors.transparent],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(painter: _PrismaticBorderPainter(borderRadius: BorderRadius.circular(24))),
+                ),
               ),
             ],
           ),
@@ -1365,47 +1470,31 @@ class _GlassBadgeCapsule extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Account section
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// Account card
+// ===========================================================================
 
-class _GlassAccountSection extends StatelessWidget {
+class _AccountCard extends StatelessWidget {
   final WidgetRef ref;
-  const _GlassAccountSection({required this.ref});
+  const _AccountCard({required this.ref});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _GlassSectionLabel('Account'),
-        _GlassCard(
+        const _LiquidLabel('Account'),
+        _LiquidCard(
           padding: EdgeInsets.zero,
           child: Column(
             children: [
-              _GlassTile(
-                icon: Icons.edit_outlined,
-                label: 'Edit Profile',
-                iconColor: const Color(0xFF60A5FA),
-                onTap: () => context.push('/app/profile/edit'),
-              ),
-              Divider(height: 1, color: Colors.white.withOpacity(0.08)),
-              _GlassTile(
-                icon: Icons.lock_outline,
-                label: 'Privacy',
-                iconColor: const Color(0xFF34D399),
-                onTap: () => context.push('/app/profile/privacy'),
-              ),
-              Divider(height: 1, color: Colors.white.withOpacity(0.08)),
-              _GlassTile(
-                icon: Icons.palette_outlined,
-                label: 'Appearance',
-                iconColor: const Color(0xFFA78BFA),
-                showChevron: false,
-                onTap: () => ThemePickerSheet.show(context),
-              ),
-              Divider(height: 1, color: Colors.white.withOpacity(0.08)),
-              _GlassTile(
+              _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: const Color(0xFF60A5FA), onTap: () => context.push('/app/profile/edit')),
+              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
+              _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: const Color(0xFF34D399), onTap: () => context.push('/app/profile/privacy')),
+              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
+              _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFFA78BFA), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
+              Divider(height: 1, color: Colors.white.withOpacity(0.07)),
+              _Tile(
                 icon: Icons.logout_rounded,
                 label: 'Sign Out',
                 iconColor: const Color(0xFFF87171),
@@ -1415,25 +1504,16 @@ class _GlassAccountSection extends StatelessWidget {
                   final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      backgroundColor: const Color(0xFF1A1A2E),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                      title: const Text(
-                        'Sign out?',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17),
-                      ),
+                      backgroundColor: const Color(0xFF0E1527),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      title: const Text('Sign out?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17)),
                       content: const Text(
                         "You'll need to sign in again to access your account.",
                         style: TextStyle(color: Colors.white60, fontSize: 14, height: 1.5),
                       ),
                       actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: const Text('Cancel', style: TextStyle(color: Colors.white54, fontWeight: FontWeight.w500)),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          child: const Text('Sign Out', style: TextStyle(color: Color(0xFFF87171), fontWeight: FontWeight.w600)),
-                        ),
+                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
+                        TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: Color(0xFFF87171), fontWeight: FontWeight.w600))),
                       ],
                     ),
                   );
@@ -1451,7 +1531,7 @@ class _GlassAccountSection extends StatelessWidget {
   }
 }
 
-class _GlassTile extends StatelessWidget {
+class _Tile extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color iconColor;
@@ -1459,7 +1539,7 @@ class _GlassTile extends StatelessWidget {
   final bool showChevron;
   final VoidCallback onTap;
 
-  const _GlassTile({
+  const _Tile({
     required this.icon,
     required this.label,
     required this.iconColor,
@@ -1472,32 +1552,28 @@ class _GlassTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      splashColor: Colors.white.withOpacity(0.05),
-      highlightColor: Colors.white.withOpacity(0.03),
+      splashColor: Colors.white.withOpacity(0.04),
+      highlightColor: Colors.white.withOpacity(0.02),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 36, height: 36,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.14),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: iconColor.withOpacity(0.24), width: 0.8),
-              ),
-              child: Icon(icon, color: iconColor, size: 16),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: labelColor ?? Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                gradient: LinearGradient(
+                  colors: [iconColor.withOpacity(0.22), iconColor.withOpacity(0.10)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: iconColor.withOpacity(0.28), width: 0.8),
               ),
+              child: Icon(icon, color: iconColor, size: 17),
+            ),
+            const SizedBox(width: 13),
+            Expanded(
+              child: Text(label, style: TextStyle(color: labelColor ?? Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
             ),
             if (showChevron) Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2), size: 18),
           ],
@@ -1507,9 +1583,9 @@ class _GlassTile extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Skeleton loading
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 class _GlassSkeleton extends StatelessWidget {
   const _GlassSkeleton();
@@ -1519,33 +1595,32 @@ class _GlassSkeleton extends StatelessWidget {
     final topPad = MediaQuery.of(context).padding.top;
     return Stack(
       children: [
-        const _GradientBg(),
+        const _AuroraBg(),
         Shimmer.fromColors(
-          baseColor: Colors.white.withOpacity(0.06),
-          highlightColor: Colors.white.withOpacity(0.14),
+          baseColor: Colors.white.withOpacity(0.05),
+          highlightColor: Colors.white.withOpacity(0.13),
           child: SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Cover photo placeholder
-                Container(height: topPad + 160, color: Colors.white),
-                const SizedBox(height: 64),
-                Center(child: _SBox(h: 22, w: 180, r: 6)),
+                Container(height: topPad + 165, color: Colors.white),
+                const SizedBox(height: 68),
+                Center(child: _SBox(h: 22, w: 190, r: 6)),
                 const SizedBox(height: 8),
-                Center(child: _SBox(h: 14, w: 110, r: 6)),
+                Center(child: _SBox(h: 14, w: 120, r: 6)),
                 const SizedBox(height: 20),
-                Center(child: _SBox(h: 36, w: 130, r: 18)),
+                Center(child: _SBox(h: 38, w: 140, r: 19)),
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
-                      _SBox(h: 64, w: double.infinity, r: 20),
-                      const SizedBox(height: 14),
-                      _SBox(h: 80, w: double.infinity, r: 20),
-                      const SizedBox(height: 14),
-                      _SBox(h: 200, w: double.infinity, r: 20),
+                      _SBox(h: 64, w: double.infinity, r: 24),
+                      const SizedBox(height: 12),
+                      _SBox(h: 90, w: double.infinity, r: 24),
+                      const SizedBox(height: 12),
+                      _SBox(h: 210, w: double.infinity, r: 24),
                     ],
                   ),
                 ),
@@ -1563,16 +1638,13 @@ class _SBox extends StatelessWidget {
   const _SBox({required this.h, required this.w, required this.r});
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: h,
-        width: w,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(r)),
-      );
+  Widget build(BuildContext context) =>
+      Container(height: h, width: w, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(r)));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Error view
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 class _ErrorView extends StatelessWidget {
   final String message;
@@ -1582,7 +1654,7 @@ class _ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const _GradientBg(),
+        const _AuroraBg(),
         Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -1591,11 +1663,7 @@ class _ErrorView extends StatelessWidget {
               children: [
                 const Icon(Icons.error_outline, size: 48, color: Color(0xFFF87171)),
                 const SizedBox(height: 12),
-                Text(
-                  message,
-                  style: const TextStyle(color: Colors.white60, fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
+                Text(message, style: const TextStyle(color: Colors.white60, fontSize: 14), textAlign: TextAlign.center),
               ],
             ),
           ),
