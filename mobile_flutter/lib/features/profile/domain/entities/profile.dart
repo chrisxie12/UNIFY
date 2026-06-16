@@ -5,13 +5,14 @@ class Profile extends Equatable {
   final String email;
   final String? displayName;
   final String? avatarUrl;
+  final String? coverPhotoUrl;
   final String? school;
   final String? programme;
   final int? yearOfStudy;
   final String role;
   final DateTime createdAt;
 
-  // Extended identity fields
+  // Extended identity
   final String? username;
   final String? bio;
   final String? campus;
@@ -21,6 +22,8 @@ class Profile extends Equatable {
 
   // Social links
   final String? instagramUrl;
+  final String? tiktokUrl;
+  final String? snapchatUrl;
   final String? linkedinUrl;
   final String? twitterUrl;
   final String? githubUrl;
@@ -32,14 +35,17 @@ class Profile extends Equatable {
 
   // Metadata
   final List<String> interests;
+  final List<String> skills;
   final bool isVerified;
   final int profileViews;
+  final String privacyLevel; // 'public' | 'university' | 'friends'
 
   const Profile({
     required this.id,
     required this.email,
     this.displayName,
     this.avatarUrl,
+    this.coverPhotoUrl,
     this.school,
     this.programme,
     this.yearOfStudy,
@@ -52,6 +58,8 @@ class Profile extends Equatable {
     this.faculty,
     this.expectedGraduationYear,
     this.instagramUrl,
+    this.tiktokUrl,
+    this.snapchatUrl,
     this.linkedinUrl,
     this.twitterUrl,
     this.githubUrl,
@@ -59,8 +67,10 @@ class Profile extends Equatable {
     this.phone,
     this.hostel,
     this.interests = const [],
+    this.skills = const [],
     this.isVerified = false,
     this.profileViews = 0,
+    this.privacyLevel = 'public',
   });
 
   /// Two-letter initials from display name; falls back to email initial.
@@ -76,14 +86,60 @@ class Profile extends Equatable {
     return 'U';
   }
 
-  /// Profile is complete when the core academic fields are present.
-  bool get isComplete =>
-      displayName != null &&
-      displayName!.isNotEmpty &&
-      programme != null &&
-      programme!.isNotEmpty &&
-      school != null &&
-      school!.isNotEmpty;
+  /// Academic year mapped to student status label.
+  String get studentStatus {
+    switch (yearOfStudy) {
+      case 1:
+        return 'Freshman';
+      case 2:
+        return 'Sophomore';
+      case 3:
+        return 'Junior';
+      case 4:
+        return 'Senior';
+      default:
+        if (yearOfStudy != null && yearOfStudy! > 4) return 'Graduate';
+        return 'Student';
+    }
+  }
+
+  /// Profile completion score, 0–100.
+  int get completionScore {
+    int score = 0;
+    if (displayName?.isNotEmpty == true) score += 10;
+    if (avatarUrl?.isNotEmpty == true) score += 10;
+    if (bio?.isNotEmpty == true) score += 10;
+    if (programme?.isNotEmpty == true) score += 10;
+    if (school?.isNotEmpty == true) score += 10;
+    if (faculty?.isNotEmpty == true) score += 5;
+    if (department?.isNotEmpty == true) score += 5;
+    if (yearOfStudy != null) score += 5;
+    if (campus?.isNotEmpty == true) score += 5;
+    if (username?.isNotEmpty == true) score += 5;
+    if (interests.length >= 3) score += 10;
+    if (skills.isNotEmpty) score += 5;
+    final hasSocial = [
+      instagramUrl,
+      tiktokUrl,
+      snapchatUrl,
+      linkedinUrl,
+      twitterUrl,
+      githubUrl,
+      portfolioUrl,
+    ].any((u) => u?.isNotEmpty == true);
+    if (hasSocial) score += 5;
+    if (phone?.isNotEmpty == true) score += 5;
+    return score.clamp(0, 100);
+  }
+
+  /// Gamified engagement score, 0–1000.
+  int get unifyScore {
+    final base = (completionScore * 8).clamp(0, 800);
+    return (base + (isVerified ? 200 : 0)).clamp(0, 1000);
+  }
+
+  /// Profile is considered complete when completionScore >= 60.
+  bool get isComplete => completionScore >= 60;
 
   /// @username if set, else email prefix prefixed with @.
   String get displayUsername {
@@ -97,6 +153,7 @@ class Profile extends Equatable {
         email,
         displayName,
         avatarUrl,
+        coverPhotoUrl,
         school,
         programme,
         yearOfStudy,
@@ -109,6 +166,8 @@ class Profile extends Equatable {
         faculty,
         expectedGraduationYear,
         instagramUrl,
+        tiktokUrl,
+        snapchatUrl,
         linkedinUrl,
         twitterUrl,
         githubUrl,
@@ -116,7 +175,9 @@ class Profile extends Equatable {
         phone,
         hostel,
         interests,
+        skills,
         isVerified,
         profileViews,
+        privacyLevel,
       ];
 }

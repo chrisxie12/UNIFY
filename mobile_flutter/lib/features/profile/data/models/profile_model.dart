@@ -6,6 +6,7 @@ class ProfileModel extends Profile {
     required super.email,
     super.displayName,
     super.avatarUrl,
+    super.coverPhotoUrl,
     super.school,
     super.programme,
     super.yearOfStudy,
@@ -18,6 +19,8 @@ class ProfileModel extends Profile {
     super.faculty,
     super.expectedGraduationYear,
     super.instagramUrl,
+    super.tiktokUrl,
+    super.snapchatUrl,
     super.linkedinUrl,
     super.twitterUrl,
     super.githubUrl,
@@ -25,8 +28,10 @@ class ProfileModel extends Profile {
     super.phone,
     super.hostel,
     super.interests,
+    super.skills,
     super.isVerified,
     super.profileViews,
+    super.privacyLevel,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +40,7 @@ class ProfileModel extends Profile {
       email: json['email'] as String? ?? '',
       displayName: json['display_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
+      coverPhotoUrl: json['cover_photo_url'] as String?,
       school: json['school'] as String?,
       programme: json['programme'] as String?,
       yearOfStudy: json['year_of_study'] as int?,
@@ -47,6 +53,8 @@ class ProfileModel extends Profile {
       faculty: json['faculty'] as String?,
       expectedGraduationYear: json['expected_graduation_year'] as int?,
       instagramUrl: json['instagram_url'] as String?,
+      tiktokUrl: json['tiktok_url'] as String?,
+      snapchatUrl: json['snapchat_url'] as String?,
       linkedinUrl: json['linkedin_url'] as String?,
       twitterUrl: json['twitter_url'] as String?,
       githubUrl: json['github_url'] as String?,
@@ -54,8 +62,10 @@ class ProfileModel extends Profile {
       phone: json['phone'] as String?,
       hostel: json['hostel'] as String?,
       interests: (json['interests'] as List<dynamic>?)?.cast<String>() ?? [],
+      skills: (json['skills'] as List<dynamic>?)?.cast<String>() ?? [],
       isVerified: json['is_verified'] as bool? ?? false,
       profileViews: json['profile_views'] as int? ?? 0,
+      privacyLevel: json['privacy_level'] as String? ?? 'public',
     );
   }
 
@@ -64,6 +74,7 @@ class ProfileModel extends Profile {
       'id': id,
       'display_name': displayName,
       'avatar_url': avatarUrl,
+      'cover_photo_url': coverPhotoUrl,
       'school': school,
       'programme': programme,
       'year_of_study': yearOfStudy,
@@ -75,6 +86,8 @@ class ProfileModel extends Profile {
       'faculty': faculty,
       'expected_graduation_year': expectedGraduationYear,
       'instagram_url': instagramUrl,
+      'tiktok_url': tiktokUrl,
+      'snapchat_url': snapchatUrl,
       'linkedin_url': linkedinUrl,
       'twitter_url': twitterUrl,
       'github_url': githubUrl,
@@ -82,8 +95,10 @@ class ProfileModel extends Profile {
       'phone': phone,
       'hostel': hostel,
       'interests': interests,
+      'skills': skills,
       'is_verified': isVerified,
       'profile_views': profileViews,
+      'privacy_level': privacyLevel,
     };
   }
 }

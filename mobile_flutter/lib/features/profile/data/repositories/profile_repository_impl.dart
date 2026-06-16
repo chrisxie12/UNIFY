@@ -43,4 +43,14 @@ class ProfileRepositoryImpl {
         );
     return _client.storage.from('avatars').getPublicUrl(path);
   }
+
+  Future<String?> uploadCoverPhoto(String userId, Uint8List bytes, String ext) async {
+    final path = '$userId/cover.$ext';
+    await _client.storage.from('covers').uploadBinary(
+          path,
+          bytes,
+          fileOptions: const FileOptions(upsert: true),
+        );
+    return _client.storage.from('covers').getPublicUrl(path);
+  }
 }

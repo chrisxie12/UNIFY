@@ -35,6 +35,33 @@ const List<String> _kInterests = [
   'Science',
 ];
 
+const List<String> _kSkills = [
+  'Flutter',
+  'Python',
+  'JavaScript',
+  'React',
+  'Node.js',
+  'Data Analysis',
+  'Machine Learning',
+  'UI/UX Design',
+  'Graphic Design',
+  'Video Editing',
+  'Photography',
+  'Writing',
+  'Public Speaking',
+  'Leadership',
+  'Project Management',
+  'Marketing',
+  'Research',
+  'Teaching',
+  'Music Production',
+  'Cybersecurity',
+  'Networking',
+  'Database Design',
+  'Cloud Computing',
+  'Entrepreneurship',
+];
+
 // ---------------------------------------------------------------------------
 // Screen
 // ---------------------------------------------------------------------------
@@ -55,10 +82,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late final TextEditingController _programmeCtrl;
   late final TextEditingController _facultyCtrl;
   late final TextEditingController _departmentCtrl;
+  late final TextEditingController _campusCtrl;
   late final TextEditingController _graduationYearCtrl;
   late final TextEditingController _phoneCtrl;
   late final TextEditingController _hostelCtrl;
   late final TextEditingController _instagramCtrl;
+  late final TextEditingController _tiktokCtrl;
+  late final TextEditingController _snapchatCtrl;
   late final TextEditingController _linkedinCtrl;
   late final TextEditingController _twitterCtrl;
   late final TextEditingController _githubCtrl;
@@ -67,6 +97,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   // ── Non-text state ────────────────────────────────────────────────────────
   int? _yearOfStudy;
   List<String> _interests = [];
+  List<String> _skills = [];
+  String _privacyLevel = 'public';
 
   // ── Original values (for dirty-check) ────────────────────────────────────
   Profile? _original;
@@ -74,9 +106,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   // ── Loading flags ─────────────────────────────────────────────────────────
   bool _isSaving = false;
   bool _isUploadingPhoto = false;
+  bool _isUploadingCover = false;
 
-  // ── Avatar override (newly picked, before upload) ─────────────────────────
-  String? _pendingAvatarUrl; // url returned after upload
+  // ── Pending upload URLs ───────────────────────────────────────────────────
+  String? _pendingAvatarUrl;
+  String? _pendingCoverUrl;
 
   @override
   void initState() {
@@ -88,16 +122,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _programmeCtrl = TextEditingController();
     _facultyCtrl = TextEditingController();
     _departmentCtrl = TextEditingController();
+    _campusCtrl = TextEditingController();
     _graduationYearCtrl = TextEditingController();
     _phoneCtrl = TextEditingController();
     _hostelCtrl = TextEditingController();
     _instagramCtrl = TextEditingController();
+    _tiktokCtrl = TextEditingController();
+    _snapchatCtrl = TextEditingController();
     _linkedinCtrl = TextEditingController();
     _twitterCtrl = TextEditingController();
     _githubCtrl = TextEditingController();
     _portfolioCtrl = TextEditingController();
 
-    // Populate once the profile is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final profile = ref.read(profileProvider).valueOrNull;
       if (profile != null) _populateFromProfile(profile);
@@ -113,10 +149,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _programmeCtrl.dispose();
     _facultyCtrl.dispose();
     _departmentCtrl.dispose();
+    _campusCtrl.dispose();
     _graduationYearCtrl.dispose();
     _phoneCtrl.dispose();
     _hostelCtrl.dispose();
     _instagramCtrl.dispose();
+    _tiktokCtrl.dispose();
+    _snapchatCtrl.dispose();
     _linkedinCtrl.dispose();
     _twitterCtrl.dispose();
     _githubCtrl.dispose();
@@ -133,11 +172,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _programmeCtrl.text = profile.programme ?? '';
     _facultyCtrl.text = profile.faculty ?? '';
     _departmentCtrl.text = profile.department ?? '';
-    _graduationYearCtrl.text =
-        profile.expectedGraduationYear?.toString() ?? '';
+    _campusCtrl.text = profile.campus ?? '';
+    _graduationYearCtrl.text = profile.expectedGraduationYear?.toString() ?? '';
     _phoneCtrl.text = profile.phone ?? '';
     _hostelCtrl.text = profile.hostel ?? '';
     _instagramCtrl.text = profile.instagramUrl ?? '';
+    _tiktokCtrl.text = profile.tiktokUrl ?? '';
+    _snapchatCtrl.text = profile.snapchatUrl ?? '';
     _linkedinCtrl.text = profile.linkedinUrl ?? '';
     _twitterCtrl.text = profile.twitterUrl ?? '';
     _githubCtrl.text = profile.githubUrl ?? '';
@@ -145,6 +186,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     setState(() {
       _yearOfStudy = profile.yearOfStudy;
       _interests = List<String>.from(profile.interests);
+      _skills = List<String>.from(profile.skills);
+      _privacyLevel = profile.privacyLevel;
     });
   }
 
@@ -160,28 +203,37 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (_programmeCtrl.text != (p.programme ?? '')) return true;
     if (_facultyCtrl.text != (p.faculty ?? '')) return true;
     if (_departmentCtrl.text != (p.department ?? '')) return true;
+    if (_campusCtrl.text != (p.campus ?? '')) return true;
     final gradYear = int.tryParse(_graduationYearCtrl.text);
     if (gradYear != p.expectedGraduationYear) return true;
     if (_yearOfStudy != p.yearOfStudy) return true;
     if (_phoneCtrl.text != (p.phone ?? '')) return true;
     if (_hostelCtrl.text != (p.hostel ?? '')) return true;
     if (_instagramCtrl.text != (p.instagramUrl ?? '')) return true;
+    if (_tiktokCtrl.text != (p.tiktokUrl ?? '')) return true;
+    if (_snapchatCtrl.text != (p.snapchatUrl ?? '')) return true;
     if (_linkedinCtrl.text != (p.linkedinUrl ?? '')) return true;
     if (_twitterCtrl.text != (p.twitterUrl ?? '')) return true;
     if (_githubCtrl.text != (p.githubUrl ?? '')) return true;
     if (_portfolioCtrl.text != (p.portfolioUrl ?? '')) return true;
     if (_interests.length != p.interests.length) return true;
-    for (int i = 0; i < _interests.length; i++) {
-      if (!p.interests.contains(_interests[i])) return true;
+    for (final i in _interests) {
+      if (!p.interests.contains(i)) return true;
     }
+    if (_skills.length != p.skills.length) return true;
+    for (final s in _skills) {
+      if (!p.skills.contains(s)) return true;
+    }
+    if (_privacyLevel != p.privacyLevel) return true;
     if (_pendingAvatarUrl != null) return true;
+    if (_pendingCoverUrl != null) return true;
     return false;
   }
 
-  // ── Photo picker ──────────────────────────────────────────────────────────
+  // ── Avatar picker ─────────────────────────────────────────────────────────
 
-  Future<void> _pickPhoto(ImageSource source) async {
-    Navigator.pop(context); // close bottom sheet
+  Future<void> _pickAvatar(ImageSource source) async {
+    Navigator.pop(context);
     final picker = ImagePicker();
     final XFile? file = await picker.pickImage(
       source: source,
@@ -201,9 +253,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final ext = file.name.split('.').last.toLowerCase();
       final repo = ref.read(profileRepositoryProvider);
       final url = await repo.uploadAvatar(userId, bytes, ext);
-      setState(() {
-        _pendingAvatarUrl = url;
-      });
+      setState(() => _pendingAvatarUrl = url);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -219,7 +269,66 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
-  void _showPhotoOptions() {
+  void _showAvatarOptions() {
+    _showPhotoBottomSheet(
+      title: 'Profile Photo',
+      onCamera: () => _pickAvatar(ImageSource.camera),
+      onGallery: () => _pickAvatar(ImageSource.gallery),
+    );
+  }
+
+  // ── Cover photo picker ────────────────────────────────────────────────────
+
+  Future<void> _pickCover(ImageSource source) async {
+    Navigator.pop(context);
+    final picker = ImagePicker();
+    final XFile? file = await picker.pickImage(
+      source: source,
+      maxWidth: 1200,
+      maxHeight: 600,
+      imageQuality: 85,
+    );
+    if (file == null) return;
+
+    final client = ref.read(supabaseProvider);
+    final userId = client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    setState(() => _isUploadingCover = true);
+    try {
+      final Uint8List bytes = await file.readAsBytes();
+      final ext = file.name.split('.').last.toLowerCase();
+      final repo = ref.read(profileRepositoryProvider);
+      final url = await repo.uploadCoverPhoto(userId, bytes, ext);
+      setState(() => _pendingCoverUrl = url);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cover upload failed: $e'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUploadingCover = false);
+    }
+  }
+
+  void _showCoverOptions() {
+    _showPhotoBottomSheet(
+      title: 'Cover Photo',
+      onCamera: () => _pickCover(ImageSource.camera),
+      onGallery: () => _pickCover(ImageSource.gallery),
+    );
+  }
+
+  void _showPhotoBottomSheet({
+    required String title,
+    required VoidCallback onCamera,
+    required VoidCallback onGallery,
+  }) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -235,25 +344,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 Container(
                   width: 36,
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 12),
+                  margin: const EdgeInsets.only(bottom: 8),
                   decoration: BoxDecoration(
                     color: AppColors.grey4,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.camera_alt_outlined,
-                        color: AppColors.primary),
-                  ),
-                  title: Text('Take Photo', style: AppTextStyles.bodySemi),
-                  onTap: () => _pickPhoto(ImageSource.camera),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text(title, style: AppTextStyles.h3),
                 ),
                 ListTile(
                   leading: Container(
@@ -263,12 +362,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       color: AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.photo_library_outlined,
-                        color: AppColors.primary),
+                    child: const Icon(Icons.camera_alt_outlined, color: AppColors.primary),
                   ),
-                  title: Text('Choose from Gallery',
-                      style: AppTextStyles.bodySemi),
-                  onTap: () => _pickPhoto(ImageSource.gallery),
+                  title: Text('Take Photo', style: AppTextStyles.bodySemi),
+                  onTap: onCamera,
+                ),
+                ListTile(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.photo_library_outlined, color: AppColors.primary),
+                  ),
+                  title: Text('Choose from Gallery', style: AppTextStyles.bodySemi),
+                  onTap: onGallery,
                 ),
                 const SizedBox(height: 8),
               ],
@@ -291,38 +401,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     try {
       final updates = <String, dynamic>{
         'display_name': _displayNameCtrl.text.trim(),
-        'username': _usernameCtrl.text.trim(),
-        'bio': _bioCtrl.text.trim(),
-        'school': _schoolCtrl.text.trim(),
-        'programme': _programmeCtrl.text.trim(),
-        'faculty': _facultyCtrl.text.trim(),
-        'department': _departmentCtrl.text.trim(),
+        'username': _usernameCtrl.text.trim().isEmpty ? null : _usernameCtrl.text.trim(),
+        'bio': _bioCtrl.text.trim().isEmpty ? null : _bioCtrl.text.trim(),
+        'school': _schoolCtrl.text.trim().isEmpty ? null : _schoolCtrl.text.trim(),
+        'programme': _programmeCtrl.text.trim().isEmpty ? null : _programmeCtrl.text.trim(),
+        'faculty': _facultyCtrl.text.trim().isEmpty ? null : _facultyCtrl.text.trim(),
+        'department': _departmentCtrl.text.trim().isEmpty ? null : _departmentCtrl.text.trim(),
+        'campus': _campusCtrl.text.trim().isEmpty ? null : _campusCtrl.text.trim(),
         'year_of_study': _yearOfStudy,
-        'expected_graduation_year':
-            int.tryParse(_graduationYearCtrl.text.trim()),
-        'phone': _phoneCtrl.text.trim().isEmpty
-            ? null
-            : _phoneCtrl.text.trim(),
-        'hostel': _hostelCtrl.text.trim().isEmpty
-            ? null
-            : _hostelCtrl.text.trim(),
-        'instagram_url': _instagramCtrl.text.trim().isEmpty
-            ? null
-            : _instagramCtrl.text.trim(),
-        'linkedin_url': _linkedinCtrl.text.trim().isEmpty
-            ? null
-            : _linkedinCtrl.text.trim(),
-        'twitter_url': _twitterCtrl.text.trim().isEmpty
-            ? null
-            : _twitterCtrl.text.trim(),
-        'github_url': _githubCtrl.text.trim().isEmpty
-            ? null
-            : _githubCtrl.text.trim(),
-        'portfolio_url': _portfolioCtrl.text.trim().isEmpty
-            ? null
-            : _portfolioCtrl.text.trim(),
+        'expected_graduation_year': int.tryParse(_graduationYearCtrl.text.trim()),
+        'phone': _phoneCtrl.text.trim().isEmpty ? null : _phoneCtrl.text.trim(),
+        'hostel': _hostelCtrl.text.trim().isEmpty ? null : _hostelCtrl.text.trim(),
+        'instagram_url': _instagramCtrl.text.trim().isEmpty ? null : _instagramCtrl.text.trim(),
+        'tiktok_url': _tiktokCtrl.text.trim().isEmpty ? null : _tiktokCtrl.text.trim(),
+        'snapchat_url': _snapchatCtrl.text.trim().isEmpty ? null : _snapchatCtrl.text.trim(),
+        'linkedin_url': _linkedinCtrl.text.trim().isEmpty ? null : _linkedinCtrl.text.trim(),
+        'twitter_url': _twitterCtrl.text.trim().isEmpty ? null : _twitterCtrl.text.trim(),
+        'github_url': _githubCtrl.text.trim().isEmpty ? null : _githubCtrl.text.trim(),
+        'portfolio_url': _portfolioCtrl.text.trim().isEmpty ? null : _portfolioCtrl.text.trim(),
         'interests': _interests,
+        'skills': _skills,
+        'privacy_level': _privacyLevel,
         if (_pendingAvatarUrl != null) 'avatar_url': _pendingAvatarUrl,
+        if (_pendingCoverUrl != null) 'cover_photo_url': _pendingCoverUrl,
       };
 
       final repo = ref.read(profileRepositoryProvider);
@@ -352,13 +453,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final discard = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text('Discard changes?', style: AppTextStyles.h3),
-        content: Text(
-          'You have unsaved changes. Discard them?',
-          style: AppTextStyles.body,
-        ),
+        content: Text('You have unsaved changes. Discard them?', style: AppTextStyles.body),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -366,10 +463,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(
-              'Discard',
-              style: TextStyle(color: AppColors.error),
-            ),
+            child: Text('Discard', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -383,15 +477,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Widget build(BuildContext context) {
     final profileAsync = ref.watch(profileProvider);
 
-    // Populate controllers once the profile first arrives
     profileAsync.whenData((profile) {
       if (profile != null && _original == null) {
         _populateFromProfile(profile);
       }
     });
 
-    final currentAvatarUrl =
-        _pendingAvatarUrl ?? profileAsync.valueOrNull?.avatarUrl;
+    final currentAvatarUrl = _pendingAvatarUrl ?? profileAsync.valueOrNull?.avatarUrl;
+    final currentCoverUrl = _pendingCoverUrl ?? profileAsync.valueOrNull?.coverPhotoUrl;
     final initials = profileAsync.valueOrNull?.initials ?? 'U';
 
     return PopScope(
@@ -433,9 +526,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: Text(
                         'Save',
                         style: AppTextStyles.bodySemi.copyWith(
-                          color: _hasChanges
-                              ? AppColors.primary
-                              : AppColors.grey3,
+                          color: _hasChanges ? AppColors.primary : AppColors.grey3,
                         ),
                       ),
                     ),
@@ -446,25 +537,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           children: [
             profileAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Text('Error loading profile: $e',
-                    style: AppTextStyles.body),
-              ),
-              data: (_) => _buildForm(currentAvatarUrl, initials),
+              error: (e, _) => Center(child: Text('Error loading profile: $e', style: AppTextStyles.body)),
+              data: (_) => _buildForm(currentAvatarUrl, currentCoverUrl, initials),
             ),
-            // Photo upload overlay
-            if (_isUploadingPhoto)
+            if (_isUploadingPhoto || _isUploadingCover)
               Container(
                 color: Colors.black38,
-                child: const Center(
+                child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(color: Colors.white),
-                      SizedBox(height: 16),
+                      const CircularProgressIndicator(color: Colors.white),
+                      const SizedBox(height: 16),
                       Text(
-                        'Uploading photo…',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        _isUploadingCover ? 'Uploading cover…' : 'Uploading photo…',
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ],
                   ),
@@ -476,17 +563,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     );
   }
 
-  Widget _buildForm(String? avatarUrl, String initials) {
+  Widget _buildForm(String? avatarUrl, String? coverUrl, String initials) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Photo section ────────────────────────────────────────────────
-          _buildPhotoSection(avatarUrl, initials),
+          // ── Cover photo ──────────────────────────────────────────────────
+          _buildCoverSection(coverUrl),
+          const SizedBox(height: 16),
+
+          // ── Avatar ───────────────────────────────────────────────────────
+          _buildAvatarSection(avatarUrl, initials),
           const SizedBox(height: 32),
 
-          // ── BASIC section ────────────────────────────────────────────────
+          // ── BASIC INFO ───────────────────────────────────────────────────
           _SectionLabel(title: 'BASIC INFO'),
           const SizedBox(height: 12),
           _FormCard(
@@ -512,7 +603,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── ACADEMIC section ─────────────────────────────────────────────
+          // ── ACADEMIC ─────────────────────────────────────────────────────
           _SectionLabel(title: 'ACADEMIC'),
           const SizedBox(height: 12),
           _FormCard(
@@ -565,16 +656,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── CONTACT section ──────────────────────────────────────────────
+          // ── CONTACT ──────────────────────────────────────────────────────
           _SectionLabel(title: 'CONTACT'),
           const SizedBox(height: 12),
           _FormCard(
             children: [
               AppTextField(
-                label: 'Phone Number (optional)',
-                hint: 'e.g. +233 20 000 0000',
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
+                label: 'Campus',
+                hint: 'e.g. East Legon Campus',
+                controller: _campusCtrl,
+                capitalization: TextCapitalization.words,
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 20),
@@ -585,11 +676,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 capitalization: TextCapitalization.words,
                 onChanged: (_) => setState(() {}),
               ),
+              const SizedBox(height: 20),
+              AppTextField(
+                label: 'Phone Number (optional)',
+                hint: 'e.g. +233 20 000 0000',
+                controller: _phoneCtrl,
+                keyboardType: TextInputType.phone,
+                onChanged: (_) => setState(() {}),
+              ),
             ],
           ),
           const SizedBox(height: 24),
 
-          // ── SOCIAL LINKS section ─────────────────────────────────────────
+          // ── SOCIAL LINKS ─────────────────────────────────────────────────
           _SectionLabel(title: 'SOCIAL LINKS'),
           const SizedBox(height: 12),
           _FormCard(
@@ -600,6 +699,24 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 controller: _instagramCtrl,
                 icon: Icons.camera_alt_outlined,
                 iconColor: const Color(0xFFE1306C),
+                onChanged: (_) => setState(() {}),
+              ),
+              const SizedBox(height: 20),
+              _SocialField(
+                label: 'TikTok',
+                hint: 'https://tiktok.com/@yourhandle',
+                controller: _tiktokCtrl,
+                icon: Icons.music_note_rounded,
+                iconColor: const Color(0xFFFF0050),
+                onChanged: (_) => setState(() {}),
+              ),
+              const SizedBox(height: 20),
+              _SocialField(
+                label: 'Snapchat',
+                hint: 'https://snapchat.com/add/yourhandle',
+                controller: _snapchatCtrl,
+                icon: Icons.chat_bubble_outline_rounded,
+                iconColor: const Color(0xFFFFE921),
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 20),
@@ -642,53 +759,140 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── INTERESTS section ────────────────────────────────────────────
+          // ── INTERESTS ────────────────────────────────────────────────────
           _SectionLabel(title: 'INTERESTS'),
           const SizedBox(height: 12),
-          _InterestsGrid(
+          _ToggleChipGrid(
+            items: _kInterests,
             selected: _interests,
-            onToggle: (interest) {
+            onToggle: (item) {
               setState(() {
-                if (_interests.contains(interest)) {
-                  _interests.remove(interest);
+                if (_interests.contains(item)) {
+                  _interests.remove(item);
                 } else {
-                  _interests.add(interest);
+                  _interests.add(item);
                 }
               });
             },
+          ),
+          const SizedBox(height: 24),
+
+          // ── SKILLS ───────────────────────────────────────────────────────
+          _SectionLabel(title: 'SKILLS'),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              'Select skills that represent what you can do',
+              style: AppTextStyles.caption.copyWith(color: AppColors.grey2),
+            ),
+          ),
+          _ToggleChipGrid(
+            items: _kSkills,
+            selected: _skills,
+            activeColor: const Color(0xFF059669),
+            onToggle: (item) {
+              setState(() {
+                if (_skills.contains(item)) {
+                  _skills.remove(item);
+                } else {
+                  _skills.add(item);
+                }
+              });
+            },
+          ),
+          const SizedBox(height: 24),
+
+          // ── PRIVACY ──────────────────────────────────────────────────────
+          _SectionLabel(title: 'PRIVACY'),
+          const SizedBox(height: 12),
+          _PrivacySelector(
+            selected: _privacyLevel,
+            onSelect: (v) => setState(() {
+              _privacyLevel = v;
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPhotoSection(String? avatarUrl, String initials) {
+  Widget _buildCoverSection(String? coverUrl) {
+    return GestureDetector(
+      onTap: _showCoverOptions,
+      child: Stack(
+        children: [
+          Container(
+            height: 140,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0D2F7A), Color(0xFF4338CA), Color(0xFF6D28D9)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: coverUrl != null && coverUrl.isNotEmpty
+                ? Image.network(coverUrl, fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const SizedBox())
+                : null,
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.black.withOpacity(0.22),
+              ),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.45),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 0.8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.camera_alt_outlined, color: Colors.white, size: 16),
+                      SizedBox(width: 6),
+                      Text('Edit Cover Photo', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAvatarSection(String? avatarUrl, String initials) {
     return Center(
       child: GestureDetector(
-        onTap: _showPhotoOptions,
+        onTap: _showAvatarOptions,
         child: Stack(
           children: [
-            // Avatar circle
             Container(
               width: 96,
               height: 96,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                    color: AppColors.primary.withOpacity(0.2), width: 3),
+                border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 3),
               ),
               child: ClipOval(
                 child: avatarUrl != null && avatarUrl.isNotEmpty
                     ? Image.network(
                         avatarUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            _AvatarInitials(initials: initials),
+                        errorBuilder: (_, __, ___) => _AvatarInitials(initials: initials),
                       )
                     : _AvatarInitials(initials: initials),
               ),
             ),
-            // Camera badge
             Positioned(
               bottom: 0,
               right: 0,
@@ -698,11 +902,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  border:
-                      Border.all(color: AppColors.white, width: 2),
+                  border: Border.all(color: AppColors.white, width: 2),
                 ),
-                child: const Icon(Icons.camera_alt,
-                    color: Colors.white, size: 14),
+                child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
               ),
             ),
           ],
@@ -722,15 +924,12 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: AppTextStyles.labelS.copyWith(letterSpacing: 1.2),
-    );
+    return Text(title, style: AppTextStyles.labelS.copyWith(letterSpacing: 1.2));
   }
 }
 
 // ---------------------------------------------------------------------------
-// Card wrapper for form groups
+// Form card wrapper
 // ---------------------------------------------------------------------------
 
 class _FormCard extends StatelessWidget {
@@ -750,10 +949,7 @@ class _FormCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
       ),
     );
   }
@@ -781,10 +977,10 @@ class _UsernameField extends StatelessWidget {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.none,
           style: const TextStyle(fontSize: 14, color: AppColors.dark),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'yourhandle',
             prefixText: '@',
-            prefixStyle: const TextStyle(
+            prefixStyle: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
@@ -876,17 +1072,12 @@ class _YearSelector extends StatelessWidget {
               onTap: () => onSelect(active ? null : year),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color: active
-                      ? AppColors.primary
-                      : AppColors.primary.withOpacity(0.06),
+                  color: active ? AppColors.primary : AppColors.primary.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: active
-                        ? AppColors.primary
-                        : AppColors.primary.withOpacity(0.25),
+                    color: active ? AppColors.primary : AppColors.primary.withOpacity(0.25),
                   ),
                 ),
                 child: Text(
@@ -905,16 +1096,25 @@ class _YearSelector extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Interests toggle chips grid
+// Reusable toggle chip grid (interests + skills)
 // ---------------------------------------------------------------------------
 
-class _InterestsGrid extends StatelessWidget {
+class _ToggleChipGrid extends StatelessWidget {
+  final List<String> items;
   final List<String> selected;
   final ValueChanged<String> onToggle;
-  const _InterestsGrid({required this.selected, required this.onToggle});
+  final Color? activeColor;
+
+  const _ToggleChipGrid({
+    required this.items,
+    required this.selected,
+    required this.onToggle,
+    this.activeColor,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final color = activeColor ?? AppColors.primary;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -925,29 +1125,24 @@ class _InterestsGrid extends StatelessWidget {
       child: Wrap(
         spacing: 10,
         runSpacing: 10,
-        children: _kInterests.map((interest) {
-          final active = selected.contains(interest);
+        children: items.map((item) {
+          final active = selected.contains(item);
           return GestureDetector(
-            onTap: () => onToggle(interest),
+            onTap: () => onToggle(item),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: active
-                    ? AppColors.primary
-                    : AppColors.primary.withOpacity(0.06),
+                color: active ? color : color.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: active
-                      ? AppColors.primary
-                      : AppColors.primary.withOpacity(0.3),
+                  color: active ? color : color.withOpacity(0.3),
                 ),
               ),
               child: Text(
-                interest,
+                item,
                 style: AppTextStyles.label.copyWith(
-                  color: active ? Colors.white : AppColors.primary,
+                  color: active ? Colors.white : color,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -960,7 +1155,82 @@ class _InterestsGrid extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Initials fallback inside the avatar circle
+// Privacy level selector
+// ---------------------------------------------------------------------------
+
+class _PrivacySelector extends StatelessWidget {
+  final String selected;
+  final ValueChanged<String> onSelect;
+
+  const _PrivacySelector({required this.selected, required this.onSelect});
+
+  static const _options = [
+    (
+      value: 'public',
+      emoji: '🌍',
+      label: 'Public',
+      desc: 'Anyone can discover and view your profile',
+    ),
+    (
+      value: 'university',
+      emoji: '🏫',
+      label: 'University Only',
+      desc: 'Only verified students at your university',
+    ),
+    (
+      value: 'friends',
+      emoji: '👥',
+      label: 'Friends Only',
+      desc: 'Only people you are connected with',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: _options.map((opt) {
+        final active = selected == opt.value;
+        return GestureDetector(
+          onTap: () => onSelect(opt.value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: active ? AppColors.primary.withOpacity(0.07) : AppColors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: active ? AppColors.primary : AppColors.border,
+                width: active ? 1.5 : 0.5,
+              ),
+            ),
+            child: Row(
+              children: [
+                Text(opt.emoji, style: const TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(opt.label, style: AppTextStyles.bodySemi),
+                      const SizedBox(height: 2),
+                      Text(opt.desc, style: AppTextStyles.caption.copyWith(color: AppColors.grey2)),
+                    ],
+                  ),
+                ),
+                if (active)
+                  Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 20),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Avatar initials fallback
 // ---------------------------------------------------------------------------
 
 class _AvatarInitials extends StatelessWidget {
@@ -974,11 +1244,7 @@ class _AvatarInitials extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         initials,
-        style: const TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
-        ),
+        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: Colors.white),
       ),
     );
   }
