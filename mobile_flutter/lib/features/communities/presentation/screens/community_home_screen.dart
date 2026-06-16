@@ -28,20 +28,6 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
     super.dispose();
   }
 
-  Color _badgeColor(String? role) {
-    switch (role) {
-      case 'verified_student':
-      case 'class_representative':
-        return const Color(0xFF0066FF);
-      case 'src_executive':
-        return const Color(0xFF7C3AED);
-      case 'administrator':
-        return const Color(0xFFDC2626);
-      default:
-        return const Color(0xFF0066FF);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final communityAsync = ref.watch(communityDetailProvider(widget.communityId));
