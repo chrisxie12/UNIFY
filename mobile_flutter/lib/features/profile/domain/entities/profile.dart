@@ -40,6 +40,13 @@ class Profile extends Equatable {
   final int profileViews;
   final String privacyLevel; // 'public' | 'university' | 'friends'
 
+  // Leader verification
+  final bool isVerifiedLeader;
+  final String? leadershipRole;
+  final String? representedClass;
+  final String? representedDepartment;
+  final String verificationStatus; // 'none' | 'pending' | 'verified' | 'rejected'
+
   const Profile({
     required this.id,
     required this.email,
@@ -71,6 +78,11 @@ class Profile extends Equatable {
     this.isVerified = false,
     this.profileViews = 0,
     this.privacyLevel = 'public',
+    this.isVerifiedLeader = false,
+    this.leadershipRole,
+    this.representedClass,
+    this.representedDepartment,
+    this.verificationStatus = 'none',
   });
 
   /// Two-letter initials from display name; falls back to email initial.
@@ -179,5 +191,10 @@ class Profile extends Equatable {
         isVerified,
         profileViews,
         privacyLevel,
+        isVerifiedLeader,
+        leadershipRole,
+        representedClass,
+        representedDepartment,
+        verificationStatus,
       ];
 }
