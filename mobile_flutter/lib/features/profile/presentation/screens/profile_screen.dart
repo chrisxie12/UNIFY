@@ -271,19 +271,32 @@ class _BioSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasBio = profile.bio != null && profile.bio!.isNotEmpty;
+
+    if (!hasBio) {
+      return GestureDetector(
+        onTap: () => context.push('/app/profile/edit'),
+        child: Row(
+          children: [
+            Icon(Icons.edit_note_outlined, size: 18, color: AppColors.grey3),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Add a bio to tell people about yourself…',
+                style: AppTextStyles.body.copyWith(color: AppColors.grey3),
+              ),
+            ),
+            Icon(Icons.chevron_right, size: 18, color: AppColors.grey4),
+          ],
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: () => context.push('/app/profile/edit'),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              hasBio ? profile.bio! : 'Add a bio to tell people about yourself…',
-              style: hasBio
-                  ? AppTextStyles.body
-                  : AppTextStyles.body.copyWith(color: AppColors.grey3),
-            ),
-          ),
+          Expanded(child: Text(profile.bio!, style: AppTextStyles.body)),
           const SizedBox(width: 8),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -358,7 +371,8 @@ class _StatBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
-    final isZero = value == '0' && zeroLabel != null;
+    final isEmpty = value == '0';
+    final isZeroCta = isEmpty && zeroLabel != null;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -366,14 +380,17 @@ class _StatBox extends StatelessWidget {
           children: [
             Text(
               value,
-              style: AppTextStyles.h3.copyWith(color: primary),
+              // Gray for zero, colored for real data
+              style: AppTextStyles.h3.copyWith(
+                color: isEmpty ? AppColors.grey3 : primary,
+              ),
             ),
             const SizedBox(height: 2),
             Text(
-              isZero ? zeroLabel! : label,
+              isZeroCta ? zeroLabel! : label,
               style: AppTextStyles.caption.copyWith(
-                color: isZero ? primary : null,
-                fontWeight: isZero ? FontWeight.w600 : null,
+                color: isZeroCta ? primary : null,
+                fontWeight: isZeroCta ? FontWeight.w600 : null,
               ),
             ),
           ],
@@ -626,7 +643,7 @@ class _SocialLinkRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
           Container(
@@ -812,7 +829,7 @@ class _BadgeCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               color: badge.color.withOpacity(0.12),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(badge.icon, color: badge.color, size: 22),
           ),
@@ -866,6 +883,7 @@ class _AccountSection extends StatelessWidget {
                 icon: Icons.palette_outlined,
                 label: 'Appearance',
                 iconColor: const Color(0xFF8B5CF6),
+                showChevron: false,
                 onTap: () => ThemePickerSheet.show(context),
               ),
               const Divider(height: 1, indent: 56, endIndent: 0),

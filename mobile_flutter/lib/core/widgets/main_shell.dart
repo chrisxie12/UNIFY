@@ -9,10 +9,10 @@ class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.navigationShell});
 
   static const _tabs = [
-    _TabItem(icon: Icons.home_outlined,        activeIcon: Icons.home_rounded,        label: 'Feed'),
-    _TabItem(icon: Icons.grid_view_outlined,   activeIcon: Icons.grid_view_rounded,   label: 'Hubs'),
-    _TabItem(icon: Icons.chat_bubble_outline,  activeIcon: Icons.chat_bubble_rounded, label: 'Messages'),
-    _TabItem(icon: Icons.person_outline_rounded,activeIcon: Icons.person_rounded,     label: 'Profile'),
+    _TabItem(icon: Icons.home_outlined,         activeIcon: Icons.home_outlined,         label: 'Feed'),
+    _TabItem(icon: Icons.grid_view_outlined,    activeIcon: Icons.grid_view_outlined,    label: 'Hubs'),
+    _TabItem(icon: Icons.chat_bubble_outline,   activeIcon: Icons.chat_bubble_outline,   label: 'Messages'),
+    _TabItem(icon: Icons.person_outline_rounded,activeIcon: Icons.person_outline_rounded,label: 'Profile'),
   ];
 
   @override
