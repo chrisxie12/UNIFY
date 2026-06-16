@@ -47,7 +47,7 @@ class _UnifyBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           child: Row(
             children: List.generate(
               MainShell._tabs.length,
@@ -92,7 +92,7 @@ class _NavItem extends StatelessWidget {
               width: 44,
               height: 34,
               decoration: BoxDecoration(
-                color: active ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                color: active ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Stack(
@@ -100,7 +100,7 @@ class _NavItem extends StatelessWidget {
                 children: [
                   Icon(
                     active ? tab.activeIcon : tab.icon,
-                    color: active ? AppColors.primary : AppColors.grey3,
+                    color: active ? Theme.of(context).colorScheme.primary : AppColors.grey3,
                     size: 22,
                   ),
                   if (badge > 0)
@@ -133,7 +133,7 @@ class _NavItem extends StatelessWidget {
             Text(
               tab.label,
               style: AppTextStyles.caption.copyWith(
-                color: active ? AppColors.primary : AppColors.grey3,
+                color: active ? Theme.of(context).colorScheme.primary : AppColors.grey3,
                 fontWeight: active ? FontWeight.w600 : FontWeight.w400,
               ),
             ),

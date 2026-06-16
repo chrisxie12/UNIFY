@@ -104,7 +104,16 @@ class _ProfileSliverHeader extends ConsumerWidget {
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           decoration: BoxDecoration(
-            gradient: activeTheme.gradient,
+            gradient: LinearGradient(
+              colors: [
+                activeTheme.primaryLight.withOpacity(0.82),
+                activeTheme.primary,
+                activeTheme.primaryDark,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
           child: SafeArea(
             child: Column(
@@ -114,7 +123,7 @@ class _ProfileSliverHeader extends ConsumerWidget {
                 // Tappable avatar -> edit profile
                 GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
-                  child: _Avatar(profile: profile, radius: 44),
+                  child: _Avatar(profile: profile, radius: 44, showBorder: true),
                 ),
                 const SizedBox(height: 12),
                 // Name + verification badge
@@ -136,26 +145,27 @@ class _ProfileSliverHeader extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  profile.displayUsername,
-                  style: AppTextStyles.bodyS.copyWith(color: Colors.white60),
-                ),
+                if (profile.username != null && profile.username!.isNotEmpty)
+                  Text(
+                    '@${profile.username}',
+                    style: AppTextStyles.bodyS.copyWith(color: Colors.white60),
+                  )
+                else
+                  GestureDetector(
+                    onTap: () => context.push('/app/profile/edit'),
+                    child: Text(
+                      'Set your handle',
+                      style: AppTextStyles.bodyS.copyWith(
+                        color: Colors.white38,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.white38,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 12),
-                // School / programme / year chips
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: [
-                    if (profile.school != null && profile.school!.isNotEmpty)
-                      _HeaderChip(label: profile.school!),
-                    if (profile.programme != null &&
-                        profile.programme!.isNotEmpty)
-                      _HeaderChip(label: profile.programme!),
-                    if (profile.yearOfStudy != null)
-                      _HeaderChip(label: 'Year ${profile.yearOfStudy}'),
-                  ],
-                ),
+                // School chip only — details live in the Academic section
+                if (profile.school != null && profile.school!.isNotEmpty)
+                  _HeaderChip(label: profile.school!),
               ],
             ),
           ),
@@ -193,12 +203,14 @@ class _HeaderChip extends StatelessWidget {
 class _Avatar extends StatelessWidget {
   final Profile profile;
   final double radius;
-  const _Avatar({required this.profile, this.radius = 36});
+  final bool showBorder;
+  const _Avatar({required this.profile, this.radius = 36, this.showBorder = false});
 
   @override
   Widget build(BuildContext context) {
+    Widget inner;
     if (profile.avatarUrl != null && profile.avatarUrl!.isNotEmpty) {
-      return CircleAvatar(
+      inner = CircleAvatar(
         radius: radius,
         backgroundColor: AppColors.primaryLight,
         child: ClipOval(
@@ -207,19 +219,22 @@ class _Avatar extends StatelessWidget {
             width: radius * 2,
             height: radius * 2,
             fit: BoxFit.cover,
-            placeholder: (_, __) => _InitialsAvatar(
-              initials: profile.initials,
-              radius: radius,
-            ),
-            errorWidget: (_, __, ___) => _InitialsAvatar(
-              initials: profile.initials,
-              radius: radius,
-            ),
+            placeholder: (_, __) => _InitialsAvatar(initials: profile.initials, radius: radius),
+            errorWidget: (_, __, ___) => _InitialsAvatar(initials: profile.initials, radius: radius),
           ),
         ),
       );
+    } else {
+      inner = _InitialsAvatar(initials: profile.initials, radius: radius);
     }
-    return _InitialsAvatar(initials: profile.initials, radius: radius);
+    if (!showBorder) return inner;
+    return Container(
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.fromBorderSide(BorderSide(color: Colors.white, width: 2.5)),
+      ),
+      child: inner,
+    );
   }
 }
 
@@ -270,7 +285,14 @@ class _BioSection extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Icon(Icons.edit_outlined, size: 16, color: AppColors.grey3),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.edit_outlined, size: 13, color: AppColors.grey3),
+              const SizedBox(width: 3),
+              Text('Edit', style: AppTextStyles.caption),
+            ],
+          ),
         ],
       ),
     );
@@ -298,9 +320,14 @@ class _StatsRow extends StatelessWidget {
         children: [
           _StatBox(value: postCount.toString(), label: 'Posts'),
           _VerticalDivider(),
-          const _StatBox(value: '0', label: 'Communities'),
+          _StatBox(
+            value: '0',
+            label: 'Communities',
+            zeroLabel: 'Join',
+            onTap: () => context.go('/app/communities'),
+          ),
           _VerticalDivider(),
-          const _StatBox(value: '0', label: 'Friends'),
+          const _StatBox(value: '0', label: 'Friends', zeroLabel: 'Find'),
           _VerticalDivider(),
           const _StatBox(value: '0', label: 'Views'),
         ],
@@ -312,35 +339,45 @@ class _StatsRow extends StatelessWidget {
 class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 0.5,
-      height: 40,
-      color: AppColors.border,
-    );
+    return Container(width: 0.5, height: 40, color: AppColors.border);
   }
 }
 
 class _StatBox extends StatelessWidget {
   final String value;
   final String label;
-  const _StatBox({required this.value, required this.label});
+  final String? zeroLabel;
+  final VoidCallback? onTap;
+  const _StatBox({
+    required this.value,
+    required this.label,
+    this.zeroLabel,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final isZero = value == '0' && zeroLabel != null;
     return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: AppTextStyles.h3
-                .copyWith(color: Theme.of(context).colorScheme.primary),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: AppTextStyles.caption,
-          ),
-        ],
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: AppTextStyles.h3.copyWith(color: primary),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              isZero ? zeroLabel! : label,
+              style: AppTextStyles.caption.copyWith(
+                color: isZero ? primary : null,
+                fontWeight: isZero ? FontWeight.w600 : null,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -399,7 +436,7 @@ class _AcademicCard extends StatelessWidget {
     if (profile.expectedGraduationYear != null) {
       rows.add(_RowData(
         'Expected Graduation',
-        profile.expectedGraduationYear.toString(),
+        'Class of ${profile.expectedGraduationYear}',
       ));
     }
 
@@ -534,18 +571,24 @@ class _SocialLinksCard extends StatelessWidget {
             border: Border.all(color: AppColors.border, width: 0.5),
           ),
           child: links.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Icon(Icons.add_link, color: AppColors.grey3, size: 18),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Add social links',
-                        style:
-                            AppTextStyles.body.copyWith(color: AppColors.grey3),
-                      ),
-                    ],
+              ? InkWell(
+                  onTap: () => context.push('/app/profile/edit'),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(Icons.add_link, color: AppColors.grey3, size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Add LinkedIn, GitHub, and more',
+                            style: AppTextStyles.body.copyWith(color: AppColors.grey3),
+                          ),
+                        ),
+                        Icon(Icons.chevron_right, color: AppColors.grey4, size: 18),
+                      ],
+                    ),
                   ),
                 )
               : Column(
@@ -723,13 +766,12 @@ class _AchievementsSection extends StatelessWidget {
       children: [
         const _SectionHeader(title: 'Achievements'),
         SizedBox(
-          height: 96,
+          height: 120,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: badges.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) =>
-                _BadgeCard(badge: badges[index]),
+            itemBuilder: (context, index) => _BadgeCard(badge: badges[index]),
           ),
         ),
       ],
@@ -755,8 +797,8 @@ class _BadgeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 104,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+      width: 112,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -832,11 +874,36 @@ class _AccountSection extends StatelessWidget {
                 label: 'Sign Out',
                 iconColor: AppColors.error,
                 labelColor: AppColors.error,
+                showChevron: false,
                 onTap: () async {
-                  await ref
-                      .read(authNotifierProvider.notifier)
-                      .signOut();
-                  if (context.mounted) context.go('/get-started');
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      title: Text('Sign out?', style: AppTextStyles.h3),
+                      content: Text(
+                        'You\'ll need to sign in again to access your account.',
+                        style: AppTextStyles.body,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: Text(
+                            'Sign Out',
+                            style: TextStyle(color: AppColors.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true) {
+                    await ref.read(authNotifierProvider.notifier).signOut();
+                    if (context.mounted) context.go('/get-started');
+                  }
                 },
               ),
             ],
@@ -852,6 +919,7 @@ class _SettingsTile extends StatelessWidget {
   final String label;
   final Color iconColor;
   final Color? labelColor;
+  final bool showChevron;
   final VoidCallback onTap;
 
   const _SettingsTile({
@@ -860,6 +928,7 @@ class _SettingsTile extends StatelessWidget {
     required this.iconColor,
     required this.onTap,
     this.labelColor,
+    this.showChevron = true,
   });
 
   @override
@@ -889,7 +958,8 @@ class _SettingsTile extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right, color: AppColors.grey3, size: 18),
+            if (showChevron)
+              Icon(Icons.chevron_right, color: AppColors.grey3, size: 18),
           ],
         ),
       ),
@@ -946,9 +1016,9 @@ class _ProfileSkeleton extends StatelessWidget {
                   // Achievements
                   Row(
                     children: [
-                      _ShimmerBox(height: 96, width: 104, radius: 16),
+                      _ShimmerBox(height: 120, width: 112, radius: 16),
                       const SizedBox(width: 12),
-                      _ShimmerBox(height: 96, width: 104, radius: 16),
+                      _ShimmerBox(height: 120, width: 112, radius: 16),
                     ],
                   ),
                   const SizedBox(height: 20),

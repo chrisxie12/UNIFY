@@ -18,7 +18,7 @@ import '../providers/profile_provider.dart';
 
 const List<String> _kInterests = [
   'Technology',
-  'AI & Machine Learning',
+  'AI / ML',
   'Startups',
   'Football',
   'Basketball',
