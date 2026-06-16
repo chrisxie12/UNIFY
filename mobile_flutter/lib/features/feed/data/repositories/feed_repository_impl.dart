@@ -49,7 +49,7 @@ class FeedRepositoryImpl implements FeedRepository {
     // Build query: apply cursor filter BEFORE order/limit so types stay compatible
     final data = await _client
         .from('announcements')
-        .select('*, profiles(display_name, avatar_url)')
+        .select('*, profiles!author_id(display_name, avatar_url)')
         .filter('created_at', 'lt', cursor ?? '9999-12-31')
         .order('is_pinned', ascending: false)
         .order('created_at', ascending: false)
