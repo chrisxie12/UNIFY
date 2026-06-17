@@ -9,6 +9,7 @@ import '../../domain/entities/announcement.dart';
 import '../widgets/announcement_card.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../snapshots/presentation/widgets/snapshot_tray.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -152,9 +153,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
             ),
 
-            // ── Stories row ─────────────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: _StoriesRow(avatarUrl: avatarUrl, firstName: firstName),
+            // ── Snapshots (24-hour stories) ─────────────────────────────────
+            const SliverToBoxAdapter(
+              child: SnapshotTray(),
             ),
 
             // ── Post composer ────────────────────────────────────────────────
@@ -316,183 +317,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           ],
         ),
       ),
-    );
-  }
-}
-
-// ── Stories row ───────────────────────────────────────────────────────────────
-
-class _StoriesRow extends StatelessWidget {
-  final String? avatarUrl;
-  final String firstName;
-  const _StoriesRow({this.avatarUrl, required this.firstName});
-
-  static const _placeholders = [
-    _StoryData('Campus News', true,  null,              null,              Color(0xFF0066FF)),
-    _StoryData('Kwame A.',    false, 'KA',              null,              Color(0xFF8B5CF6)),
-    _StoryData('Ama B.',      false, 'AB',              null,              Color(0xFF10B981)),
-    _StoryData('Kofi M.',     false, 'KM',              null,              Color(0xFFEF4444)),
-    _StoryData('Efua T.',     false, 'ET',              null,              Color(0xFFF59E0B)),
-    _StoryData('Yaw O.',      false, 'YO',              null,              Color(0xFF0066FF)),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-      child: SizedBox(
-        height: 84,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            _MyStory(avatarUrl: avatarUrl, name: firstName),
-            const SizedBox(width: 14),
-            ..._placeholders.map((s) => Padding(
-              padding: const EdgeInsets.only(right: 14),
-              child: _StoryBubble(data: s),
-            )),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StoryData {
-  final String name;
-  final bool isUniversity;
-  final String? initials;
-  final String? imageUrl;
-  final Color color;
-  const _StoryData(this.name, this.isUniversity, this.initials, this.imageUrl, this.color);
-}
-
-class _MyStory extends StatelessWidget {
-  final String? avatarUrl;
-  final String name;
-  const _MyStory({this.avatarUrl, required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: 54,
-          height: 54,
-          child: Stack(
-            children: [
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.border, width: 2),
-                  color: const Color(0xFFF5F7FA),
-                ),
-                child: avatarUrl != null
-                    ? ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: avatarUrl!,
-                          fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) => _Initials(name.isNotEmpty ? name[0].toUpperCase() : 'U'),
-                        ),
-                      )
-                    : _Initials(name.isNotEmpty ? name[0].toUpperCase() : 'U'),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: context.primary,
-                    shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
-                  ),
-                  child: const Icon(Icons.add, size: 13, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 6),
-        const Text('Your Story', style: TextStyle(fontSize: 10, color: AppColors.grey2, fontWeight: FontWeight.w500)),
-      ],
-    );
-  }
-}
-
-class _StoryBubble extends StatelessWidget {
-  final _StoryData data;
-  const _StoryBubble({required this.data});
-
-  static const _ring = LinearGradient(
-    colors: [Color(0xFF0066FF), Color(0xFF8B5CF6)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    Widget inner = ClipOval(
-      child: Container(
-        color: data.color,
-        child: data.imageUrl != null
-            ? CachedNetworkImage(imageUrl: data.imageUrl!, fit: BoxFit.cover)
-            : data.isUniversity
-                ? const Icon(Icons.school_rounded, color: Colors.white, size: 22)
-                : Center(
-                    child: Text(
-                      data.initials ?? data.name[0],
-                      style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,
-                      ),
-                    ),
-                  ),
-      ),
-    );
-
-    Widget avatar;
-    if (data.isUniversity) {
-      avatar = Container(
-        width: 54, height: 54,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [data.color, data.color.withBlue(200)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: data.imageUrl != null
-            ? ClipOval(child: CachedNetworkImage(imageUrl: data.imageUrl!, fit: BoxFit.cover))
-            : const Icon(Icons.school_rounded, color: Colors.white, size: 24),
-      );
-    } else {
-      avatar = Container(
-        width: 54, height: 54,
-        decoration: const BoxDecoration(shape: BoxShape.circle, gradient: _ring),
-        padding: const EdgeInsets.all(2.5),
-        child: Container(
-          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-          padding: const EdgeInsets.all(1.5),
-          child: inner,
-        ),
-      );
-    }
-
-    return Column(
-      children: [
-        avatar,
-        const SizedBox(height: 6),
-        Text(
-          data.name.split(' ').first,
-          style: const TextStyle(fontSize: 10, color: AppColors.dark, fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }
