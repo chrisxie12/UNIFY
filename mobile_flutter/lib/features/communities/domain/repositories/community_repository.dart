@@ -7,4 +7,5 @@ abstract class CommunityRepository {
   Future<bool> joinCommunity(String communityId, String userId);
   Future<bool> leaveCommunity(String communityId, String userId);
   Future<bool> updateMemberCount(String communityId);
+  Future<List<CommunityDetailModel>> getRecommendedCommunities(String userId);
 }

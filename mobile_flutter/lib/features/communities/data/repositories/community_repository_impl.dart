@@ -109,6 +109,45 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
+  Future<List<CommunityDetailModel>> getRecommendedCommunities(String userId) async {
+    final profile = await _client
+        .from('profiles')
+        .select('university_id, programme, department, level, hall_residence')
+        .filter('id', 'eq', userId)
+        .single();
+
+    final response = await _client
+        .from('communities')
+        .select('*')
+        .order('member_count', ascending: false) as List;
+
+    final universityId = profile['university_id'] as String?;
+    final programme = (profile['programme'] as String?)?.toLowerCase() ?? '';
+    final department = (profile['department'] as String?)?.toLowerCase() ?? '';
+    final level = (profile['level'] as String?)?.toLowerCase() ?? '';
+
+    final scored = response.map((c) {
+      int score = 0;
+      final cDept = (c['department'] as String?)?.toLowerCase() ?? '';
+      final cLevel = (c['level'] as String?)?.toLowerCase() ?? '';
+      final cProgramme = (c['programme'] as String?)?.toLowerCase() ?? '';
+
+      if (cDept == department) score += 100;
+      if (cLevel == level) score += 50;
+      if (cProgramme == programme) score += 75;
+      if (c['university_id'] == universityId) score += 25;
+      if (c['community_type'] == 'department' || c['community_type'] == 'class') score += 30;
+      score += (c['member_count'] as int? ?? 0);
+
+      return {'community': c, 'score': score};
+    }).toList();
+
+    scored.sort((a, b) => (b['score'] as int).compareTo(a['score'] as int));
+
+    return scored.take(10).map((s) => CommunityDetailModel.fromJson(s['community'] as Map<String, dynamic>)).toList();
+  }
+
+  @override
   Future<bool> updateMemberCount(String communityId) async {
     return true;
   }
