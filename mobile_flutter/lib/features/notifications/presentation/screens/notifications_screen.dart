@@ -64,7 +64,11 @@ class NotificationsScreen extends ConsumerWidget {
                     ref.invalidate(unreadCountProvider(userId));
                   }
                   if (notification.referenceType == 'community_request' && notification.referenceId != null) {
-                    context.push('/admin');
+                    if (notification.type == 'admin_new_request') {
+                      context.push('/admin');
+                    } else {
+                      context.push('/community-request');
+                    }
                   }
                 },
               );
@@ -86,6 +90,8 @@ class _NotificationTile extends StatelessWidget {
     switch (notification.type) {
       case 'community_approved': return Icons.check_circle;
       case 'community_rejected': return Icons.cancel;
+      case 'community_changes_requested': return Icons.feedback_rounded;
+      case 'admin_new_request': return Icons.group_add_rounded;
       case 'announcement_posted': return Icons.campaign;
       case 'discussion_reply': return Icons.reply;
       case 'resource_uploaded': return Icons.upload_file;
@@ -107,6 +113,10 @@ class _NotificationTile extends StatelessWidget {
       case 'community_rejected':
       case 'verification_rejected':
         return Colors.red;
+      case 'community_changes_requested':
+        return const Color(0xFFF59E0B);
+      case 'admin_new_request':
+        return const Color(0xFF8B5CF6);
       case 'announcement_posted':
         return Colors.orange;
       default:

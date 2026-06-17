@@ -23,7 +23,15 @@ import '../../features/leadership/presentation/screens/community_request_screen.
 import '../../features/leadership/presentation/screens/class_rep_dashboard_screen.dart';
 import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
 import '../../features/verification/presentation/screens/verification_request_screen.dart';
+import '../../features/communities/presentation/screens/community_members_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
+import '../../features/posts/presentation/screens/create_post_screen.dart';
+import '../../features/posts/presentation/screens/post_detail_screen.dart';
+import '../../features/polls/presentation/screens/create_poll_screen.dart';
+import '../../features/events/presentation/screens/event_detail_screen.dart';
+import '../../features/resources/presentation/screens/resource_upload_screen.dart';
+import '../../features/admin/presentation/screens/founder_analytics_screen.dart';
+import '../../features/admin/presentation/screens/admin_notification_center_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -87,6 +95,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
+      GoRoute(path: '/admin/analytics', builder: (_, __) => const FounderAnalyticsScreen()),
+      GoRoute(path: '/admin/notifications', builder: (_, __) => const AdminNotificationCenterScreen()),
       GoRoute(
         path: '/community/:id',
         builder: (_, state) => CommunityDetailScreen(
@@ -99,6 +109,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+      GoRoute(
+        path: '/post/:id',
+        builder: (_, state) => PostDetailScreen(postId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/event/:id',
+        builder: (_, state) => EventDetailScreen(eventId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/community/:id/create-post',
+        builder: (_, state) => CreatePostScreen(communityId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/community/:id/create-poll',
+        builder: (_, state) => CreatePollScreen(communityId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/community/:id/upload-resource',
+        builder: (_, state) => ResourceUploadScreen(communityId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/community/:id/members',
+        builder: (_, state) => CommunityMembersScreen(communityId: state.pathParameters['id']!),
+      ),
 
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),

@@ -16,6 +16,7 @@ class CommunityRequestModel {
   final String? reviewedBy;
   final DateTime? reviewedAt;
   final DateTime createdAt;
+  final String? className;
 
   const CommunityRequestModel({
     required this.id,
@@ -35,6 +36,7 @@ class CommunityRequestModel {
     this.reviewedBy,
     this.reviewedAt,
     required this.createdAt,
+    this.className,
   });
 
   factory CommunityRequestModel.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class CommunityRequestModel {
       reviewedBy: json['reviewed_by'] as String?,
       reviewedAt: json['reviewed_at'] != null ? DateTime.parse(json['reviewed_at'] as String) : null,
       createdAt: DateTime.parse(json['created_at'] as String),
+      className: json['class_name'] as String?,
     );
   }
 
@@ -72,6 +75,7 @@ class CommunityRequestModel {
       'academic_year': academicYear,
       'estimated_student_count': estimatedStudentCount,
       'purpose': purpose,
+      'class_name': className,
     };
   }
 }

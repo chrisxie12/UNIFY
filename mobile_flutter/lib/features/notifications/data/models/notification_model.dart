@@ -52,6 +52,8 @@ class NotificationModel {
   static const Map<String, String> typeLabels = {
     'community_approved': 'Community Approved',
     'community_rejected': 'Community Rejected',
+    'community_changes_requested': 'More Information Needed',
+    'admin_new_request': 'New Community Request',
     'announcement_posted': 'New Announcement',
     'discussion_reply': 'New Reply',
     'discussion_mention': 'Mentioned in Discussion',
@@ -69,6 +71,8 @@ class NotificationModel {
   static const Map<String, String> typeIcons = {
     'community_approved': 'check_circle',
     'community_rejected': 'cancel',
+    'community_changes_requested': 'feedback',
+    'admin_new_request': 'group_add',
     'announcement_posted': 'campaign',
     'discussion_reply': 'reply',
     'resource_uploaded': 'upload_file',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -7,6 +8,7 @@ import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
 import '../../../verification/data/models/verification_request_model.dart';
+import 'representative_detail_screen.dart';
 
 // ── Admin Local Providers ────────────────────────────────────
 
@@ -70,6 +72,24 @@ final _announcementStatsProvider = FutureProvider.autoDispose<_AdminStats>((ref)
   );
 });
 
+final _adminUnreadNotificationsProvider = FutureProvider.autoDispose<int>((ref) async {
+  ref.watch(authStateProvider);
+  final client = ref.read(supabaseProvider);
+  final user = client.auth.currentUser;
+  if (user == null) return 0;
+
+  final data = await client
+      .from('notifications')
+      .select()
+      .filter('user_id', 'eq', user.id)
+      .order('created_at', ascending: false) as List;
+
+  return data
+      .where((n) => n['is_read'] == false)
+      .where((n) => ['admin_new_request', 'community_changes_requested'].contains(n['type']))
+      .length;
+});
+
 // ── Screen ───────────────────────────────────────────────────
 
 class AdminScreen extends ConsumerWidget {
@@ -77,11 +97,43 @@ class AdminScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final unreadAsync = ref.watch(_adminUnreadNotificationsProvider);
+    final unreadCount = unreadAsync.valueOrNull ?? 0;
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Admin Dashboard'),
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined),
+                  onPressed: () => context.push('/admin/notifications'),
+                ),
+                if (unreadCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: const BoxDecoration(
+                        color: AppColors.error,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          unreadCount > 9 ? '9+' : '$unreadCount',
+                          style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Communities'),
@@ -375,6 +427,19 @@ class _RequestCard extends ConsumerWidget {
                 ],
                 const SizedBox(height: 12),
                 Text(_timeAgo(request.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                const SizedBox(height: 12),
+                GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => RepresentativeDetailScreen(userId: request.requesterId),
+                  )),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person_search_rounded, size: 14, color: AppColors.primary),
+                      const SizedBox(width: 6),
+                      Text('View Representative', style: TextStyle(fontSize: 12, color: context.primary, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -384,9 +449,39 @@ class _RequestCard extends ConsumerWidget {
             const Divider(height: 1, color: AppColors.border),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _handleRequestInfo(context, ref),
+                          icon: const Icon(Icons.feedback_rounded, size: 16),
+                          label: const Text('Request Info'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.warning,
+                            side: const BorderSide(color: AppColors.warning),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: () => _handleAction(context, ref, 'approved'),
+                          icon: const Icon(Icons.check_rounded, size: 16),
+                          label: const Text('Approve'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.success,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  SizedBox(
+                    width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: () => _handleAction(context, ref, 'rejected'),
                       icon: const Icon(Icons.close_rounded, size: 16),
@@ -394,18 +489,6 @@ class _RequestCard extends ConsumerWidget {
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.error,
                         side: const BorderSide(color: AppColors.error),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: () => _handleAction(context, ref, 'approved'),
-                      icon: const Icon(Icons.check_rounded, size: 16),
-                      label: const Text('Approve'),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.success,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
@@ -447,6 +530,91 @@ class _RequestCard extends ConsumerWidget {
     return '${dt.day}/${dt.month}/${dt.year}';
   }
 
+  Future<void> _handleRequestInfo(BuildContext context, WidgetRef ref) async {
+    final feedbackCtrl = TextEditingController();
+    final feedback = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Request More Information'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Provide feedback on what information is needed:', style: TextStyle(fontSize: 13, color: AppColors.grey1)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: feedbackCtrl,
+              decoration: InputDecoration(
+                hintText: 'e.g. Please provide evidence of your leadership position',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              ),
+              maxLines: 3,
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, feedbackCtrl.text.trim()),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.warning),
+            child: const Text('Send Request'),
+          ),
+        ],
+      ),
+    );
+
+    if (feedback == null || feedback.isEmpty) return;
+
+    try {
+      final client = ref.read(supabaseProvider);
+      final admin = client.auth.currentUser;
+      if (admin == null) return;
+
+      final repo = ref.read(leadershipRepositoryProvider);
+      await repo.updateRequestStatus(
+        requestId: request.id,
+        status: 'changes_requested',
+        adminFeedback: feedback,
+        reviewedBy: admin.id,
+      );
+
+      try {
+        await client.rpc('create_notification', params: {
+          'p_user_id': request.requesterId,
+          'p_type': 'community_changes_requested',
+          'p_title': 'More Information Needed',
+          'p_message': 'Admin requested changes for "${request.communityName}": $feedback',
+          'p_ref_id': request.id,
+          'p_ref_type': 'community_request',
+        });
+      } catch (_) {}
+
+      ref.invalidate(_pendingRequestsProvider);
+      ref.invalidate(_allRequestsProvider);
+      ref.invalidate(_adminStatsProvider);
+      ref.invalidate(_adminUnreadNotificationsProvider);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Feedback sent to requester.'),
+            backgroundColor: AppColors.warning,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
+        );
+      }
+    }
+  }
+
   Future<void> _handleAction(BuildContext context, WidgetRef ref, String status) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -482,18 +650,39 @@ class _RequestCard extends ConsumerWidget {
       );
 
       if (status == 'approved') {
-        // Fetch full request data and create community
         final requestData = await client
             .from('community_requests')
             .select()
             .eq('id', request.id)
             .single();
         await repo.approveAndCreateCommunity(requestData, request.id);
+        try {
+          await client.rpc('create_notification', params: {
+            'p_user_id': request.requesterId,
+            'p_type': 'community_approved',
+            'p_title': 'Community Approved',
+            'p_message': 'Your request for "${request.communityName}" has been approved.',
+            'p_ref_id': request.id,
+            'p_ref_type': 'community_request',
+          });
+        } catch (_) {}
+      } else if (status == 'rejected') {
+        try {
+          await client.rpc('create_notification', params: {
+            'p_user_id': request.requesterId,
+            'p_type': 'community_rejected',
+            'p_title': 'Community Request Rejected',
+            'p_message': 'Your request for "${request.communityName}" was not approved.',
+            'p_ref_id': request.id,
+            'p_ref_type': 'community_request',
+          });
+        } catch (_) {}
       }
 
       ref.invalidate(_pendingRequestsProvider);
       ref.invalidate(_allRequestsProvider);
       ref.invalidate(_adminStatsProvider);
+      ref.invalidate(_adminUnreadNotificationsProvider);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1008,40 +1197,67 @@ class _VerificationCard extends ConsumerWidget {
 
   Future<void> _handleVerification(BuildContext context, WidgetRef ref, String status) async {
     final notesCtrl = TextEditingController();
-    final confirm = await showDialog<bool>(
+    final roles = await ref.read(leadershipRepositoryProvider).getAllRoles();
+    String? selectedRoleId;
+
+    final result = await showDialog<Map<String, dynamic>>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(status == 'approved' ? 'Approve Verification?' : 'Reject Verification?'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(status == 'approved'
-                ? 'This will mark the user as a verified leader.'
-                : 'The user will be notified of the rejection.'),
-            const SizedBox(height: 12),
-            TextField(
-              controller: notesCtrl,
-              decoration: InputDecoration(
-                hintText: 'Admin notes (optional)',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(status == 'approved' ? 'Approve Verification?' : 'Reject Verification?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(status == 'approved'
+                  ? 'This will mark the user as a verified leader.'
+                  : 'The user will be notified of the rejection.'),
+              if (status == 'approved' && roles.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedRoleId,
+                  decoration: InputDecoration(
+                    hintText: 'Select role',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    isDense: true,
+                  ),
+                  items: roles.map((r) => DropdownMenuItem(
+                    value: r.id,
+                    child: Text(r.title, style: const TextStyle(fontSize: 13)),
+                  )).toList(),
+                  onChanged: (v) => setDialogState(() => selectedRoleId = v),
+                ),
+                const SizedBox(height: 8),
+                Text('Default: ${request.position}', style: const TextStyle(fontSize: 11, color: AppColors.grey3, fontStyle: FontStyle.italic)),
+              ],
+              const SizedBox(height: 12),
+              TextField(
+                controller: notesCtrl,
+                decoration: InputDecoration(
+                  hintText: 'Admin notes (optional)',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                ),
+                maxLines: 2,
               ),
-              maxLines: 2,
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, {'confirmed': true, 'roleId': selectedRoleId}),
+              child: Text(status == 'approved' ? 'Approve' : 'Reject',
+                  style: TextStyle(color: status == 'approved' ? AppColors.success : AppColors.error, fontWeight: FontWeight.w600)),
             ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(status == 'approved' ? 'Approve' : 'Reject',
-                style: TextStyle(color: status == 'approved' ? AppColors.success : AppColors.error, fontWeight: FontWeight.w600)),
-          ),
-        ],
       ),
     );
-    if (confirm != true) return;
+    if (result == null || result['confirmed'] != true) return;
 
     try {
       final client = ref.read(supabaseProvider);
@@ -1056,13 +1272,31 @@ class _VerificationCard extends ConsumerWidget {
       }).eq('id', request.id);
 
       if (status == 'approved') {
+        final selectedRole = result['roleId'] as String?;
+        final roleTitle = selectedRole != null
+            ? roles.firstWhere((r) => r.id == selectedRole, orElse: () => roles.first).title
+            : request.position;
+
         await client.from('profiles').update({
           'is_verified_leader': true,
-          'leadership_role': request.position,
+          'leadership_role': roleTitle,
           'represented_class': request.classRepresented,
           'represented_department': request.department,
           'verification_status': 'verified',
         }).eq('id', request.userId);
+
+        if (selectedRole != null) {
+          final userProfile = await client.from('profiles').select('university_id').eq('id', request.userId).single();
+          await client.from('user_leadership').insert({
+            'user_id': request.userId,
+            'role_id': selectedRole,
+            'university_id': userProfile['university_id'],
+            'department': request.department,
+            'academic_year': request.academicYear,
+            'verified_by': admin.id,
+            'verified_at': DateTime.now().toUtc().toIso8601String(),
+          });
+        }
       } else {
         await client.from('profiles').update({
           'verification_status': 'rejected',
@@ -1075,6 +1309,19 @@ class _VerificationCard extends ConsumerWidget {
         'performed_by': admin.id,
         'notes': notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim(),
       });
+
+      try {
+        await client.rpc('create_notification', params: {
+          'p_user_id': request.userId,
+          'p_type': status == 'approved' ? 'verification_approved' : 'verification_rejected',
+          'p_title': status == 'approved' ? 'Verification Approved' : 'Verification Rejected',
+          'p_message': status == 'approved'
+              ? 'You have been verified as a ${request.position}.'
+              : 'Your verification request as ${request.position} was not approved.',
+          'p_ref_id': request.id,
+          'p_ref_type': 'verification_request',
+        });
+      } catch (_) {}
 
       ref.invalidate(_pendingVerificationProvider);
       ref.invalidate(_allVerificationProvider);
