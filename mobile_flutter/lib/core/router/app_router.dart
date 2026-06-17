@@ -23,7 +23,6 @@ import '../../features/leadership/presentation/screens/community_request_screen.
 import '../../features/leadership/presentation/screens/class_rep_dashboard_screen.dart';
 import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
 import '../../features/verification/presentation/screens/verification_request_screen.dart';
-import '../../features/communities/presentation/screens/community_home_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
@@ -99,10 +98,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/announcement-request', builder: (_, __) => const AnnouncementRequestScreen()),
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
-      GoRoute(
-        path: '/community/:id',
-        builder: (_, state) => CommunityHomeScreen(communityId: state.pathParameters['id']!),
-      ),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
 
       StatefulShellRoute.indexedStack(

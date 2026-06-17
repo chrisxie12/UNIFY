@@ -282,18 +282,27 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                     else if (!feedState.hasMore)
                       SliverToBoxAdapter(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 56),
-                          child: Row(
+                          padding: const EdgeInsets.fromLTRB(24, 32, 24, 96),
+                          child: Column(
                             children: [
-                              const Expanded(child: Divider(color: AppColors.border)),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(
-                                  "You're all caught up",
-                                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                              Container(
+                                width: 64, height: 64,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.background,
+                                  shape: BoxShape.circle,
                                 ),
+                                child: const Icon(Icons.check_circle_outline_rounded, size: 32, color: AppColors.grey3),
                               ),
-                              const Expanded(child: Divider(color: AppColors.border)),
+                              const SizedBox(height: 12),
+                              const Text(
+                                "You're all caught up",
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.grey2),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Pull down to refresh for new updates',
+                                style: TextStyle(fontSize: 12, color: AppColors.grey3),
+                              ),
                             ],
                           ),
                         ),
@@ -419,40 +428,64 @@ class _StoryBubble extends StatelessWidget {
   final _StoryData data;
   const _StoryBubble({required this.data});
 
+  static const _ring = LinearGradient(
+    colors: [Color(0xFF0066FF), Color(0xFF8B5CF6)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 54,
-          height: 54,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: data.color,
-            border: data.isUniversity
-                ? null
-                : Border.all(color: context.primary.withValues(alpha: 0.3), width: 2),
-            gradient: data.isUniversity
-                ? LinearGradient(
-                    colors: [data.color, data.color.withBlue(200)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-          ),
-          child: data.imageUrl != null
-              ? ClipOval(child: CachedNetworkImage(imageUrl: data.imageUrl!, fit: BoxFit.cover))
-              : data.isUniversity
-                  ? const Icon(Icons.school_rounded, color: Colors.white, size: 24)
-                  : Center(
-                      child: Text(
-                        data.initials ?? data.name[0],
-                        style: const TextStyle(
-                          fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white,
-                        ),
+    Widget inner = ClipOval(
+      child: Container(
+        color: data.color,
+        child: data.imageUrl != null
+            ? CachedNetworkImage(imageUrl: data.imageUrl!, fit: BoxFit.cover)
+            : data.isUniversity
+                ? const Icon(Icons.school_rounded, color: Colors.white, size: 22)
+                : Center(
+                    child: Text(
+                      data.initials ?? data.name[0],
+                      style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white,
                       ),
                     ),
+                  ),
+      ),
+    );
+
+    Widget avatar;
+    if (data.isUniversity) {
+      avatar = Container(
+        width: 54, height: 54,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [data.color, data.color.withBlue(200)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
+        child: data.imageUrl != null
+            ? ClipOval(child: CachedNetworkImage(imageUrl: data.imageUrl!, fit: BoxFit.cover))
+            : const Icon(Icons.school_rounded, color: Colors.white, size: 24),
+      );
+    } else {
+      avatar = Container(
+        width: 54, height: 54,
+        decoration: const BoxDecoration(shape: BoxShape.circle, gradient: _ring),
+        padding: const EdgeInsets.all(2.5),
+        child: Container(
+          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          padding: const EdgeInsets.all(1.5),
+          child: inner,
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        avatar,
         const SizedBox(height: 6),
         Text(
           data.name.split(' ').first,
@@ -489,40 +522,43 @@ class _ComposerBar extends StatelessWidget {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.border),
-                child: avatarUrl != null
-                    ? ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: avatarUrl!,
-                          fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) => _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
-                        ),
-                      )
-                    : _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Share an update, idea or question...',
-                  style: const TextStyle(fontSize: 13, color: AppColors.grey2),
+      child: Material(
+        elevation: 2,
+        shadowColor: Colors.black.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.surface),
+                  child: avatarUrl != null
+                      ? ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: avatarUrl!,
+                            fit: BoxFit.cover,
+                            errorWidget: (_, __, ___) => _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
+                          ),
+                        )
+                      : _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
                 ),
-              ),
-              const Icon(Icons.photo_camera_outlined, color: AppColors.grey2, size: 19),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Share an update, idea or question…',
+                    style: const TextStyle(fontSize: 13.5, color: AppColors.grey2),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.photo_camera_outlined, color: AppColors.grey2, size: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -557,9 +593,12 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               unselectedLabelColor: AppColors.grey2,
               labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              indicatorColor: context.primary,
-              indicatorWeight: 2.5,
-              indicatorSize: TabBarIndicatorSize.label,
+              indicator: BoxDecoration(
+                color: context.primary.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 7),
               dividerColor: Colors.transparent,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               tabs: tabs.map((t) => Tab(text: t, height: 43)).toList(),

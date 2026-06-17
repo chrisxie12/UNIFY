@@ -17,10 +17,11 @@ class AnnouncementCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          boxShadow: [
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          border: Border.all(color: const Color(0xFFF3F4F6)),
+          boxShadow: const [
             BoxShadow(color: Color(0x09000000), blurRadius: 12, offset: Offset(0, 3)),
             BoxShadow(color: Color(0x05000000), blurRadius: 4),
           ],
@@ -289,18 +290,17 @@ class _Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
+      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
       child: Row(
         children: [
-          const Icon(Icons.remove_red_eye_outlined, size: 13, color: AppColors.grey2),
+          const Icon(Icons.remove_red_eye_outlined, size: 14, color: AppColors.grey3),
           const SizedBox(width: 4),
           Text(
             '${item.viewCount}',
-            style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+            style: const TextStyle(fontSize: 12, color: AppColors.grey3),
           ),
           const Spacer(),
           _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),
-          const SizedBox(width: 18),
           _FooterBtn(icon: Icons.reply_rounded, label: 'Share'),
         ],
       ),
@@ -315,13 +315,16 @@ class _FooterBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 15, color: AppColors.grey2),
-        const SizedBox(width: 4),
-        Text(label,
-            style: const TextStyle(fontSize: 12, color: AppColors.grey2, fontWeight: FontWeight.w500)),
-      ],
+    return TextButton.icon(
+      onPressed: () {},
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.grey2,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minimumSize: Size.zero,
+      ),
+      icon: Icon(icon, size: 16),
+      label: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
     );
   }
 }

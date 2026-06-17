@@ -1528,33 +1528,43 @@ class _VerificationStatusCard extends StatelessWidget {
       );
     }
 
-    // status == 'none'
-    return _Card(
+    // status == 'none' — tonal blue CTA
+    return GestureDetector(
       onTap: () => context.push('/verification-request'),
-      child: Row(
-        children: [
-          Container(
-            width: 42, height: 42,
-            decoration: BoxDecoration(
-              color: context.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEFF6FF), // blue-50
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFBFDBFE)), // blue-200
+          boxShadow: AppColors.cardShadow,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42, height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.verified_rounded, color: Colors.white, size: 22),
             ),
-            child: Icon(Icons.verified_user_rounded, color: context.primary, size: 22),
-          ),
-          const SizedBox(width: 14),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Get Verified', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                SizedBox(height: 2),
-                Text('Apply for student leader verification',
-                    style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
-              ],
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Get Verified', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                  SizedBox(height: 2),
+                  Text('Apply for student leader verification',
+                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                ],
+              ),
             ),
-          ),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
-        ],
+            const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.grey2),
+          ],
+        ),
       ),
     );
   }
