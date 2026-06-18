@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'core/services/crash_reporting_service.dart';
@@ -34,13 +33,6 @@ Future<void> bootstrap(
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-
-      try {
-        await Firebase.initializeApp();
-      } catch (e) {
-        debugPrint('[Bootstrap] Firebase init skipped: $e');
-      }
-
       final widget = await builder();
       runApp(widget);
     },
