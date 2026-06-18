@@ -9,16 +9,21 @@ import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: 'assets/.env');
   await bootstrap(() async {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await dotenv.load(fileName: 'assets/.env');
     await Hive.initFlutter();
     final supabaseUrl = dotenv.env['SUPABASE_URL'];
     final supabaseKey = dotenv.env['SUPABASE_ANON_KEY'];
     if (supabaseUrl != null && supabaseKey != null) {
-      try {
-        await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseKey);
-      } catch (_) {}
+      await Supabase.initialize(
+        url: supabaseUrl,
+        anonKey: supabaseKey,
+        authOptions: const FlutterAuthClientOptions(
+          autoRefreshToken: true,
+          authFlowType: AuthFlowType.pkce,
+        ),
+      );
     }
     return const ProviderScope(child: UnifyApp());
   }, sentryDsn: dotenv.env['SENTRY_DSN']);
