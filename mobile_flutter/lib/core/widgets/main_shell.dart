@@ -67,9 +67,9 @@ class _UnifyBottomNav extends StatelessWidget {
             child: Container(
               height: _pillHeight,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.97),
+                color: context.cardBg.withValues(alpha: 0.97),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: const Color(0xFFE4E4E7), width: 0.5),
+                border: Border.all(color: context.borderCol, width: 0.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.12),

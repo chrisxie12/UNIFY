@@ -71,7 +71,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     final avatarUrl = user?.userMetadata?['avatar_url'] as String?;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: RefreshIndicator(
         onRefresh: () => ref.read(feedProvider.notifier).refresh(),
         color: context.primary,
@@ -80,12 +80,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           slivers: [
             // ── App bar ─────────────────────────────────────────────────────
             SliverAppBar(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
+              backgroundColor: context.appBarBg,
+              surfaceTintColor: context.appBarBg,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0.6,
-              shadowColor: AppColors.border,
+              shadowColor: context.borderCol,
               toolbarHeight: 58,
               title: Row(
                 children: [
@@ -119,7 +119,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.search_rounded, color: AppColors.dark, size: 22),
+                  icon: Icon(Icons.search_rounded, color: context.textPrimary, size: 22),
                   onPressed: () {},
                   tooltip: 'Search',
                 ),
@@ -127,7 +127,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   alignment: Alignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.notifications_outlined, color: AppColors.dark, size: 22),
+                      icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 22),
                       onPressed: () => context.push('/notifications'),
                       tooltip: 'Notifications',
                     ),
@@ -149,7 +149,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ],
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(1),
-                child: Container(height: 1, color: AppColors.border),
+                child: Container(height: 1, color: context.borderCol),
               ),
             ),
 
@@ -197,14 +197,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                           child: const Icon(Icons.wifi_off_rounded, size: 36, color: Color(0xFF9CA3AF)),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'Could not load feed',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.dark),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           e.toString(),
-                          style: const TextStyle(fontSize: 13, color: AppColors.grey2),
+                          style: TextStyle(fontSize: 13, color: context.textSecondary),
                           textAlign: TextAlign.center,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
@@ -242,14 +242,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             child: Icon(Icons.campaign_outlined, size: 36, color: context.primary),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Nothing here yet',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.dark),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary),
                           ),
                           const SizedBox(height: 6),
-                          const Text(
+                          Text(
                             'Check back soon for campus updates.',
-                            style: TextStyle(fontSize: 13, color: AppColors.grey2),
+                            style: TextStyle(fontSize: 13, color: context.textSecondary),
                           ),
                         ],
                       ),
@@ -291,21 +291,21 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             children: [
                               Container(
                                 width: 64, height: 64,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.background,
+                                decoration: BoxDecoration(
+                                  color: context.bg,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.check_circle_outline_rounded, size: 32, color: AppColors.grey3),
+                                child: Icon(Icons.check_circle_outline_rounded, size: 32, color: context.textSecondary),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
+                              Text(
                                 "You're all caught up",
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.grey2),
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.textSecondary),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                              Text(
                                 'Pull down to refresh for new updates',
-                                style: TextStyle(fontSize: 12, color: AppColors.grey3),
+                                style: TextStyle(fontSize: 12, color: context.textSecondary),
                               ),
                             ],
                           ),

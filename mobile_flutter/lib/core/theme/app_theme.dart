@@ -15,8 +15,12 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: preset.primary,
         brightness: Brightness.light,
+      ).copyWith(
+        onSurface: AppColors.dark,
+        onSurfaceVariant: AppColors.grey2,
+        surface: AppColors.white,
       ),
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.background,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
     );
@@ -112,6 +116,8 @@ class AppTheme {
       ).copyWith(
         surface: _dSurface,
         onSurface: _dText,
+        onSurfaceVariant: _dMuted,
+        surfaceContainerHighest: _dCard,
       ),
       scaffoldBackgroundColor: _dBg,
       canvasColor: _dSurface,
