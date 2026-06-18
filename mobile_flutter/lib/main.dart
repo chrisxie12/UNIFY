@@ -17,7 +17,11 @@ Future<void> main() async {
     try {
       await Supabase.initialize(
         url: dotenv.env['SUPABASE_URL']!,
-        publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
+        anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+        authOptions: const FlutterAuthClientOptions(
+          autoRefreshToken: true,
+          authFlowType: AuthFlowType.pkce,
+        ),
       );
     } catch (_) {}
     return const ProviderScope(child: UnifyApp());
