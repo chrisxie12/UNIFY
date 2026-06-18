@@ -119,6 +119,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.storefront_outlined, color: AppColors.dark, size: 22),
+                  onPressed: () => context.push('/marketplace'),
+                  tooltip: 'Marketplace',
+                ),
+                IconButton(
                   icon: const Icon(Icons.search_rounded, color: AppColors.dark, size: 22),
                   onPressed: () {},
                   tooltip: 'Search',

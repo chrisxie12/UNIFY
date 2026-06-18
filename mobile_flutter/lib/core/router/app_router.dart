@@ -24,6 +24,18 @@ import '../../features/leadership/presentation/screens/class_rep_dashboard_scree
 import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
 import '../../features/verification/presentation/screens/verification_request_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
+import '../../features/marketplace/presentation/screens/marketplace_home_screen.dart';
+import '../../features/marketplace/presentation/screens/category_listings_screen.dart';
+import '../../features/marketplace/presentation/screens/listing_detail_screen.dart';
+import '../../features/marketplace/presentation/screens/create_listing_screen.dart';
+import '../../features/marketplace/presentation/screens/saved_listings_screen.dart';
+import '../../features/marketplace/presentation/screens/my_listings_screen.dart';
+import '../../features/marketplace/presentation/screens/marketplace_search_screen.dart';
+import '../../features/marketplace/presentation/screens/freelancers_screen.dart';
+import '../../features/marketplace/presentation/screens/freelancer_detail_screen.dart';
+import '../../features/marketplace/presentation/screens/freelancer_profile_screen.dart';
+import '../../features/marketplace/presentation/screens/seller_profile_screen.dart';
+import '../../features/marketplace/presentation/screens/marketplace_admin_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -99,6 +111,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+
+      // ── Marketplace ──────────────────────────────────────────
+      GoRoute(path: '/marketplace', builder: (_, __) => const MarketplaceHomeScreen()),
+      GoRoute(path: '/marketplace/search', builder: (_, __) => const MarketplaceSearchScreen()),
+      GoRoute(path: '/marketplace/sell', builder: (_, __) => const CreateListingScreen()),
+      GoRoute(path: '/marketplace/saved', builder: (_, __) => const SavedListingsScreen()),
+      GoRoute(path: '/marketplace/mine', builder: (_, __) => const MyListingsScreen()),
+      GoRoute(path: '/marketplace/admin', builder: (_, __) => const MarketplaceAdminScreen()),
+      GoRoute(path: '/marketplace/freelancers', builder: (_, __) => const FreelancersScreen()),
+      GoRoute(
+        path: '/marketplace/freelancer-profile',
+        builder: (_, __) => const FreelancerProfileScreen(),
+      ),
+      GoRoute(
+        path: '/marketplace/category/:key',
+        builder: (_, state) =>
+            CategoryListingsScreen(categoryKey: state.pathParameters['key']!),
+      ),
+      GoRoute(
+        path: '/marketplace/listing/:id',
+        builder: (_, state) =>
+            ListingDetailScreen(listingId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/marketplace/freelancer/:id',
+        builder: (_, state) =>
+            FreelancerDetailScreen(userId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/marketplace/seller/:id',
+        builder: (_, state) =>
+            SellerProfileScreen(sellerId: state.pathParameters['id']!),
+      ),
 
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),

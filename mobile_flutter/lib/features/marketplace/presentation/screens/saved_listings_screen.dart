@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
+import '../providers/marketplace_provider.dart';
+import '../widgets/listing_card.dart';
+
+class SavedListingsScreen extends ConsumerWidget {
+  const SavedListingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(savedListingsProvider);
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0.6,
+        shadowColor: AppColors.border,
+        title: const Text('Saved Listings',
+            style: TextStyle(fontWeight: FontWeight.w800)),
+      ),
+      body: async.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Could not load: $e')),
+        data: (items) {
+          if (items.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: const BoxDecoration(
+                        color: AppColors.surface, shape: BoxShape.circle),
+                    child: const Icon(Icons.favorite_border_rounded,
+                        size: 34, color: AppColors.grey3),
+                  ),
+                  const SizedBox(height: 14),
+                  const Text('No saved listings',
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 6),
+                  const Text('Tap the heart on any listing to save it here.',
+                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                ],
+              ),
+            );
+          }
+          return RefreshIndicator(
+            onRefresh: () async => ref.invalidate(savedListingsProvider),
+            color: context.primary,
+            child: GridView.builder(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 0.66,
+              ),
+              itemCount: items.length,
+              itemBuilder: (_, i) => ListingCard(
+                listing: items[i],
+                onTap: () =>
+                    context.push('/marketplace/listing/${items[i].id}'),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
