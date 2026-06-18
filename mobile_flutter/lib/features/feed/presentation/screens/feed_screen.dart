@@ -343,7 +343,7 @@ class _StoriesRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: context.appBarBg,
       padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
       child: SizedBox(
         height: 84,
@@ -391,7 +391,7 @@ class _MyStory extends StatelessWidget {
                 height: 54,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.border, width: 2),
+                  border: Border.all(color: context.borderCol, width: 2),
                   color: const Color(0xFFF5F7FA),
                 ),
                 child: avatarUrl != null
@@ -422,7 +422,7 @@ class _MyStory extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const Text('Your Story', style: TextStyle(fontSize: 10, color: AppColors.grey2, fontWeight: FontWeight.w500)),
+        Text('Your Story', style: TextStyle(fontSize: 10, color: context.textSecondary, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -493,7 +493,7 @@ class _StoryBubble extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           data.name.split(' ').first,
-          style: const TextStyle(fontSize: 10, color: AppColors.dark, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 10, color: context.textPrimary, fontWeight: FontWeight.w500),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -509,7 +509,7 @@ class _Initials extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       letter,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.dark),
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.textPrimary),
     ),
   );
 }
@@ -524,13 +524,13 @@ class _ComposerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: context.appBarBg,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
       child: Material(
         elevation: 2,
         shadowColor: Colors.black.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
+        color: context.cardBg,
         child: InkWell(
           onTap: () {},
           borderRadius: BorderRadius.circular(16),
@@ -553,14 +553,14 @@ class _ComposerBar extends StatelessWidget {
                       : _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Share an update, idea or question…',
-                    style: TextStyle(fontSize: 13.5, color: AppColors.grey2),
+                    style: TextStyle(fontSize: 13.5, color: context.textSecondary),
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(Icons.photo_camera_outlined, color: AppColors.grey2, size: 20),
+                Icon(Icons.photo_camera_outlined, color: context.textSecondary, size: 20),
               ],
             ),
           ),
@@ -585,7 +585,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Colors.white,
+      color: context.appBarBg,
       child: Column(
         children: [
           Expanded(
@@ -594,7 +594,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               isScrollable: true,
               tabAlignment: TabAlignment.start,
               labelColor: context.primary,
-              unselectedLabelColor: AppColors.grey2,
+              unselectedLabelColor: context.textSecondary,
               labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
               indicator: BoxDecoration(
@@ -608,7 +608,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               tabs: tabs.map((t) => Tab(text: t, height: 43)).toList(),
             ),
           ),
-          Container(height: 1, color: AppColors.border),
+          Container(height: 1, color: context.borderCol),
         ],
       ),
     );

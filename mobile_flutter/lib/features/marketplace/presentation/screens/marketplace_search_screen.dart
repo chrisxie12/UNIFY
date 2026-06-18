@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
@@ -60,12 +61,12 @@ class _MarketplaceSearchScreenState
     final listingsAsync = ref.watch(listingsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         titleSpacing: 0,
         title: Container(
           height: 42,
@@ -77,8 +78,8 @@ class _MarketplaceSearchScreenState
           ),
           child: Row(
             children: [
-              const Icon(Icons.search_rounded,
-                  color: AppColors.grey2, size: 20),
+              Icon(Icons.search_rounded,
+                  color: context.textSecondary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
@@ -99,8 +100,8 @@ class _MarketplaceSearchScreenState
                     _ctrl.clear();
                     _onChanged('');
                   },
-                  child: const Icon(Icons.close_rounded,
-                      size: 18, color: AppColors.grey2),
+                  child: Icon(Icons.close_rounded,
+                      size: 18, color: context.textSecondary),
                 ),
             ],
           ),
@@ -114,9 +115,9 @@ class _MarketplaceSearchScreenState
               error: (e, _) => Center(child: Text('Error: $e')),
               data: (items) {
                 if (items.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text('No results found',
-                        style: TextStyle(color: AppColors.grey2)),
+                        style: TextStyle(color: context.textSecondary)),
                   );
                 }
                 return GridView.builder(

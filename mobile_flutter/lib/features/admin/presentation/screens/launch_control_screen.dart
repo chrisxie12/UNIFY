@@ -14,12 +14,12 @@ class LaunchControlScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Launch Control',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -32,7 +32,7 @@ class LaunchControlScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          _section('Monitor'),
+          _section(context, 'Monitor'),
           _grid(context, const [
             _Item('Launch Readiness', Icons.rocket_launch_rounded,
                 Color(0xFF0066FF), '/launch/readiness'),
@@ -45,7 +45,7 @@ class LaunchControlScreen extends ConsumerWidget {
           ]),
           const SizedBox(height: 22),
 
-          _section('Grow'),
+          _section(context, 'Grow'),
           _grid(context, const [
             _Item('Beta Access', Icons.workspaces_rounded,
                 Color(0xFFEA580C), '/launch/beta'),
@@ -58,7 +58,7 @@ class LaunchControlScreen extends ConsumerWidget {
           ]),
           const SizedBox(height: 22),
 
-          _section('Support'),
+          _section(context, 'Support'),
           _grid(context, const [
             _Item('Feedback Center', Icons.feedback_rounded,
                 Color(0xFFD97706), '/launch/feedback'),
@@ -69,7 +69,7 @@ class LaunchControlScreen extends ConsumerWidget {
           ]),
           const SizedBox(height: 22),
 
-          _section('Moderation'),
+          _section(context, 'Moderation'),
           _grid(context, const [
             _Item('Requests & Verification', Icons.verified_user_rounded,
                 Color(0xFF16A34A), '/admin'),
@@ -79,14 +79,14 @@ class LaunchControlScreen extends ConsumerWidget {
     );
   }
 
-  Widget _section(String t) => Padding(
+  Widget _section(BuildContext context, String t) => Padding(
         padding: const EdgeInsets.only(left: 4, bottom: 12),
         child: Text(t.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0.8,
-                color: AppColors.grey2)),
+                color: context.textSecondary)),
       );
 
   Widget _grid(BuildContext context, List<_Item> items) {
@@ -121,9 +121,9 @@ class _Tile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
           boxShadow: AppColors.cardShadow,
         ),
         child: Column(
@@ -140,10 +140,10 @@ class _Tile extends StatelessWidget {
               child: Icon(item.icon, color: item.color, size: 21),
             ),
             Text(item.label,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.dark)),
+                    color: context.textPrimary)),
           ],
         ),
       ),

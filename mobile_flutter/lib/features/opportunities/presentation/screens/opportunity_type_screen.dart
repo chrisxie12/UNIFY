@@ -38,23 +38,23 @@ class _OpportunityTypeScreenState
     final async = ref.watch(opportunitiesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: Text(_type?.label ?? 'All Opportunities',
-            style: const TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
-                color: AppColors.dark)),
+                color: context.textPrimary)),
         actions: [
           IconButton(
             icon: Stack(
               clipBehavior: Clip.none,
               children: [
-                const Icon(Icons.tune_rounded, color: AppColors.dark),
+                Icon(Icons.tune_rounded, color: context.textPrimary),
                 if (_activeFilterCount(filter) > 0)
                   Positioned(
                     top: -4,
@@ -82,8 +82,8 @@ class _OpportunityTypeScreenState
               children: [
                 async.maybeWhen(
                   data: (l) => Text('${l.length} results',
-                      style: const TextStyle(
-                          fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(
+                          fontSize: 13, color: context.textSecondary)),
                   orElse: () => const SizedBox.shrink(),
                 ),
                 const Spacer(),
@@ -125,9 +125,9 @@ class _OpportunityTypeScreenState
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600)),
                         const SizedBox(height: 6),
-                        const Text('Try adjusting your filters.',
+                        Text('Try adjusting your filters.',
                             style: TextStyle(
-                                fontSize: 13, color: AppColors.grey2)),
+                                fontSize: 13, color: context.textSecondary)),
                       ],
                     ),
                   );
@@ -167,7 +167,6 @@ class _OpportunityTypeScreenState
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _FilterSheet(
@@ -241,7 +240,7 @@ class _FilterSheetState extends State<_FilterSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),

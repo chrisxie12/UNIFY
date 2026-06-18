@@ -24,12 +24,12 @@ class SellerProfileScreen extends ConsumerWidget {
     final isMe = me?.id == sellerId;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Seller'),
       ),
       floatingActionButton: isMe
@@ -53,9 +53,9 @@ class SellerProfileScreen extends ConsumerWidget {
             data: (r) => Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFF0F1F3)),
+                border: Border.all(color: context.borderCol),
               ),
               child: Row(
                 children: [
@@ -88,8 +88,8 @@ class SellerProfileScreen extends ConsumerWidget {
                       r.total == 0
                           ? 'No reviews yet. Be the first to rate this seller after a transaction.'
                           : 'Based on ${r.total} review${r.total == 1 ? '' : 's'} from buyers on campus.',
-                      style: const TextStyle(
-                          fontSize: 13, color: AppColors.grey2, height: 1.4),
+                      style: TextStyle(
+                          fontSize: 13, color: context.textSecondary, height: 1.4),
                     ),
                   ),
                 ],
@@ -142,10 +142,10 @@ class SellerProfileScreen extends ConsumerWidget {
                               margin: const EdgeInsets.only(bottom: 10),
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: context.cardBg,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                    color: const Color(0xFFF0F1F3)),
+                                    color: context.borderCol),
                               ),
                               child: Column(
                                 crossAxisAlignment:
@@ -178,9 +178,9 @@ class SellerProfileScreen extends ConsumerWidget {
                                       r.comment!.isNotEmpty) ...[
                                     const SizedBox(height: 6),
                                     Text(r.comment!,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 13,
-                                            color: AppColors.grey1)),
+                                            color: context.textSecondary)),
                                   ],
                                 ],
                               ),
@@ -197,7 +197,7 @@ class SellerProfileScreen extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: context.cardBg,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _ReviewSheet(sellerId: sellerId),
@@ -241,7 +241,7 @@ class _ReviewSheetState extends ConsumerState<_ReviewSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),

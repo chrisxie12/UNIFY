@@ -27,12 +27,12 @@ class ApplicationTrackerScreen extends ConsumerWidget {
     return DefaultTabController(
       length: _columns.length,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           elevation: 0.6,
-          shadowColor: AppColors.border,
+          shadowColor: context.borderCol,
           title: const Text('Application Tracker',
               style: TextStyle(fontWeight: FontWeight.w800)),
           bottom: TabBar(
@@ -66,11 +66,11 @@ class ApplicationTrackerScreen extends ConsumerWidget {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 6),
-                    const Text(
+                    Text(
                         'Save an opportunity and set its status to start tracking.',
                         textAlign: TextAlign.center,
                         style:
-                            TextStyle(fontSize: 13, color: AppColors.grey2)),
+                            TextStyle(fontSize: 13, color: context.textSecondary)),
                   ],
                 ),
               );
@@ -82,7 +82,7 @@ class ApplicationTrackerScreen extends ConsumerWidget {
                 if (list.isEmpty) {
                   return Center(
                     child: Text('No ${stage.label.toLowerCase()} items',
-                        style: const TextStyle(color: AppColors.grey3)),
+                        style: TextStyle(color: context.textSecondary)),
                   );
                 }
                 return ListView.separated(
@@ -114,9 +114,9 @@ class _AppRow extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFF0F1F3)),
+          border: Border.all(color: context.borderCol),
         ),
         child: Row(
           children: [
@@ -146,8 +146,8 @@ class _AppRow extends ConsumerWidget {
                     Text(o!.organization!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                        style: TextStyle(
+                            fontSize: 12, color: context.textSecondary)),
                   if (o?.deadline != null) ...[
                     const SizedBox(height: 4),
                     Row(
@@ -171,8 +171,8 @@ class _AppRow extends ConsumerWidget {
               ),
             ),
             PopupMenuButton<ApplicationStage>(
-              icon: const Icon(Icons.more_vert_rounded,
-                  color: AppColors.grey2),
+              icon: Icon(Icons.more_vert_rounded,
+                  color: context.textSecondary),
               onSelected: (s) => _move(ref, s),
               itemBuilder: (_) => ApplicationStage.values
                   .where((s) => s != app.stage)

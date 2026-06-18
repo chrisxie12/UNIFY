@@ -15,12 +15,12 @@ class MyListingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(myListingsProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('My Listings',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -83,9 +83,9 @@ class _MyListingRow extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         children: [
@@ -143,7 +143,7 @@ class _MyListingRow extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey2),
+            icon: Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (v) => _action(context, ref, v),
             itemBuilder: (_) => [
               if (!listing.isSold)

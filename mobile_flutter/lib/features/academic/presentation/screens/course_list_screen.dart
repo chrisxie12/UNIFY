@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class CourseListScreen extends ConsumerWidget {
   const CourseListScreen({super.key});
@@ -32,12 +33,12 @@ class CourseListScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.school_outlined, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.school_outlined, size: 64, color: context.borderCol),
                   const SizedBox(height: 16),
-                  Text('No courses available', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('No courses available', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
                   Text('Courses will appear when added by your department',
-                      style: TextStyle(color: Colors.grey[400], fontSize: 13)),
+                      style: TextStyle(color: context.textSecondary, fontSize: 13)),
                 ],
               ),
             );
@@ -84,9 +85,9 @@ class _CourseTile extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
         subtitle: Row(
           children: [
-            Text('${course.credits} credits', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            Text('${course.credits} credits', style: TextStyle(fontSize: 12, color: context.textSecondary)),
             if (course.lecturerName != null) ...[
-              Text(' · ${course.lecturerName}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text(' · ${course.lecturerName}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ],
         ),

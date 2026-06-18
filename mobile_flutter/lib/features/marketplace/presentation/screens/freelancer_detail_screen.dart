@@ -20,12 +20,12 @@ class FreelancerDetailScreen extends ConsumerWidget {
     final reviewsAsync = ref.watch(sellerReviewsProvider(userId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Freelancer'),
       ),
       bottomNavigationBar: async.maybeWhen(
@@ -110,16 +110,16 @@ class FreelancerDetailScreen extends ConsumerWidget {
                         ),
                         if (p.headline != null)
                           Text(p.headline!,
-                              style: const TextStyle(
-                                  fontSize: 13, color: AppColors.grey1)),
+                              style: TextStyle(
+                                  fontSize: 13, color: context.textSecondary)),
                         const SizedBox(height: 4),
                         Text(
                           [
                             if (p.programme != null) p.programme,
                             if (p.level != null) 'Level ${p.level}',
                           ].whereType<String>().join(' · '),
-                          style: const TextStyle(
-                              fontSize: 12, color: AppColors.grey2),
+                          style: TextStyle(
+                              fontSize: 12, color: context.textSecondary),
                         ),
                       ],
                     ),
@@ -152,8 +152,8 @@ class FreelancerDetailScreen extends ConsumerWidget {
                 _section('About'),
                 const SizedBox(height: 8),
                 Text(p.bio!,
-                    style: const TextStyle(
-                        fontSize: 14, height: 1.5, color: AppColors.grey1)),
+                    style: TextStyle(
+                        fontSize: 14, height: 1.5, color: context.textSecondary)),
               ],
 
               if (p.skills.isNotEmpty) ...[
@@ -239,9 +239,9 @@ class FreelancerDetailScreen extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFF0F1F3)),
+            border: Border.all(color: context.borderCol),
           ),
           child: Column(
             children: [
@@ -251,7 +251,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
               const SizedBox(height: 2),
               Text(label,
                   style:
-                      const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                      TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -271,9 +271,9 @@ class _ReviewTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,8 +320,8 @@ class _ReviewTile extends StatelessWidget {
           if (review.comment != null && review.comment!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(review.comment!,
-                style: const TextStyle(
-                    fontSize: 13, height: 1.4, color: AppColors.grey1)),
+                style: TextStyle(
+                    fontSize: 13, height: 1.4, color: context.textSecondary)),
           ],
           const SizedBox(height: 6),
           Text(review.createdAt.timeAgo,

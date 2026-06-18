@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
@@ -26,12 +27,12 @@ class FeatureAdoptionScreen extends ConsumerWidget {
     final adoptionAsync = ref.watch(featureAdoptionProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Feature Adoption',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -144,9 +145,9 @@ class _FeatureRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +159,10 @@ class _FeatureRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
               ),
               if (underused) ...[
@@ -183,10 +184,10 @@ class _FeatureRow extends StatelessWidget {
                 const SizedBox(width: 8),
               ],
               Text('$users',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 10),

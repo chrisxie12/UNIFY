@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
@@ -22,12 +23,12 @@ class UsageAnalyticsScreen extends ConsumerWidget {
     final retentionAsync = ref.watch(retentionProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Usage Analytics',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),

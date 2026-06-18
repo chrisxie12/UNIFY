@@ -56,7 +56,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            const Text('Quick Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            Text('Quick Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -84,7 +84,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            const Text('My Community Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            Text('My Community Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 12),
             myRequestsAsync.when(
               data: (requests) {
@@ -101,7 +101,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            const Text('My Announcement Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            Text('My Announcement Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 12),
             announcementReqsAsync.when(
               data: (requests) {
@@ -118,7 +118,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            const Text('Your Badges', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            Text('Your Badges', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 12),
             badgesAsync.when(
               data: (badges) {
@@ -284,7 +284,7 @@ class _ActionCard extends StatelessWidget {
                 child: Icon(icon, color: color, size: 22),
               ),
               const SizedBox(height: 10),
-              Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.dark, height: 1.3)),
+              Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.textPrimary, height: 1.3)),
             ],
           ),
         ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
+
 class AcademicHubScreen extends ConsumerWidget {
   const AcademicHubScreen({super.key});
 
@@ -104,7 +106,7 @@ class _HubCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: context.cardBg,
       borderRadius: BorderRadius.circular(16),
       elevation: 0,
       shadowColor: Colors.transparent,
@@ -114,7 +116,7 @@ class _HubCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(color: context.borderCol),
           ),
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -131,7 +133,7 @@ class _HubCard extends StatelessWidget {
               const Spacer(),
               Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ),
         ),

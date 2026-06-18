@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/datetime_extensions.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
@@ -40,12 +41,12 @@ class SystemHealthScreen extends ConsumerWidget {
     final errorsAsync = ref.watch(recentErrorsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('System Health',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -145,14 +146,14 @@ class SystemHealthScreen extends ConsumerWidget {
                 );
               },
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 6),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
               child: Text(
                 'Recent errors',
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.dark),
+                    color: context.textPrimary),
               ),
             ),
             errorsAsync.when(
@@ -203,9 +204,9 @@ class _ErrorTile extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(12, 5, 12, 5),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,16 +226,16 @@ class _ErrorTile extends StatelessWidget {
                   entry.message,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13.5,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   meta,
                   style:
-                      const TextStyle(fontSize: 11.5, color: AppColors.grey2),
+                      TextStyle(fontSize: 11.5, color: context.textSecondary),
                 ),
               ],
             ),

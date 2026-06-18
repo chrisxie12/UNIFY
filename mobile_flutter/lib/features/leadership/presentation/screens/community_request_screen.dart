@@ -109,6 +109,7 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
 
   @override
   Widget build(BuildContext context) {
+    _inputFillColor = context.cardBg;
     final leadershipAsync = ref.watch(userLeadershipProvider);
 
     return Scaffold(
@@ -130,20 +131,20 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                     ),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.info_outline_rounded, size: 18, color: AppColors.warning),
-                        SizedBox(width: 10),
+                        const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.warning),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Leadership Role Required', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
-                              SizedBox(height: 4),
+                              Text('Leadership Role Required', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
+                              const SizedBox(height: 4),
                               Text(
                                 'Community creation is restricted to verified student representatives.',
-                                style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4),
+                                style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4),
                               ),
                             ],
                           ),
@@ -168,10 +169,10 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Verified Leader', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                            Text('Verified Leader', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                             Text(
                               roles.map((r) => r.role.title).join(', '),
-                              style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                              style: TextStyle(fontSize: 12, color: context.textSecondary),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -211,7 +212,7 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
             if (_type == 'class') ...[
               const _SectionLabel('Class Name'),
               const SizedBox(height: 4),
-              const Text('Enter the specific class this community represents (e.g. IT Level 100)', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+              Text('Enter the specific class this community represents (e.g. IT Level 100)', style: TextStyle(fontSize: 11, color: context.textSecondary)),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _classNameCtrl,
@@ -231,10 +232,10 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
                   children: [
                     Icon(Icons.shield_rounded, size: 16, color: context.primary),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Class communities require a Course Representative or Assistant Course Representative leadership position.',
-                        style: TextStyle(fontSize: 12, color: AppColors.grey1, height: 1.4),
+                        style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4),
                       ),
                     ),
                   ],
@@ -381,8 +382,10 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
     filled: true,
-    fillColor: AppColors.white,
+    fillColor: _inputFillColor,
   );
+
+  Color? _inputFillColor;
 }
 
 class _SectionLabel extends StatelessWidget {
@@ -391,6 +394,6 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark));
+    return Text(text, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary));
   }
 }

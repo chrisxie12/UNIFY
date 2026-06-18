@@ -14,12 +14,12 @@ class SupportAdminScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           elevation: 0.6,
-          shadowColor: AppColors.border,
+          shadowColor: context.borderCol,
           title: const Text('Support Admin',
               style: TextStyle(fontWeight: FontWeight.w800)),
           bottom: TabBar(
@@ -557,7 +557,7 @@ class _CreateDialogState extends State<_CreateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
+      backgroundColor: context.cardBg,
       title: Text(widget.title,
           style: const TextStyle(fontWeight: FontWeight.w800)),
       content: SingleChildScrollView(
@@ -640,9 +640,9 @@ class _CardShell extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: child,
     );

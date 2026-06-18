@@ -19,12 +19,12 @@ class FreelancersScreen extends ConsumerWidget {
     final category = ref.watch(freelancerCategoryProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Student Freelancers',
             style: TextStyle(fontWeight: FontWeight.w800)),
         actions: [
@@ -74,9 +74,9 @@ class FreelancersScreen extends ConsumerWidget {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 6),
-                        const Text('Offer a service to be the first here.',
+                        Text('Offer a service to be the first here.',
                             style: TextStyle(
-                                fontSize: 13, color: AppColors.grey2)),
+                                fontSize: 13, color: context.textSecondary)),
                         const SizedBox(height: 16),
                         FilledButton(
                           onPressed: () => context
@@ -114,16 +114,16 @@ class FreelancersScreen extends ConsumerWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: selected ? context.primary : Colors.white,
+            color: selected ? context.primary : context.cardBg,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-                color: selected ? context.primary : AppColors.border),
+                color: selected ? context.primary : context.borderCol),
           ),
           child: Text(label,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: selected ? Colors.white : AppColors.grey1)),
+                  color: selected ? Colors.white : context.textSecondary)),
         ),
       ),
     );
@@ -142,9 +142,9 @@ class _FreelancerCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFF0F1F3)),
+          border: Border.all(color: context.borderCol),
           boxShadow: AppColors.cardShadow,
         ),
         child: Column(
@@ -195,9 +195,9 @@ class _FreelancerCard extends StatelessWidget {
                           child: Text(profile.headline!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12.5,
-                                  color: AppColors.grey2)),
+                                  color: context.textSecondary)),
                         ),
                     ],
                   ),
@@ -225,8 +225,8 @@ class _FreelancerCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(s,
-                              style: const TextStyle(
-                                  fontSize: 11, color: AppColors.grey1)),
+                              style: TextStyle(
+                                  fontSize: 11, color: context.textSecondary)),
                         ))
                     .toList(),
               ),
@@ -248,8 +248,8 @@ class _FreelancerCard extends StatelessWidget {
                     size: 15, color: AppColors.grey3),
                 const SizedBox(width: 4),
                 Text('${profile.completedJobs} jobs',
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.grey2)),
+                    style: TextStyle(
+                        fontSize: 12, color: context.textSecondary)),
                 const Spacer(),
                 if (profile.isAvailable)
                   Container(

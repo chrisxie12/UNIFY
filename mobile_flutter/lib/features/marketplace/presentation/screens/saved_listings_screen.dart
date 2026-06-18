@@ -14,12 +14,12 @@ class SavedListingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(savedListingsProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Saved Listings',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -45,8 +45,8 @@ class SavedListingsScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
-                  const Text('Tap the heart on any listing to save it here.',
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                  Text('Tap the heart on any listing to save it here.',
+                      style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
             );

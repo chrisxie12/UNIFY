@@ -17,7 +17,7 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
     final recsAsync = ref.watch(recommendedOpportunitiesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: RefreshIndicator(
         color: context.primary,
         onRefresh: () async {
@@ -28,26 +28,26 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
+              backgroundColor: context.appBarBg,
+              surfaceTintColor: context.appBarBg,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0.6,
-              shadowColor: AppColors.border,
-              title: const Text('Opportunities',
+              shadowColor: context.borderCol,
+              title: Text('Opportunities',
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 19,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.alarm_rounded, color: AppColors.dark),
+                  icon: Icon(Icons.alarm_rounded, color: context.textPrimary),
                   tooltip: 'Deadlines',
                   onPressed: () => context.push('/opportunities/deadlines'),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.bookmark_border_rounded,
-                      color: AppColors.dark),
+                  icon: Icon(Icons.bookmark_border_rounded,
+                      color: context.textPrimary),
                   tooltip: 'Saved',
                   onPressed: () => context.push('/opportunities/saved'),
                 ),
@@ -65,18 +65,18 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
                     height: 46,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.cardBg,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.borderCol),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.search_rounded,
-                            color: AppColors.grey2, size: 21),
-                        SizedBox(width: 10),
+                            color: context.textSecondary, size: 21),
+                        const SizedBox(width: 10),
                         Text('Search scholarships, internships…',
                             style: TextStyle(
-                                color: AppColors.grey2, fontSize: 14)),
+                                color: context.textSecondary, fontSize: 14)),
                       ],
                     ),
                   ),
@@ -176,9 +176,9 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600)),
                         const SizedBox(height: 6),
-                        const Text('Showing cached items when offline.',
+                        Text('Showing cached items when offline.',
                             style: TextStyle(
-                                fontSize: 12, color: AppColors.grey2)),
+                                fontSize: 12, color: context.textSecondary)),
                         const SizedBox(height: 16),
                         FilledButton(
                           onPressed: () =>
@@ -197,7 +197,7 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
                       padding: EdgeInsets.all(40),
                       child: Center(
                         child: Text('No opportunities yet. Check back soon.',
-                            style: TextStyle(color: AppColors.grey2)),
+                            style: TextStyle(color: context.textSecondary)),
                       ),
                     ),
                   );
@@ -290,16 +290,16 @@ class _SectionHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color: AppColors.dark)),
+                color: context.textPrimary)),
         if (subtitle != null)
           Padding(
             padding: const EdgeInsets.only(top: 2),
             child: Text(subtitle!,
                 style:
-                    const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                    TextStyle(fontSize: 12, color: context.textSecondary)),
           ),
       ],
     );
@@ -334,11 +334,11 @@ class _TypeChip extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 10.5,
                   height: 1.1,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.dark),
+                  color: context.textPrimary),
             ),
           ],
         ),
@@ -361,9 +361,9 @@ class _RecCard extends StatelessWidget {
         width: 240,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFF0F1F3)),
+          border: Border.all(color: context.borderCol),
           boxShadow: AppColors.cardShadow,
         ),
         child: Column(
@@ -399,7 +399,7 @@ class _RecCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style:
-                    const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                    TextStyle(fontSize: 12, color: context.textSecondary)),
             const Spacer(),
             Row(
               children: [

@@ -34,10 +34,10 @@ class _Gate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0,
         title: const Text('Sell on UNIFY'),
       ),
@@ -62,11 +62,11 @@ class _Gate extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 19, fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Only verified students can post listings. This keeps the '
                 'marketplace safe and scam-free for everyone on campus.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColors.grey2),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
               const SizedBox(height: 24),
               FilledButton(
@@ -131,12 +131,12 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
   Widget build(BuildContext context) {
     final subs = kSubcategories[_category] ?? const [];
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Create Listing',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -437,10 +437,10 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
               width: 76,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: sel ? c.color.withValues(alpha: 0.10) : Colors.white,
+                color: sel ? c.color.withValues(alpha: 0.10) : context.cardBg,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color: sel ? c.color : AppColors.border,
+                    color: sel ? c.color : context.borderCol,
                     width: sel ? 1.5 : 1),
               ),
               child: Column(
@@ -456,7 +456,7 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
                           fontSize: 9.5,
                           height: 1.1,
                           fontWeight: FontWeight.w600,
-                          color: sel ? c.color : AppColors.grey1)),
+                          color: sel ? c.color : context.textSecondary)),
                 ],
               ),
             ),
@@ -478,9 +478,9 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.borderCol),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -489,8 +489,8 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
                       color: context.primary, size: 24),
                   const SizedBox(height: 4),
                   Text('${_images.length}/5',
-                      style: const TextStyle(
-                          fontSize: 11, color: AppColors.grey2)),
+                      style: TextStyle(
+                          fontSize: 11, color: context.textSecondary)),
                 ],
               ),
             ),
@@ -540,10 +540,10 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(text,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: AppColors.dark)),
+                color: context.textPrimary)),
       );
 
   Widget _field(
@@ -563,16 +563,16 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
         hintText: hint,
         prefixText: prefix,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: context.cardBg,
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: context.primary, width: 1.5)),
@@ -593,16 +593,16 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
       hint: hint != null ? Text(hint) : null,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: context.cardBg,
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
       ),
       items: items
           .map((i) => DropdownMenuItem(

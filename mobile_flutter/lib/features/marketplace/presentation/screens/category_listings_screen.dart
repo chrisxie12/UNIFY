@@ -40,20 +40,20 @@ class _CategoryListingsScreenState
     final subs = _category != null ? kSubcategories[_category!] ?? const [] : const <String>[];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: Text(_category?.label ?? 'All Listings',
-            style: const TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
-                color: AppColors.dark)),
+                color: context.textPrimary)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.tune_rounded, color: AppColors.dark),
+            icon: Icon(Icons.tune_rounded, color: context.textPrimary),
             tooltip: 'Filters',
             onPressed: () => _openFilters(context, filter),
           ),
@@ -95,8 +95,8 @@ class _CategoryListingsScreenState
               children: [
                 listingsAsync.maybeWhen(
                   data: (l) => Text('${l.length} results',
-                      style: const TextStyle(
-                          fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(
+                          fontSize: 13, color: context.textSecondary)),
                   orElse: () => const SizedBox.shrink(),
                 ),
                 const Spacer(),
@@ -159,16 +159,16 @@ class _CategoryListingsScreenState
           decoration: BoxDecoration(
             color: selected
                 ? context.primary
-                : Colors.white,
+                : context.cardBg,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-                color: selected ? context.primary : AppColors.border),
+                color: selected ? context.primary : context.borderCol),
           ),
           child: Text(label,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: selected ? Colors.white : AppColors.grey1)),
+                  color: selected ? Colors.white : context.textSecondary)),
         ),
       ),
     );
@@ -189,14 +189,14 @@ class _CategoryListingsScreenState
                   size: 34, color: context.primary),
             ),
             const SizedBox(height: 14),
-            const Text('No listings yet',
+            Text('No listings yet',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.dark)),
+                    color: context.textPrimary)),
             const SizedBox(height: 6),
-            const Text('Be the first to post in this category.',
-                style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+            Text('Be the first to post in this category.',
+                style: TextStyle(fontSize: 13, color: context.textSecondary)),
             const SizedBox(height: 18),
             FilledButton(
               onPressed: () => context.push('/marketplace/sell'),
@@ -219,7 +219,7 @@ class _CategoryListingsScreenState
               Text('Could not load listings\n$e',
                   textAlign: TextAlign.center,
                   style:
-                      const TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      TextStyle(fontSize: 13, color: context.textSecondary)),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => ref.invalidate(listingsProvider),
@@ -234,7 +234,7 @@ class _CategoryListingsScreenState
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: context.cardBg,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _FilterSheet(
@@ -329,7 +329,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                    color: AppColors.border,
+                    color: context.borderCol,
                     borderRadius: BorderRadius.circular(2)),
               ),
             ),
@@ -344,9 +344,9 @@ class _FilterSheetState extends State<_FilterSheet> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(child: _numField(_minCtrl, 'Min')),
+                Expanded(child: _numField(context, _minCtrl, 'Min')),
                 const SizedBox(width: 12),
-                Expanded(child: _numField(_maxCtrl, 'Max')),
+                Expanded(child: _numField(context, _maxCtrl, 'Max')),
               ],
             ),
             const SizedBox(height: 16),
@@ -356,7 +356,7 @@ class _FilterSheetState extends State<_FilterSheet> {
             const SizedBox(height: 8),
             TextField(
               controller: _locCtrl,
-              decoration: _dec('e.g. Main campus, hostel name'),
+              decoration: _dec(context, 'e.g. Main campus, hostel name'),
             ),
             if (widget.showCondition) ...[
               const SizedBox(height: 16),
@@ -432,22 +432,23 @@ class _FilterSheetState extends State<_FilterSheet> {
     );
   }
 
-  Widget _numField(TextEditingController c, String hint) => TextField(
+  Widget _numField(BuildContext context, TextEditingController c, String hint) =>
+      TextField(
         controller: c,
         keyboardType: TextInputType.number,
-        decoration: _dec(hint),
+        decoration: _dec(context, hint),
       );
 
-  InputDecoration _dec(String hint) => InputDecoration(
+  InputDecoration _dec(BuildContext context, String hint) => InputDecoration(
         hintText: hint,
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
       );
 }

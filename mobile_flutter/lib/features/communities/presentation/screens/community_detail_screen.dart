@@ -64,7 +64,7 @@ class _CommunityDetailView extends ConsumerWidget {
     return DefaultTabController(
       length: _tabs.length,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         body: NestedScrollView(
           headerSliverBuilder: (context, innerScrolled) => [
             SliverOverlapAbsorber(
@@ -73,19 +73,19 @@ class _CommunityDetailView extends ConsumerWidget {
               sliver: SliverAppBar(
                 expandedHeight: 260,
                 pinned: true,
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
+                backgroundColor: context.appBarBg,
+                surfaceTintColor: context.appBarBg,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new_rounded,
                       size: 18),
-                  color: innerScrolled ? AppColors.dark : Colors.white,
+                  color: innerScrolled ? context.textPrimary : Colors.white,
                   onPressed: () => context.pop(),
                 ),
                 actions: [
                   IconButton(
                     icon: const Icon(CupertinoIcons.ellipsis_vertical,
                         size: 18),
-                    color: innerScrolled ? AppColors.dark : Colors.white,
+                    color: innerScrolled ? context.textPrimary : Colors.white,
                     onPressed: () {},
                   ),
                 ],
@@ -112,7 +112,7 @@ class _CommunityDetailView extends ConsumerWidget {
                   ),
                   indicatorColor: primary,
                   indicatorWeight: 2.5,
-                  dividerColor: AppColors.border,
+                  dividerColor: context.borderCol,
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
                   padding: EdgeInsets.zero,
@@ -448,9 +448,9 @@ class _AnnouncementRow extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -512,10 +512,10 @@ class _AnnouncementRow extends StatelessWidget {
                             children: [
                               Text(
                                 name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.dark,
+                                  color: context.textPrimary,
                                 ),
                               ),
                               if (isVerified) ...[
@@ -527,8 +527,8 @@ class _AnnouncementRow extends StatelessWidget {
                           if (createdAt != null)
                             Text(
                               DateFormat('MMM d · h:mm a').format(createdAt),
-                              style: const TextStyle(
-                                  fontSize: 11, color: AppColors.grey3),
+                              style: TextStyle(
+                                  fontSize: 11, color: context.textSecondary),
                             ),
                         ],
                       ),
@@ -555,18 +555,18 @@ class _AnnouncementRow extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   data['title'] as String? ?? '',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.dark,
+                    color: context.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   data['body'] as String? ?? '',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.grey1,
+                    color: context.textSecondary,
                     height: 1.5,
                   ),
                   maxLines: 4,
@@ -698,7 +698,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.cardBg,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: const [
                           BoxShadow(
@@ -712,10 +712,10 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                           Icon(Icons.edit_outlined,
                               size: 18, color: context.primary),
                           const SizedBox(width: 10),
-                          const Text(
+                          Text(
                             'Start a discussion…',
                             style: TextStyle(
-                              color: AppColors.grey3,
+                              color: context.textSecondary,
                               fontSize: 14,
                             ),
                           ),
@@ -753,9 +753,9 @@ class _ComposePanel extends StatelessWidget {
         top: 12,
         bottom: MediaQuery.of(context).viewInsets.bottom + 16,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        boxShadow: const [
           BoxShadow(
               color: Color(0x1A000000), blurRadius: 20, offset: Offset(0, -4)),
         ],
@@ -767,25 +767,25 @@ class _ComposePanel extends StatelessWidget {
           TextField(
             controller: titleCtrl,
             autofocus: true,
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.dark),
-            decoration: const InputDecoration(
+            style: TextStyle(
+                fontSize: 15, fontWeight: FontWeight.w600, color: context.textPrimary),
+            decoration: InputDecoration(
               hintText: 'Title (optional)',
-              hintStyle: TextStyle(color: AppColors.grey3),
+              hintStyle: TextStyle(color: context.textSecondary),
               border: InputBorder.none,
             ),
           ),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(height: 1, color: context.borderCol),
           const SizedBox(height: 8),
           TextField(
             controller: bodyCtrl,
             maxLines: 4,
             minLines: 2,
             style:
-                const TextStyle(fontSize: 14, color: AppColors.dark, height: 1.5),
-            decoration: const InputDecoration(
+                TextStyle(fontSize: 14, color: context.textPrimary, height: 1.5),
+            decoration: InputDecoration(
               hintText: 'What\'s on your mind?',
-              hintStyle: TextStyle(color: AppColors.grey3),
+              hintStyle: TextStyle(color: context.textSecondary),
               border: InputBorder.none,
             ),
           ),
@@ -795,8 +795,8 @@ class _ComposePanel extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: onCancel,
-                child: const Text('Cancel',
-                    style: TextStyle(color: AppColors.grey2)),
+                child: Text('Cancel',
+                    style: TextStyle(color: context.textSecondary)),
               ),
               const SizedBox(width: 8),
               FilledButton(
@@ -834,9 +834,9 @@ class _PostCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -881,10 +881,10 @@ class _PostCard extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.dark,
+                            color: context.textPrimary,
                           ),
                         ),
                         if (post.authorIsVerified) ...[
@@ -895,8 +895,8 @@ class _PostCard extends StatelessWidget {
                     ),
                     Text(
                       DateFormat('MMM d · h:mm a').format(post.createdAt),
-                      style: const TextStyle(
-                          fontSize: 11, color: AppColors.grey3),
+                      style: TextStyle(
+                          fontSize: 11, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -907,36 +907,36 @@ class _PostCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               post.title!,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.dark),
+                  color: context.textPrimary),
             ),
           ],
           const SizedBox(height: 6),
           Text(
             post.body,
-            style: const TextStyle(
-                fontSize: 14, color: AppColors.grey1, height: 1.5),
+            style: TextStyle(
+                fontSize: 14, color: context.textSecondary, height: 1.5),
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              const Icon(Icons.favorite_border_rounded,
-                  size: 16, color: AppColors.grey3),
+              Icon(Icons.favorite_border_rounded,
+                  size: 16, color: context.textSecondary),
               const SizedBox(width: 4),
               Text('${post.reactionCount}',
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.grey3)),
+                  style: TextStyle(
+                      fontSize: 12, color: context.textSecondary)),
               const SizedBox(width: 14),
-              const Icon(Icons.chat_bubble_outline_rounded,
-                  size: 16, color: AppColors.grey3),
+              Icon(Icons.chat_bubble_outline_rounded,
+                  size: 16, color: context.textSecondary),
               const SizedBox(width: 4),
               Text('${post.commentCount}',
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.grey3)),
+                  style: TextStyle(
+                      fontSize: 12, color: context.textSecondary)),
             ],
           ),
         ],
@@ -1017,9 +1017,9 @@ class _ResourceCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         boxShadow: AppColors.cardShadow,
       ),
       child: Row(
@@ -1043,10 +1043,10 @@ class _ResourceCard extends StatelessWidget {
               children: [
                 Text(
                   resource.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.dark,
+                    color: context.textPrimary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -1063,40 +1063,40 @@ class _ResourceCard extends StatelessWidget {
                       ),
                       child: Text(
                         _categoryLabels[resource.category] ?? resource.category,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.grey2,
+                          color: context.textSecondary,
                         ),
                       ),
                     ),
                     if (resource.fileSizeLabel.isNotEmpty) ...[
                       const SizedBox(width: 6),
                       Text(resource.fileSizeLabel,
-                          style: const TextStyle(
-                              fontSize: 11, color: AppColors.grey3)),
+                          style: TextStyle(
+                              fontSize: 11, color: context.textSecondary)),
                     ],
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.download_outlined,
-                        size: 12, color: AppColors.grey3),
+                    Icon(Icons.download_outlined,
+                        size: 12, color: context.textSecondary),
                     const SizedBox(width: 3),
                     Text(
                       '${resource.downloadCount} downloads',
-                      style: const TextStyle(
-                          fontSize: 11, color: AppColors.grey3),
+                      style: TextStyle(
+                          fontSize: 11, color: context.textSecondary),
                     ),
                     if (resource.uploaderName != null) ...[
-                      const Text(' · ',
+                      Text(' · ',
                           style: TextStyle(
-                              fontSize: 11, color: AppColors.grey3)),
+                              fontSize: 11, color: context.textSecondary)),
                       Text(
                         resource.uploaderName!,
-                        style: const TextStyle(
-                            fontSize: 11, color: AppColors.grey3),
+                        style: TextStyle(
+                            fontSize: 11, color: context.textSecondary),
                       ),
                     ],
                   ],
@@ -1203,9 +1203,9 @@ class _MemberRow extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
         boxShadow: AppColors.cardShadow,
       ),
       child: Row(
@@ -1233,10 +1233,10 @@ class _MemberRow extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.dark,
+                        color: context.textPrimary,
                       ),
                     ),
                     if (member.isVerifiedLeader) ...[
@@ -1251,8 +1251,8 @@ class _MemberRow extends StatelessWidget {
                       if (member.programme != null) member.programme!,
                       if (member.level != null) member.level!,
                     ].join(' · '),
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.grey3),
+                    style: TextStyle(
+                        fontSize: 12, color: context.textSecondary),
                   ),
               ],
             ),
@@ -1300,22 +1300,22 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 48, color: AppColors.grey3),
+            Icon(icon, size: 48, color: context.textSecondary),
             const SizedBox(height: 14),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                color: AppColors.dark,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.grey3,
+                color: context.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,

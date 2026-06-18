@@ -33,12 +33,12 @@ class BetaAdminScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           elevation: 0.6,
-          shadowColor: AppColors.border,
+          shadowColor: context.borderCol,
           title: const Text('Beta & Waitlist',
               style: TextStyle(fontWeight: FontWeight.w800)),
           bottom: const TabBar(
@@ -134,9 +134,9 @@ class _WaitlistCard extends ConsumerWidget {
     final color = _statusColor(entry.status);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -159,10 +159,10 @@ class _WaitlistCard extends ConsumerWidget {
                   entry.fullName?.isNotEmpty == true
                       ? entry.fullName!
                       : entry.email,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(entry.email,
@@ -370,9 +370,9 @@ class _InviteCodeCard extends ConsumerWidget {
         : '${code.useCount}/${code.maxUses}';
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -393,11 +393,11 @@ class _InviteCodeCard extends ConsumerWidget {
                     children: [
                       Text(
                         code.code,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1,
-                            color: AppColors.dark),
+                            color: context.textPrimary),
                       ),
                       const SizedBox(width: 6),
                       const Icon(Icons.copy_rounded,
@@ -482,9 +482,9 @@ class _BetaTesterCard extends ConsumerWidget {
     final color = _statusColor(tester.status);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -508,10 +508,10 @@ class _BetaTesterCard extends ConsumerWidget {
                   tester.fullName?.isNotEmpty == true
                       ? tester.fullName!
                       : 'Tester',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(

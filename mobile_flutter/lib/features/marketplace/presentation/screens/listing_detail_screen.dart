@@ -45,7 +45,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
     final async = ref.watch(listingDetailProvider(widget.listingId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load listing\n$e')),
@@ -74,8 +74,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
         SliverAppBar(
           expandedHeight: l.images.isNotEmpty ? 320 : 120,
           pinned: true,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           leading: _circleBtn(Icons.arrow_back_rounded, () => context.pop()),
           actions: [
             _circleBtn(Icons.flag_outlined, () => _report(l)),
@@ -135,7 +135,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
 
         SliverToBoxAdapter(
           child: Container(
-            color: Colors.white,
+            color: context.cardBg,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,10 +178,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(l.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.dark)),
+                        color: context.textPrimary)),
                 const SizedBox(height: 8),
                 if (l.priceLabel.isNotEmpty)
                   Row(
@@ -200,11 +200,11 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Text('Negotiable',
+                          child: Text('Negotiable',
                               style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.grey1)),
+                                  color: context.textSecondary)),
                         ),
                     ],
                   ),
@@ -233,7 +233,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
             child: Container(
               margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               padding: const EdgeInsets.all(16),
-              decoration: _cardDeco(),
+              decoration: _cardDeco(context),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -242,10 +242,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                           fontSize: 14, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Text(l.description!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 14,
                           height: 1.5,
-                          color: AppColors.grey1)),
+                          color: context.textSecondary)),
                 ],
               ),
             ),
@@ -332,30 +332,30 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       padding: const EdgeInsets.all(16),
-      decoration: _cardDeco(),
+      decoration: _cardDeco(context),
       child: Column(
         children: [
           for (var i = 0; i < entries.length; i++) ...[
             Row(
               children: [
-                Icon(entries[i].$1, size: 18, color: AppColors.grey2),
+                Icon(entries[i].$1, size: 18, color: context.textSecondary),
                 const SizedBox(width: 10),
                 Text(entries[i].$2,
-                    style: const TextStyle(
-                        fontSize: 13, color: AppColors.grey2)),
+                    style: TextStyle(
+                        fontSize: 13, color: context.textSecondary)),
                 const Spacer(),
                 Flexible(
                   child: Text(entries[i].$3,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.dark)),
+                          color: context.textPrimary)),
                 ),
               ],
             ),
             if (i < entries.length - 1)
-              const Divider(height: 18, color: AppColors.border),
+              Divider(height: 18, color: context.borderCol),
           ],
         ],
       ),
@@ -370,7 +370,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
         padding: const EdgeInsets.all(16),
-        decoration: _cardDeco(),
+        decoration: _cardDeco(context),
         child: Column(
           children: [
             Row(
@@ -400,10 +400,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                             child: Text(l.sellerName ?? 'Student',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.dark)),
+                                    color: context.textPrimary)),
                           ),
                           if (l.sellerVerified) ...[
                             const SizedBox(width: 4),
@@ -420,8 +420,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                         ].whereType<String>().join(' · '),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2),
+                        style: TextStyle(
+                            fontSize: 12, color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -460,10 +460,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
           Icon(ic, size: 16, color: color),
           const SizedBox(width: 4),
           Text(text,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.grey1)),
+                  color: context.textSecondary)),
         ],
       );
 
@@ -473,9 +473,9 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: context.cardBg,
+          border: Border(top: BorderSide(color: context.borderCol)),
         ),
         child: Row(
           children: [
@@ -522,7 +522,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
   void _report(ListingModel l) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: context.cardBg,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _ReportSheet(listing: l),
@@ -537,7 +537,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
           color: Colors.white.withValues(alpha: 0.92),
           shape: const CircleBorder(),
           child: IconButton(
-            icon: Icon(icon, color: AppColors.dark, size: 20),
+            icon: Icon(icon, color: context.textPrimary, size: 20),
             onPressed: onTap,
           ),
         ),
@@ -553,21 +553,21 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(ic, size: 13, color: AppColors.grey2),
+            Icon(ic, size: 13, color: context.textSecondary),
             const SizedBox(width: 4),
             Text(text,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.grey1)),
+                    color: context.textSecondary)),
           ],
         ),
       );
 
-  BoxDecoration _cardDeco() => BoxDecoration(
-        color: Colors.white,
+  BoxDecoration _cardDeco(BuildContext context) => BoxDecoration(
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: context.borderCol),
       );
 
   static String _initials(String? name) {
@@ -652,7 +652,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),
@@ -660,8 +660,8 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
           const Text('Report listing',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          const Text('Help keep the marketplace safe.',
-              style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+          Text('Help keep the marketplace safe.',
+              style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const SizedBox(height: 12),
           ...kReportReasons.map((r) {
             final sel = _reason == r;

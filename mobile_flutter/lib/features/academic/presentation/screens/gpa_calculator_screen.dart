@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 const _gradeMap = {
   'A': 4.0, 'B+': 3.5, 'B': 3.0, 'C+': 2.5,
@@ -129,7 +130,7 @@ class _GPACalculatorScreenState extends ConsumerState<GPACalculatorScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Courses', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
+              Text('Courses', style: TextStyle(fontWeight: FontWeight.w600, color: context.textPrimary)),
               TextButton.icon(
                 onPressed: _addCourse,
                 icon: const Icon(Icons.add, size: 18),
@@ -148,9 +149,9 @@ class _GPACalculatorScreenState extends ConsumerState<GPACalculatorScreen> {
                 padding: const EdgeInsets.all(32),
                 child: Column(
                   children: [
-                    Icon(Icons.add_circle_outline, size: 48, color: Colors.grey[300]),
+                    Icon(Icons.add_circle_outline, size: 48, color: context.borderCol),
                     const SizedBox(height: 8),
-                    Text('Tap "Add Course" to start', style: TextStyle(color: Colors.grey[500])),
+                    Text('Tap "Add Course" to start', style: TextStyle(color: context.textSecondary)),
                   ],
                 ),
               ),

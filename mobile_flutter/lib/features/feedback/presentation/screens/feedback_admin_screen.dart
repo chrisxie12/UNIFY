@@ -15,12 +15,12 @@ class FeedbackAdminScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           elevation: 0.6,
-          shadowColor: AppColors.border,
+          shadowColor: context.borderCol,
           title: const Text('Feedback Admin',
               style: TextStyle(fontWeight: FontWeight.w800)),
           bottom: TabBar(
@@ -66,7 +66,7 @@ class _StatHeader extends ConsumerWidget {
       loading: () => const SizedBox(height: 64),
       error: (_, __) => const SizedBox.shrink(),
       data: (c) => Container(
-        color: Colors.white,
+        color: context.cardBg,
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
         child: Row(
           children: [
@@ -142,9 +142,9 @@ class _FeedbackCard extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

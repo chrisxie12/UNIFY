@@ -33,7 +33,7 @@ class ProfileScreen extends ConsumerWidget {
     final isLeaderAsync = ref.watch(isVerifiedLeaderProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: profileAsync.when(
         loading: () => const _Skeleton(),
         error: (e, _) => _ErrorView(message: e.toString()),
@@ -216,7 +216,7 @@ class _Header extends StatelessWidget {
             ),
             // White identity block — paddingTop makes room for avatar bottom half
             Container(
-              color: AppColors.white,
+              color: context.cardBg,
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(16, avatarR + 14, 16, 0),
               child: Column(
@@ -235,10 +235,10 @@ class _Header extends StatelessWidget {
                                 Flexible(
                                   child: Text(
                                     profile.displayName ?? profile.email.split('@').first,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w800,
-                                      color: AppColors.dark,
+                                      color: context.textPrimary,
                                       letterSpacing: -0.3,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -272,7 +272,7 @@ class _Header extends StatelessWidget {
                             ),
                             if (profile.username?.isNotEmpty == true) ...[
                               const SizedBox(height: 2),
-                              Text('@${profile.username}', style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+                              Text('@${profile.username}', style: TextStyle(fontSize: 13, color: context.textSecondary)),
                             ],
                           ],
                         ),
@@ -298,7 +298,7 @@ class _Header extends StatelessWidget {
                   if (profile.programme?.isNotEmpty == true) ...[
                     Text(
                       profile.programme!,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                     ),
                     const SizedBox(height: 3),
                   ],
@@ -310,7 +310,7 @@ class _Header extends StatelessWidget {
                         if (profile.school?.isNotEmpty == true) profile.school!,
                         if (profile.yearOfStudy != null) profile.studentStatus,
                       ].join(' · '),
-                      style: const TextStyle(fontSize: 13, color: AppColors.grey2),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary),
                     ),
 
                   // Campus
@@ -318,9 +318,9 @@ class _Header extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_rounded, size: 13, color: AppColors.grey2),
+                        Icon(Icons.location_on_rounded, size: 13, color: context.textSecondary),
                         const SizedBox(width: 3),
-                        Text(profile.campus!, style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+                        Text(profile.campus!, style: TextStyle(fontSize: 13, color: context.textSecondary)),
                       ],
                     ),
                   ],
@@ -436,7 +436,7 @@ class _ActionBtn extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: const [BoxShadow(color: Color(0x25000000), blurRadius: 8)],
         ),
-        child: Icon(icon, size: 18, color: AppColors.dark),
+        child: Icon(icon, size: 18, color: context.textPrimary),
       ),
     );
   }
@@ -529,7 +529,7 @@ class _StatsStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(height: 1, color: AppColors.border),
+        Divider(height: 1, color: context.borderCol),
         const SizedBox(height: 14),
         Row(
           children: [
@@ -570,7 +570,7 @@ class _StatCell extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: isEmpty && !cta ? const Color(0xFFD1D5DB) : AppColors.dark,
+                  color: isEmpty && !cta ? const Color(0xFFD1D5DB) : context.textPrimary,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -579,7 +579,7 @@ class _StatCell extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 11,
-                  color: cta && isEmpty ? context.primary : AppColors.grey2,
+                  color: cta && isEmpty ? context.primary : context.textSecondary,
                   fontWeight: cta && isEmpty ? FontWeight.w600 : FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
@@ -595,7 +595,7 @@ class _StatCell extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      Container(width: 1, height: 36, color: AppColors.border);
+      Container(width: 1, height: 36, color: context.borderCol);
 }
 
 // ---------------------------------------------------------------------------
@@ -614,9 +614,9 @@ class _Card extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: context.borderCol, width: 0.5),
         boxShadow: AppColors.cardShadow,
       ),
       child: child,
@@ -649,7 +649,7 @@ class _CardHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+          Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
           if (action != null)
             GestureDetector(
               onTap: onAction,
@@ -680,9 +680,9 @@ class _CompletionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Complete your profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                Text('Complete your profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
                 const SizedBox(height: 3),
-                const Text('A complete profile helps students and employers find you.', style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                Text('A complete profile helps students and employers find you.', style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
                 const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -704,7 +704,7 @@ class _CompletionCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
+          Icon(Icons.arrow_forward_ios_rounded, size: 13, color: context.textSecondary),
         ],
       ),
     );
@@ -728,12 +728,12 @@ class _AboutCard extends StatelessWidget {
         children: [
           _CardHeader('About', action: 'Edit', onAction: () => context.push('/app/profile/edit')),
           hasBio
-              ? Text(profile.bio!, style: const TextStyle(fontSize: 14, color: AppColors.dark, height: 1.65))
+              ? Text(profile.bio!, style: TextStyle(fontSize: 14, color: context.textPrimary, height: 1.65))
               : GestureDetector(
                   onTap: () => context.push('/app/profile/edit'),
                   child: Row(
                     children: [
-                      const Text('Add a bio to introduce yourself', style: TextStyle(fontSize: 14, color: AppColors.grey2)),
+                      Text('Add a bio to introduce yourself', style: TextStyle(fontSize: 14, color: context.textSecondary)),
                       const Spacer(),
                       Container(
                         width: 28, height: 28,
@@ -787,8 +787,8 @@ class _AcademicCard extends StatelessWidget {
                     child: Icon(Icons.school_rounded, size: 18, color: context.primary),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(child: Text('Add your university details', style: TextStyle(color: AppColors.grey2, fontSize: 14))),
-                  const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.grey2),
+                  Expanded(child: Text('Add your university details', style: TextStyle(color: context.textSecondary, fontSize: 14))),
+                  Icon(Icons.chevron_right_rounded, size: 18, color: context.textSecondary),
                 ],
               ),
             )
@@ -797,7 +797,7 @@ class _AcademicCard extends StatelessWidget {
               children: [
                 for (int i = 0; i < rows.length; i++) ...[
                   _DataRow(label: rows[i].label, value: rows[i].value),
-                  if (i < rows.length - 1) const Divider(height: 1, color: AppColors.border),
+                  if (i < rows.length - 1) Divider(height: 1, color: context.borderCol),
                 ],
               ],
             ),
@@ -827,12 +827,12 @@ class _DataRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 100,
-            child: Text(label, style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+            child: Text(label, style: TextStyle(fontSize: 13, color: context.textSecondary)),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary),
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -899,7 +899,7 @@ class _SocialCard extends StatelessWidget {
               children: [
                 for (int i = 0; i < active.length; i++) ...[
                   _SocialRow(platform: active[i]),
-                  if (i < active.length - 1) const Divider(height: 1, color: AppColors.border),
+                  if (i < active.length - 1) Divider(height: 1, color: context.borderCol),
                 ],
               ],
             ),
@@ -1039,12 +1039,12 @@ class _SocialRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(platform.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                Text(platform.label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 Text(platform.url!, style: TextStyle(fontSize: 11, color: context.primary), overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
-          const Icon(Icons.open_in_new_rounded, size: 14, color: AppColors.grey2),
+          Icon(Icons.open_in_new_rounded, size: 14, color: context.textSecondary),
         ],
       ),
     );
@@ -1139,7 +1139,7 @@ class _EmptyPrompt extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, color: AppColors.grey2))),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: context.textSecondary))),
           const SizedBox(width: 8),
           Container(
             width: 28, height: 28,
@@ -1191,7 +1191,7 @@ class _AchievementsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Text('Achievements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
@@ -1274,7 +1274,7 @@ class _LeadershipCard extends StatelessWidget {
             children: [
               Icon(Icons.shield_rounded, size: 16, color: Color(0xFFFF6B35)),
               SizedBox(width: 6),
-              Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1296,16 +1296,16 @@ class _LeadershipCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l.role.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                      Text(l.role.title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
                       const SizedBox(height: 2),
                       if (l.programme != null)
-                        Text(l.programme!, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                        Text(l.programme!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                       if (l.level != null)
-                        Text('Level ${l.level}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                        Text('Level ${l.level}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                       if (l.department != null || l.faculty != null)
                         Text(
                           [if (l.department != null) l.department!, if (l.faculty != null) l.faculty!].join(' · '),
-                          style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                       const SizedBox(height: 2),
                       Row(
@@ -1314,7 +1314,7 @@ class _LeadershipCard extends StatelessWidget {
                           const SizedBox(width: 3),
                           Text('Verified by UNIFY', style: TextStyle(fontSize: 10, color: context.primary, fontWeight: FontWeight.w500)),
                           const SizedBox(width: 8),
-                          Text('AY ${l.academicYear}', style: const TextStyle(fontSize: 10, color: AppColors.grey3)),
+                          Text('AY ${l.academicYear}', style: TextStyle(fontSize: 10, color: context.textSecondary)),
                         ],
                       ),
                     ],
@@ -1366,14 +1366,14 @@ class _VerificationStatusCard extends StatelessWidget {
               child: const Icon(Icons.access_time_rounded, color: AppColors.warning, size: 22),
             ),
             const SizedBox(width: 14),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Verification Pending', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                  SizedBox(height: 2),
+                  Text('Verification Pending', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                  const SizedBox(height: 2),
                   Text('Your request is being reviewed by an admin',
-                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
                 ],
               ),
             ),
@@ -1395,19 +1395,19 @@ class _VerificationStatusCard extends StatelessWidget {
               child: const Icon(Icons.cancel_rounded, color: AppColors.error, size: 22),
             ),
             const SizedBox(width: 14),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Verification Rejected', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.error)),
-                  SizedBox(height: 2),
+                  const Text('Verification Rejected', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.error)),
+                  const SizedBox(height: 2),
                   Text('Your request was not approved. You can reapply.',
-                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
+            Icon(Icons.arrow_forward_ios_rounded, size: 13, color: context.textSecondary),
           ],
         ),
         onTap: () => context.push('/verification-request'),
@@ -1437,18 +1437,18 @@ class _VerificationStatusCard extends StatelessWidget {
               child: const Icon(Icons.verified_rounded, color: Colors.white, size: 22),
             ),
             const SizedBox(width: 14),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Get Verified', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                  SizedBox(height: 2),
+                  Text('Get Verified', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                  const SizedBox(height: 2),
                   Text('Apply for student leader verification',
-                      style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                      style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.grey2),
+            Icon(Icons.chevron_right_rounded, size: 20, color: context.textSecondary),
           ],
         ),
       ),
@@ -1476,18 +1476,18 @@ class _RequestCommunityCard extends StatelessWidget {
             child: Icon(Icons.group_add_rounded, color: context.primary, size: 22),
           ),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Request Community Creation', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                SizedBox(height: 2),
+                Text('Request Community Creation', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                const SizedBox(height: 2),
                 Text('Create a new community for your class, department, or faculty',
-                    style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                    style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
+          Icon(Icons.arrow_forward_ios_rounded, size: 13, color: context.textSecondary),
         ],
       ),
     );
@@ -1509,20 +1509,20 @@ class _AccountCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: context.borderCol, width: 0.5),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         children: [
           _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: context.primary, onTap: () => context.push('/app/profile/edit')),
-          const Divider(height: 1, color: AppColors.border, indent: 58),
+          Divider(height: 1, color: context.borderCol, indent: 58),
           _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
-          const Divider(height: 1, color: AppColors.border, indent: 58),
+          Divider(height: 1, color: context.borderCol, indent: 58),
           _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), onTap: () => context.push('/app/profile/settings')),
           if (isAdmin) ...[
-            const Divider(height: 1, color: AppColors.border, indent: 58),
+            Divider(height: 1, color: context.borderCol, indent: 58),
             _Tile(
               icon: Icons.rocket_launch_rounded,
               label: 'Launch Control',
@@ -1530,7 +1530,7 @@ class _AccountCard extends StatelessWidget {
               onTap: () => context.push('/launch'),
             ),
           ],
-          const Divider(height: 1, color: AppColors.border, indent: 58),
+          Divider(height: 1, color: context.borderCol, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,
             label: 'Sign Out',
@@ -1542,10 +1542,10 @@ class _AccountCard extends StatelessWidget {
                 context: context,
                 builder: (ctx) => AlertDialog(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  title: const Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: AppColors.dark)),
-                  content: const Text("You'll need to sign in again to access your account.", style: TextStyle(color: AppColors.grey2, fontSize: 14, height: 1.5)),
+                  title: Text('Sign out?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17, color: context.textPrimary)),
+                  content: Text("You'll need to sign in again to access your account.", style: TextStyle(color: context.textSecondary, fontSize: 14, height: 1.5)),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel', style: TextStyle(color: AppColors.grey2))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel', style: TextStyle(color: context.textSecondary))),
                     TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600))),
                   ],
                 ),
@@ -1599,9 +1599,9 @@ class _Tile extends StatelessWidget {
             ),
             const SizedBox(width: 13),
             Expanded(
-              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? AppColors.dark)),
+              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: labelColor ?? context.textPrimary)),
             ),
-            if (showChevron) const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.grey2),
+            if (showChevron) Icon(Icons.chevron_right_rounded, size: 20, color: context.textSecondary),
           ],
         ),
       ),

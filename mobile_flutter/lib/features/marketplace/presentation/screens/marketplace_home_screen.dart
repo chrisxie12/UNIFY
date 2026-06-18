@@ -16,7 +16,7 @@ class MarketplaceHomeScreen extends ConsumerWidget {
     final featuredAsync = ref.watch(featuredListingsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/marketplace/sell'),
         backgroundColor: context.primary,
@@ -27,27 +27,27 @@ class MarketplaceHomeScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
+            backgroundColor: context.appBarBg,
+            surfaceTintColor: context.appBarBg,
             pinned: true,
             elevation: 0,
             scrolledUnderElevation: 0.6,
-            shadowColor: AppColors.border,
-            title: const Text('Marketplace',
+            shadowColor: context.borderCol,
+            title: Text('Marketplace',
                 style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 19,
-                    color: AppColors.dark)),
+                    color: context.textPrimary)),
             actions: [
               IconButton(
-                icon: const Icon(Icons.favorite_border_rounded,
-                    color: AppColors.dark),
+                icon: Icon(Icons.favorite_border_rounded,
+                    color: context.textPrimary),
                 tooltip: 'Saved',
                 onPressed: () => context.push('/marketplace/saved'),
               ),
               IconButton(
-                icon: const Icon(Icons.inventory_2_outlined,
-                    color: AppColors.dark),
+                icon: Icon(Icons.inventory_2_outlined,
+                    color: context.textPrimary),
                 tooltip: 'My listings',
                 onPressed: () => context.push('/marketplace/mine'),
               ),
@@ -65,18 +65,18 @@ class MarketplaceHomeScreen extends ConsumerWidget {
                   height: 46,
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.cardBg,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: context.borderCol),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(Icons.search_rounded,
-                          color: AppColors.grey2, size: 21),
-                      SizedBox(width: 10),
+                          color: context.textSecondary, size: 21),
+                      const SizedBox(width: 10),
                       Text('Search items, services, rooms…',
                           style:
-                              TextStyle(color: AppColors.grey2, fontSize: 14)),
+                              TextStyle(color: context.textSecondary, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -245,10 +245,10 @@ class _SectionHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color: AppColors.dark)),
+                color: context.textPrimary)),
         if (actionLabel != null)
           GestureDetector(
             onTap: onAction,
@@ -280,9 +280,9 @@ class _CategoryTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFF0F1F3)),
+          border: Border.all(color: context.borderCol),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -304,11 +304,11 @@ class _CategoryTile extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 11,
                     height: 1.15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.dark),
+                    color: context.textPrimary),
               ),
             ),
           ],
@@ -350,10 +350,10 @@ class _FeaturedCard extends StatelessWidget {
             Text(listing.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.dark)),
+                    color: context.textPrimary)),
             const SizedBox(height: 2),
             Text(listing.priceLabel,
                 style: TextStyle(

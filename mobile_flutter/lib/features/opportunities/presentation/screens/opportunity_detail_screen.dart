@@ -36,7 +36,7 @@ class _OpportunityDetailScreenState
   Widget build(BuildContext context) {
     final async = ref.watch(opportunityDetailProvider(widget.opportunityId));
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load\n$e')),
@@ -55,8 +55,8 @@ class _OpportunityDetailScreenState
       slivers: [
         SliverAppBar(
           pinned: true,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
           leading: _circleBtn(Icons.arrow_back_rounded, () => context.pop()),
           actions: [
             _circleBtn(Icons.flag_outlined, () => _report(o)),
@@ -98,7 +98,7 @@ class _OpportunityDetailScreenState
         ),
         SliverToBoxAdapter(
           child: Container(
-            color: Colors.white,
+            color: context.cardBg,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,18 +133,18 @@ class _OpportunityDetailScreenState
                 ),
                 const SizedBox(height: 12),
                 Text(o.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.w800,
                         height: 1.25,
-                        color: AppColors.dark)),
+                        color: context.textPrimary)),
                 if (o.organization != null) ...[
                   const SizedBox(height: 6),
                   Text(o.organization!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.grey1)),
+                          color: context.textSecondary)),
                 ],
                 const SizedBox(height: 14),
                 // Deadline banner
@@ -174,7 +174,7 @@ class _OpportunityDetailScreenState
                             fontWeight: FontWeight.w700,
                             color: o.isClosingSoon
                                 ? AppColors.error
-                                : AppColors.dark),
+                                : context.textPrimary),
                       ),
                     ],
                   ),
@@ -229,9 +229,9 @@ class _OpportunityDetailScreenState
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(t,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.grey1)),
+                                      color: context.textSecondary)),
                             ))
                         .toList(),
                   ),
@@ -272,24 +272,24 @@ class _OpportunityDetailScreenState
           for (var i = 0; i < facts.length; i++) ...[
             Row(
               children: [
-                Icon(facts[i].$1, size: 18, color: AppColors.grey2),
+                Icon(facts[i].$1, size: 18, color: context.textSecondary),
                 const SizedBox(width: 10),
                 Text(facts[i].$2,
-                    style: const TextStyle(
-                        fontSize: 13, color: AppColors.grey2)),
+                    style: TextStyle(
+                        fontSize: 13, color: context.textSecondary)),
                 const Spacer(),
                 Flexible(
                   child: Text(facts[i].$3,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.dark)),
+                          color: context.textPrimary)),
                 ),
               ],
             ),
             if (i < facts.length - 1)
-              const Divider(height: 18, color: AppColors.border),
+              Divider(height: 18, color: context.borderCol),
           ],
         ],
       ),
@@ -308,8 +308,8 @@ class _OpportunityDetailScreenState
                     fontSize: 14, fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             Text(body,
-                style: const TextStyle(
-                    fontSize: 14, height: 1.5, color: AppColors.grey1)),
+                style: TextStyle(
+                    fontSize: 14, height: 1.5, color: context.textSecondary)),
           ],
         ),
       );
@@ -320,9 +320,9 @@ class _OpportunityDetailScreenState
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: context.cardBg,
+          border: Border(top: BorderSide(color: context.borderCol)),
         ),
         child: Row(
           children: [
@@ -330,7 +330,7 @@ class _OpportunityDetailScreenState
               icon: o.isSaved
                   ? Icons.bookmark_rounded
                   : Icons.bookmark_border_rounded,
-              color: o.isSaved ? context.primary : AppColors.grey1,
+              color: o.isSaved ? context.primary : context.textSecondary,
               onTap: () async {
                 await ref
                     .read(opportunitySaveControllerProvider.notifier)
@@ -368,7 +368,6 @@ class _OpportunityDetailScreenState
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _ApplySheet(opportunity: o),
@@ -378,7 +377,6 @@ class _OpportunityDetailScreenState
   void _report(OpportunityModel o) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _ReportSheet(opportunityId: o.id),
@@ -393,7 +391,7 @@ class _OpportunityDetailScreenState
           color: Colors.white.withValues(alpha: 0.92),
           shape: const CircleBorder(),
           child: IconButton(
-            icon: Icon(icon, color: AppColors.dark, size: 20),
+            icon: Icon(icon, color: context.textPrimary, size: 20),
             onPressed: onTap,
           ),
         ),
@@ -411,9 +409,9 @@ class _OpportunityDetailScreenState
       );
 
   BoxDecoration _cardDeco() => BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: context.borderCol),
       );
 }
 
@@ -465,7 +463,7 @@ class _ReminderAction extends ConsumerWidget {
         ),
         child: Icon(
           hasReminder ? Icons.notifications_active_rounded : Icons.alarm_add_rounded,
-          color: hasReminder ? context.primary : AppColors.grey1,
+          color: hasReminder ? context.primary : context.textSecondary,
         ),
       ),
     );
@@ -489,7 +487,6 @@ class _ReminderAction extends ConsumerWidget {
     }
     final choice = await showModalBottomSheet<int>(
       context: context,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => Padding(
@@ -501,13 +498,13 @@ class _ReminderAction extends ConsumerWidget {
             const Text('Remind me',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
-            const Text('We\'ll notify you before the deadline.',
-                style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+            Text('We\'ll notify you before the deadline.',
+                style: TextStyle(fontSize: 13, color: context.textSecondary)),
             const SizedBox(height: 12),
             ...kReminderOffsets.map((r) => ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.alarm_rounded,
-                      color: AppColors.grey1),
+                  leading: Icon(Icons.alarm_rounded,
+                      color: context.textSecondary),
                   title: Text(r.$1),
                   onTap: () => Navigator.pop(context, r.$2),
                 )),
@@ -574,7 +571,7 @@ class _ApplySheetState extends ConsumerState<_ApplySheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),
@@ -614,7 +611,7 @@ class _ApplySheetState extends ConsumerState<_ApplySheet> {
                 onSelected: (_) => setState(() => _stage = s),
                 selectedColor: s.color.withValues(alpha: 0.15),
                 labelStyle: TextStyle(
-                    color: sel ? s.color : AppColors.grey1,
+                    color: sel ? s.color : context.textSecondary,
                     fontWeight: FontWeight.w600,
                     fontSize: 12.5),
               );
@@ -741,7 +738,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),

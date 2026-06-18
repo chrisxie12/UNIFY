@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/ops_provider.dart';
 import '../widgets/ops_widgets.dart';
@@ -13,12 +14,12 @@ class LaunchReadinessScreen extends ConsumerWidget {
     final readinessAsync = ref.watch(launchReadinessProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Launch Readiness',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -150,9 +151,9 @@ class _ReadinessSummary extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -167,12 +168,12 @@ class _ReadinessSummary extends StatelessWidget {
                 color: allGood ? AppColors.success : AppColors.primary,
               ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'Readiness',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.dark),
+                    color: context.textPrimary),
               ),
               const Spacer(),
               Text(
@@ -202,8 +203,8 @@ class _ReadinessSummary extends StatelessWidget {
                   Expanded(
                     child: Text(
                       c.label,
-                      style: const TextStyle(
-                          fontSize: 13.5, color: AppColors.grey1),
+                      style: TextStyle(
+                          fontSize: 13.5, color: context.textSecondary),
                     ),
                   ),
                 ],

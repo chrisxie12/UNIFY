@@ -17,12 +17,12 @@ class SupportCenterScreen extends ConsumerWidget {
     final articles = ref.watch(articlesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Support Center',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -63,15 +63,15 @@ class SupportCenterScreen extends ConsumerWidget {
               }
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.cardBg,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: context.borderCol),
                 ),
                 child: Column(
                   children: [
                     for (int i = 0; i < items.length; i++) ...[
                       if (i > 0)
-                        const Divider(height: 1, color: AppColors.border),
+                        Divider(height: 1, color: context.borderCol),
                       ExpansionTile(
                         shape: const Border(),
                         collapsedShape: const Border(),
@@ -152,9 +152,9 @@ class SupportCenterScreen extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
         ),
         child: Row(
           children: [

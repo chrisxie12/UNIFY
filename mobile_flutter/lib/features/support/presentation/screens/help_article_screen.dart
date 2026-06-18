@@ -50,12 +50,12 @@ class _HelpArticleScreenState extends ConsumerState<HelpArticleScreen> {
   Widget build(BuildContext context) {
     final article = ref.watch(articleProvider(widget.articleId));
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Help Article',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -94,22 +94,22 @@ class _HelpArticleScreenState extends ConsumerState<HelpArticleScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.cardBg,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: context.borderCol),
                 ),
                 child: Text(a.body,
-                    style: const TextStyle(
-                        fontSize: 15, height: 1.5, color: AppColors.grey1)),
+                    style: TextStyle(
+                        fontSize: 15, height: 1.5, color: context.textSecondary)),
               ),
               const SizedBox(height: 22),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.cardBg,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: context.borderCol),
                 ),
                 child: Column(
                   children: [
