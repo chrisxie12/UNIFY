@@ -122,7 +122,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             const SizedBox(height: 4),
             Text(
               'Control who can see your UNIFY profile and information.',
-              style: AppTextStyles.body.copyWith(color: AppColors.grey2),
+              style: AppTextStyles.body.copyWith(color: context.textSecondary),
             ),
             const SizedBox(height: 20),
 
@@ -173,7 +173,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                             const SizedBox(height: 3),
                             Text(
                               opt.desc,
-                              style: AppTextStyles.caption.copyWith(color: AppColors.grey2),
+                              style: AppTextStyles.caption.copyWith(color: context.textSecondary),
                             ),
                           ],
                         ),
@@ -193,7 +193,7 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             const SizedBox(height: 4),
             Text(
               'Verified students get a badge and appear higher in searches.',
-              style: AppTextStyles.body.copyWith(color: AppColors.grey2),
+              style: AppTextStyles.body.copyWith(color: context.textSecondary),
             ),
             const SizedBox(height: 16),
             const _InfoTile(
@@ -276,7 +276,7 @@ class _InfoTile extends StatelessWidget {
               children: [
                 Text(title, style: AppTextStyles.bodySemi),
                 const SizedBox(height: 2),
-                Text(subtitle, style: AppTextStyles.caption.copyWith(color: AppColors.grey2)),
+                Text(subtitle, style: AppTextStyles.caption.copyWith(color: context.textSecondary)),
               ],
             ),
           ),

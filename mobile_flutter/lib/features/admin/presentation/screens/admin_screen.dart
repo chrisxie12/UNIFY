@@ -335,9 +335,9 @@ class _RequestCard extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,9 +360,9 @@ class _RequestCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(request.communityName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(request.communityName, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text(_typeLabel(request.communityType), style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text(_typeLabel(request.communityType), style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -394,15 +394,15 @@ class _RequestCard extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color: context.bg,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Purpose', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.grey2)),
+                      Text('Purpose', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.textSecondary)),
                       const SizedBox(height: 4),
-                      Text(request.purpose, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.5)),
+                      Text(request.purpose, style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.5)),
                     ],
                   ),
                 ),
@@ -418,15 +418,15 @@ class _RequestCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Admin Feedback', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.grey2)),
+                        Text('Admin Feedback', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: context.textSecondary)),
                         const SizedBox(height: 4),
-                        Text(request.adminFeedback!, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.5)),
+                        Text(request.adminFeedback!, style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.5)),
                       ],
                     ),
                   ),
                 ],
                 const SizedBox(height: 12),
-                Text(_timeAgo(request.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                Text(_timeAgo(request.createdAt), style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 const SizedBox(height: 12),
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(
@@ -790,9 +790,9 @@ class _AnnouncementRequestCard extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1048,9 +1048,9 @@ class _VerificationCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

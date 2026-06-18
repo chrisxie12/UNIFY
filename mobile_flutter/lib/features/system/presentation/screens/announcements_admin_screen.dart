@@ -286,7 +286,7 @@ class _AnnouncementsAdminScreenState
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.borderCol),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -300,7 +300,7 @@ class _AnnouncementsAdminScreenState
                         : 'Ends ${_endsAt!.toLocal().toString().split(' ').first}',
                     style: TextStyle(
                       color:
-                          _endsAt == null ? AppColors.grey3 : AppColors.dark,
+                          _endsAt == null ? AppColors.grey3 : context.textPrimary,
                     ),
                   ),
                   const Spacer(),
@@ -352,9 +352,9 @@ class _AnnouncementsAdminScreenState
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -369,10 +369,10 @@ class _AnnouncementsAdminScreenState
                   a.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
-                    color: AppColors.dark,
+                    color: context.textPrimary,
                   ),
                 ),
               ),
