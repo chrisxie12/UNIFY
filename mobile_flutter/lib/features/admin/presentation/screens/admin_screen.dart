@@ -446,7 +446,7 @@ class _RequestCard extends ConsumerWidget {
 
           // Actions
           if (showActions && request.status == 'pending') ...[
-            const Divider(height: 1, color: AppColors.border),
+            Divider(height: 1, color: context.borderCol),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               child: Column(
@@ -502,12 +502,12 @@ class _RequestCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoRow(String label, String value) => Padding(
+  Widget _infoRow(String label, String value, BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Row(
       children: [
-        SizedBox(width: 100, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2))),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark))),
+        SizedBox(width: 100, child: Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary))),
+        Expanded(child: Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.textPrimary))),
       ],
     ),
   );

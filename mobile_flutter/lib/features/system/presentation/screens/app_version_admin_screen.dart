@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
@@ -14,13 +15,13 @@ class AppVersionAdminScreen extends ConsumerWidget {
     final async = ref.watch(appVersionsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: context.appBarBg,
         elevation: 0.6,
-        title: const Text(
+        title: Text(
           'App Versions',
-          style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.dark),
+          style: TextStyle(fontWeight: FontWeight.w800, color: context.textPrimary),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -78,9 +79,9 @@ class AppVersionAdminScreen extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(

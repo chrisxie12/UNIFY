@@ -127,7 +127,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: selected ? AppColors.white : AppColors.grey1,
+                              color: selected ? Colors.white : context.textSecondary,
                             ),
                           ),
                         ),
