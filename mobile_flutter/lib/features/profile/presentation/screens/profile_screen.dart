@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../core/widgets/theme_picker_sheet.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -368,7 +367,7 @@ class _Header extends StatelessWidget {
               const SizedBox(width: 8),
               _ActionBtn(
                 icon: Icons.settings_outlined,
-                onTap: () => context.push('/app/profile/privacy'),
+                onTap: () => context.push('/app/profile/settings'),
               ),
             ],
           ),
@@ -1518,7 +1517,7 @@ class _AccountCard extends StatelessWidget {
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
-          _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
+          _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), onTap: () => context.push('/app/profile/settings')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,

@@ -17,6 +17,7 @@ import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/privacy_settings_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
 import '../../features/leadership/presentation/screens/community_request_screen.dart';
@@ -234,6 +235,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'privacy',
                   builder: (_, __) => const PrivacySettingsScreen(),
+                ),
+                GoRoute(
+                  path: 'settings',
+                  builder: (_, __) => const SettingsScreen(),
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
+import 'core/providers/theme_mode_provider.dart';
 
 class UnifyApp extends ConsumerStatefulWidget {
   const UnifyApp({super.key});
@@ -42,10 +43,13 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
     final theme = ref.watch(themeNotifierProvider);
+    final mode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'UNIFY',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.buildFrom(theme),
+      darkTheme: AppTheme.buildDark(theme),
+      themeMode: mode,
       routerConfig: router,
     );
   }
