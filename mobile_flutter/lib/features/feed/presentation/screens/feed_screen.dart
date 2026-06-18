@@ -9,6 +9,7 @@ import '../../domain/entities/announcement.dart';
 import '../widgets/announcement_card.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../system/presentation/widgets/system_announcement_banner.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -151,6 +152,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                 child: Container(height: 1, color: AppColors.border),
               ),
             ),
+
+            // ── System announcements ────────────────────────────────────────
+            const SliverToBoxAdapter(child: SystemAnnouncementBanner()),
 
             // ── Stories row ─────────────────────────────────────────────────
             SliverToBoxAdapter(

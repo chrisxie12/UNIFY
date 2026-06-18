@@ -31,7 +31,7 @@ class AmbassadorRepository {
   Future<Ambassador> getAmbassador(String id) async {
     final data =
         await _client.from('ambassadors').select(_join).eq('id', id).single();
-    return Ambassador.fromJson(data as Map<String, dynamic>);
+    return Ambassador.fromJson(data);
   }
 
   Future<Ambassador?> myAmbassadorProfile(String userId) async {
@@ -41,7 +41,7 @@ class AmbassadorRepository {
         .eq('user_id', userId)
         .maybeSingle();
     if (data == null) return null;
-    return Ambassador.fromJson(data as Map<String, dynamic>);
+    return Ambassador.fromJson(data);
   }
 
   Future<List<Map<String, dynamic>>> searchProfiles(String query) async {

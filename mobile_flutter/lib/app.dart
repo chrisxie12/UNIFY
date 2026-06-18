@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
+import 'features/system/presentation/widgets/update_gate.dart';
 
 class UnifyApp extends ConsumerStatefulWidget {
   const UnifyApp({super.key});
@@ -51,6 +52,8 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
       darkTheme: AppTheme.buildDark(theme),
       themeMode: mode,
       routerConfig: router,
+      builder: (context, child) =>
+          UpdateGate(child: child ?? const SizedBox.shrink()),
     );
   }
 }

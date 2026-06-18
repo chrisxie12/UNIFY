@@ -21,6 +21,7 @@ import '../../features/messaging/presentation/screens/create_group_screen.dart';
 import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/privacy_settings_screen.dart';
+import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/reputation/presentation/screens/reputation_dashboard_screen.dart';
@@ -71,6 +72,25 @@ import '../../features/academic/presentation/screens/exam_prep_center_screen.dar
 import '../../features/academic/presentation/screens/gpa_calculator_screen.dart';
 import '../../features/academic/presentation/screens/study_planner_screen.dart';
 import '../../features/academic/presentation/screens/academic_search_screen.dart';
+// ── Launch infrastructure (Step 13) ──────────────────────────
+import '../../features/admin/presentation/screens/launch_control_screen.dart';
+import '../../features/growth/presentation/screens/beta_admin_screen.dart';
+import '../../features/growth/presentation/screens/referral_admin_screen.dart';
+import '../../features/growth/presentation/screens/my_referrals_screen.dart';
+import '../../features/feedback/presentation/screens/feedback_screen.dart';
+import '../../features/feedback/presentation/screens/feedback_admin_screen.dart';
+import '../../features/support/presentation/screens/support_center_screen.dart';
+import '../../features/support/presentation/screens/help_article_screen.dart';
+import '../../features/support/presentation/screens/support_admin_screen.dart';
+import '../../features/system/presentation/screens/announcements_admin_screen.dart';
+import '../../features/system/presentation/screens/app_version_admin_screen.dart';
+import '../../features/ops/presentation/screens/usage_analytics_screen.dart';
+import '../../features/ops/presentation/screens/feature_adoption_screen.dart';
+import '../../features/ops/presentation/screens/system_health_screen.dart';
+import '../../features/ops/presentation/screens/launch_readiness_screen.dart';
+import '../../features/ambassadors/presentation/screens/ambassador_admin_screen.dart';
+import '../../features/ambassadors/presentation/screens/ambassador_detail_screen.dart';
+import '../../features/ambassadors/presentation/screens/ambassador_profile_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -264,6 +284,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const SkillsManagementScreen(),
       ),
 
+      // ── Launch Control (admin ops) ───────────────────────────
+      GoRoute(path: '/launch', builder: (_, __) => const LaunchControlScreen()),
+      GoRoute(path: '/launch/readiness', builder: (_, __) => const LaunchReadinessScreen()),
+      GoRoute(path: '/launch/analytics', builder: (_, __) => const UsageAnalyticsScreen()),
+      GoRoute(path: '/launch/adoption', builder: (_, __) => const FeatureAdoptionScreen()),
+      GoRoute(path: '/launch/health', builder: (_, __) => const SystemHealthScreen()),
+      GoRoute(path: '/launch/beta', builder: (_, __) => const BetaAdminScreen()),
+      GoRoute(path: '/launch/referrals', builder: (_, __) => const ReferralAdminScreen()),
+      GoRoute(path: '/launch/ambassadors', builder: (_, __) => const AmbassadorAdminScreen()),
+      GoRoute(path: '/launch/announcements', builder: (_, __) => const AnnouncementsAdminScreen()),
+      GoRoute(path: '/launch/feedback', builder: (_, __) => const FeedbackAdminScreen()),
+      GoRoute(path: '/launch/support', builder: (_, __) => const SupportAdminScreen()),
+      GoRoute(path: '/launch/app-versions', builder: (_, __) => const AppVersionAdminScreen()),
+      GoRoute(
+        path: '/launch/ambassador/:id',
+        builder: (_, state) =>
+            AmbassadorDetailScreen(ambassadorId: state.pathParameters['id']!),
+      ),
+
+      // ── Launch — student facing ──────────────────────────────
+      GoRoute(path: '/referrals', builder: (_, __) => const MyReferralsScreen()),
+      GoRoute(path: '/feedback', builder: (_, __) => const FeedbackScreen()),
+      GoRoute(path: '/support', builder: (_, __) => const SupportCenterScreen()),
+      GoRoute(path: '/ambassador', builder: (_, __) => const AmbassadorProfileScreen()),
+      GoRoute(
+        path: '/support/article/:id',
+        builder: (_, state) =>
+            HelpArticleScreen(articleId: state.pathParameters['id']!),
+      ),
+
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),
         branches: [
@@ -297,6 +347,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'privacy',
                   builder: (_, __) => const PrivacySettingsScreen(),
+                ),
+                GoRoute(
+                  path: 'settings',
+                  builder: (_, __) => const SettingsScreen(),
                 ),
               ],
             ),

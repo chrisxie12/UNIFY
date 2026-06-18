@@ -1504,6 +1504,9 @@ class _AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appUser = ref.watch(currentAppUserProvider).valueOrNull;
+    final isAdmin = appUser?.isAdmin ?? false;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -1518,6 +1521,15 @@ class _AccountCard extends StatelessWidget {
           _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), onTap: () => context.push('/app/profile/settings')),
+          if (isAdmin) ...[
+            const Divider(height: 1, color: AppColors.border, indent: 58),
+            _Tile(
+              icon: Icons.rocket_launch_rounded,
+              label: 'Launch Control',
+              iconColor: const Color(0xFF0066FF),
+              onTap: () => context.push('/launch'),
+            ),
+          ],
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,
