@@ -18,6 +18,8 @@ class AppConstants {
   static const String feedCacheBox    = 'feed_cache';
   static const String profileCacheBox = 'profile_cache';
   static const String opportunitiesBox = 'opportunities_cache';
+  static const String academicBox = 'academic_cache';
+  static const String offlineResourcesBox = 'offline_resources';
 
   // Roles
   static const String roleStudent    = 'student';

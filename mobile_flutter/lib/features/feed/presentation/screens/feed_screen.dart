@@ -119,6 +119,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.school_outlined, color: AppColors.dark, size: 22),
+                  onPressed: () => context.push('/academic'),
+                  tooltip: 'Academic Hub',
+                ),
+                IconButton(
                   icon: const Icon(Icons.explore_outlined, color: AppColors.dark, size: 22),
                   onPressed: () => context.push('/opportunities'),
                   tooltip: 'Opportunities',

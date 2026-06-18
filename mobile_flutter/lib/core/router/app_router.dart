@@ -44,6 +44,19 @@ import '../../features/opportunities/presentation/screens/application_tracker_sc
 import '../../features/opportunities/presentation/screens/deadlines_screen.dart';
 import '../../features/opportunities/presentation/screens/opportunity_search_screen.dart';
 import '../../features/opportunities/presentation/screens/opportunities_admin_screen.dart';
+import '../../features/academic/presentation/screens/academic_home_screen.dart';
+import '../../features/academic/presentation/screens/courses_screen.dart';
+import '../../features/academic/presentation/screens/course_detail_screen.dart';
+import '../../features/academic/presentation/screens/course_form_screen.dart';
+import '../../features/academic/presentation/screens/resource_detail_screen.dart';
+import '../../features/academic/presentation/screens/resource_upload_screen.dart';
+import '../../features/academic/presentation/screens/assignments_screen.dart';
+import '../../features/academic/presentation/screens/exam_prep_screen.dart';
+import '../../features/academic/presentation/screens/gpa_calculator_screen.dart';
+import '../../features/academic/presentation/screens/study_planner_screen.dart';
+import '../../features/academic/presentation/screens/offline_library_screen.dart';
+import '../../features/academic/presentation/screens/academic_search_screen.dart';
+import '../../features/academic/presentation/screens/academic_admin_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -169,6 +182,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/opportunities/detail/:id',
         builder: (_, state) =>
             OpportunityDetailScreen(opportunityId: state.pathParameters['id']!),
+      ),
+
+      // ── Academic Hub ─────────────────────────────────────────
+      GoRoute(path: '/academic', builder: (_, __) => const AcademicHomeScreen()),
+      GoRoute(path: '/academic/courses', builder: (_, __) => const CoursesScreen()),
+      GoRoute(path: '/academic/course-new', builder: (_, __) => const CourseFormScreen()),
+      GoRoute(path: '/academic/upload', builder: (_, __) => const ResourceUploadScreen()),
+      GoRoute(path: '/academic/assignments', builder: (_, __) => const AssignmentsScreen()),
+      GoRoute(path: '/academic/exams', builder: (_, __) => const ExamPrepScreen()),
+      GoRoute(path: '/academic/gpa', builder: (_, __) => const GpaCalculatorScreen()),
+      GoRoute(path: '/academic/planner', builder: (_, __) => const StudyPlannerScreen()),
+      GoRoute(path: '/academic/offline', builder: (_, __) => const OfflineLibraryScreen()),
+      GoRoute(path: '/academic/search', builder: (_, __) => const AcademicSearchScreen()),
+      GoRoute(path: '/academic/admin', builder: (_, __) => const AcademicAdminScreen()),
+      GoRoute(
+        path: '/academic/course/:id',
+        builder: (_, state) =>
+            CourseDetailScreen(courseId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/academic/resource/:id',
+        builder: (_, state) =>
+            ResourceDetailScreen(resourceId: state.pathParameters['id']!),
       ),
 
       StatefulShellRoute.indexedStack(
