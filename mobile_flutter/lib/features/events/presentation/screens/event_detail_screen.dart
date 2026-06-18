@@ -1,411 +1,224 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final String eventId;
-
   const EventDetailScreen({super.key, required this.eventId});
-
   @override
   ConsumerState<EventDetailScreen> createState() => _EventDetailScreenState();
 }
 
 class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
-  String? _selectedRsvp;
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final eventAsync = ref.watch(eventDetailProvider(widget.eventId));
-    final userId = ref.read(supabaseProvider).auth.currentUser?.id;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Details'),
+    return eventAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text('$e'))),
+      data: (event) => _EventDetailContent(
+        event: event, theme: theme, ref: ref, eventId: widget.eventId,
       ),
-      body: eventAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (event) {
-          _selectedRsvp ??= event.myRsvpStatus;
+    );
+  }
+}
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (event.coverUrl != null)
-                  ClipRRect(
-                    child: Image.network(
-                      event.coverUrl!,
-                      width: double.infinity,
-                      height: 220,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        height: 220,
-                        color: Colors.grey[100],
-                        child: Center(child: Icon(Icons.event, size: 48, color: Colors.grey[400])),
-                      ),
-                      loadingBuilder: (_, child, progress) {
-                        if (progress == null) return child;
-                        return Container(
-                          height: 220,
-                          color: Colors.grey[100],
-                          child: const Center(child: CircularProgressIndicator()),
-                        );
-                      },
-                    ),
-                  )
-                else
-                  Container(
-                    height: 140,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFF0066FF),
-                          const Color(0xFF0066FF).withValues(alpha: 0.7),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.event, size: 48, color: Colors.white.withValues(alpha: 0.6)),
-                    ),
-                  ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 74,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0066FF),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _monthAbbr(event.eventDate),
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  event.eventDate.day.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  event.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF0066FF).withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        event.eventTypeLabel,
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFF0066FF),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      _InfoRow(
-                        icon: Icons.access_time,
-                        label: '${DateFormat('EEEE, MMMM d, yyyy').format(event.eventDate)}',
-                        value: '${event.formattedTime}${event.endDate != null ? ' - ${DateFormat('h:mm a').format(event.endDate!)}' : ''}',
-                      ),
-                      if (event.location != null) ...[
-                        const SizedBox(height: 16),
-                        _InfoRow(
-                          icon: Icons.location_on_outlined,
-                          label: event.location!,
-                          value: null,
-                        ),
-                      ],
-                      if (event.isVirtual && event.meetingLink != null) ...[
-                        const SizedBox(height: 16),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.videocam, color: const Color(0xFFFF6B35), size: 20),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Virtual Event',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: Color(0xFFFF6B35),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      event.meetingLink!,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFF6B35),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Text(
-                                  'Join',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 24),
-                      if (event.description != null) ...[
-                        Text(
-                          event.description!,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey[700],
-                            height: 1.5,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      Row(
-                        children: [
-                          Icon(Icons.people_outline, size: 18, color: Colors.grey[500]),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${event.rsvpCount} attending',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          if (event.maxAttendees != null) ...[
-                            const SizedBox(width: 4),
-                            Text(
-                              '/ ${event.maxAttendees} max',
-                              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                            ),
-                          ],
-                        ],
-                      ),
-                      if (event.maxAttendees != null) ...[
-                        const SizedBox(height: 12),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: event.maxAttendees! > 0 ? event.rsvpCount / event.maxAttendees! : 0,
-                            backgroundColor: Colors.grey[200],
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
-                            minHeight: 6,
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 24),
-                      if (event.location != null) ...[
-                        Container(
-                          height: 140,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.map_outlined, size: 36, color: Colors.grey[400]),
-                                const SizedBox(height: 8),
-                                Text(
-                                  event.location!,
-                                  style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      Text(
-                        'Your RSVP',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          _RsvpChip(
-                            label: 'Going',
-                            icon: Icons.check_circle_outline,
-                            selected: _selectedRsvp == 'going',
-                            color: const Color(0xFF0066FF),
-                            onTap: () => _updateRsvp(event.id, 'going', userId),
-                          ),
-                          const SizedBox(width: 8),
-                          _RsvpChip(
-                            label: 'Maybe',
-                            icon: Icons.help_outline,
-                            selected: _selectedRsvp == 'maybe',
-                            color: const Color(0xFFFF6B35),
-                            onTap: () => _updateRsvp(event.id, 'maybe', userId),
-                          ),
-                          const SizedBox(width: 8),
-                          _RsvpChip(
-                            label: 'Not Going',
-                            icon: Icons.cancel_outlined,
-                            selected: _selectedRsvp == 'declined',
-                            color: Colors.red,
-                            onTap: () => _updateRsvp(event.id, 'declined', userId),
-                          ),
-                        ],
-                      ),
-                      if (_selectedRsvp != null) ...[
-                        const SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () => _updateRsvp(event.id, null, userId),
-                          child: Text(
-                            'Clear RSVP',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[500],
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 32),
-                    ],
+class _EventDetailContent extends ConsumerWidget {
+  final EventModel event;
+  final ThemeData theme;
+  final WidgetRef ref;
+  final String eventId;
+
+  const _EventDetailContent({
+    required this.event, required this.theme, required this.ref, required this.eventId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef widgetRef) {
+    final isOrganizer = event.creatorId == ref.read(currentUserIdProvider);
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverAppBar(context, isOrganizer),
+          SliverToBoxAdapter(child: _buildBody(context, isOrganizer)),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomBar(context, isOrganizer),
+    );
+  }
+
+  Widget _buildSliverAppBar(BuildContext context, bool isOrganizer) {
+    return SliverAppBar(
+      expandedHeight: 220,
+      pinned: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => context.pop(),
+      ),
+      actions: [
+        if (isOrganizer)
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onSelected: (v) {
+              if (v == 'edit') context.push('/events/$eventId/edit');
+              if (v == 'dashboard') context.push('/events/$eventId/dashboard');
+              if (v == 'discard') {
+                ref.read(eventRepositoryProvider).deleteEvent(eventId);
+                context.pop();
+              }
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(value: 'edit', child: Text('Edit Event')),
+              const PopupMenuItem(value: 'dashboard', child: Text('Organizer Dashboard')),
+              const PopupMenuItem(value: 'discard', child: Text('Delete Event')),
+            ],
+          ),
+        IconButton(
+          icon: Icon(
+            event.isSaved ? Icons.bookmark : Icons.bookmark_border,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            final userId = ref.read(currentUserIdProvider);
+            if (userId == null) return;
+            if (event.isSaved) {
+              ref.read(eventRepositoryProvider).unSaveEvent(event.id, userId);
+            } else {
+              ref.read(eventRepositoryProvider).saveEvent(event.id, userId);
+            }
+            ref.invalidate(eventDetailProvider(eventId));
+          },
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: event.coverUrl != null
+            ? Image.network(event.coverUrl!, fit: BoxFit.cover)
+            : Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)],
+                    begin: Alignment.topLeft, end: Alignment.bottomRight,
                   ),
                 ),
-              ],
-            ),
-          );
-        },
+              ),
       ),
     );
   }
 
-  Future<void> _updateRsvp(String eventId, String? status, String? userId) async {
-    if (userId == null) return;
-
-    final repo = ref.read(eventRepositoryProvider);
-    if (status == null) {
-      await repo.cancelRsvp(eventId, userId);
-    } else {
-      await repo.rsvpEvent(eventId, userId, status);
-    }
-
-    setState(() => _selectedRsvp = status);
-    ref.invalidate(eventDetailProvider(widget.eventId));
+  Widget _buildBody(BuildContext context, bool isOrganizer) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _HeaderSection(event: event, theme: theme),
+          const SizedBox(height: 16),
+          _InfoSection(event: event, theme: theme),
+          const SizedBox(height: 16),
+          _DescriptionSection(event: event, theme: theme),
+          const SizedBox(height: 16),
+          _CapacitySection(event: event, theme: theme),
+          const SizedBox(height: 24),
+          _ActionButtons(event: event, theme: theme, ref: ref, eventId: eventId),
+          const SizedBox(height: 16),
+          _QuickLinks(event: event, theme: theme, ref: ref),
+          const SizedBox(height: 16),
+          _AttendeesPreview(event: event),
+        ],
+      ),
+    );
   }
 
-  String _monthAbbr(DateTime date) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[date.month - 1];
+  Widget _buildBottomBar(BuildContext context, bool isOrganizer) {
+    final userId = ref.read(currentUserIdProvider);
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: event.isCancelled || event.isPast ? null : () async {
+                  if (userId == null) return;
+                  if (event.registrationType == 'free') {
+                    final ticket = await ref.read(eventRepositoryProvider).registerForEvent(event.id, userId);
+                    if (ticket != null && context.mounted) {
+                      context.push('/events/ticket/${ticket.id}');
+                    }
+                  }
+                },
+                icon: Icon(event.myTicketId != null ? Icons.confirmation_number : Icons.event),
+                label: Text(event.myTicketId != null ? 'View Ticket' : event.isPast ? 'Event Ended' : 'Register Now'),
+              ),
+            ),
+            if (isOrganizer) ...[
+              const SizedBox(width: 12),
+              OutlinedButton.icon(
+                onPressed: () => context.push('/events/$eventId/dashboard'),
+                icon: const Icon(Icons.dashboard),
+                label: const Text('Manage'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String? value;
-
-  const _InfoRow({required this.icon, required this.label, this.value});
+class _HeaderSection extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  const _HeaderSection({required this.event, required this.theme});
 
   @override
   Widget build(BuildContext context) {
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: Colors.grey[500]),
+        Container(
+          width: 56, height: 64,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(months[event.eventDate.month - 1], style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
+              Text('${event.eventDate.day}', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              if (value != null) ...[
-                const SizedBox(height: 2),
-                Text(
-                  value!,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+              Text(event.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Row(children: [
+                _Badge(text: event.categoryLabel, color: theme.colorScheme.primary),
+                const SizedBox(width: 6),
+                _Badge(text: event.scopeLabel, color: Colors.orange),
+                if (event.isFeatured) ...[
+                  const SizedBox(width: 6), const _Badge(text: 'Featured', color: Colors.amber),
+                ],
+                if (!event.isApproved && event.scope != 'community') ...[
+                  const SizedBox(width: 6), const _Badge(text: 'Pending', color: Colors.grey),
+                ],
+              ]),
+              if (event.isCancelled) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(4)),
+                  child: Text('Cancelled', style: TextStyle(fontSize: 11, color: Colors.red[700], fontWeight: FontWeight.w600)),
                 ),
               ],
             ],
@@ -416,56 +229,245 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _RsvpChip extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool selected;
+class _Badge extends StatelessWidget {
+  final String text;
   final Color color;
-  final VoidCallback onTap;
+  const _Badge({required this.text, required this.color});
 
-  const _RsvpChip({
-    required this.label,
-    required this.icon,
-    required this.selected,
-    required this.color,
-    required this.onTap,
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+      child: Text(text, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500)),
+    );
+  }
+}
+
+class _InfoSection extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  const _InfoSection({required this.event, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(children: [
+          if (event.eventTime != null) _InfoRow(icon: Icons.access_time, text: '${event.formattedDate} at ${event.formattedTime}'),
+          if (event.location != null) _InfoRow(icon: Icons.location_on, text: event.location!),
+          if (event.organizerType != null) _InfoRow(icon: Icons.badge, text: event.organizerType!.replaceAll('_', ' ').split(' ').map((w) => w[0].toUpperCase() + w.substring(1)).join(' ')),
+          if (event.contactInfo != null) _InfoRow(icon: Icons.contact_phone, text: event.contactInfo!),
+          _InfoRow(icon: Icons.monetization_on, text: event.registrationTypeLabel),
+        ]),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _InfoRow({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: Colors.grey[800]))),
+      ]),
+    );
+  }
+}
+
+class _DescriptionSection extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  const _DescriptionSection({required this.event, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+        const SizedBox(height: 8),
+        Text(event.description ?? 'No description provided.', style: const TextStyle(fontSize: 14, height: 1.5)),
+      ],
+    );
+  }
+}
+
+class _CapacitySection extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  const _CapacitySection({required this.event, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    if (event.capacity == null) return const SizedBox.shrink();
+    final percentage = event.capacity! > 0 ? event.attendeeCount / event.capacity! : 0.0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Icon(Icons.people, size: 16, color: Colors.grey[600]),
+          const SizedBox(width: 4),
+          Text('${event.attendeeCount} / ${event.capacity} registered', style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+          const Spacer(),
+          Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+        ]),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: percentage,
+            backgroundColor: Colors.grey[200],
+            color: percentage >= 1 ? Colors.red : theme.colorScheme.primary,
+            minHeight: 6,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  final WidgetRef ref;
+  final String eventId;
+  const _ActionButtons({required this.event, required this.theme, required this.ref, required this.eventId});
+
+  @override
+  Widget build(BuildContext context) {
+    final userId = ref.read(currentUserIdProvider);
+    return Row(children: [
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: () {
+            if (userId == null) return;
+            if (event.myRsvpStatus != null) {
+              ref.read(eventRepositoryProvider).cancelRsvp(event.id, userId);
+              ref.invalidate(eventDetailProvider(eventId));
+            } else {
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  ListTile(leading: const Icon(Icons.check, color: Colors.green), title: const Text('Going'), onTap: () async {
+                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'going');
+                    if (context.mounted) Navigator.pop(context);
+                    ref.invalidate(eventDetailProvider(eventId));
+                  }),
+                  ListTile(leading: const Icon(Icons.help, color: Colors.orange), title: const Text('Maybe'), onTap: () async {
+                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'maybe');
+                    if (context.mounted) Navigator.pop(context);
+                    ref.invalidate(eventDetailProvider(eventId));
+                  }),
+                  ListTile(leading: const Icon(Icons.close, color: Colors.red), title: const Text('Not Going'), onTap: () async {
+                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'not_going');
+                    if (context.mounted) Navigator.pop(context);
+                    ref.invalidate(eventDetailProvider(eventId));
+                  }),
+                ])),
+              );
+            }
+          },
+          icon: Icon(event.myRsvpStatus != null ? Icons.check_circle : Icons.event),
+          label: Text(event.myRsvpStatus != null ? 'RSVPed (${event.myRsvpStatus})' : 'RSVP'),
+        ),
+      ),
+      const SizedBox(width: 8),
+      OutlinedButton.icon(
+        onPressed: () {
+          // Calendar integration placeholder
+        },
+        icon: const Icon(Icons.calendar_month),
+        label: const Text('Calendar'),
+      ),
+    ]);
+  }
+}
+
+class _QuickLinks extends StatelessWidget {
+  final EventModel event;
+  final ThemeData theme;
+  final WidgetRef ref;
+  const _QuickLinks({required this.event, required this.theme, required this.ref});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      _QuickLinkCard(icon: Icons.chat, label: 'Discuss', onTap: () => context.push('/events/${event.id}/discussions')),
+      const SizedBox(width: 8),
+      _QuickLinkCard(icon: Icons.photo_library, label: 'Media', onTap: () => context.push('/events/${event.id}/media')),
+      const SizedBox(width: 8),
+      _QuickLinkCard(icon: Icons.share, label: 'Share', onTap: () {}),
+      const SizedBox(width: 8),
+      _QuickLinkCard(icon: Icons.notifications, label: 'Remind', onTap: () {
+        final userId = ref.read(currentUserIdProvider);
+        if (userId == null) return;
+        for (final offset in [const Duration(days: 7), const Duration(days: 3), const Duration(days: 1), const Duration(hours: 1)]) {
+          final remindAt = event.eventDate.subtract(offset);
+          if (remindAt.isAfter(DateTime.now())) {
+            ref.read(eventRepositoryProvider).setReminder(event.id, userId, remindAt);
+          }
+        }
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reminders set!')));
+      }),
+    ]);
+  }
+}
+
+class _QuickLinkCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _QuickLinkCard({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: selected ? color.withValues(alpha: 0.1) : Colors.grey[50],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: selected ? color : Colors.grey[200]!,
-              width: selected ? 1.5 : 1,
-            ),
-          ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: selected ? color : Colors.grey[400],
-                size: 24,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: selected ? color : Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
+          decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[200]!)),
+          child: Column(children: [
+            Icon(icon, size: 20, color: Colors.grey[700]),
+            const SizedBox(height: 4),
+            Text(label, style: TextStyle(fontSize: 10, color: Colors.grey[700])),
+          ]),
         ),
       ),
+    );
+  }
+}
+
+class _AttendeesPreview extends StatelessWidget {
+  final EventModel event;
+  const _AttendeesPreview({required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.push('/events/${event.id}/attendees'),
+      child: Row(children: [
+        SizedBox(
+          height: 28,
+          child: Stack(children: List.generate(3, (i) => Positioned(
+            left: i * 16.0,
+            child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: Colors.grey[500])),
+          ))),
+        ),
+        const SizedBox(width: 8),
+        Text('${event.attendeeCount} attending', style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+      ]),
     );
   }
 }

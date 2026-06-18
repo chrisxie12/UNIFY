@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/notification_provider.dart';
 import '../../data/models/notification_model.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -109,7 +110,7 @@ class _NotificationTile extends StatelessWidget {
     switch (notification.type) {
       case 'community_approved':
       case 'verification_approved':
-        return const Color(0xFF0066FF);
+        return AppColors.primary;
       case 'community_rejected':
       case 'verification_rejected':
         return Colors.red;
@@ -144,7 +145,7 @@ class _NotificationTile extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: const BoxDecoration(
-                color: Color(0xFF0066FF),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
             )

@@ -77,7 +77,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 groupValue: _selectedReason,
                 onChanged: (v) => setState(() => _selectedReason = v!),
                 dense: true,
-                activeColor: const Color(0xFF0066FF),
+                activeColor: Theme.of(context).colorScheme.primary,
               )),
           const SizedBox(height: 8),
           TextField(
@@ -94,7 +94,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
           FilledButton(
             onPressed: _isSubmitting ? null : _submitReport,
             style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF0066FF),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),

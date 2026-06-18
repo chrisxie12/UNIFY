@@ -154,12 +154,12 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_rounded, color: AppColors.primary, size: 20),
+                  Icon(Icons.info_rounded, color: Theme.of(context).colorScheme.primary, size: 20),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       'Submit your leadership evidence to get verified. Only verified leaders can create official communities.',
-                      style: TextStyle(fontSize: 12, color: AppColors.primary.withValues(alpha: 0.9), height: 1.5),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9), height: 1.5),
                     ),
                   ),
                 ],
@@ -170,7 +170,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
             _label('Position'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _positionCtrl.text.isEmpty ? null : _positionCtrl.text,
+              initialValue: _positionCtrl.text.isEmpty ? null : _positionCtrl.text,
               decoration: _input(),
               hint: const Text('Select your position'),
               items: _positions.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
@@ -198,7 +198,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
             _label('Academic Year'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _academicYear,
+              initialValue: _academicYear,
               decoration: _input(),
               items: _academicYears.map((y) => DropdownMenuItem(value: y, child: Text(y))).toList(),
               onChanged: (v) => setState(() => _academicYear = v ?? '2025/2026'),
@@ -226,7 +226,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
                   color: _evidenceFile != null ? const Color(0xFFEFF4FF) : AppColors.background,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _evidenceFile != null ? AppColors.primary : AppColors.border,
+                    color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.border,
                     width: _evidenceFile != null ? 1.5 : 1,
                   ),
                 ),
@@ -235,20 +235,20 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
                     Icon(
                       _evidenceFile != null ? Icons.check_circle_rounded : Icons.upload_file_rounded,
                       size: 32,
-                      color: _evidenceFile != null ? AppColors.primary : AppColors.grey3,
+                      color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.grey3,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       _evidenceFile != null ? _evidenceFile!.path.split('/').last : 'Tap to upload evidence',
                       style: TextStyle(
                         fontSize: 13,
-                        color: _evidenceFile != null ? AppColors.primary : AppColors.grey2,
+                        color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.grey2,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     if (_evidenceFile != null) ...[
                       const SizedBox(height: 4),
-                      Text('Tap to change', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+                      const Text('Tap to change', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
                     ],
                   ],
                 ),

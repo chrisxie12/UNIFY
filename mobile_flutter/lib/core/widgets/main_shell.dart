@@ -12,6 +12,8 @@ class MainShell extends StatelessWidget {
     _TabItem(icon: CupertinoIcons.house,           label: 'Feed'),
     _TabItem(icon: CupertinoIcons.square_grid_2x2, label: 'Hubs'),
     _TabItem(icon: CupertinoIcons.chat_bubble,     label: 'Messages'),
+    _TabItem(icon: CupertinoIcons.calendar,        label: 'Events'),
+    _TabItem(icon: CupertinoIcons.book,            label: 'Study'),
     _TabItem(icon: CupertinoIcons.person,          label: 'Profile'),
   ];
 
@@ -45,27 +47,29 @@ class _UnifyBottomNav extends StatelessWidget {
   static const Color _gray400 = Color(0xFFA1A1AA);
 
   // Pill dimensions
-  static const double _pillHeight = 64;
-  static const double _pillHPad  = 20; // horizontal margin on each side
-  static const double _bottomGap = 16; // gap above safe-area inset
+  static const double _pillHeight = 50;
+  static const double _pillHPad  = 24;
+  static const double _topGap    = 16;
+  static const double _bottomGap = 8;
 
   @override
   Widget build(BuildContext context) {
     final safeBottom = MediaQuery.of(context).padding.bottom;
 
     return SizedBox(
-      // Total height = pill + gap above safe area + safe area itself
-      height: _pillHeight + _bottomGap + safeBottom,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: _pillHPad),
-          child: Container(
-            height: _pillHeight,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.97),
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE4E4E7), width: 1),
+      height: _topGap + _pillHeight + _bottomGap + safeBottom,
+      child: Padding(
+        padding: const EdgeInsets.only(top: _topGap),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: _pillHPad),
+            child: Container(
+              height: _pillHeight,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.97),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: const Color(0xFFE4E4E7), width: 0.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.12),
@@ -94,6 +98,7 @@ class _UnifyBottomNav extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -128,7 +133,11 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
     const gray400 = _UnifyBottomNav._gray400;
 
     return Expanded(
-      child: GestureDetector(
+      child: Semantics(
+        button: true,
+        label: widget.tab.label,
+        hint: 'Switch to ${widget.tab.label} tab',
+        child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
@@ -144,9 +153,9 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
               AnimatedContainer(
                 duration: const Duration(milliseconds: 400),
                 curve: const Cubic(0.34, 1.56, 0.64, 1),
-                width: 4.5,
-                height: 4.5,
-                margin: const EdgeInsets.only(bottom: 4),
+                width: 4,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 2),
                 decoration: BoxDecoration(
                   color: widget.active ? primary : Colors.transparent,
                   shape: BoxShape.circle,
@@ -162,7 +171,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
               // Icon — smooth color + micro lift on active
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                transform: Matrix4.translationValues(0, widget.active ? -1 : 0, 0),
+                transform: Matrix4.translationValues(0, widget.active ? -0.5 : 0, 0),
                 child: Stack(
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
@@ -176,13 +185,13 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                       builder: (context, color, _) => Icon(
                         widget.tab.icon,
                         color: color,
-                        size: 24,
+                        size: 22,
                       ),
                     ),
                     if (widget.badge > 0)
                       Positioned(
-                        top: -4,
-                        right: -4,
+                        top: -6,
+                        right: -5,
                         child: Container(
                           height: 16,
                           constraints: const BoxConstraints(minWidth: 16),
@@ -209,13 +218,13 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                 ),
               ),
 
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
 
               // Label
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   color: widget.active ? primary : gray400,
                   fontWeight: widget.active ? FontWeight.w600 : FontWeight.w500,
                 ),
@@ -224,6 +233,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
             ],
           ),
         ),
+      ),
       ),
     );
   }

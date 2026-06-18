@@ -6,7 +6,8 @@ import '../../data/models/post_model.dart';
 class PostCard extends ConsumerWidget {
   final PostModel post;
   final VoidCallback? onTap;
-  final VoidCallback? onLike;
+  final VoidCallback? onUpvote;
+  final VoidCallback? onDownvote;
   final VoidCallback? onBookmark;
   final VoidCallback? onShare;
 
@@ -14,7 +15,8 @@ class PostCard extends ConsumerWidget {
     super.key,
     required this.post,
     this.onTap,
-    this.onLike,
+    this.onUpvote,
+    this.onDownvote,
     this.onBookmark,
     this.onShare,
   });
@@ -46,8 +48,8 @@ class PostCard extends ConsumerWidget {
                     child: post.authorAvatar == null
                         ? Text(
                             (post.authorName ?? 'U')[0].toUpperCase(),
-                            style: const TextStyle(
-                              color: Color(0xFF0066FF),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -74,21 +76,61 @@ class PostCard extends ConsumerWidget {
                             ),
                             if (post.authorIsVerifiedLeader == true) ...[
                               const SizedBox(width: 4),
-                              const Icon(
+                              Icon(
                                 Icons.verified,
-                                color: Color(0xFF0066FF),
+                                color: Theme.of(context).colorScheme.primary,
                                 size: 16,
                               ),
                             ],
                           ],
                         ),
                         const SizedBox(height: 2),
-                        Text(
-                          _formatTime(post.createdAt),
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 12,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              _formatTime(post.createdAt),
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 12,
+                              ),
+                            ),
+                            if (post.postType == 'question') ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'Question',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.orange[800],
+                                  ),
+                                ),
+                              ),
+                            ],
+                            if (post.bestAnswerId != null) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'Answered',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
                     ),
@@ -123,10 +165,10 @@ class PostCard extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: GestureDetector(
                     onTap: onTap,
-                    child: const Text(
+                    child: Text(
                       'Show more',
                       style: TextStyle(
-                        color: Color(0xFF0066FF),
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -171,13 +213,13 @@ class PostCard extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.link, size: 20, color: Color(0xFF0066FF)),
+                      Icon(Icons.link, size: 20, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           post.linkUrl!,
-                          style: const TextStyle(
-                            color: Color(0xFF0066FF),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 13,
                           ),
                           maxLines: 1,
@@ -192,34 +234,32 @@ class PostCard extends ConsumerWidget {
               const Divider(height: 1),
               const SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _ActionButton(
-                    icon: post.isLikedByMe == true
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    label: _formatCount(post.likesCount),
-                    color: post.isLikedByMe == true
-                        ? const Color(0xFF0066FF)
-                        : Colors.grey[600],
-                    onPressed: onLike,
+                  _VoteButtons(
+                    netVotes: post.netVoteCount,
+                    myVote: post.myVote,
+                    onUpvote: onUpvote,
+                    onDownvote: onDownvote,
                   ),
+                  const Spacer(),
                   _ActionButton(
                     icon: Icons.chat_bubble_outline,
                     label: _formatCount(post.commentsCount),
                     color: Colors.grey[600],
                     onPressed: onTap,
                   ),
+                  const SizedBox(width: 12),
                   _ActionButton(
                     icon: post.isBookmarkedByMe == true
                         ? Icons.bookmark
                         : Icons.bookmark_border,
                     label: _formatCount(post.bookmarksCount),
                     color: post.isBookmarkedByMe == true
-                        ? const Color(0xFF0066FF)
+                        ? Theme.of(context).colorScheme.primary
                         : Colors.grey[600],
                     onPressed: onBookmark,
                   ),
+                  const SizedBox(width: 12),
                   _ActionButton(
                     icon: Icons.share_outlined,
                     color: Colors.grey[600],
@@ -248,6 +288,59 @@ class PostCard extends ConsumerWidget {
     if (count >= 1000000) return '${(count / 1000000).toStringAsFixed(1)}M';
     if (count >= 1000) return '${(count / 1000).toStringAsFixed(1)}K';
     return count.toString();
+  }
+}
+
+class _VoteButtons extends StatelessWidget {
+  final int netVotes;
+  final String? myVote;
+  final VoidCallback? onUpvote;
+  final VoidCallback? onDownvote;
+
+  const _VoteButtons({
+    required this.netVotes,
+    this.myVote,
+    this.onUpvote,
+    this.onDownvote,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: onUpvote,
+          child: Icon(
+            myVote == 'upvote' ? Icons.arrow_upward : Icons.arrow_upward_outlined,
+            size: 22,
+            color: myVote == 'upvote' ? Theme.of(context).colorScheme.primary : Colors.grey[500],
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          netVotes.toString(),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: myVote == 'upvote'
+                ? Theme.of(context).colorScheme.primary
+                : myVote == 'downvote'
+                    ? Colors.red
+                    : Colors.grey[700],
+          ),
+        ),
+        const SizedBox(width: 6),
+        GestureDetector(
+          onTap: onDownvote,
+          child: Icon(
+            myVote == 'downvote' ? Icons.arrow_downward : Icons.arrow_downward_outlined,
+            size: 22,
+            color: myVote == 'downvote' ? Colors.red : Colors.grey[500],
+          ),
+        ),
+      ],
+    );
   }
 }
 

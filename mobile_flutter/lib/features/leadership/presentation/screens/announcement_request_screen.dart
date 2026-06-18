@@ -142,7 +142,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
             _label('Category'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _category,
+              initialValue: _category,
               decoration: _input(null),
               items: _categories.map((c) => DropdownMenuItem(
                 value: c.$1,
@@ -171,7 +171,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
             _label('Target Audience'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _targetAudience,
+              initialValue: _targetAudience,
               decoration: _input(null),
               hint: const Text('Select audience (optional)'),
               items: _audiences.map((a) => DropdownMenuItem(value: a.$1, child: Text(a.$2))).toList(),
@@ -183,7 +183,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
               title: const Text('Mark as Urgent', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
               subtitle: const Text('Urgent announcements are highlighted in red', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
               value: _isUrgent,
-              activeColor: AppColors.error,
+              activeThumbColor: AppColors.error,
               onChanged: (v) => setState(() => _isUrgent = v),
               contentPadding: EdgeInsets.zero,
             ),

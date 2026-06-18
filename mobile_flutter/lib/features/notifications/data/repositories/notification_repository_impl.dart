@@ -12,11 +12,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
     final response = await _client
         .from('notifications')
         .select('*')
-        .order('created_at', ascending: false) as List;
+        .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .limit(50) as List;
 
     return response
-        .where((n) => n['user_id'] == userId)
-        .take(50)
         .map((json) => NotificationModel.fromJson(json))
         .toList();
   }
@@ -26,9 +26,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
     final response = await _client
         .from('notifications')
         .select('id')
-        .order('created_at', ascending: false) as List;
+        .eq('user_id', userId)
+        .eq('is_read', false) as List;
 
-    return response.where((n) => n['user_id'] == userId && n['is_read'] == false).length;
+    return response.length;
   }
 
   @override

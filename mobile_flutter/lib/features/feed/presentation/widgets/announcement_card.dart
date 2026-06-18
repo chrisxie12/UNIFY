@@ -58,10 +58,10 @@ class AnnouncementCard extends StatelessWidget {
 class _PinnedBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
-        children: const [
+        children: [
           Icon(Icons.push_pin_rounded, size: 12, color: AppColors.grey2),
           SizedBox(width: 5),
           Text(
@@ -83,7 +83,7 @@ class _Header extends StatelessWidget {
   static Color _catColor(String cat) {
     switch (cat) {
       case 'urgent':   return const Color(0xFFEF4444);
-      case 'academic': return const Color(0xFF0066FF);
+      case 'academic': return AppColors.primary;
       case 'events':   return const Color(0xFF8B5CF6);
       case 'admin':    return const Color(0xFFF59E0B);
       default:         return const Color(0xFF6B7280);
@@ -165,9 +165,9 @@ class _Header extends StatelessWidget {
             ),
             if (item.isUrgent) ...[
               const SizedBox(height: 4),
-              _Chip(
+              const _Chip(
                 label: 'Urgent',
-                color: const Color(0xFFEF4444),
+                color: Color(0xFFEF4444),
                 icon: Icons.priority_high_rounded,
               ),
             ],
@@ -300,8 +300,8 @@ class _Footer extends StatelessWidget {
             style: const TextStyle(fontSize: 12, color: AppColors.grey3),
           ),
           const Spacer(),
-          _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),
-          _FooterBtn(icon: Icons.reply_rounded, label: 'Share'),
+          const _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),
+          const _FooterBtn(icon: Icons.reply_rounded, label: 'Share'),
         ],
       ),
     );

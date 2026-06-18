@@ -449,7 +449,7 @@ class _BottomControls extends StatelessWidget {
               gradient: LinearGradient(
                 colors: isLast
                     ? [const Color(0xFFFF6B35), const Color(0xFFFF8C42)]
-                    : [const Color(0xFF0047FF), const Color(0xFF0066FF)],
+                    : [const Color(0xFF0047FF), Theme.of(context).colorScheme.primary],
               ),
               borderRadius: BorderRadius.circular(18),
               boxShadow: [

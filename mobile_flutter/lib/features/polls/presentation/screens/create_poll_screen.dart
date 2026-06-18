@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../providers/poll_provider.dart';
 
@@ -67,7 +66,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                 : Text(
                     'Create',
                     style: TextStyle(
-                      color: _isValid ? const Color(0xFF0066FF) : Colors.grey[400],
+                      color: _isValid ? Theme.of(context).colorScheme.primary : Colors.grey[400],
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -139,7 +138,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text('Add option'),
                     style: TextButton.styleFrom(
-                      foregroundColor: const Color(0xFF0066FF),
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                     ),
                   ),
@@ -156,14 +155,14 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0066FF).withValues(alpha: 0.1),
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
                         child: Text(
                           String.fromCharCode(65 + index),
-                          style: const TextStyle(
-                            color: Color(0xFF0066FF),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -228,7 +227,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                     subtitle: Text('Only one option can be selected', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
                     value: _pollType == 'single',
                     onChanged: (v) => setState(() => _pollType = v ? 'single' : 'multiple'),
-                    activeColor: const Color(0xFF0066FF),
+                    activeThumbColor: Theme.of(context).colorScheme.primary,
                     dense: true,
                   ),
                   Divider(height: 1, indent: 16, endIndent: 16, color: Colors.grey[200]),
@@ -237,7 +236,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                     subtitle: Text("Voters' identities are hidden", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
                     value: _isAnonymous,
                     onChanged: (v) => setState(() => _isAnonymous = v),
-                    activeColor: const Color(0xFF0066FF),
+                    activeThumbColor: Theme.of(context).colorScheme.primary,
                     dense: true,
                   ),
                 ],
@@ -272,7 +271,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                             const SizedBox(height: 2),
                             Text(
                               DateFormat('MMM d, yyyy').format(_expiryDate!),
-                              style: TextStyle(fontSize: 12, color: const Color(0xFF0066FF)),
+                              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
                             ),
                           ],
                         ],

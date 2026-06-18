@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
-import '../../data/models/community_detail_model.dart';
 import '../providers/community_provider.dart';
 import '../../../posts/presentation/widgets/post_card.dart';
 import '../../../posts/presentation/providers/post_provider.dart';
-import '../../../posts/data/models/post_model.dart';
 import '../../../events/presentation/widgets/event_card.dart';
 import '../../../events/presentation/providers/event_provider.dart';
 import '../../../resources/presentation/widgets/resource_card.dart';
 import '../../../resources/presentation/providers/resource_provider.dart';
 import '../../../resources/data/models/community_resource_model.dart';
+import '../../../polls/presentation/widgets/poll_card.dart';
+import '../../../polls/presentation/providers/poll_provider.dart';
+import '../../../polls/data/models/poll_model.dart';
 
 class CommunityHomeScreen extends ConsumerStatefulWidget {
   final String communityId;
@@ -43,6 +43,7 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
   Widget build(BuildContext context) {
     final communityAsync = ref.watch(communityDetailProvider(widget.communityId));
     final userId = ref.read(supabaseProvider).auth.currentUser?.id;
+    final isManagerAsync = ref.watch(isCommunityManagerProvider(widget.communityId));
 
     return communityAsync.when(
       loading: () => const Scaffold(
@@ -70,8 +71,8 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFF0066FF),
-                                    const Color(0xFF0066FF).withValues(alpha: 0.7),
+                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -107,10 +108,10 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
                                       community.name.isNotEmpty
                                           ? community.name[0].toUpperCase()
                                           : 'C',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 28,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0066FF),
+                                        color: Theme.of(context).colorScheme.primary,
                                       ),
                                     )
                                   : null,
@@ -137,9 +138,9 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
                                       ),
                                       const SizedBox(width: 6),
                                       if (community.creatorIsVerifiedLeader == true)
-                                        const Icon(
+                                        Icon(
                                           Icons.verified,
-                                          color: Color(0xFF0066FF),
+                                          color: Theme.of(context).colorScheme.primary,
                                           size: 20,
                                         ),
                                     ],
@@ -170,12 +171,12 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
                   TabBar(
                     controller: _tabController,
                     isScrollable: false,
-                    labelColor: const Color(0xFF0066FF),
+                    labelColor: Theme.of(context).colorScheme.primary,
                     unselectedLabelColor: Colors.grey[600],
-                    indicatorColor: const Color(0xFF0066FF),
+                    indicatorColor: Theme.of(context).colorScheme.primary,
                     tabs: const [
                       Tab(icon: Icon(Icons.campaign, size: 20), text: 'Announcements'),
-                      Tab(icon: Icon(Icons.article, size: 20), text: 'Posts'),
+                      Tab(icon: Icon(Icons.forum, size: 20), text: 'Discussions'),
                       Tab(icon: Icon(Icons.event, size: 20), text: 'Events'),
                       Tab(icon: Icon(Icons.folder, size: 20), text: 'Resources'),
                       Tab(icon: Icon(Icons.people, size: 20), text: 'Members'),
@@ -189,25 +190,88 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
               controller: _tabController,
               children: [
                 _AnnouncementsTab(communityId: widget.communityId, userId: userId),
-                _PostsTab(communityId: widget.communityId, userId: userId),
+                _DiscussionsTab(communityId: widget.communityId, userId: userId),
                 _EventsTab(communityId: widget.communityId, userId: userId),
                 _ResourcesTab(communityId: widget.communityId),
                 _MembersTab(communityId: widget.communityId),
               ],
             ),
           ),
-          floatingActionButton: _tabController.index == 1
-              ? FloatingActionButton(
+          floatingActionButton: isManagerAsync.when(
+            data: (isManager) {
+              if (!isManager) return null;
+              if (_tabController.index == 1) {
+                return FloatingActionButton(
                   onPressed: () {
-                    context.push('/community/${widget.communityId}/create-post');
+                    _showCreateMenu(context, widget.communityId);
                   },
                   backgroundColor: const Color(0xFFFF6B35),
                   foregroundColor: Colors.white,
                   child: const Icon(Icons.edit),
-                )
-              : null,
+                );
+              }
+              if (_tabController.index == 2) {
+                return FloatingActionButton(
+                  onPressed: () {
+                    // Navigate to create event
+                  },
+                  backgroundColor: const Color(0xFFFF6B35),
+                  foregroundColor: Colors.white,
+                  child: const Icon(Icons.add),
+                );
+              }
+              return null;
+            },
+            loading: () => null,
+            error: (_, __) => null,
+          ),
         );
       },
+    );
+  }
+
+  void _showCreateMenu(BuildContext context, String communityId) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Icon(Icons.article, color: Theme.of(context).colorScheme.primary),
+                title: const Text('Create Post'),
+                subtitle: const Text('Share text, images, or links'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  context.push('/community/$communityId/create-post');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.poll, color: Theme.of(context).colorScheme.primary),
+                title: const Text('Create Poll'),
+                subtitle: const Text('Ask the community to vote'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  context.push('/community/$communityId/create-poll');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -252,7 +316,7 @@ class _JoinButton extends ConsumerWidget {
         ref.invalidate(communityDetailProvider(communityId));
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isMember ? Colors.grey[200] : const Color(0xFF0066FF),
+        backgroundColor: isMember ? Colors.grey[200] : Theme.of(context).colorScheme.primary,
         foregroundColor: isMember ? Colors.black87 : Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -274,7 +338,7 @@ class _AnnouncementsTab extends ConsumerWidget {
 
     return postsAsync.when(
       loading: () => const _PostsShimmer(),
-      error: (e, _) => Center(child: Text('Error loading announcements')),
+      error: (e, _) => const Center(child: Text('Error loading announcements')),
       data: (posts) {
         final announcements = posts.where((p) => p.isAnnouncement).toList();
         final pinned = announcements.where((p) => p.isPinned).toList();
@@ -312,10 +376,10 @@ class _AnnouncementsTab extends ConsumerWidget {
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: post.isPinned ? const Color(0xFF0066FF).withValues(alpha: 0.03) : Colors.white,
+                  color: post.isPinned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.03) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: post.isPinned
-                      ? const Border(left: BorderSide(color: Color(0xFF0066FF), width: 3))
+                      ? Border(left: BorderSide(color: Theme.of(context).colorScheme.primary, width: 3))
                       : null,
                   boxShadow: [
                     BoxShadow(
@@ -327,15 +391,27 @@ class _AnnouncementsTab extends ConsumerWidget {
                 ),
                 child: PostCard(
                   post: post,
-                    onTap: () => context.push('/post/${post.id}'),
-                  onLike: () async {
+                  onTap: () => context.push('/post/${post.id}'),
+                  onUpvote: () async {
                     final repo = ref.read(postRepositoryProvider);
                     final uid = userId;
                     if (uid != null) {
-                      if (post.isLikedByMe == true) {
-                        await repo.unlikePost(post.id, uid);
+                      if (post.myVote == 'upvote') {
+                        await repo.removeVote(post.id, uid);
                       } else {
-                        await repo.likePost(post.id, uid);
+                        await repo.upvotePost(post.id, uid);
+                      }
+                      ref.invalidate(communityPostsProvider(communityId));
+                    }
+                  },
+                  onDownvote: () async {
+                    final repo = ref.read(postRepositoryProvider);
+                    final uid = userId;
+                    if (uid != null) {
+                      if (post.myVote == 'downvote') {
+                        await repo.removeVote(post.id, uid);
+                      } else {
+                        await repo.downvotePost(post.id, uid);
                       }
                       ref.invalidate(communityPostsProvider(communityId));
                     }
@@ -363,85 +439,125 @@ class _AnnouncementsTab extends ConsumerWidget {
   }
 }
 
-class _PostsTab extends ConsumerWidget {
+class _DiscussionsTab extends ConsumerWidget {
   final String communityId;
   final String? userId;
 
-  const _PostsTab({required this.communityId, required this.userId});
+  const _DiscussionsTab({required this.communityId, required this.userId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postsAsync = ref.watch(communityPostsProvider(communityId));
+    final pollsAsync = ref.watch(communityPollsProvider(communityId));
 
     return postsAsync.when(
       loading: () => const _PostsShimmer(),
-      error: (e, _) => Center(child: Text('Error loading posts')),
-      data: (posts) {
-        final regular = posts.where((p) => !p.isAnnouncement).toList();
-        final pinned = regular.where((p) => p.isPinned).toList();
-        final unpinned = regular.where((p) => !p.isPinned).toList();
-        final sorted = [...pinned, ...unpinned];
+      error: (e, _) => const Center(child: Text('Error loading discussions')),
+      data: (posts) => pollsAsync.when(
+        loading: () => const _PostsShimmer(),
+        error: (_, __) => const Center(child: Text('Error loading polls')),
+        data: (polls) {
+          final regular = posts.where((p) => !p.isAnnouncement && p.postType != 'poll').toList();
+          final pinned = regular.where((p) => p.isPinned).toList();
+          final unpinned = regular.where((p) => !p.isPinned).toList();
 
-        if (sorted.isEmpty) {
-          return ListView(
-            children: [
-              const SizedBox(height: 80),
-              Center(
-                child: Column(
-                  children: [
-                    Icon(Icons.article, size: 48, color: Colors.grey[400]),
-                    const SizedBox(height: 12),
-                    Text('No posts yet', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 4),
-                    Text('Be the first to start a discussion', style: TextStyle(color: Colors.grey[500])),
-                  ],
+          final items = <Widget>[];
+          for (final post in [...pinned, ...unpinned]) {
+            items.add(PostCard(
+              post: post,
+              onTap: () => context.push('/post/${post.id}'),
+              onUpvote: () async {
+                final repo = ref.read(postRepositoryProvider);
+                final uid = userId;
+                if (uid != null) {
+                  if (post.myVote == 'upvote') {
+                    await repo.removeVote(post.id, uid);
+                  } else {
+                    await repo.upvotePost(post.id, uid);
+                  }
+                  ref.invalidate(communityPostsProvider(communityId));
+                }
+              },
+              onDownvote: () async {
+                final repo = ref.read(postRepositoryProvider);
+                final uid = userId;
+                if (uid != null) {
+                  if (post.myVote == 'downvote') {
+                    await repo.removeVote(post.id, uid);
+                  } else {
+                    await repo.downvotePost(post.id, uid);
+                  }
+                  ref.invalidate(communityPostsProvider(communityId));
+                }
+              },
+              onBookmark: () async {
+                final repo = ref.read(postRepositoryProvider);
+                final uid = userId;
+                if (uid != null) {
+                  if (post.isBookmarkedByMe == true) {
+                    await repo.unbookmarkPost(post.id, uid);
+                  } else {
+                    await repo.bookmarkPost(post.id, uid);
+                  }
+                  ref.invalidate(communityPostsProvider(communityId));
+                }
+              },
+              onShare: () {},
+            ));
+          }
+
+          for (final poll in polls) {
+            items.add(_buildPollCard(context, ref, poll, communityId));
+          }
+
+          if (items.isEmpty) {
+            return ListView(
+              children: [
+                const SizedBox(height: 80),
+                Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.forum, size: 48, color: Colors.grey[400]),
+                      const SizedBox(height: 12),
+                      Text('No discussions yet', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 4),
+                      Text('Start a conversation or create a poll',
+                          style: TextStyle(color: Colors.grey[500])),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        }
+              ],
+            );
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(communityPostsProvider(communityId));
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 8, bottom: 80),
-            itemCount: sorted.length,
-            itemBuilder: (context, index) {
-              final post = sorted[index];
-              return PostCard(
-                post: post,
-                  onTap: () => context.push('/post/${post.id}'),
-                onLike: () async {
-                  final repo = ref.read(postRepositoryProvider);
-                  final uid = userId;
-                  if (uid != null) {
-                    if (post.isLikedByMe == true) {
-                      await repo.unlikePost(post.id, uid);
-                    } else {
-                      await repo.likePost(post.id, uid);
-                    }
-                    ref.invalidate(communityPostsProvider(communityId));
-                  }
-                },
-                onBookmark: () async {
-                  final repo = ref.read(postRepositoryProvider);
-                  final uid = userId;
-                  if (uid != null) {
-                    if (post.isBookmarkedByMe == true) {
-                      await repo.unbookmarkPost(post.id, uid);
-                    } else {
-                      await repo.bookmarkPost(post.id, uid);
-                    }
-                    ref.invalidate(communityPostsProvider(communityId));
-                  }
-                },
-                onShare: () {},
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(communityPostsProvider(communityId));
+              ref.invalidate(communityPollsProvider(communityId));
             },
-          ),
-        );
+            child: ListView(
+              padding: const EdgeInsets.only(top: 8, bottom: 80),
+              children: items,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPollCard(BuildContext context, WidgetRef ref, PollModel poll, String communityId) {
+    return PollCard(
+      poll: poll,
+      onVote: (optionId) async {
+        final repo = ref.read(pollRepositoryProvider);
+        final uid = userId;
+        if (uid != null) {
+          if (poll.myVote != null) {
+            await repo.unvote(poll.id, uid);
+          }
+          await repo.vote(poll.id, optionId, uid);
+          ref.invalidate(communityPollsProvider(communityId));
+        }
       },
     );
   }
@@ -453,6 +569,103 @@ class _EventsTab extends ConsumerWidget {
 
   const _EventsTab({required this.communityId, required this.userId});
 
+  void _showRsvpSheet(BuildContext context, WidgetRef ref, String eventId, String? currentStatus) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text('RSVP', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: Icon(Icons.check_circle, color: currentStatus == 'going'
+                    ? Theme.of(context).colorScheme.primary : Colors.grey),
+                title: const Text('Going'),
+                trailing: currentStatus == 'going'
+                    ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                    : null,
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final repo = ref.read(eventRepositoryProvider);
+                  final uid = userId;
+                  if (uid != null) {
+                    await repo.rsvpEvent(eventId, uid, 'going');
+                    ref.invalidate(communityEventsProvider(communityId));
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.help_outline, color: currentStatus == 'maybe'
+                    ? const Color(0xFFFF6B35) : Colors.grey),
+                title: const Text('Maybe'),
+                trailing: currentStatus == 'maybe'
+                    ? const Icon(Icons.check, color: Color(0xFFFF6B35))
+                    : null,
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final repo = ref.read(eventRepositoryProvider);
+                  final uid = userId;
+                  if (uid != null) {
+                    await repo.rsvpEvent(eventId, uid, 'maybe');
+                    ref.invalidate(communityEventsProvider(communityId));
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.cancel, color: currentStatus == 'not_going'
+                    ? Colors.red : Colors.grey),
+                title: const Text('Not Going'),
+                trailing: currentStatus == 'not_going'
+                    ? const Icon(Icons.check, color: Colors.red)
+                    : null,
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final repo = ref.read(eventRepositoryProvider);
+                  final uid = userId;
+                  if (uid != null) {
+                    await repo.rsvpEvent(eventId, uid, 'not_going');
+                    ref.invalidate(communityEventsProvider(communityId));
+                  }
+                },
+              ),
+              if (currentStatus != null) ...[
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.remove_circle_outline, color: Colors.grey),
+                  title: const Text('Clear RSVP',
+                      style: TextStyle(color: Colors.grey)),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    final repo = ref.read(eventRepositoryProvider);
+                    final uid = userId;
+                    if (uid != null) {
+                      await repo.cancelRsvp(eventId, uid);
+                      ref.invalidate(communityEventsProvider(communityId));
+                    }
+                  },
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eventsAsync = ref.watch(communityEventsProvider(communityId));
@@ -460,7 +673,7 @@ class _EventsTab extends ConsumerWidget {
 
     return eventsAsync.when(
       loading: () => const _EventsShimmer(),
-      error: (e, _) => Center(child: Text('Error loading events')),
+      error: (e, _) => const Center(child: Text('Error loading events')),
       data: (events) {
         final now = DateTime.now();
         final upcoming = events.where((e) => e.eventDate.isAfter(now) || e.eventDate.isAtSameMomentAs(now)).toList();
@@ -509,6 +722,7 @@ class _EventsTab extends ConsumerWidget {
                     ...upcoming.map((event) => EventCard(
                       event: event,
                       onTap: () => context.push('/event/${event.id}'),
+                      onRsvp: () => _showRsvpSheet(context, ref, event.id, event.myRsvpStatus),
                     )),
                   ],
                   if (past.isNotEmpty) ...[
@@ -529,6 +743,7 @@ class _EventsTab extends ConsumerWidget {
                       child: EventCard(
                         event: event,
                         onTap: () => context.push('/event/${event.id}'),
+                        onRsvp: () => _showRsvpSheet(context, ref, event.id, event.myRsvpStatus),
                       ),
                     )),
                   ],
@@ -569,7 +784,7 @@ class _ResourcesTab extends ConsumerWidget {
 
     return resourcesAsync.when(
       loading: () => const _ResourcesShimmer(),
-      error: (e, _) => Center(child: Text('Error loading resources')),
+      error: (e, _) => const Center(child: Text('Error loading resources')),
       data: (resources) {
         final types = CommunityResourceModel.resourceTypeLabels.keys.toList();
         final selectedType = ref.watch(_selectedResourceTypeProvider);
@@ -668,7 +883,7 @@ class _FilterChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFF0066FF) : Colors.grey[100],
+            color: selected ? Theme.of(context).colorScheme.primary : Colors.grey[100],
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
@@ -696,7 +911,7 @@ class _MembersTab extends ConsumerWidget {
 
     return membersAsync.when(
       loading: () => const _MembersShimmer(),
-      error: (e, _) => Center(child: Text('Error loading members')),
+      error: (e, _) => const Center(child: Text('Error loading members')),
       data: (members) {
         final searchQuery = ref.watch(_memberSearchProvider);
         final filtered = searchQuery.isEmpty
@@ -819,8 +1034,8 @@ class _MemberTile extends StatelessWidget {
         child: avatar == null
             ? Text(
                 name[0].toUpperCase(),
-                style: const TextStyle(
-                  color: Color(0xFF0066FF),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
                 ),
               )
@@ -838,7 +1053,7 @@ class _MemberTile extends StatelessWidget {
           ),
           if (isVerified) ...[
             const SizedBox(width: 4),
-            const Icon(Icons.verified, color: Color(0xFF0066FF), size: 16),
+            Icon(Icons.verified, color: Theme.of(context).colorScheme.primary, size: 16),
           ],
         ],
       ),
@@ -854,15 +1069,15 @@ class _MemberTile extends StatelessWidget {
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF0066FF).withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 role == 'owner' ? 'Owner' : 'Manager',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF0066FF),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             )

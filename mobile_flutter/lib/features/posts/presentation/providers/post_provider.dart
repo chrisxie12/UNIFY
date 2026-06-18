@@ -11,15 +11,18 @@ final postRepositoryProvider = Provider<PostRepository>((ref) {
 
 final communityPostsProvider = FutureProvider.family<List<PostModel>, String>((ref, communityId) async {
   final repo = ref.watch(postRepositoryProvider);
-  return repo.getPosts(communityId);
+  final userId = ref.read(supabaseProvider).auth.currentUser?.id;
+  return repo.getPosts(communityId, currentUserId: userId);
 });
 
 final postDetailProvider = FutureProvider.family<PostModel, String>((ref, postId) async {
   final repo = ref.watch(postRepositoryProvider);
-  return repo.getPost(postId);
+  final userId = ref.read(supabaseProvider).auth.currentUser?.id;
+  return repo.getPost(postId, currentUserId: userId);
 });
 
 final postCommentsProvider = FutureProvider.family<List<PostCommentModel>, String>((ref, postId) async {
   final repo = ref.watch(postRepositoryProvider);
-  return repo.getComments(postId);
+  final userId = ref.read(supabaseProvider).auth.currentUser?.id;
+  return repo.getComments(postId, currentUserId: userId);
 });

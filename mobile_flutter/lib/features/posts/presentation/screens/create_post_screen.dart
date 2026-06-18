@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
-import '../../data/models/post_model.dart';
 import '../providers/post_provider.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -26,11 +24,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   bool _isSubmitting = false;
 
   final List<_PostTypeOption> _postTypes = [
-    _PostTypeOption('text', Icons.text_fields, 'Text'),
-    _PostTypeOption('image', Icons.image, 'Image'),
-    _PostTypeOption('link', Icons.link, 'Link'),
-    _PostTypeOption('poll', Icons.poll, 'Poll'),
-    _PostTypeOption('question', Icons.help_outline, 'Question'),
+    const _PostTypeOption('text', Icons.text_fields, 'Text'),
+    const _PostTypeOption('image', Icons.image, 'Image'),
+    const _PostTypeOption('link', Icons.link, 'Link'),
+    const _PostTypeOption('poll', Icons.poll, 'Poll'),
+    const _PostTypeOption('question', Icons.help_outline, 'Question'),
   ];
 
   @override
@@ -63,7 +61,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 : Text(
                     'Post',
                     style: TextStyle(
-                      color: _hasContent ? const Color(0xFF0066FF) : Colors.grey[400],
+                      color: _hasContent ? Theme.of(context).colorScheme.primary : Colors.grey[400],
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -132,7 +130,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         decoration: BoxDecoration(
-                          color: selected ? const Color(0xFF0066FF) : Colors.grey[100],
+                          color: selected ? Theme.of(context).colorScheme.primary : Colors.grey[100],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -202,7 +200,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 decoration: InputDecoration(
                   hintText: 'https://',
                   hintStyle: TextStyle(color: Colors.grey[400]),
-                  prefixIcon: Icon(Icons.link, color: const Color(0xFF0066FF)),
+                  prefixIcon: Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
                   filled: true,
                   fillColor: Colors.grey[50],
                   border: OutlineInputBorder(

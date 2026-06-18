@@ -234,9 +234,9 @@ class _Background extends StatelessWidget {
     return Stack(
       children: [
         // Primary blue gradient
-        Positioned.fill(
+        const Positioned.fill(
           child: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -302,7 +302,7 @@ class _LogoWidget extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0066FF).withValues(alpha: 0.55),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.55),
                 blurRadius: 52,
                 spreadRadius: 10,
               ),

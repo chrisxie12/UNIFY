@@ -16,6 +16,19 @@ class SupabaseTables {
   static const String verificationRequests  = 'verification_requests';
   static const String verificationLog       = 'verification_log';
   static const String announcementRequests  = 'announcement_requests';
+
+  // Multi-University Admin
+  static const String faculties             = 'faculties';
+  static const String departments           = 'departments';
+  static const String adminRoles            = 'admin_roles';
+  static const String universityAdministrators = 'university_administrators';
+  static const String auditLogs             = 'audit_logs';
+  static const String moderationQueue       = 'moderation_queue';
+  static const String adminAnnouncements    = 'admin_announcements';
+  static const String adminAnnouncementRecipients = 'admin_announcement_recipients';
+  static const String opportunities         = 'opportunities';
+  static const String marketplaceReports    = 'marketplace_reports';
+  static const String analyticsSnapshots    = 'analytics_snapshots';
 }
 
 class SupabaseColumns {

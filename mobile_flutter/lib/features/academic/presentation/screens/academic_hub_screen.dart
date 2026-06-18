@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+class AcademicHubScreen extends ConsumerWidget {
+  const AcademicHubScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Academic Hub'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => context.push('/academic/search'),
+          ),
+        ],
+      ),
+      body: GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(16),
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.9,
+        children: [
+          _HubCard(
+            icon: Icons.library_books,
+            label: 'Notes',
+            subtitle: 'Browse course notes',
+            color: const Color(0xFF4F46E5),
+            onTap: () => context.push('/academic/resources', extra: {'type': 'note'}),
+          ),
+          _HubCard(
+            icon: Icons.quiz_outlined,
+            label: 'Past Questions',
+            subtitle: 'Exam papers & quizzes',
+            color: const Color(0xFF0891B2),
+            onTap: () => context.push('/academic/resources', extra: {'type': 'past_question'}),
+          ),
+          _HubCard(
+            icon: Icons.school,
+            label: 'Courses',
+            subtitle: 'Your enrolled courses',
+            color: const Color(0xFF059669),
+            onTap: () => context.push('/academic/courses'),
+          ),
+          _HubCard(
+            icon: Icons.assignment,
+            label: 'Assignments',
+            subtitle: 'Track deadlines & submit',
+            color: const Color(0xFFD97706),
+            onTap: () => context.push('/academic/assignments'),
+          ),
+          _HubCard(
+            icon: Icons.event_note,
+            label: 'Exam Prep',
+            subtitle: 'Timetables & revision',
+            color: const Color(0xFFDC2626),
+            onTap: () => context.push('/academic/exams'),
+          ),
+          _HubCard(
+            icon: Icons.calculate,
+            label: 'GPA Calculator',
+            subtitle: 'Semester & CGPA',
+            color: const Color(0xFF7C3AED),
+            onTap: () => context.push('/academic/gpa'),
+          ),
+          _HubCard(
+            icon: Icons.calendar_month,
+            label: 'Study Planner',
+            subtitle: 'Plan your revision',
+            color: const Color(0xFF0EA5E9),
+            onTap: () => context.push('/academic/planner'),
+          ),
+          _HubCard(
+            icon: Icons.star,
+            label: 'Top Resources',
+            subtitle: 'Highest rated content',
+            color: const Color(0xFFF59E0B),
+            onTap: () => context.push('/academic/resources', extra: {'type': null}),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HubCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _HubCard({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 28),
+              ),
+              const Spacer(),
+              Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 2),
+              Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

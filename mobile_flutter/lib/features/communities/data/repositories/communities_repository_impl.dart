@@ -56,7 +56,8 @@ class CommunitiesRepositoryImpl {
     final data = await _client
         .from('community_members')
         .select('communities(*)')
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .limit(50);
 
     return (data as List)
         .map((r) => CommunityModel.fromJson(r['communities'] as Map<String, dynamic>))
@@ -103,7 +104,8 @@ class CommunitiesRepositoryImpl {
           ')',
         )
         .eq('community_id', communityId)
-        .order('joined_at', ascending: true);
+        .order('joined_at', ascending: true)
+        .limit(50);
 
     final members = (data as List)
         .map((r) => CommunityMemberProfile.fromJson(r as Map<String, dynamic>))
@@ -128,13 +130,14 @@ class CommunitiesRepositoryImpl {
         .eq('community_id', communityId)
         .eq('is_published', true)
         .order('is_pinned', ascending: false)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(20);
     return (data as List).cast<Map<String, dynamic>>();
   }
 
   // ── Discussion posts ────────────────────────────────────────
 
-  Future<List<CommunityPostModel>> getPosts(String communityId) async {
+  Future<List<CommunityPostModel>> getPosts(String communityId, {int limit = 20}) async {
     final data = await _client
         .from('community_posts')
         .select(
@@ -144,7 +147,8 @@ class CommunitiesRepositoryImpl {
         )
         .eq('community_id', communityId)
         .order('is_pinned', ascending: false)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(limit);
 
     return (data as List)
         .map((r) => CommunityPostModel.fromJson(r as Map<String, dynamic>))
@@ -191,7 +195,8 @@ class CommunitiesRepositoryImpl {
           ')',
         )
         .eq('post_id', postId)
-        .order('created_at', ascending: true);
+        .order('created_at', ascending: true)
+        .limit(50);
 
     return (data as List)
         .map((r) => CommunityCommentModel.fromJson(r as Map<String, dynamic>))
@@ -244,6 +249,7 @@ class CommunitiesRepositoryImpl {
   Future<List<CommunityResourceModel>> getResources(
     String communityId, {
     String? category,
+    int limit = 20,
   }) async {
     var query = _client
         .from('community_resources')
@@ -256,7 +262,7 @@ class CommunitiesRepositoryImpl {
 
     if (category != null) query = query.eq('category', category);
 
-    final data = await query.order('created_at', ascending: false);
+    final data = await query.order('created_at', ascending: false).limit(limit);
 
     return (data as List)
         .map((r) => CommunityResourceModel.fromJson(r as Map<String, dynamic>))

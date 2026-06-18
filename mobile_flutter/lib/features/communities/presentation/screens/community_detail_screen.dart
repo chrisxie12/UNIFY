@@ -82,7 +82,7 @@ class _CommunityDetailView extends ConsumerWidget {
                 ),
                 actions: [
                   IconButton(
-                    icon: Icon(CupertinoIcons.ellipsis_vertical,
+                    icon: const Icon(CupertinoIcons.ellipsis_vertical,
                         size: 18),
                     color: innerScrolled ? AppColors.dark : Colors.white,
                     onPressed: () {},
@@ -402,7 +402,7 @@ class _AnnouncementsTab extends ConsumerWidget {
       announcementsAsync.when(
         data: (announcements) {
           if (announcements.isEmpty) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               child: _EmptyState(
                 icon: Icons.campaign_outlined,
                 title: 'No announcements yet',
@@ -640,7 +640,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
           postsAsync.when(
             data: (posts) {
               if (!widget.isMember) {
-                return SliverFillRemaining(
+                return const SliverFillRemaining(
                   child: _EmptyState(
                     icon: Icons.lock_outline_rounded,
                     title: 'Members only',
@@ -649,7 +649,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                 );
               }
               if (posts.isEmpty) {
-                return SliverFillRemaining(
+                return const SliverFillRemaining(
                   child: _EmptyState(
                     icon: Icons.forum_outlined,
                     title: 'No discussions yet',
@@ -709,7 +709,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                           Icon(Icons.edit_outlined,
                               size: 18, color: context.primary),
                           const SizedBox(width: 10),
-                          Text(
+                          const Text(
                             'Start a discussion…',
                             style: TextStyle(
                               color: AppColors.grey3,
@@ -921,14 +921,14 @@ class _PostCard extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              Icon(Icons.favorite_border_rounded,
+              const Icon(Icons.favorite_border_rounded,
                   size: 16, color: AppColors.grey3),
               const SizedBox(width: 4),
               Text('${post.reactionCount}',
                   style: const TextStyle(
                       fontSize: 12, color: AppColors.grey3)),
               const SizedBox(width: 14),
-              Icon(Icons.chat_bubble_outline_rounded,
+              const Icon(Icons.chat_bubble_outline_rounded,
                   size: 16, color: AppColors.grey3),
               const SizedBox(width: 4),
               Text('${post.commentCount}',
@@ -961,7 +961,7 @@ class _ResourcesTab extends ConsumerWidget {
       resourcesAsync.when(
         data: (resources) {
           if (!isMember) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               child: _EmptyState(
                 icon: Icons.lock_outline_rounded,
                 title: 'Members only',
@@ -970,7 +970,7 @@ class _ResourcesTab extends ConsumerWidget {
             );
           }
           if (resources.isEmpty) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               child: _EmptyState(
                 icon: Icons.folder_open_outlined,
                 title: 'No resources yet',
@@ -1078,7 +1078,7 @@ class _ResourceCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.download_outlined,
+                    const Icon(Icons.download_outlined,
                         size: 12, color: AppColors.grey3),
                     const SizedBox(width: 3),
                     Text(
@@ -1125,7 +1125,7 @@ class _MediaTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return _tabScaffold(
       context,
-      SliverFillRemaining(
+      const SliverFillRemaining(
         child: _EmptyState(
           icon: Icons.photo_library_outlined,
           title: 'No media yet',
@@ -1151,7 +1151,7 @@ class _MembersTab extends ConsumerWidget {
       membersAsync.when(
         data: (members) {
           if (members.isEmpty) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               child: _EmptyState(
                 icon: Icons.people_outline_rounded,
                 title: 'No members yet',

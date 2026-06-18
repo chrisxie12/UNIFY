@@ -10,6 +10,7 @@ class PostCommentModel {
   final String body;
   final int likesCount;
   final bool? isLikedByMe;
+  final bool isBestAnswer;
   final List<PostCommentModel>? replies;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -26,6 +27,7 @@ class PostCommentModel {
     required this.body,
     this.likesCount = 0,
     this.isLikedByMe,
+    this.isBestAnswer = false,
     this.replies,
     required this.createdAt,
     required this.updatedAt,
@@ -44,6 +46,7 @@ class PostCommentModel {
       body: json['body'] as String,
       likesCount: json['likes_count'] as int? ?? 0,
       isLikedByMe: json['is_liked_by_me'] as bool?,
+      isBestAnswer: json['is_best_answer'] as bool? ?? false,
       replies: json['replies'] != null
           ? (json['replies'] as List).map((e) => PostCommentModel.fromJson(e as Map<String, dynamic>)).toList()
           : null,

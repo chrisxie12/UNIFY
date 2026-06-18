@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
-import '../../../../core/providers/supabase_provider.dart';
 import '../../../../features/auth/presentation/providers/auth_provider.dart';
 import '../../../../features/leadership/presentation/providers/leadership_provider.dart';
 
@@ -31,14 +30,14 @@ class CommunitiesScreen extends ConsumerWidget {
         data: (communities) {
           final isVerified = isVerifiedAsync.valueOrNull ?? false;
           
-          Widget _requestButton() {
+          Widget requestButton() {
             if (isVerified) {
               return FilledButton.icon(
                 onPressed: () => context.push('/community-request'),
                 icon: const Icon(Icons.add),
                 label: const Text('Request New Community'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFF0066FF),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               );
@@ -75,7 +74,7 @@ class CommunitiesScreen extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Text('Join or create a community', style: TextStyle(color: Colors.grey[400])),
                   const SizedBox(height: 24),
-                  _requestButton(),
+                  requestButton(),
                 ],
               ),
             );
@@ -90,7 +89,7 @@ class CommunitiesScreen extends ConsumerWidget {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
-                    child: _requestButton(),
+                    child: requestButton(),
                   );
                 }
 
@@ -107,12 +106,12 @@ class CommunitiesScreen extends ConsumerWidget {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: const Color(0xFF0066FF).withValues(alpha: 0.1),
+                            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                             backgroundImage: community.avatarUrl != null ? NetworkImage(community.avatarUrl!) : null,
                             child: community.avatarUrl == null
                                 ? Text(
                                     community.name.isNotEmpty ? community.name[0].toUpperCase() : 'C',
-                                    style: const TextStyle(color: Color(0xFF0066FF), fontWeight: FontWeight.bold),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
                                   )
                                 : null,
                           ),

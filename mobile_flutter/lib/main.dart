@@ -13,13 +13,13 @@ Future<void> main() async {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     await dotenv.load(fileName: 'assets/.env');
     await Hive.initFlutter();
-    // Guard: Supabase throws if initialize() is called twice (e.g. hot restart)
-    try {
-      await Supabase.initialize(
-        url: dotenv.env['SUPABASE_URL']!,
-        publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
-      );
-    } catch (_) {}
+    final supabaseUrl = dotenv.env['SUPABASE_URL'];
+    final supabaseKey = dotenv.env['SUPABASE_ANON_KEY'];
+    if (supabaseUrl != null && supabaseKey != null) {
+      try {
+        await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseKey);
+      } catch (_) {}
+    }
     return const ProviderScope(child: UnifyApp());
-  });
+  }, sentryDsn: dotenv.env['SENTRY_DSN']);
 }

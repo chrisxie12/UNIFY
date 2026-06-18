@@ -134,16 +134,16 @@ class AdminScreen extends ConsumerWidget {
               ],
             ),
           ],
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            tabs: const [
               Tab(text: 'Communities'),
               Tab(text: 'Verification'),
               Tab(text: 'Announcements'),
               Tab(text: 'History'),
             ],
-            labelColor: AppColors.primary,
+            labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor: AppColors.grey3,
-            indicatorColor: AppColors.primary,
+            indicatorColor: Theme.of(context).colorScheme.primary,
           ),
         ),
         body: TabBarView(
@@ -189,7 +189,7 @@ class _PendingRequestsTab extends ConsumerWidget {
             children: [
               Icon(Icons.hourglass_empty_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              Text('Pending Reviews', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Pending Reviews', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
           ),
           const SizedBox(height: 12),
@@ -434,7 +434,7 @@ class _RequestCard extends ConsumerWidget {
                   )),
                   child: Row(
                     children: [
-                      Icon(Icons.person_search_rounded, size: 14, color: AppColors.primary),
+                      Icon(Icons.person_search_rounded, size: 14, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 6),
                       Text('View Representative', style: TextStyle(fontSize: 12, color: context.primary, fontWeight: FontWeight.w500)),
                     ],
@@ -732,7 +732,7 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
             children: [
               Icon(Icons.campaign_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              Text('Pending Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Pending Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1004,7 +1004,7 @@ class _VerificationTab extends ConsumerWidget {
             children: [
               Icon(Icons.verified_user_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              Text('Pending Verifications', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Pending Verifications', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1109,7 +1109,7 @@ class _VerificationCard extends ConsumerWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.visibility_rounded, size: 16, color: AppColors.primary),
+                          Icon(Icons.visibility_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
                           const SizedBox(width: 8),
                           Text('View Evidence', style: TextStyle(fontSize: 13, color: context.primary, fontWeight: FontWeight.w500)),
                         ],

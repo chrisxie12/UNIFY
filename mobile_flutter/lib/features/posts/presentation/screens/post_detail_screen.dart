@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/post_model.dart';
 import '../../data/models/post_comment_model.dart';
@@ -75,7 +74,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Row(
                         children: [
-                          Icon(Icons.reply, size: 16, color: const Color(0xFF0066FF)),
+                          Icon(Icons.reply, size: 16, color: Theme.of(context).colorScheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -98,8 +97,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                         ],
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Text(
                       'Comments',
                       style: TextStyle(
@@ -113,8 +112,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                       padding: EdgeInsets.all(32),
                       child: Center(child: CircularProgressIndicator()),
                     ),
-                    error: (e, _) => Padding(
-                      padding: const EdgeInsets.all(32),
+                    error: (e, _) => const Padding(
+                      padding: EdgeInsets.all(32),
                       child: Center(child: Text('Error loading comments')),
                     ),
                     data: (comments) {
@@ -142,6 +141,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                           }),
                           userId: userId,
                           postId: widget.postId,
+                          post: post,
                         )).toList(),
                       );
                     },
@@ -198,7 +198,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                       height: 40,
                       decoration: BoxDecoration(
                         color: _commentController.text.trim().isNotEmpty
-                            ? const Color(0xFF0066FF)
+                            ? Theme.of(context).colorScheme.primary
                             : Colors.grey[200],
                         shape: BoxShape.circle,
                       ),
@@ -245,7 +245,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to post comment')),
+          const SnackBar(content: Text('Failed to post comment')),
         );
       }
     } finally {
@@ -278,8 +278,8 @@ class _PostContent extends ConsumerWidget {
                 child: post.authorAvatar == null
                     ? Text(
                         (post.authorName ?? 'U')[0].toUpperCase(),
-                        style: const TextStyle(
-                          color: Color(0xFF0066FF),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -306,14 +306,54 @@ class _PostContent extends ConsumerWidget {
                         ),
                         if (post.authorIsVerifiedLeader == true) ...[
                           const SizedBox(width: 4),
-                          const Icon(Icons.verified, color: Color(0xFF0066FF), size: 16),
+                          Icon(Icons.verified, color: Theme.of(context).colorScheme.primary, size: 16),
                         ],
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      _formatDateTime(post.createdAt),
-                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                    Row(
+                      children: [
+                        Text(
+                          _formatDateTime(post.createdAt),
+                          style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        ),
+                        if (post.postType == 'question') ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Question',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orange[800],
+                              ),
+                            ),
+                          ),
+                        ],
+                        if (post.bestAnswerId != null) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Answered',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),
@@ -376,12 +416,12 @@ class _PostContent extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.link, size: 20, color: const Color(0xFF0066FF)),
+                  Icon(Icons.link, size: 20, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       post.linkUrl!,
-                      style: const TextStyle(color: Color(0xFF0066FF), fontSize: 13),
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 13),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -396,18 +436,29 @@ class _PostContent extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _ActionChip(
-                icon: post.isLikedByMe == true ? Icons.favorite : Icons.favorite_border,
-                label: _formatCount(post.likesCount),
-                color: post.isLikedByMe == true ? const Color(0xFF0066FF) : Colors.grey[600],
-                onTap: () async {
+              _VoteChip(
+                netVotes: post.netVoteCount,
+                myVote: post.myVote,
+                onUpvote: () async {
                   final repo = ref.read(postRepositoryProvider);
                   final uid = userId;
                   if (uid != null) {
-                    if (post.isLikedByMe == true) {
-                      await repo.unlikePost(post.id, uid);
+                    if (post.myVote == 'upvote') {
+                      await repo.removeVote(post.id, uid);
                     } else {
-                      await repo.likePost(post.id, uid);
+                      await repo.upvotePost(post.id, uid);
+                    }
+                    ref.invalidate(postDetailProvider(post.id));
+                  }
+                },
+                onDownvote: () async {
+                  final repo = ref.read(postRepositoryProvider);
+                  final uid = userId;
+                  if (uid != null) {
+                    if (post.myVote == 'downvote') {
+                      await repo.removeVote(post.id, uid);
+                    } else {
+                      await repo.downvotePost(post.id, uid);
                     }
                     ref.invalidate(postDetailProvider(post.id));
                   }
@@ -422,7 +473,7 @@ class _PostContent extends ConsumerWidget {
               _ActionChip(
                 icon: post.isBookmarkedByMe == true ? Icons.bookmark : Icons.bookmark_border,
                 label: _formatCount(post.bookmarksCount),
-                color: post.isBookmarkedByMe == true ? const Color(0xFF0066FF) : Colors.grey[600],
+                color: post.isBookmarkedByMe == true ? Theme.of(context).colorScheme.primary : Colors.grey[600],
                 onTap: () async {
                   final repo = ref.read(postRepositoryProvider);
                   final uid = userId;
@@ -465,6 +516,59 @@ class _PostContent extends ConsumerWidget {
   }
 }
 
+class _VoteChip extends StatelessWidget {
+  final int netVotes;
+  final String? myVote;
+  final VoidCallback onUpvote;
+  final VoidCallback onDownvote;
+
+  const _VoteChip({
+    required this.netVotes,
+    required this.myVote,
+    required this.onUpvote,
+    required this.onDownvote,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: onUpvote,
+          child: Icon(
+            myVote == 'upvote' ? Icons.arrow_upward : Icons.arrow_upward_outlined,
+            size: 22,
+            color: myVote == 'upvote' ? Theme.of(context).colorScheme.primary : Colors.grey[500],
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          netVotes.toString(),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: myVote == 'upvote'
+                ? Theme.of(context).colorScheme.primary
+                : myVote == 'downvote'
+                    ? Colors.red
+                    : Colors.grey[700],
+          ),
+        ),
+        const SizedBox(width: 6),
+        GestureDetector(
+          onTap: onDownvote,
+          child: Icon(
+            myVote == 'downvote' ? Icons.arrow_downward : Icons.arrow_downward_outlined,
+            size: 22,
+            color: myVote == 'downvote' ? Colors.red : Colors.grey[500],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ActionChip extends StatelessWidget {
   final IconData icon;
   final String? label;
@@ -496,12 +600,13 @@ class _ActionChip extends StatelessWidget {
   }
 }
 
-class _CommentTile extends StatelessWidget {
+class _CommentTile extends ConsumerWidget {
   final PostCommentModel comment;
   final int depth;
   final Function(String commentId, String name) onReply;
   final String? userId;
   final String postId;
+  final PostModel post;
 
   const _CommentTile({
     required this.comment,
@@ -509,10 +614,17 @@ class _CommentTile extends StatelessWidget {
     required this.onReply,
     required this.userId,
     required this.postId,
+    required this.post,
   });
 
+  bool get _canManage {
+    if (userId == null) return false;
+    if (post.authorId == userId) return true;
+    return false;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -547,7 +659,7 @@ class _CommentTile extends StatelessWidget {
                           ? Text(
                               (comment.authorName ?? 'U')[0].toUpperCase(),
                               style: TextStyle(
-                                color: const Color(0xFF0066FF),
+                                color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                               ),
@@ -570,15 +682,60 @@ class _CommentTile extends StatelessWidget {
                               ),
                               if (comment.authorIsVerifiedLeader == true) ...[
                                 const SizedBox(width: 4),
-                                const Icon(Icons.verified, color: Color(0xFF0066FF), size: 14),
+                                Icon(Icons.verified, color: Theme.of(context).colorScheme.primary, size: 14),
                               ],
                               const SizedBox(width: 8),
                               Text(
                                 _timeAgo(comment.createdAt),
                                 style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                               ),
+                              if (comment.isBestAnswer) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.check_circle, size: 12, color: Theme.of(context).colorScheme.primary),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        'Best Answer',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
+                          if (comment.isBestAnswer && depth == 0)
+                            Container(
+                              margin: const EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                                ),
+                              ),
+                              child: Text(
+                                'Accepted Answer',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
                           const SizedBox(height: 4),
                           Text(
                             comment.body,
@@ -588,7 +745,18 @@ class _CommentTile extends StatelessWidget {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () async {
+                                  final repo = ref.read(postRepositoryProvider);
+                                  final uid = userId;
+                                  if (uid != null) {
+                                    if (comment.isLikedByMe == true) {
+                                      await repo.unlikeComment(comment.id, uid);
+                                    } else {
+                                      await repo.likeComment(comment.id, uid);
+                                    }
+                                    ref.invalidate(postCommentsProvider(postId));
+                                  }
+                                },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -596,7 +764,7 @@ class _CommentTile extends StatelessWidget {
                                       Icons.favorite_border,
                                       size: 14,
                                       color: comment.isLikedByMe == true
-                                          ? const Color(0xFF0066FF)
+                                          ? Theme.of(context).colorScheme.primary
                                           : Colors.grey[500],
                                     ),
                                     const SizedBox(width: 3),
@@ -605,7 +773,7 @@ class _CommentTile extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 11,
                                         color: comment.isLikedByMe == true
-                                            ? const Color(0xFF0066FF)
+                                            ? Theme.of(context).colorScheme.primary
                                             : Colors.grey[500],
                                       ),
                                     ),
@@ -624,6 +792,31 @@ class _CommentTile extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              if (_canManage && comment.parentId == null && depth == 0) ...[
+                                const SizedBox(width: 16),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final repo = ref.read(postRepositoryProvider);
+                                    if (comment.isBestAnswer) {
+                                      await repo.unmarkBestAnswer(postId, comment.id);
+                                    } else {
+                                      await repo.markBestAnswer(postId, comment.id);
+                                    }
+                                    ref.invalidate(postDetailProvider(postId));
+                                    ref.invalidate(postCommentsProvider(postId));
+                                  },
+                                  child: Text(
+                                    comment.isBestAnswer ? 'Unmark Answer' : 'Mark as Best Answer',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: comment.isBestAnswer
+                                          ? Colors.orange
+                                          : Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ],
@@ -642,6 +835,7 @@ class _CommentTile extends StatelessWidget {
             onReply: onReply,
             userId: userId,
             postId: postId,
+            post: post,
           )),
       ],
     );

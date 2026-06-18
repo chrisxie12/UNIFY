@@ -191,8 +191,8 @@ class _MemberListTile extends StatelessWidget {
         child: avatarUrl == null
             ? Text(
                 name[0].toUpperCase(),
-                style: const TextStyle(
-                  color: Color(0xFF0066FF),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -214,7 +214,7 @@ class _MemberListTile extends StatelessWidget {
           ),
           if (isVerified) ...[
             const SizedBox(width: 4),
-            const Icon(Icons.verified, color: Color(0xFF0066FF), size: 18),
+            Icon(Icons.verified, color: Theme.of(context).colorScheme.primary, size: 18),
           ],
           if (isManager) ...[
             const SizedBox(width: 6),
@@ -222,7 +222,7 @@ class _MemberListTile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: role == 'owner'
-                    ? const Color(0xFF0066FF).withValues(alpha: 0.1)
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                     : Colors.grey[100],
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -231,7 +231,7 @@ class _MemberListTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: role == 'owner' ? const Color(0xFF0066FF) : Colors.grey[600],
+                  color: role == 'owner' ? Theme.of(context).colorScheme.primary : Colors.grey[600],
                 ),
               ),
             ),

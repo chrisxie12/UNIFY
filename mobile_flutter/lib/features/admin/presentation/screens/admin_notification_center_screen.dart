@@ -76,14 +76,14 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
           error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
           data: (notifications) {
             if (notifications.isEmpty) {
-              return Center(
+              return const Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.notifications_none_rounded, size: 64, color: AppColors.grey4),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text('No admin notifications', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: AppColors.grey3)),
                   ],
                 ),
@@ -148,7 +148,7 @@ class _AdminNotificationTile extends StatelessWidget {
       trailing: !notification.isRead
           ? Container(
               width: 8, height: 8,
-              decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle),
             )
           : null,
       onTap: onTap,

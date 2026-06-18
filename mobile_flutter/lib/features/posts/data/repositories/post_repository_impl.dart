@@ -35,14 +35,16 @@ class PostRepositoryImpl implements PostRepository {
     }).toList();
 
     if (currentUserId != null && posts.isNotEmpty) {
-      final likesResponse = await _client
-          .from('post_likes')
-          .select('post_id')
+      final votesResponse = await _client
+          .from('post_votes')
+          .select('post_id, vote_type')
           .filter('user_id', 'eq', currentUserId) as List;
-      final likedIds = likesResponse
+      final voteMap = votesResponse
           .cast<Map<String, dynamic>>()
-          .map((l) => l['post_id'] as String)
-          .toSet();
+          .fold<Map<String, String>>({}, (map, v) {
+            map[v['post_id'] as String] = v['vote_type'] as String;
+            return map;
+          });
 
       final bookmarksResponse = await _client
           .from('post_bookmarks')
@@ -55,7 +57,7 @@ class PostRepositoryImpl implements PostRepository {
 
       for (var i = 0; i < posts.length; i++) {
         posts[i] = posts[i].copyWith(
-          isLikedByMe: likedIds.contains(posts[i].id),
+          myVote: voteMap[posts[i].id],
           isBookmarkedByMe: bookmarkedIds.contains(posts[i].id),
         );
       }
@@ -83,9 +85,9 @@ class PostRepositoryImpl implements PostRepository {
     final post = PostModel.fromJson(response);
 
     if (currentUserId != null) {
-      final likes = await _client
-          .from('post_likes')
-          .select('id')
+      final votes = await _client
+          .from('post_votes')
+          .select('vote_type')
           .filter('post_id', 'eq', postId)
           .filter('user_id', 'eq', currentUserId) as List;
       final bookmarks = await _client
@@ -94,8 +96,12 @@ class PostRepositoryImpl implements PostRepository {
           .filter('post_id', 'eq', postId)
           .filter('user_id', 'eq', currentUserId) as List;
 
+      final myVote = votes.isNotEmpty
+          ? (votes.first as Map<String, dynamic>)['vote_type'] as String
+          : null;
+
       return post.copyWith(
-        isLikedByMe: likes.isNotEmpty,
+        myVote: myVote,
         isBookmarkedByMe: bookmarks.isNotEmpty,
       );
     }
@@ -134,12 +140,13 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<bool> likePost(String postId, String userId) async {
+  Future<bool> upvotePost(String postId, String userId) async {
     try {
-      await _client.from('post_likes').insert({
+      await _client.from('post_votes').upsert({
         'post_id': postId,
         'user_id': userId,
-      });
+        'vote_type': 'upvote',
+      }, onConflict: 'post_id,user_id');
       return true;
     } catch (_) {
       return false;
@@ -147,9 +154,23 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<bool> unlikePost(String postId, String userId) async {
+  Future<bool> downvotePost(String postId, String userId) async {
     try {
-      await _client.from('post_likes').delete().filter('post_id', 'eq', postId).filter('user_id', 'eq', userId);
+      await _client.from('post_votes').upsert({
+        'post_id': postId,
+        'user_id': userId,
+        'vote_type': 'downvote',
+      }, onConflict: 'post_id,user_id');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> removeVote(String postId, String userId) async {
+    try {
+      await _client.from('post_votes').delete().filter('post_id', 'eq', postId).filter('user_id', 'eq', userId);
       return true;
     } catch (_) {
       return false;
@@ -217,6 +238,7 @@ class PostRepositoryImpl implements PostRepository {
         authorLeadershipRole: topLevel[i].authorLeadershipRole,
         body: topLevel[i].body, likesCount: topLevel[i].likesCount,
         isLikedByMe: topLevel[i].isLikedByMe,
+        isBestAnswer: topLevel[i].isBestAnswer,
         replies: replyMap[topLevel[i].id],
         createdAt: topLevel[i].createdAt, updatedAt: topLevel[i].updatedAt,
       );
@@ -237,6 +259,7 @@ class PostRepositoryImpl implements PostRepository {
             authorId: c.authorId, authorName: c.authorName, authorAvatar: c.authorAvatar,
             authorIsVerifiedLeader: c.authorIsVerifiedLeader, authorLeadershipRole: c.authorLeadershipRole,
             body: c.body, likesCount: c.likesCount, isLikedByMe: likedIds.contains(c.id),
+            isBestAnswer: c.isBestAnswer,
             replies: c.replies, createdAt: c.createdAt, updatedAt: c.updatedAt,
           );
           if (c.replies != null) applyLikes(c.replies!);
@@ -285,6 +308,32 @@ class PostRepositoryImpl implements PostRepository {
   Future<bool> unlikeComment(String commentId, String userId) async {
     try {
       await _client.from('comment_likes').delete().filter('comment_id', 'eq', commentId).filter('user_id', 'eq', userId);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> markBestAnswer(String postId, String commentId) async {
+    try {
+      final post = await getPost(postId);
+      if (post.bestAnswerId != null) {
+        await _client.from('post_comments').update({'is_best_answer': false}).filter('id', 'eq', post.bestAnswerId);
+      }
+      await _client.from('post_comments').update({'is_best_answer': true}).filter('id', 'eq', commentId);
+      await _client.from('community_posts').update({'best_answer_id': commentId}).filter('id', 'eq', postId);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> unmarkBestAnswer(String postId, String commentId) async {
+    try {
+      await _client.from('post_comments').update({'is_best_answer': false}).filter('id', 'eq', commentId);
+      await _client.from('community_posts').update({'best_answer_id': null}).filter('id', 'eq', postId);
       return true;
     } catch (_) {
       return false;

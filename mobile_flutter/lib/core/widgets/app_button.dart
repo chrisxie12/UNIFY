@@ -46,7 +46,10 @@ class AppButton extends StatelessWidget {
         border = Border.all(color: AppColors.border);
     }
 
-    return GestureDetector(
+    return Semantics(
+      button: true,
+      label: label,
+      child: GestureDetector(
       onTap: enabled ? onTap : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
@@ -75,6 +78,7 @@ class AppButton extends StatelessWidget {
                   ],
                 ),
         ),
+      ),
       ),
     );
   }

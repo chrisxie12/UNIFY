@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/event_model.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class EventCard extends ConsumerWidget {
   final EventModel event;
@@ -34,7 +35,7 @@ class EventCard extends ConsumerWidget {
                 width: 60,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0066FF),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -154,7 +155,7 @@ class EventCard extends ConsumerWidget {
                           child: ElevatedButton(
                             onPressed: onRsvp,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0066FF),
+                              backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               shape: RoundedRectangleBorder(
@@ -186,7 +187,7 @@ class EventCard extends ConsumerWidget {
   Color _rsvpColor(String status) {
     switch (status) {
       case 'going':
-        return const Color(0xFF0066FF);
+        return AppColors.primary;
       case 'maybe':
         return const Color(0xFFFF6B35);
       case 'declined':

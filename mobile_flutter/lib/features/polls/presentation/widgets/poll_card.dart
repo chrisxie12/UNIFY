@@ -95,12 +95,12 @@ class PollCard extends ConsumerWidget {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: isSelected
-                            ? const Color(0xFF0066FF)
+                            ? Theme.of(context).colorScheme.primary
                             : Colors.grey[200]!,
                       ),
                       borderRadius: BorderRadius.circular(10),
                       color: isSelected
-                          ? const Color(0xFF0066FF).withValues(alpha: 0.05)
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.05)
                           : Colors.white,
                     ),
                     child: Stack(
@@ -114,7 +114,7 @@ class PollCard extends ConsumerWidget {
                                 widthFactor: percentage / 100,
                                 child: Container(
                                   color: isSelected
-                                      ? const Color(0xFF0066FF).withValues(alpha: 0.1)
+                                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                                       : Colors.grey[100],
                                 ),
                               ),
@@ -134,7 +134,7 @@ class PollCard extends ConsumerWidget {
                                           : Icons.check_box_outline_blank,
                                       size: 22,
                                       color: isSelected
-                                          ? const Color(0xFF0066FF)
+                                          ? Theme.of(context).colorScheme.primary
                                           : Colors.grey[400],
                                     )
                                   : Icon(
@@ -143,7 +143,7 @@ class PollCard extends ConsumerWidget {
                                           : Icons.radio_button_unchecked,
                                       size: 22,
                                       color: isSelected
-                                          ? const Color(0xFF0066FF)
+                                          ? Theme.of(context).colorScheme.primary
                                           : Colors.grey[400],
                                     ),
                               const SizedBox(width: 12),
@@ -155,7 +155,7 @@ class PollCard extends ConsumerWidget {
                                     fontWeight:
                                         isSelected ? FontWeight.w600 : FontWeight.normal,
                                     color: isSelected
-                                        ? const Color(0xFF0066FF)
+                                        ? Theme.of(context).colorScheme.primary
                                         : Colors.grey[800],
                                   ),
                                 ),
@@ -167,7 +167,7 @@ class PollCard extends ConsumerWidget {
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                     color: isSelected
-                                        ? const Color(0xFF0066FF)
+                                        ? Theme.of(context).colorScheme.primary
                                         : Colors.grey[600],
                                   ),
                                 ),
@@ -199,7 +199,7 @@ class PollCard extends ConsumerWidget {
                           ? () => onVote?.call(selectedOptionId!)
                           : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0066FF),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         shape: RoundedRectangleBorder(

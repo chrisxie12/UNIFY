@@ -56,7 +56,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            Text('Quick Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            const Text('Quick Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -84,11 +84,11 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            Text('My Community Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            const Text('My Community Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             const SizedBox(height: 12),
             myRequestsAsync.when(
               data: (requests) {
-                if (requests.isEmpty) return _EmptyCard('No community requests yet');
+                if (requests.isEmpty) return const _EmptyCard('No community requests yet');
                 return Column(
                   children: requests.take(3).map((r) => Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -101,11 +101,11 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            Text('My Announcement Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            const Text('My Announcement Requests', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             const SizedBox(height: 12),
             announcementReqsAsync.when(
               data: (requests) {
-                if (requests.isEmpty) return _EmptyCard('No announcement requests yet');
+                if (requests.isEmpty) return const _EmptyCard('No announcement requests yet');
                 return Column(
                   children: requests.take(3).map((r) => Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -118,11 +118,11 @@ class ClassRepDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            Text('Your Badges', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+            const Text('Your Badges', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             const SizedBox(height: 12),
             badgesAsync.when(
               data: (badges) {
-                if (badges.isEmpty) return _EmptyCard('No badges yet');
+                if (badges.isEmpty) return const _EmptyCard('No badges yet');
                 return Wrap(
                   spacing: 8, runSpacing: 8,
                   children: badges.map((b) => _BadgeChip(badge: b.badge)).toList(),
@@ -284,7 +284,7 @@ class _ActionCard extends StatelessWidget {
                 child: Icon(icon, color: color, size: 22),
               ),
               const SizedBox(height: 10),
-              Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.dark, height: 1.3)),
+              Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.dark, height: 1.3)),
             ],
           ),
         ),
@@ -447,7 +447,7 @@ class _BadgeChip extends StatelessWidget {
   Color get _color {
     switch (badge.slug) {
       case 'verified_student':
-        return const Color(0xFF0066FF);
+        return AppColors.primary;
       case 'class_rep':
         return const Color(0xFFFFD700);
       case 'src_executive':

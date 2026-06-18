@@ -97,7 +97,7 @@ class CommunityCard extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.people_outline_rounded,
+                      const Icon(Icons.people_outline_rounded,
                           size: 13, color: AppColors.grey3),
                       const SizedBox(width: 3),
                       Text(

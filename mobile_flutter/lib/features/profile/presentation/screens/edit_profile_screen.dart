@@ -464,7 +464,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text('Discard', style: TextStyle(color: AppColors.error)),
+            child: const Text('Discard', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -579,7 +579,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 32),
 
           // ── BASIC INFO ───────────────────────────────────────────────────
-          _SectionLabel(title: 'BASIC INFO'),
+          const _SectionLabel(title: 'BASIC INFO'),
           const SizedBox(height: 12),
           _FormCard(
             children: [
@@ -605,7 +605,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── ACADEMIC ─────────────────────────────────────────────────────
-          _SectionLabel(title: 'ACADEMIC'),
+          const _SectionLabel(title: 'ACADEMIC'),
           const SizedBox(height: 12),
           _FormCard(
             children: [
@@ -658,7 +658,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── CONTACT ──────────────────────────────────────────────────────
-          _SectionLabel(title: 'CONTACT'),
+          const _SectionLabel(title: 'CONTACT'),
           const SizedBox(height: 12),
           _FormCard(
             children: [
@@ -690,7 +690,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── SOCIAL LINKS ─────────────────────────────────────────────────
-          _SectionLabel(title: 'SOCIAL LINKS'),
+          const _SectionLabel(title: 'SOCIAL LINKS'),
           const SizedBox(height: 12),
           _FormCard(
             children: [
@@ -761,7 +761,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── INTERESTS ────────────────────────────────────────────────────
-          _SectionLabel(title: 'INTERESTS'),
+          const _SectionLabel(title: 'INTERESTS'),
           const SizedBox(height: 12),
           _ToggleChipGrid(
             items: _kInterests,
@@ -779,7 +779,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── SKILLS ───────────────────────────────────────────────────────
-          _SectionLabel(title: 'SKILLS'),
+          const _SectionLabel(title: 'SKILLS'),
           const SizedBox(height: 4),
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -805,7 +805,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           const SizedBox(height: 24),
 
           // ── PRIVACY ──────────────────────────────────────────────────────
-          _SectionLabel(title: 'PRIVACY'),
+          const _SectionLabel(title: 'PRIVACY'),
           const SizedBox(height: 12),
           _PrivacySelector(
             selected: _privacyLevel,

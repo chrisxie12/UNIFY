@@ -27,7 +27,9 @@ class CommunityRepositoryImpl implements CommunityRepository {
       final allMembers = await _client
           .from('community_members')
           .select('user_id, role')
-          .filter('community_id', 'eq', communityId) as List;
+          .filter('community_id', 'eq', communityId)
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1) as List;
       final member = allMembers.cast<Map<String, dynamic>>().where((m) => m['user_id'] == currentUserId).toList();
       response['is_member'] = member.isNotEmpty;
       response['membership_role'] = member.isNotEmpty ? member.first['role'] : null;
@@ -37,7 +39,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
         .from('community_managers')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
         .filter('community_id', 'eq', communityId)
-        .order('assigned_at') as List;
+        .order('assigned_at').limit(1) as List;
 
     final activeManagers = managersResponse.where((m) => m['is_active'] == true).toList();
 
@@ -60,7 +62,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
     final response = await _client
         .from('community_members')
         .select('community_id, role, communities(*)')
-        .filter('user_id', 'eq', userId) as List;
+        .filter('user_id', 'eq', userId).limit(50) as List;
 
     return response.map((json) {
       final community = json['communities'] as Map<String, dynamic>;
@@ -75,12 +77,12 @@ class CommunityRepositoryImpl implements CommunityRepository {
     final response = await _client
         .from('communities')
         .select('*')
-        .order('member_count', ascending: false) as List;
+        .order('member_count', ascending: false).limit(20) as List;
 
     final results = response.where((c) {
       final name = (c['name'] as String?)?.toLowerCase() ?? '';
       return name.contains(query.toLowerCase()) && c['is_active'] == true;
-    }).take(20).toList();
+    }).toList();
 
     return results.map((json) => CommunityDetailModel.fromJson(json)).toList();
   }
@@ -119,7 +121,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
     final response = await _client
         .from('communities')
         .select('*')
-        .order('member_count', ascending: false) as List;
+        .order('member_count', ascending: false).limit(10) as List;
 
     final universityId = profile['university_id'] as String?;
     final programme = (profile['programme'] as String?)?.toLowerCase() ?? '';
@@ -144,7 +146,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
     scored.sort((a, b) => (b['score'] as int).compareTo(a['score'] as int));
 
-    return scored.take(10).map((s) => CommunityDetailModel.fromJson(s['community'] as Map<String, dynamic>)).toList();
+    return scored.map((s) => CommunityDetailModel.fromJson(s['community'] as Map<String, dynamic>)).toList();
   }
 
   @override

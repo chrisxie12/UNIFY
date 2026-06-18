@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/community_resource_model.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ResourceCard extends ConsumerWidget {
   final CommunityResourceModel resource;
@@ -125,13 +126,13 @@ class ResourceCard extends ConsumerWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0066FF).withValues(alpha: 0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: IconButton(
                   onPressed: onDownload,
                   icon: const Icon(Icons.download_rounded, size: 20),
-                  color: const Color(0xFF0066FF),
+                  color: AppColors.primary,
                   padding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
                 ),
@@ -178,7 +179,7 @@ class ResourceCard extends ConsumerWidget {
         return Colors.red;
       case 'docx':
       case 'doc':
-        return const Color(0xFF0066FF);
+        return AppColors.primary;
       case 'ppt':
       case 'pptx':
         return const Color(0xFFFF6B35);

@@ -185,11 +185,11 @@ class _Header extends StatelessWidget {
 
   static Color _badgeColor(String slug) {
     switch (slug) {
-      case 'verified_student': return const Color(0xFF0066FF);
+      case 'verified_student': return AppColors.primary;
       case 'class_rep':        return const Color(0xFFFFD700);
       case 'src_executive':    return const Color(0xFF7C3AED);
       case 'admin':            return const Color(0xFFDC2626);
-      default:                 return const Color(0xFF0066FF);
+      default:                 return AppColors.primary;
     }
   }
 
@@ -407,7 +407,7 @@ class _DefaultCover extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF003EB3), Color(0xFF0066FF), Color(0xFF4DA3FF)],
+          colors: [Color(0xFF003EB3), AppColors.primary, Color(0xFF4DA3FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -535,7 +535,7 @@ class _StatsStrip extends StatelessWidget {
           children: [
             _StatCell(value: postCount, label: 'Posts'),
             _Divider(),
-            _StatCell(value: 0, label: 'Connections', cta: true),
+            const _StatCell(value: 0, label: 'Connections', cta: true),
             _Divider(),
             _StatCell(value: 0, label: 'Communities', cta: true, onTap: () => context.go('/app/communities')),
           ],
@@ -1284,7 +1284,7 @@ class _AchievementsCard extends StatelessWidget {
       if (profile.isVerified)
         const _Badge(emoji: '⭐', label: 'Verified Student', color: Color(0xFFF59E0B)),
       if (profile.unifyScore >= 500)
-        const _Badge(emoji: '⚡', label: 'Power User', color: Color(0xFF0066FF)),
+        const _Badge(emoji: '⚡', label: 'Power User', color: AppColors.primary),
     ];
     // Add server badges
     for (final ub in badges) {
@@ -1384,11 +1384,11 @@ class _LeadershipCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              Icon(Icons.shield_rounded, size: 16, color: const Color(0xFFFF6B35)),
-              const SizedBox(width: 6),
-              const Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Icon(Icons.shield_rounded, size: 16, color: Color(0xFFFF6B35)),
+              SizedBox(width: 6),
+              Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1521,7 +1521,7 @@ class _VerificationStatusCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
+            const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.grey2),
           ],
         ),
         onTap: () => context.push('/verification-request'),
@@ -1590,14 +1590,14 @@ class _RequestCommunityCard extends StatelessWidget {
             child: Icon(Icons.group_add_rounded, color: context.primary, size: 22),
           ),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Request Community Creation', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                const SizedBox(height: 2),
+                Text('Request Community Creation', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                SizedBox(height: 2),
                 Text('Create a new community for your class, department, or faculty',
-                    style: const TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
+                    style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4)),
               ],
             ),
           ),
@@ -1733,25 +1733,25 @@ class _Skeleton extends StatelessWidget {
             Container(
               color: Colors.white,
               padding: const EdgeInsets.fromLTRB(16, 58, 16, 20),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _SBox(h: 22, w: 190, r: 6),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   _SBox(h: 14, w: 130, r: 6),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   _SBox(h: 14, w: 210, r: 6),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Column(
                 children: [
                   _SBox(h: 70, w: double.infinity, r: 16),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   _SBox(h: 160, w: double.infinity, r: 16),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   _SBox(h: 130, w: double.infinity, r: 16),
                 ],
               ),

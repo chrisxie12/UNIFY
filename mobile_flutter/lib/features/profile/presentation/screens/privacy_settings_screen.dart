@@ -196,16 +196,16 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
               style: AppTextStyles.body.copyWith(color: AppColors.grey2),
             ),
             const SizedBox(height: 16),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.badge_outlined,
-              iconColor: const Color(0xFF3B82F6),
+              iconColor: Color(0xFF3B82F6),
               title: 'Verification Status',
               subtitle: 'Student verification is coming soon',
             ),
             const SizedBox(height: 10),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.school_outlined,
-              iconColor: const Color(0xFF10B981),
+              iconColor: Color(0xFF10B981),
               title: 'Student ID',
               subtitle: 'Required for verification — not yet collected',
             ),
@@ -215,16 +215,16 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
             // ── Data & account ─────────────────────────────────────────────
             Text('Data & Account', style: AppTextStyles.h3),
             const SizedBox(height: 16),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.visibility_outlined,
-              iconColor: const Color(0xFF8B5CF6),
+              iconColor: Color(0xFF8B5CF6),
               title: 'Profile Views',
               subtitle: 'Other students can see that you viewed their profile',
             ),
             const SizedBox(height: 10),
-            _InfoTile(
+            const _InfoTile(
               icon: Icons.analytics_outlined,
-              iconColor: const Color(0xFFF59E0B),
+              iconColor: Color(0xFFF59E0B),
               title: 'Analytics',
               subtitle: 'Profile analytics and insights coming soon',
             ),

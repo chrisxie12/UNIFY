@@ -24,14 +24,14 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
   double _uploadProgress = 0;
 
   final List<_ResourceTypeOption> _resourceTypes = [
-    _ResourceTypeOption('lecture_note', 'Lecture Notes', Icons.menu_book),
-    _ResourceTypeOption('past_question', 'Past Questions', Icons.quiz),
-    _ResourceTypeOption('assignment', 'Assignments', Icons.assignment),
-    _ResourceTypeOption('project', 'Projects', Icons.folder_special),
-    _ResourceTypeOption('textbook', 'Textbooks', Icons.book),
-    _ResourceTypeOption('study_guide', 'Study Guides', Icons.lightbulb),
-    _ResourceTypeOption('tutorial', 'Tutorials', Icons.school),
-    _ResourceTypeOption('document', 'Documents', Icons.description),
+    const _ResourceTypeOption('lecture_note', 'Lecture Notes', Icons.menu_book),
+    const _ResourceTypeOption('past_question', 'Past Questions', Icons.quiz),
+    const _ResourceTypeOption('assignment', 'Assignments', Icons.assignment),
+    const _ResourceTypeOption('project', 'Projects', Icons.folder_special),
+    const _ResourceTypeOption('textbook', 'Textbooks', Icons.book),
+    const _ResourceTypeOption('study_guide', 'Study Guides', Icons.lightbulb),
+    const _ResourceTypeOption('tutorial', 'Tutorials', Icons.school),
+    const _ResourceTypeOption('document', 'Documents', Icons.description),
   ];
 
   @override
@@ -58,7 +58,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                 : Text(
                     'Upload',
                     style: TextStyle(
-                      color: _isValid ? const Color(0xFF0066FF) : Colors.grey[400],
+                      color: _isValid ? Theme.of(context).colorScheme.primary : Colors.grey[400],
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -107,7 +107,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: DropdownButtonFormField<String>(
-                value: _resourceType,
+                initialValue: _resourceType,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -117,7 +117,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                     value: type.id,
                     child: Row(
                       children: [
-                        Icon(type.icon, size: 20, color: const Color(0xFF0066FF)),
+                        Icon(type.icon, size: 20, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(width: 12),
                         Text(type.label),
                       ],
@@ -148,7 +148,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                   color: Colors.grey[50],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _selectedFile != null ? const Color(0xFF0066FF) : Colors.grey[200]!,
+                    color: _selectedFile != null ? Theme.of(context).colorScheme.primary : Colors.grey[200]!,
                     width: _selectedFile != null ? 1.5 : 1,
                   ),
                 ),
@@ -158,7 +158,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                           Icon(
                             _fileIcon(_selectedFile!.extension ?? ''),
                             size: 40,
-                            color: const Color(0xFF0066FF),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           const SizedBox(height: 12),
                           Text(
@@ -170,13 +170,13 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (_selectedFile!.size != null) ...[
-                            const SizedBox(height: 4),
-                            Text(
-                              _formatFileSize(_selectedFile!.size!),
-                              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                            ),
-                          ],
+                          ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            _formatFileSize(_selectedFile!.size),
+                            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                          ),
+                        ],
                           const SizedBox(height: 8),
                           GestureDetector(
                             onTap: () => setState(() => _selectedFile = null),
@@ -219,7 +219,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                 child: LinearProgressIndicator(
                   value: _uploadProgress,
                   backgroundColor: Colors.grey[200],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
                   minHeight: 8,
                 ),
               ),

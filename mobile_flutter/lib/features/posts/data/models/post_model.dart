@@ -13,12 +13,14 @@ class PostModel {
   final String? linkUrl;
   final bool isPinned;
   final bool isAnnouncement;
-  final int likesCount;
+  final int upvoteCount;
+  final int downvoteCount;
   final int commentsCount;
   final int sharesCount;
   final int bookmarksCount;
-  final bool? isLikedByMe;
+  final String? myVote;
   final bool? isBookmarkedByMe;
+  final String? bestAnswerId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -37,15 +39,19 @@ class PostModel {
     this.linkUrl,
     this.isPinned = false,
     this.isAnnouncement = false,
-    this.likesCount = 0,
+    this.upvoteCount = 0,
+    this.downvoteCount = 0,
     this.commentsCount = 0,
     this.sharesCount = 0,
     this.bookmarksCount = 0,
-    this.isLikedByMe,
+    this.myVote,
     this.isBookmarkedByMe,
+    this.bestAnswerId,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  int get netVoteCount => upvoteCount - downvoteCount;
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
@@ -63,12 +69,14 @@ class PostModel {
       linkUrl: json['link_url'] as String?,
       isPinned: json['is_pinned'] as bool? ?? false,
       isAnnouncement: json['is_announcement'] as bool? ?? false,
-      likesCount: json['likes_count'] as int? ?? 0,
+      upvoteCount: json['upvote_count'] as int? ?? 0,
+      downvoteCount: json['downvote_count'] as int? ?? 0,
       commentsCount: json['comments_count'] as int? ?? 0,
       sharesCount: json['shares_count'] as int? ?? 0,
       bookmarksCount: json['bookmarks_count'] as int? ?? 0,
-      isLikedByMe: json['is_liked_by_me'] as bool?,
+      myVote: json['my_vote'] as String?,
       isBookmarkedByMe: json['is_bookmarked_by_me'] as bool?,
+      bestAnswerId: json['best_answer_id'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -86,10 +94,12 @@ class PostModel {
       'link_url': linkUrl,
       'is_pinned': isPinned,
       'is_announcement': isAnnouncement,
-      'likes_count': likesCount,
+      'upvote_count': upvoteCount,
+      'downvote_count': downvoteCount,
       'comments_count': commentsCount,
       'shares_count': sharesCount,
       'bookmarks_count': bookmarksCount,
+      'best_answer_id': bestAnswerId,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -108,10 +118,12 @@ class PostModel {
   }
 
   PostModel copyWith({
-    bool? isLikedByMe,
+    String? myVote,
     bool? isBookmarkedByMe,
-    int? likesCount,
+    int? upvoteCount,
+    int? downvoteCount,
     int? commentsCount,
+    String? bestAnswerId,
   }) {
     return PostModel(
       id: id,
@@ -128,12 +140,14 @@ class PostModel {
       linkUrl: linkUrl,
       isPinned: isPinned,
       isAnnouncement: isAnnouncement,
-      likesCount: likesCount ?? this.likesCount,
+      upvoteCount: upvoteCount ?? this.upvoteCount,
+      downvoteCount: downvoteCount ?? this.downvoteCount,
       commentsCount: commentsCount ?? this.commentsCount,
       sharesCount: sharesCount,
       bookmarksCount: bookmarksCount,
-      isLikedByMe: isLikedByMe ?? this.isLikedByMe,
+      myVote: myVote ?? this.myVote,
       isBookmarkedByMe: isBookmarkedByMe ?? this.isBookmarkedByMe,
+      bestAnswerId: bestAnswerId ?? this.bestAnswerId,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

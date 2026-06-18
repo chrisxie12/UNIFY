@@ -105,7 +105,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      firstName.isNotEmpty ? _greeting + ', ' + firstName : _greeting,
+                      firstName.isNotEmpty ? '$_greeting, $firstName' : _greeting,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
@@ -186,8 +186,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         Container(
                           width: 72,
                           height: 72,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF3F4F6),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.wifi_off_rounded, size: 36, color: Color(0xFF9CA3AF)),
@@ -328,12 +328,12 @@ class _StoriesRow extends StatelessWidget {
   const _StoriesRow({this.avatarUrl, required this.firstName});
 
   static const _placeholders = [
-    _StoryData('Campus News', true,  null,              null,              Color(0xFF0066FF)),
+    _StoryData('Campus News', true,  null,              null,              AppColors.primary),
     _StoryData('Kwame A.',    false, 'KA',              null,              Color(0xFF8B5CF6)),
     _StoryData('Ama B.',      false, 'AB',              null,              Color(0xFF10B981)),
     _StoryData('Kofi M.',     false, 'KM',              null,              Color(0xFFEF4444)),
     _StoryData('Efua T.',     false, 'ET',              null,              Color(0xFFF59E0B)),
-    _StoryData('Yaw O.',      false, 'YO',              null,              Color(0xFF0066FF)),
+    _StoryData('Yaw O.',      false, 'YO',              null,              AppColors.primary),
   ];
 
   @override
@@ -409,7 +409,7 @@ class _MyStory extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: context.primary,
                     shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
+                    boxShadow: const [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
                   ),
                   child: const Icon(Icons.add, size: 13, color: Colors.white),
                 ),
@@ -429,7 +429,7 @@ class _StoryBubble extends StatelessWidget {
   const _StoryBubble({required this.data});
 
   static const _ring = LinearGradient(
-    colors: [Color(0xFF0066FF), Color(0xFF8B5CF6)],
+    colors: [AppColors.primary, Color(0xFF8B5CF6)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -549,10 +549,10 @@ class _ComposerBar extends StatelessWidget {
                       : _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
                 ),
                 const SizedBox(width: 12),
-                Expanded(
+                const Expanded(
                   child: Text(
                     'Share an update, idea or question…',
-                    style: const TextStyle(fontSize: 13.5, color: AppColors.grey2),
+                    style: TextStyle(fontSize: 13.5, color: AppColors.grey2),
                   ),
                 ),
                 const SizedBox(width: 8),

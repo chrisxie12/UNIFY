@@ -152,7 +152,7 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
               children: [
                 const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
                 const SizedBox(height: 12),
-                Text('Error loading profile', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                const Text('Error loading profile', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 Text('$e', style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
                 const SizedBox(height: 16),
@@ -184,9 +184,9 @@ class _ProfileHeader extends StatelessWidget {
     final initials = name.split(' ').where((w) => w.isNotEmpty).take(2).map((w) => w[0].toUpperCase()).join();
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF0066FF), Color(0xFF0047DD)],
+          colors: [Theme.of(context).colorScheme.primary, const Color(0xFF0047DD)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -220,7 +220,7 @@ class _ProfileHeader extends StatelessWidget {
                       color: AppColors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.verified_rounded, size: 18, color: AppColors.primary),
+                    child: Icon(Icons.verified_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
                   ),
                 ),
             ],
@@ -250,10 +250,10 @@ class _VerificationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final badgeData = switch (status) {
-      'verified' => (Icon(Icons.check_circle_rounded, size: 16, color: AppColors.success), 'Verified', AppColors.success),
-      'pending' => (Icon(Icons.access_time_rounded, size: 16, color: AppColors.warning), 'Pending', AppColors.warning),
-      'rejected' => (Icon(Icons.cancel_rounded, size: 16, color: AppColors.error), 'Rejected', AppColors.error),
-      _ => (Icon(Icons.person_outline_rounded, size: 16, color: AppColors.grey2), 'Regular Student', AppColors.grey2),
+      'verified' => (const Icon(Icons.check_circle_rounded, size: 16, color: AppColors.success), 'Verified', AppColors.success),
+      'pending' => (const Icon(Icons.access_time_rounded, size: 16, color: AppColors.warning), 'Pending', AppColors.warning),
+      'rejected' => (const Icon(Icons.cancel_rounded, size: 16, color: AppColors.error), 'Rejected', AppColors.error),
+      _ => (const Icon(Icons.person_outline_rounded, size: 16, color: AppColors.grey2), 'Regular Student', AppColors.grey2),
     };
 
     return Container(
@@ -304,7 +304,7 @@ class _DetailSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.person_outline_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.person_outline_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Profile Details', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
@@ -361,7 +361,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.description_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.description_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Verification Documents', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
               const Spacer(),
@@ -390,12 +390,12 @@ class _VerificationDocumentsSection extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.insert_drive_file_rounded, size: 18, color: AppColors.primary),
+                      Icon(Icons.insert_drive_file_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           url.split('/').last.split('?').first,
-                          style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -403,10 +403,10 @@ class _VerificationDocumentsSection extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Text('View', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                        child: Text('View', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary)),
                       ),
                     ],
                   ),
@@ -425,7 +425,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            const Icon(Icons.visibility_rounded, size: 18, color: AppColors.primary),
+            Icon(Icons.visibility_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 8),
             const Expanded(child: Text('Document', style: TextStyle(fontSize: 16))),
           ],
@@ -486,7 +486,7 @@ class _VerificationHistorySection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.history_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.history_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Verification History', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
               const Spacer(),
@@ -593,7 +593,7 @@ class _ManagedCommunitiesSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.groups_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.groups_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Communities Managed', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
               const Spacer(),
@@ -680,7 +680,7 @@ class _RecentActivitySection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.article_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.article_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Recent Activity', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],
@@ -776,7 +776,7 @@ class _ActionButtons extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.gavel_rounded, size: 16, color: AppColors.primary),
+              Icon(Icons.gavel_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               const Text('Verification Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
             ],

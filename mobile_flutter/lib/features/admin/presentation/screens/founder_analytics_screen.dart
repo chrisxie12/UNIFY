@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 
 class _AnalyticsData {
   final int totalCommunities;
@@ -117,7 +115,7 @@ class _AnalyticsSection extends StatelessWidget {
               children: [
                 Icon(icon, size: 18, color: color),
                 const SizedBox(width: 8),
-                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
               ],
             ),
           ),
@@ -172,9 +170,9 @@ class FounderAnalyticsScreen extends ConsumerWidget {
               _AnalyticsSection(
                 title: 'Communities',
                 icon: Icons.groups_rounded,
-                color: const Color(0xFF0066FF),
+                color: Theme.of(context).colorScheme.primary,
                 tiles: [
-                  _StatTileData('Total Communities', '${data.totalCommunities}', const Color(0xFF0066FF), Icons.groups_rounded),
+                  _StatTileData('Total Communities', '${data.totalCommunities}', Theme.of(context).colorScheme.primary, Icons.groups_rounded),
                   _StatTileData('Pending Requests', '${data.pendingRequests}', AppColors.warning, Icons.hourglass_empty_rounded),
                   _StatTileData('Approved', '${data.approvedRequests}', AppColors.success, Icons.check_circle_rounded),
                   _StatTileData('Rejected', '${data.rejectedRequests}', AppColors.error, Icons.cancel_rounded),

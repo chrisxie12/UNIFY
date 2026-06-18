@@ -130,17 +130,17 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                     ),
-                    child: Row(
+                    child: const Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.info_outline_rounded, size: 18, color: AppColors.warning),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Leadership Role Required', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
-                              const SizedBox(height: 4),
+                              Text('Leadership Role Required', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                              SizedBox(height: 4),
                               Text(
                                 'Community creation is restricted to verified student representatives.',
                                 style: TextStyle(fontSize: 12, color: AppColors.grey2, height: 1.4),
@@ -211,7 +211,7 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
             if (_type == 'class') ...[
               const _SectionLabel('Class Name'),
               const SizedBox(height: 4),
-              Text('Enter the specific class this community represents (e.g. IT Level 100)', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+              const Text('Enter the specific class this community represents (e.g. IT Level 100)', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _classNameCtrl,
@@ -231,7 +231,7 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
                   children: [
                     Icon(Icons.shield_rounded, size: 16, color: context.primary),
                     const SizedBox(width: 8),
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         'Class communities require a Course Representative or Assistant Course Representative leadership position.',
                         style: TextStyle(fontSize: 12, color: AppColors.grey1, height: 1.4),

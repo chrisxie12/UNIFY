@@ -14,11 +14,31 @@ import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
+import '../../features/messaging/presentation/screens/message_requests_screen.dart';
+import '../../features/messaging/presentation/screens/student_directory_screen.dart';
+import '../../features/messaging/presentation/screens/chat_screen.dart';
+import '../../features/messaging/presentation/screens/create_group_screen.dart';
+import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/privacy_settings_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/reputation/presentation/screens/reputation_dashboard_screen.dart';
+import '../../features/reputation/presentation/screens/skills_management_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
+import '../../features/admin/presentation/screens/multi_university_admin_screen.dart';
+import '../../features/admin/presentation/screens/university_management_screen.dart';
+import '../../features/admin/presentation/screens/moderation_center_screen.dart';
+import '../../features/admin/presentation/screens/verification_management_screen.dart';
+import '../../features/admin/presentation/screens/opportunities_admin_screen.dart';
+import '../../features/admin/presentation/screens/communication_center_screen.dart';
+import '../../features/admin/presentation/screens/analytics_dashboard_screen.dart';
+import '../../features/admin/presentation/screens/audit_logs_screen.dart';
+import '../../features/admin/presentation/screens/admin_management_screen.dart';
+import '../../features/admin/presentation/screens/community_admin_screen.dart';
+import '../../features/admin/presentation/screens/marketplace_admin_screen.dart';
+import '../../features/admin/presentation/screens/events_admin_screen.dart';
+import '../../features/admin/presentation/screens/academic_admin_screen.dart';
 import '../../features/leadership/presentation/screens/community_request_screen.dart';
 import '../../features/leadership/presentation/screens/class_rep_dashboard_screen.dart';
 import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
@@ -29,9 +49,28 @@ import '../../features/posts/presentation/screens/create_post_screen.dart';
 import '../../features/posts/presentation/screens/post_detail_screen.dart';
 import '../../features/polls/presentation/screens/create_poll_screen.dart';
 import '../../features/events/presentation/screens/event_detail_screen.dart';
+import '../../features/events/presentation/screens/events_screen.dart';
+import '../../features/events/presentation/screens/create_event_screen.dart';
+import '../../features/events/presentation/screens/my_tickets_screen.dart';
+import '../../features/events/presentation/screens/ticket_screen.dart';
+import '../../features/events/presentation/screens/qr_checkin_screen.dart';
+import '../../features/events/presentation/screens/organizer_dashboard_screen.dart';
+import '../../features/events/presentation/screens/admin_event_dashboard_screen.dart';
+import '../../features/events/presentation/screens/event_discussion_screen.dart';
+import '../../features/events/presentation/screens/event_media_gallery_screen.dart';
+import '../../features/events/presentation/screens/student_event_profile_screen.dart';
+import '../../features/events/presentation/screens/event_search_screen.dart';
 import '../../features/resources/presentation/screens/resource_upload_screen.dart';
-import '../../features/admin/presentation/screens/founder_analytics_screen.dart';
 import '../../features/admin/presentation/screens/admin_notification_center_screen.dart';
+import '../../features/academic/presentation/screens/academic_hub_screen.dart';
+import '../../features/academic/presentation/screens/course_list_screen.dart';
+import '../../features/academic/presentation/screens/course_page_screen.dart';
+import '../../features/academic/presentation/screens/notes_repository_screen.dart';
+import '../../features/academic/presentation/screens/assignment_hub_screen.dart';
+import '../../features/academic/presentation/screens/exam_prep_center_screen.dart';
+import '../../features/academic/presentation/screens/gpa_calculator_screen.dart';
+import '../../features/academic/presentation/screens/study_planner_screen.dart';
+import '../../features/academic/presentation/screens/academic_search_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -94,9 +133,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-      GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
-      GoRoute(path: '/admin/analytics', builder: (_, __) => const FounderAnalyticsScreen()),
+      GoRoute(path: '/admin', builder: (_, __) => const MultiUniversityAdminScreen()),
+      GoRoute(path: '/admin/legacy', builder: (_, __) => const AdminScreen()),
+      GoRoute(path: '/admin/analytics', builder: (_, __) => const AnalyticsDashboardScreen()),
       GoRoute(path: '/admin/notifications', builder: (_, __) => const AdminNotificationCenterScreen()),
+      GoRoute(path: '/admin/universities', builder: (_, __) => const UniversityManagementScreen()),
+      GoRoute(path: '/admin/moderation', builder: (_, __) => const ModerationCenterScreen()),
+      GoRoute(path: '/admin/verification', builder: (_, __) => const VerificationManagementScreen()),
+      GoRoute(path: '/admin/opportunities', builder: (_, __) => const OpportunitiesAdminScreen()),
+      GoRoute(path: '/admin/communication', builder: (_, __) => const CommunicationCenterScreen()),
+      GoRoute(path: '/admin/audit-logs', builder: (_, __) => const AuditLogsScreen()),
+      GoRoute(path: '/admin/admins', builder: (_, __) => const AdminManagementScreen()),
+      GoRoute(path: '/admin/communities', builder: (_, __) => const CommunityAdminScreen()),
+      GoRoute(path: '/admin/marketplace', builder: (_, __) => const MarketplaceAdminScreen()),
+      GoRoute(path: '/admin/events', builder: (_, __) => const EventsAdminScreen()),
+      GoRoute(path: '/admin/academic', builder: (_, __) => const AcademicAdminScreen()),
       GoRoute(
         path: '/community/:id',
         builder: (_, state) => CommunityDetailScreen(
@@ -117,6 +168,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/event/:id',
         builder: (_, state) => EventDetailScreen(eventId: state.pathParameters['id']!),
       ),
+      GoRoute(path: '/events', builder: (_, __) => const EventsScreen()),
+      GoRoute(path: '/events/create', builder: (_, __) => const CreateEventScreen()),
+      GoRoute(
+        path: '/events/:id/edit',
+        builder: (_, state) => CreateEventScreen(communityId: state.pathParameters['id']),
+      ),
+      GoRoute(path: '/events/my-tickets', builder: (_, __) => const MyTicketsScreen()),
+      GoRoute(path: '/events/search', builder: (_, __) => const EventSearchScreen()),
+      GoRoute(
+        path: '/events/ticket/:id',
+        builder: (_, state) => TicketScreen(ticketId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/events/:id/checkin',
+        builder: (_, state) => QRCheckInScreen(eventId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/events/:id/dashboard',
+        builder: (_, state) => OrganizerDashboardScreen(eventId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/events/:id/discussions',
+        builder: (_, state) => EventDiscussionScreen(eventId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/events/:id/media',
+        builder: (_, state) => EventMediaGalleryScreen(eventId: state.pathParameters['id']!),
+      ),
+      GoRoute(path: '/events/activity', builder: (_, __) => const StudentEventProfileScreen()),
+      GoRoute(
+        path: '/events/admin',
+        builder: (_, __) => const AdminEventDashboardScreen(),
+      ),
       GoRoute(
         path: '/community/:id/create-post',
         builder: (_, state) => CreatePostScreen(communityId: state.pathParameters['id']!),
@@ -134,6 +218,54 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => CommunityMembersScreen(communityId: state.pathParameters['id']!),
       ),
 
+      GoRoute(path: '/messaging/requests', builder: (_, __) => const MessageRequestsScreen()),
+      GoRoute(path: '/messaging/search', builder: (_, __) => const StudentDirectoryScreen()),
+      GoRoute(
+        path: '/messaging/chat/:id',
+        builder: (_, state) => ChatScreen(conversationId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/messaging/chat/new',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ChatScreen(conversationId: extra?['conversation_id'] as String? ?? 'new');
+        },
+      ),
+      GoRoute(path: '/messaging/create-group', builder: (_, __) => const CreateGroupScreen()),
+      GoRoute(
+        path: '/messaging/channel-view/:id',
+        builder: (_, state) => ChannelViewScreen(conversationId: state.pathParameters['id']!),
+      ),
+
+      GoRoute(path: '/academic', builder: (_, __) => const AcademicHubScreen()),
+      GoRoute(path: '/academic/courses', builder: (_, __) => const CourseListScreen()),
+      GoRoute(
+        path: '/academic/course/:id',
+        builder: (_, state) => CoursePageScreen(courseId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/academic/course/:id/notes',
+        builder: (_, state) => NotesRepositoryScreen(courseId: state.pathParameters['id']!),
+      ),
+      GoRoute(path: '/academic/assignments', builder: (_, __) => const AssignmentHubScreen()),
+      GoRoute(path: '/academic/exam-prep', builder: (_, __) => const ExamPrepCenterScreen()),
+      GoRoute(path: '/academic/gpa', builder: (_, __) => const GPACalculatorScreen()),
+      GoRoute(path: '/academic/study-planner', builder: (_, __) => const StudyPlannerScreen()),
+      GoRoute(
+        path: '/academic/resources',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return NotesRepositoryScreen(filterType: extra?['type'] as String?);
+        },
+      ),
+      GoRoute(path: '/academic/search', builder: (_, __) => const AcademicSearchScreen()),
+
+      GoRoute(path: '/reputation', builder: (_, __) => const ReputationDashboardScreen()),
+      GoRoute(
+        path: '/reputation/skills',
+        builder: (_, __) => const SkillsManagementScreen(),
+      ),
+
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => MainShell(navigationShell: shell),
         branches: [
@@ -148,6 +280,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/academic', builder: (_, __) => const AcademicHubScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
