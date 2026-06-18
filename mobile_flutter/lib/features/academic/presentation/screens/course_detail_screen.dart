@@ -1,0 +1,320 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/extensions/datetime_extensions.dart';
+import '../../data/models/academic_models.dart';
+import '../providers/academic_provider.dart';
+import '../widgets/resource_card.dart';
+
+/// A course page: Notes, Past Questions, Assignments, Exams.
+class CourseDetailScreen extends ConsumerStatefulWidget {
+  final String courseId;
+  const CourseDetailScreen({super.key, required this.courseId});
+
+  @override
+  ConsumerState<CourseDetailScreen> createState() =>
+      _CourseDetailScreenState();
+}
+
+class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(academicRepositoryProvider).recordCourseView(widget.courseId);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final courseAsync = ref.watch(courseDetailProvider(widget.courseId));
+    final resourcesAsync = ref.watch(courseResourcesProvider(widget.courseId));
+    final assignmentsAsync =
+        ref.watch(courseAssignmentsProvider(widget.courseId));
+
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () =>
+              context.push('/academic/upload?course=${widget.courseId}'),
+          backgroundColor: context.primary,
+          child: const Icon(Icons.upload_rounded, color: Colors.white),
+        ),
+        body: NestedScrollView(
+          headerSliverBuilder: (_, __) => [
+            SliverAppBar(
+              pinned: true,
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+              foregroundColor: AppColors.dark,
+              expandedHeight: 150,
+              flexibleSpace: FlexibleSpaceBar(
+                background: courseAsync.maybeWhen(
+                  data: (c) => Container(
+                    padding: const EdgeInsets.fromLTRB(16, 70, 16, 16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          context.primary,
+                          Color.alphaBlend(
+                              Colors.black.withValues(alpha: 0.20),
+                              context.primary),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(c?.code ?? '',
+                            style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 2),
+                        Text(c?.title ?? 'Course',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800)),
+                        if (c?.subtitle.isNotEmpty == true) ...[
+                          const SizedBox(height: 4),
+                          Text(c!.subtitle,
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 12)),
+                        ],
+                      ],
+                    ),
+                  ),
+                  orElse: () => Container(color: context.primary),
+                ),
+              ),
+              bottom: TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelColor: context.primary,
+                unselectedLabelColor: AppColors.grey2,
+                indicatorColor: context.primary,
+                tabs: const [
+                  Tab(text: 'Notes'),
+                  Tab(text: 'Past Questions'),
+                  Tab(text: 'Assignments'),
+                  Tab(text: 'Exams'),
+                ],
+              ),
+            ),
+          ],
+          body: TabBarView(
+            children: [
+              _resourceList(
+                  resourcesAsync, ResourceType.lectureNote),
+              _resourceList(resourcesAsync, ResourceType.pastQuestion),
+              _assignmentList(assignmentsAsync),
+              _examList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _resourceList(
+      AsyncValue<List<ResourceModel>> async, ResourceType type) {
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (all) {
+        final items = all.where((r) => r.resourceType == type).toList();
+        if (items.isEmpty) {
+          return _empty('No ${type.label.toLowerCase()} yet',
+              'Upload to share with your class.');
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+          itemCount: items.length,
+          itemBuilder: (_, i) => ResourceCard(
+            resource: items[i],
+            onTap: () =>
+                context.push('/academic/resource/${items[i].id}'),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _assignmentList(AsyncValue<List<AssignmentModel>> async) {
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (items) {
+        if (items.isEmpty) {
+          return _empty('No assignments', 'Course assignments appear here.');
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+          itemCount: items.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (_, i) => _AssignmentTile(assignment: items[i]),
+        );
+      },
+    );
+  }
+
+  Widget _examList() {
+    final async = ref.watch(examsProvider);
+    return async.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (all) {
+        final items =
+            all.where((e) => e.courseId == widget.courseId).toList();
+        if (items.isEmpty) {
+          return _empty('No exams scheduled',
+              'Quizzes, midsems and exams appear here.');
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+          itemCount: items.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (_, i) => _ExamTile(exam: items[i]),
+        );
+      },
+    );
+  }
+
+  Widget _empty(String title, String subtitle) => Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.folder_open_rounded,
+                size: 44, color: AppColors.grey3),
+            const SizedBox(height: 12),
+            Text(title,
+                style: const TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Text(subtitle,
+                style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+          ],
+        ),
+      );
+}
+
+class _AssignmentTile extends StatelessWidget {
+  final AssignmentModel assignment;
+  const _AssignmentTile({required this.assignment});
+
+  @override
+  Widget build(BuildContext context) {
+    final a = assignment;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFF0F1F3)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: (a.isOverdue ? AppColors.error : AppColors.warning)
+                  .withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: Icon(Icons.assignment_rounded,
+                color: a.isOverdue ? AppColors.error : AppColors.warning,
+                size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(a.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 3),
+                Text(a.dueLabel,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            a.isOverdue ? AppColors.error : AppColors.grey2)),
+              ],
+            ),
+          ),
+          if (a.isDone)
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.success, size: 22),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExamTile extends StatelessWidget {
+  final ExamModel exam;
+  const _ExamTile({required this.exam});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFF0F1F3)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.catUrgent.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: const Icon(Icons.event_rounded,
+                color: AppColors.catUrgent, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(exam.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 3),
+                Text(
+                  [
+                    exam.examType.toUpperCase(),
+                    if (exam.examDate != null) exam.examDate!.shortDateTime,
+                    if (exam.venue != null) exam.venue,
+                  ].whereType<String>().join(' · '),
+                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

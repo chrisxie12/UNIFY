@@ -1,0 +1,559 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/extensions/datetime_extensions.dart';
+import '../../data/models/academic_models.dart';
+import '../providers/academic_provider.dart';
+
+class ResourceDetailScreen extends ConsumerStatefulWidget {
+  final String resourceId;
+  const ResourceDetailScreen({super.key, required this.resourceId});
+
+  @override
+  ConsumerState<ResourceDetailScreen> createState() =>
+      _ResourceDetailScreenState();
+}
+
+class _ResourceDetailScreenState
+    extends ConsumerState<ResourceDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(academicRepositoryProvider)
+          .recordResourceView(widget.resourceId);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final async = ref.watch(resourceDetailProvider(widget.resourceId));
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0.6,
+        shadowColor: AppColors.border,
+        title: const Text('Resource'),
+        actions: [
+          async.maybeWhen(
+            data: (r) => r == null
+                ? const SizedBox.shrink()
+                : _VerifyMenu(resource: r),
+            orElse: () => const SizedBox.shrink(),
+          ),
+        ],
+      ),
+      body: async.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Could not load\n$e')),
+        data: (r) =>
+            r == null ? const Center(child: Text('Not found')) : _content(r),
+      ),
+      bottomNavigationBar: async.maybeWhen(
+        data: (r) => r == null ? null : _bottomBar(r),
+        orElse: () => null,
+      ),
+    );
+  }
+
+  Widget _content(ResourceModel r) {
+    final ratingsAsync = ref.watch(resourceRatingsProvider(r.id));
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: r.resourceType.color.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(r.resourceType.icon,
+                  color: r.resourceType.color, size: 28),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(r.title,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          height: 1.25)),
+                  const SizedBox(height: 6),
+                  _verificationBadge(r.verification),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Stats
+        Row(
+          children: [
+            _stat('${r.downloadCount}', 'Downloads', Icons.download_rounded),
+            _stat('${r.viewCount}', 'Views', Icons.remove_red_eye_rounded),
+            _stat(r.ratingCount == 0 ? '—' : r.rating.toStringAsFixed(1),
+                'Rating', Icons.star_rounded),
+          ],
+        ),
+
+        if (r.isImage && r.url != null) ...[
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: CachedNetworkImage(
+              imageUrl: r.url!,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(
+                  height: 200, color: AppColors.surface),
+              errorWidget: (_, __, ___) => Container(
+                height: 200,
+                color: AppColors.surface,
+                child: const Icon(Icons.broken_image_outlined,
+                    color: AppColors.grey3),
+              ),
+            ),
+          ),
+        ],
+
+        if (r.description != null && r.description!.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _card('Description', child: Text(r.description!,
+              style: const TextStyle(
+                  fontSize: 14, height: 1.5, color: AppColors.grey1))),
+        ],
+
+        const SizedBox(height: 12),
+        _card('Details', child: Column(
+          children: [
+            _row('Type', r.resourceType.label),
+            if (r.lecturer != null) _row('Lecturer', r.lecturer!),
+            if (r.academicYear != null) _row('Academic year', r.academicYear!),
+            if (r.semester != null) _row('Semester', r.semester!),
+            if (r.faculty != null) _row('Faculty', r.faculty!),
+            if (r.department != null) _row('Department', r.department!),
+            _row('Uploaded', r.createdAt.timeAgo),
+            if (r.uploaderName != null) _row('By', r.uploaderName!),
+          ],
+        )),
+
+        const SizedBox(height: 16),
+        // Rate
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Reviews',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+            TextButton.icon(
+              onPressed: () => _rate(r),
+              icon: const Icon(Icons.rate_review_outlined, size: 18),
+              label: const Text('Rate'),
+            ),
+          ],
+        ),
+        ratingsAsync.when(
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (ratings) => ratings.isEmpty
+              ? const Text('No reviews yet.',
+                  style: TextStyle(color: AppColors.grey3))
+              : Column(
+                  children: ratings
+                      .map((rt) => _ratingTile(rt))
+                      .toList()),
+        ),
+      ],
+    );
+  }
+
+  Widget _bottomBar(ResourceModel r) {
+    final offline = ref.watch(offlineFlagProvider(r.id)).valueOrNull ?? false;
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: AppColors.border)),
+        ),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                final on = await ref
+                    .read(offlineControllerProvider.notifier)
+                    .toggle(r);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(on
+                        ? 'Saved for offline access'
+                        : 'Removed from offline library'),
+                    behavior: SnackBarBehavior.floating,
+                  ));
+                }
+              },
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: offline
+                      ? context.primary.withValues(alpha: 0.12)
+                      : AppColors.surface,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  offline
+                      ? Icons.cloud_done_rounded
+                      : Icons.cloud_download_outlined,
+                  color: offline ? context.primary : AppColors.grey1,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: () => _open(r),
+                style: FilledButton.styleFrom(
+                  backgroundColor: context.primary,
+                  minimumSize: const Size.fromHeight(50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                ),
+                icon: const Icon(Icons.open_in_new_rounded,
+                    size: 18, color: Colors.white),
+                label: const Text('Open / Download',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _open(ResourceModel r) async {
+    final user = ref.read(currentUserProvider);
+    await ref.read(academicRepositoryProvider).recordDownload(r.id, user?.id);
+    ref.invalidate(resourceDetailProvider(r.id));
+    if (r.url != null) {
+      await Clipboard.setData(ClipboardData(text: r.url!));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Link copied — paste in your browser to open'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+    }
+  }
+
+  void _rate(ResourceModel r) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => _RateSheet(resourceId: r.id),
+    );
+  }
+
+  // ── UI bits ──────────────────────────────────────────────────
+
+  Widget _verificationBadge(ResourceVerification v) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: v.color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (v.isVerified)
+              Icon(Icons.verified_rounded, size: 13, color: v.color),
+            if (v.isVerified) const SizedBox(width: 4),
+            Text(v.label,
+                style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: v.color)),
+          ],
+        ),
+      );
+
+  Widget _stat(String value, String label, IconData icon) => Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFF0F1F3)),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, color: AppColors.primary, size: 20),
+              const SizedBox(height: 4),
+              Text(value,
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w800)),
+              Text(label,
+                  style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+            ],
+          ),
+        ),
+      );
+
+  Widget _card(String title, {required Widget child}) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFF0F1F3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title,
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 10),
+            child,
+          ],
+        ),
+      );
+
+  Widget _row(String k, String v) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 110,
+              child: Text(k,
+                  style: const TextStyle(
+                      fontSize: 13, color: AppColors.grey2)),
+            ),
+            Expanded(
+              child: Text(v,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.dark)),
+            ),
+          ],
+        ),
+      );
+
+  Widget _ratingTile(ResourceRating rt) => Container(
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFF0F1F3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(rt.userName ?? 'Student',
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w600)),
+                ),
+                Row(
+                  children: List.generate(
+                    5,
+                    (i) => Icon(
+                      i < rt.rating
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      size: 14,
+                      color: AppColors.warning,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (rt.comment != null && rt.comment!.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(rt.comment!,
+                  style: const TextStyle(
+                      fontSize: 13, color: AppColors.grey1)),
+            ],
+          ],
+        ),
+      );
+}
+
+// ── Verify menu (course reps / admins) ─────────────────────────
+
+class _VerifyMenu extends ConsumerWidget {
+  final ResourceModel resource;
+  const _VerifyMenu({required this.resource});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton<ResourceVerification>(
+      icon: const Icon(Icons.verified_outlined, color: AppColors.dark),
+      tooltip: 'Set verification',
+      onSelected: (v) async {
+        await ref
+            .read(academicRepositoryProvider)
+            .setVerification(resource.id, v);
+        ref.invalidate(resourceDetailProvider(resource.id));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Marked as ${v.label}'),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+      },
+      itemBuilder: (_) => ResourceVerification.values
+          .map((v) => PopupMenuItem(value: v, child: Text(v.label)))
+          .toList(),
+    );
+  }
+}
+
+// ── Rate sheet ─────────────────────────────────────────────────
+
+class _RateSheet extends ConsumerStatefulWidget {
+  final String resourceId;
+  const _RateSheet({required this.resourceId});
+
+  @override
+  ConsumerState<_RateSheet> createState() => _RateSheetState();
+}
+
+class _RateSheetState extends ConsumerState<_RateSheet> {
+  int _rating = 5;
+  final _commentCtrl = TextEditingController();
+  bool _busy = false;
+
+  @override
+  void dispose() {
+    _commentCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text('Rate this resource',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 12),
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                5,
+                (i) => GestureDetector(
+                  onTap: () => setState(() => _rating = i + 1),
+                  child: Icon(
+                    i < _rating
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                    size: 40,
+                    color: AppColors.warning,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _commentCtrl,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'How useful was this? (optional)',
+              filled: true,
+              fillColor: AppColors.surface,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none),
+            ),
+          ),
+          const SizedBox(height: 16),
+          FilledButton(
+            onPressed: _busy ? null : _submit,
+            style: FilledButton.styleFrom(
+                backgroundColor: context.primary,
+                minimumSize: const Size.fromHeight(48)),
+            child: _busy
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white))
+                : const Text('Submit rating'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
+    final user = ref.read(currentUserProvider);
+    if (user == null) return;
+    setState(() => _busy = true);
+    try {
+      await ref.read(academicRepositoryProvider).rateResource(
+            resourceId: widget.resourceId,
+            userId: user.id,
+            rating: _rating,
+            comment: _commentCtrl.text.trim(),
+          );
+      ref.invalidate(resourceRatingsProvider(widget.resourceId));
+      ref.invalidate(resourceDetailProvider(widget.resourceId));
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Thanks for rating!'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _busy = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Could not submit: $e'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+    }
+  }
+}

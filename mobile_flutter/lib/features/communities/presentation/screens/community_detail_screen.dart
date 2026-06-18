@@ -9,6 +9,7 @@ import '../../../../core/widgets/verified_badge.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/community_content_models.dart';
 import '../providers/communities_provider.dart';
+import '../../../snapshots/presentation/widgets/snapshot_tray.dart';
 
 class CommunityDetailScreen extends ConsumerWidget {
   final String communityId;
@@ -373,13 +374,14 @@ class _HeaderJoinButton extends ConsumerWidget {
 
 // ── Helper mixin for all tabs ─────────────────────────────────
 
-Widget _tabScaffold(BuildContext context, Widget sliver) {
+Widget _tabScaffold(BuildContext context, Widget sliver, {Widget? header}) {
   return Builder(
     builder: (context) => CustomScrollView(
       slivers: [
         SliverOverlapInjector(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
+        if (header != null) SliverToBoxAdapter(child: header),
         sliver,
       ],
     ),
@@ -399,6 +401,7 @@ class _AnnouncementsTab extends ConsumerWidget {
 
     return _tabScaffold(
       context,
+      header: SnapshotTray(communityId: communityId),
       announcementsAsync.when(
         data: (announcements) {
           if (announcements.isEmpty) {

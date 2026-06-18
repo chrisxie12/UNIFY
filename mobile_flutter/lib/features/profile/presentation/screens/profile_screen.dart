@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../core/widgets/theme_picker_sheet.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -367,7 +367,7 @@ class _Header extends StatelessWidget {
               const SizedBox(width: 8),
               _ActionBtn(
                 icon: Icons.settings_outlined,
-                onTap: () => context.push('/app/profile/privacy'),
+                onTap: () => context.push('/app/profile/settings'),
               ),
             ],
           ),
@@ -856,18 +856,18 @@ class _SocialCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final platforms = <_SocialP>[
       _SocialP('Instagram', profile.instagramUrl,
-        bgStart: const Color(0xFFF9ED32), bgEnd: const Color(0xFF833AB4),
-        isGradient: true, child: const _IgIcon()),
+        isGradient: true, child: const _BrandSvg(_BrandPaths.instagram)),
       _SocialP('TikTok', profile.tiktokUrl,
-        solid: const Color(0xFF010101), child: const _TikTokIcon()),
+        solid: const Color(0xFF010101), child: const _BrandSvg(_BrandPaths.tiktok)),
       _SocialP('Snapchat', profile.snapchatUrl,
-        solid: const Color(0xFFFFFC00), child: const _SnapchatIcon()),
+        solid: const Color(0xFFFFFC00),
+        child: const _BrandSvg(_BrandPaths.snapchat, color: Color(0xFF1A1A1A))),
       _SocialP('LinkedIn', profile.linkedinUrl,
-        solid: const Color(0xFF0A66C2), child: const _LinkedInIcon()),
+        solid: const Color(0xFF0A66C2), child: const _BrandSvg(_BrandPaths.linkedin)),
       _SocialP('X (Twitter)', profile.twitterUrl,
-        solid: const Color(0xFF000000), child: const _XIcon()),
+        solid: const Color(0xFF000000), child: const _BrandSvg(_BrandPaths.x)),
       _SocialP('GitHub', profile.githubUrl,
-        solid: const Color(0xFF24292F), child: const _GitHubIcon()),
+        solid: const Color(0xFF181717), child: const _BrandSvg(_BrandPaths.github)),
       _SocialP('Portfolio', profile.portfolioUrl,
         solid: context.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
@@ -920,15 +920,11 @@ class _SocialP {
   final String label;
   final String? url;
   final Color? solid;
-  final Color? bgStart;
-  final Color? bgEnd;
   final bool isGradient;
   final Widget child;
 
   const _SocialP(this.label, this.url, {
     this.solid,
-    this.bgStart,
-    this.bgEnd,
     this.isGradient = false,
     required this.child,
   });
@@ -938,10 +934,27 @@ class _BrandIconBox extends StatelessWidget {
   final _SocialP platform;
   const _BrandIconBox({required this.platform});
 
+  // Official Instagram brand gradient (warm corner → cool corner).
+  static const _instagramGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color(0xFFFEDA75), // amber
+      Color(0xFFFA7E1E), // orange
+      Color(0xFFD62976), // magenta
+      Color(0xFF962FBF), // purple
+      Color(0xFF4F5BD5), // indigo
+    ],
+    stops: [0.0, 0.25, 0.5, 0.75, 1.0],
+  );
+
   @override
   Widget build(BuildContext context) {
+    final shadowColor = platform.isGradient
+        ? const Color(0xFFD62976)
+        : (platform.solid ?? Colors.black);
     final shadow = BoxShadow(
-      color: (platform.solid ?? platform.bgEnd ?? Colors.black).withValues(alpha: 0.22),
+      color: shadowColor.withValues(alpha: 0.22),
       blurRadius: 8,
       offset: const Offset(0, 3),
     );
@@ -950,13 +963,7 @@ class _BrandIconBox extends StatelessWidget {
       width: 50, height: 50,
       decoration: BoxDecoration(
         color: platform.isGradient ? null : platform.solid,
-        gradient: platform.isGradient
-            ? LinearGradient(
-                colors: [platform.bgStart!, platform.bgEnd!],
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-              )
-            : null,
+        gradient: platform.isGradient ? _instagramGradient : null,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [shadow],
       ),
@@ -967,161 +974,40 @@ class _BrandIconBox extends StatelessWidget {
 
 // ── Brand icon widgets ─────────────────────────────────────────────────────
 
-class _IgIcon extends StatelessWidget {
-  const _IgIcon();
+/// Renders an official monochrome brand glyph (Simple Icons path data) tinted
+/// to [color] at [size]. All glyphs use a 0 0 24 24 viewBox.
+class _BrandSvg extends StatelessWidget {
+  final String path;
+  final double size;
+  final Color color;
+  const _BrandSvg(this.path, {this.size = 22, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: 22, height: 22,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            border: Border.all(color: Colors.white, width: 1.8),
-          ),
-        ),
-        Container(
-          width: 10, height: 10,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 1.8),
-          ),
-        ),
-        const Positioned(
-          top: 3, right: 3,
-          child: CircleAvatar(radius: 1.5, backgroundColor: Colors.white),
-        ),
-      ],
+    return SvgPicture.string(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
+      '<path d="$path"/></svg>',
+      width: size,
+      height: size,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     );
   }
 }
 
-class _TikTokIcon extends StatelessWidget {
-  const _TikTokIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'TT',
-      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1),
-    );
-  }
-}
-
-class _SnapchatIcon extends StatelessWidget {
-  const _SnapchatIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size(24, 24),
-      painter: _GhostPainter(),
-    );
-  }
-}
-
-class _GhostPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF333333)
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-
-    // Simple ghost body
-    path.moveTo(cx - 8, cy + 8);
-    path.lineTo(cx - 8, cy - 2);
-    path.quadraticBezierTo(cx - 8, cy - 10, cx, cy - 10);
-    path.quadraticBezierTo(cx + 8, cy - 10, cx + 8, cy - 2);
-    path.lineTo(cx + 8, cy + 8);
-    path.lineTo(cx + 4, cy + 5);
-    path.lineTo(cx, cy + 8);
-    path.lineTo(cx - 4, cy + 5);
-    path.close();
-
-    canvas.drawPath(path, paint);
-
-    // Eyes
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset(cx - 3, cy - 2), 1.5, paint);
-    canvas.drawCircle(Offset(cx + 3, cy - 2), 1.5, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
-}
-
-class _LinkedInIcon extends StatelessWidget {
-  const _LinkedInIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'in',
-      style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Colors.white, fontStyle: FontStyle.italic),
-    );
-  }
-}
-
-class _XIcon extends StatelessWidget {
-  const _XIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'X',
-      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white),
-    );
-  }
-}
-
-class _GitHubIcon extends StatelessWidget {
-  const _GitHubIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size(24, 24),
-      painter: _OctocatPainter(),
-    );
-  }
-}
-
-class _OctocatPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
-    final cx = size.width / 2;
-    final cy = size.height / 2 - 1;
-
-    // Head circle
-    canvas.drawCircle(Offset(cx, cy), 9, paint);
-
-    // Ears
-    final earPaint = Paint()..color = Colors.white..style = PaintingStyle.fill;
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx - 6, cy - 7), width: 6, height: 5), earPaint);
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx + 6, cy - 7), width: 6, height: 5), earPaint);
-
-    // Inner ear (dark)
-    final darkPaint = Paint()..color = const Color(0xFF24292F)..style = PaintingStyle.fill;
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx - 6, cy - 7), width: 3, height: 2.5), darkPaint);
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx + 6, cy - 7), width: 3, height: 2.5), darkPaint);
-
-    // Eyes
-    canvas.drawCircle(Offset(cx - 3, cy), 1.8, darkPaint);
-    canvas.drawCircle(Offset(cx + 3, cy), 1.8, darkPaint);
-
-    // Nose
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx, cy + 3), width: 3, height: 2), darkPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
+/// Official brand glyph vector paths (from the Simple Icons set, 24×24 viewBox).
+abstract class _BrandPaths {
+  static const instagram =
+      'M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z';
+  static const tiktok =
+      'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z';
+  static const snapchat =
+      'M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.12 1.526 2.97 4.305 3.435.225.034.435.225.435.435.015.075-.015.15-.03.225-.207.7-1.621 1.179-2.99 1.434-.149.029-.18.299-.359.554-.045.075-.061.15-.061.225-.044.39-.299.434-.609.434-.149 0-.345-.044-.554-.089-.479-.105-1.139-.255-1.829-.255-.42 0-.854.029-1.273.104-.81.135-1.5.629-2.295 1.178-.999.689-2.115 1.469-3.838 1.469-.073 0-.146-.003-.219-.009-.073.006-.146.009-.219.009-1.724 0-2.84-.78-3.838-1.469-.795-.549-1.485-1.043-2.295-1.178-.419-.075-.853-.104-1.273-.104-.69 0-1.35.165-1.829.27-.21.044-.404.089-.554.089-.404 0-.62-.135-.659-.434 0-.075-.03-.15-.061-.225-.179-.255-.21-.525-.359-.554-1.369-.255-2.783-.734-2.99-1.434-.015-.075-.045-.15-.03-.225 0-.21.21-.401.435-.435 2.79-.465 4.245-3.315 4.305-3.435l.015-.015c.181-.344.21-.644.12-.868-.194-.45-.883-.675-1.333-.81-.135-.044-.255-.09-.344-.119-1.107-.435-1.228-.93-1.183-1.272.06-.345.479-.601.853-.601.105 0 .195.015.27.045.404.194.764.299 1.064.299.234 0 .354-.045.42-.09l-.045-.495c-.105-1.62-.225-3.645.299-4.847C7.844 1.069 11.2.793 12.206.793z';
+  static const linkedin =
+      'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z';
+  static const x =
+      'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z';
+  static const github =
+      'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12';
 }
 
 String _badgeEmoji(String category) {
@@ -1631,7 +1517,7 @@ class _AccountCard extends StatelessWidget {
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
-          _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), showChevron: false, onTap: () => ThemePickerSheet.show(context)),
+          _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), onTap: () => context.push('/app/profile/settings')),
           const Divider(height: 1, color: AppColors.border, indent: 58),
           _Tile(
             icon: Icons.logout_rounded,

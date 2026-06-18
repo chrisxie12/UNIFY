@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/theme_provider.dart';
 import '../theme/theme_preset.dart';
 import '../theme/app_text_styles.dart';
-import '../theme/app_colors.dart';
 
 class ThemePickerSheet extends ConsumerWidget {
   const ThemePickerSheet({super.key});
@@ -20,10 +19,11 @@ class ThemePickerSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final active = ref.watch(themeNotifierProvider);
+    final scheme = Theme.of(context).colorScheme;
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).bottomSheetTheme.backgroundColor ?? Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
       child: Column(
@@ -35,15 +35,17 @@ class ThemePickerSheet extends ConsumerWidget {
             height: 4,
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-              color: AppColors.grey4,
+              color: scheme.onSurface.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          Text('Your Theme', style: AppTextStyles.h3),
+          Text('Your Theme',
+              style: AppTextStyles.h3.copyWith(color: scheme.onSurface)),
           const SizedBox(height: 4),
           Text(
             'Choose a style that\'s you',
-            style: AppTextStyles.body.copyWith(color: AppColors.grey2),
+            style: AppTextStyles.body
+                .copyWith(color: scheme.onSurface.withValues(alpha: 0.6)),
           ),
           const SizedBox(height: 20),
           GridView.count(

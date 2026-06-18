@@ -17,6 +17,15 @@ class AppConstants {
   static const String feedBoxName     = 'feed_cache';
   static const String feedCacheBox    = 'feed_cache';
   static const String profileCacheBox = 'profile_cache';
+  static const String opportunitiesBox = 'opportunities_cache';
+  static const String academicBox = 'academic_cache';
+  static const String offlineResourcesBox = 'offline_resources';
+  static const String launchBox = 'launch_cache';
+
+  // App version (kept in sync with pubspec version + build number).
+  // Used by the feedback center, analytics, and the app-update gate.
+  static const String appVersion = '1.0.0';
+  static const int appBuildNumber = 1;
 
   // Roles
   static const String roleStudent    = 'student';
