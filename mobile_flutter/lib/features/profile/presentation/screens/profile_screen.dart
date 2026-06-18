@@ -1688,7 +1688,7 @@ class _ErrorView extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
             const SizedBox(height: 12),
-            Text(message, style: const TextStyle(color: AppColors.grey2, fontSize: 14), textAlign: TextAlign.center),
+            Text(message, style: TextStyle(color: context.textSecondary, fontSize: 14), textAlign: TextAlign.center),
           ],
         ),
       ),

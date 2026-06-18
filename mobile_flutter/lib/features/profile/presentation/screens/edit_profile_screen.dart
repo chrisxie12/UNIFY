@@ -496,9 +496,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         if (ok && context.mounted) context.pop();
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: context.appBarBg,
           surfaceTintColor: Colors.transparent,
           elevation: 0,
           title: Text('Edit Profile', style: AppTextStyles.h3),
@@ -942,11 +942,11 @@ class _FormCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: AppColors.white,
+      color: context.cardBg,
       elevation: 0,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.border, width: 0.5),
+          border: Border.all(color: context.borderCol, width: 0.5),
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16),

@@ -14,12 +14,12 @@ class ReferralAdminScreen extends ConsumerWidget {
     final referralsAsync = ref.watch(allReferralsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Referrals',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -103,9 +103,9 @@ class _ReferralCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -129,10 +129,10 @@ class _ReferralCard extends StatelessWidget {
                   referral.referrerName?.isNotEmpty == true
                       ? referral.referrerName!
                       : 'Referrer',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class StudyPlannerScreen extends ConsumerStatefulWidget {
   const StudyPlannerScreen({super.key});
@@ -54,9 +55,9 @@ class _StudyPlannerScreenState extends ConsumerState<StudyPlannerScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.calendar_month, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.calendar_month, size: 64, color: context.borderCol),
                   const SizedBox(height: 16),
-                  Text('No study plans yet', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('No study plans yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton.icon(
                     onPressed: () => _showCreateDialog(context),
@@ -160,7 +161,7 @@ class _StudyPlanCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: Colors.grey[200],
+                backgroundColor: context.borderCol,
                 color: theme.colorScheme.primary,
                 minHeight: 8,
               ),
@@ -168,7 +169,7 @@ class _StudyPlanCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '${(progress * 100).toInt()}% complete · ${plan.items.where((i) => i.isCompleted).length}/${plan.items.length} tasks',
-              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
             ),
             if (plan.items.isNotEmpty) ...[
               const SizedBox(height: 8),

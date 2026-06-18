@@ -310,9 +310,9 @@ class _RequestSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         children: [
@@ -329,9 +329,9 @@ class _RequestSummaryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(request.communityName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                Text(request.communityName, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 2),
-                Text(_typeLabel(request.communityType), style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                Text(_typeLabel(request.communityType), style: TextStyle(fontSize: 11, color: context.textSecondary)),
               ],
             ),
           ),
@@ -401,9 +401,9 @@ class _AnnouncementSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         children: [
@@ -420,9 +420,9 @@ class _AnnouncementSummaryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(request.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(request.title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 2),
-                Text(request.category[0].toUpperCase() + request.category.substring(1), style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                Text(request.category[0].toUpperCase() + request.category.substring(1), style: TextStyle(fontSize: 11, color: context.textSecondary)),
               ],
             ),
           ),
@@ -505,11 +505,11 @@ class _EmptyCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: context.bg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
-      child: Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
+      child: Text(message, textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: context.textSecondary)),
     );
   }
 }
