@@ -168,7 +168,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/event/:id',
         builder: (_, state) => EventDetailScreen(eventId: state.pathParameters['id']!),
       ),
-      GoRoute(path: '/events', builder: (_, __) => const EventsScreen()),
       GoRoute(path: '/events/create', builder: (_, __) => const CreateEventScreen()),
       GoRoute(
         path: '/events/:id/edit',
@@ -237,7 +236,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => ChannelViewScreen(conversationId: state.pathParameters['id']!),
       ),
 
-      GoRoute(path: '/academic', builder: (_, __) => const AcademicHubScreen()),
       GoRoute(path: '/academic/courses', builder: (_, __) => const CourseListScreen()),
       GoRoute(
         path: '/academic/course/:id',
