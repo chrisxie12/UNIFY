@@ -1,0 +1,569 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/ambassador_models.dart';
+import '../providers/ambassador_provider.dart';
+
+class AmbassadorAdminScreen extends ConsumerWidget {
+  const AmbassadorAdminScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ambassadorsAsync = ref.watch(ambassadorsProvider);
+    final statsAsync = ref.watch(ambassadorStatsProvider);
+
+    final active = statsAsync.valueOrNull?['active'] ?? 0;
+    final totalReferrals = statsAsync.valueOrNull?['totalReferrals'] ?? 0;
+    final totalEvents = statsAsync.valueOrNull?['totalEvents'] ?? 0;
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0.6,
+        shadowColor: AppColors.border,
+        title: const Text('Campus Ambassadors',
+            style: TextStyle(fontWeight: FontWeight.w800)),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: context.primary,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.person_add_alt_1_rounded),
+        label: const Text('Add ambassador'),
+        onPressed: () => _showAddAmbassadorSheet(context, ref),
+      ),
+      body: ambassadorsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Could not load: $e')),
+        data: (ambassadors) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(ambassadorsProvider);
+              ref.invalidate(ambassadorStatsProvider);
+            },
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 88),
+              children: [
+                Row(
+                  children: [
+                    _StatTile(
+                      icon: Icons.verified_user_rounded,
+                      value: '$active',
+                      label: 'Active',
+                      color: AppColors.success,
+                    ),
+                    _StatTile(
+                      icon: Icons.people_alt_rounded,
+                      value: '$totalReferrals',
+                      label: 'Referrals',
+                      color: AppColors.info,
+                    ),
+                    _StatTile(
+                      icon: Icons.event_rounded,
+                      value: '$totalEvents',
+                      label: 'Events',
+                      color: AppColors.warning,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (ambassadors.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: _EmptyState(
+                      icon: Icons.campaign_rounded,
+                      message: 'No ambassadors yet',
+                    ),
+                  )
+                else
+                  ...ambassadors.map((a) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _AmbassadorCard(ambassador: a),
+                      )),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _AmbassadorCard extends StatelessWidget {
+  final Ambassador ambassador;
+  const _AmbassadorCard({required this.ambassador});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = statusColor(ambassador.status);
+    final subtitle = [
+      ambassador.universityName,
+      ambassador.faculty,
+      ambassador.department,
+    ].where((s) => s != null && s.isNotEmpty).join(' • ');
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(14),
+      onTap: () => context.push('/launch/ambassador/${ambassador.id}'),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.border),
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                _Avatar(url: ambassador.avatarUrl),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        ambassador.fullName?.isNotEmpty == true
+                            ? ambassador.fullName!
+                            : 'Ambassador',
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.dark),
+                      ),
+                      if (subtitle.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(subtitle,
+                              style: const TextStyle(
+                                  fontSize: 12, color: AppColors.grey2)),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _StatusChip(label: ambassador.status, color: color),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                _MiniChip(
+                  icon: Icons.people_alt_rounded,
+                  label: '${ambassador.referralCount} referrals',
+                  color: AppColors.info,
+                ),
+                const SizedBox(width: 8),
+                _MiniChip(
+                  icon: Icons.event_rounded,
+                  label: '${ambassador.eventsOrganized} events',
+                  color: AppColors.warning,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// Add ambassador flow
+// ══════════════════════════════════════════════════════════════
+
+Future<void> _showAddAmbassadorSheet(
+    BuildContext context, WidgetRef ref) async {
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+    ),
+    builder: (ctx) => Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(ctx).viewInsets.bottom,
+      ),
+      child: const _AddAmbassadorForm(),
+    ),
+  );
+}
+
+class _AddAmbassadorForm extends ConsumerStatefulWidget {
+  const _AddAmbassadorForm();
+
+  @override
+  ConsumerState<_AddAmbassadorForm> createState() => _AddAmbassadorFormState();
+}
+
+class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
+  final _searchController = TextEditingController();
+  final _universityController = TextEditingController();
+  final _facultyController = TextEditingController();
+  final _departmentController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _contactController = TextEditingController();
+
+  List<Map<String, dynamic>> _results = [];
+  Map<String, dynamic>? _selected;
+  bool _searching = false;
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _universityController.dispose();
+    _facultyController.dispose();
+    _departmentController.dispose();
+    _bioController.dispose();
+    _contactController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _runSearch() async {
+    final q = _searchController.text.trim();
+    if (q.isEmpty) return;
+    setState(() => _searching = true);
+    try {
+      final results =
+          await ref.read(ambassadorRepositoryProvider).searchProfiles(q);
+      if (mounted) setState(() => _results = results);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Search failed: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _searching = false);
+    }
+  }
+
+  Future<void> _save() async {
+    final selected = _selected;
+    if (selected == null) return;
+    setState(() => _saving = true);
+    final navigator = Navigator.of(context);
+    try {
+      await ref.read(ambassadorRepositoryProvider).createAmbassador(
+            userId: selected['id'] as String,
+            universityName: _nullable(_universityController.text),
+            faculty: _nullable(_facultyController.text),
+            department: _nullable(_departmentController.text),
+            bio: _nullable(_bioController.text),
+            contact: _nullable(_contactController.text),
+          );
+      ref.invalidate(ambassadorsProvider);
+      ref.invalidate(ambassadorStatsProvider);
+      navigator.pop();
+    } catch (e) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Could not add: $e')));
+      }
+    }
+  }
+
+  String? _nullable(String v) {
+    final t = v.trim();
+    return t.isEmpty ? null : t;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = _selected;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Add ambassador',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.dark)),
+              const SizedBox(height: 16),
+              if (selected == null) ...[
+                TextField(
+                  controller: _searchController,
+                  onSubmitted: (_) => _runSearch(),
+                  decoration: InputDecoration(
+                    labelText: 'Search by name or email',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: _searching
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2))
+                          : const Icon(Icons.search_rounded),
+                      onPressed: _searching ? null : _runSearch,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ..._results.map((p) {
+                  final name = p['full_name'] as String? ?? 'User';
+                  final email = p['email'] as String? ?? '';
+                  return ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: const CircleAvatar(
+                      backgroundColor: AppColors.surface,
+                      child: Icon(Icons.person_rounded,
+                          color: AppColors.grey2, size: 20),
+                    ),
+                    title: Text(name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 14)),
+                    subtitle: Text(email,
+                        style: const TextStyle(fontSize: 12)),
+                    onTap: () => setState(() => _selected = p),
+                  );
+                }),
+                if (!_searching && _results.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text('Search for a user to promote.',
+                        style:
+                            TextStyle(fontSize: 12, color: AppColors.grey3)),
+                  ),
+              ] else ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person_rounded,
+                            color: AppColors.grey2, size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(selected['full_name'] as String? ?? 'User',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.dark)),
+                            Text(selected['email'] as String? ?? '',
+                                style: const TextStyle(
+                                    fontSize: 12, color: AppColors.grey2)),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _saving
+                            ? null
+                            : () => setState(() => _selected = null),
+                        child: const Text('Change'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _field(_universityController, 'University name'),
+                const SizedBox(height: 12),
+                _field(_facultyController, 'Faculty'),
+                const SizedBox(height: 12),
+                _field(_departmentController, 'Department'),
+                const SizedBox(height: 12),
+                _field(_bioController, 'Bio', maxLines: 3),
+                const SizedBox(height: 12),
+                _field(_contactController, 'Contact'),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: _saving ? null : _save,
+                    child: _saving
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white))
+                        : const Text('Add ambassador'),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _field(TextEditingController c, String label, {int maxLines = 1}) {
+    return TextField(
+      controller: c,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// Shared widgets
+// ══════════════════════════════════════════════════════════════
+
+class _Avatar extends StatelessWidget {
+  final String? url;
+  const _Avatar({this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    if (url != null && url!.isNotEmpty) {
+      return CircleAvatar(radius: 20, backgroundImage: NetworkImage(url!));
+    }
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: context.primary.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(Icons.person_rounded, color: context.primary, size: 20),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color color;
+  const _StatTile({
+    required this.icon,
+    required this.value,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 22),
+            const SizedBox(height: 6),
+            Text(value,
+                style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.w800, color: color)),
+            const SizedBox(height: 2),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _StatusChip({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(label.toUpperCase(),
+          style: TextStyle(
+              fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+    );
+  }
+}
+
+class _MiniChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  const _MiniChip(
+      {required this.icon, required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: color),
+          const SizedBox(width: 4),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  const _EmptyState({required this.icon, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 48, color: AppColors.grey4),
+          const SizedBox(height: 12),
+          Text(message,
+              style: const TextStyle(fontSize: 14, color: AppColors.grey3)),
+        ],
+      ),
+    );
+  }
+}
+
+Color statusColor(String status) {
+  switch (status) {
+    case 'active':
+      return AppColors.success;
+    case 'pending':
+      return AppColors.warning;
+    case 'inactive':
+      return AppColors.grey2;
+    default:
+      return AppColors.grey2;
+  }
+}
