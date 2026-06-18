@@ -36,6 +36,14 @@ import '../../features/marketplace/presentation/screens/freelancer_detail_screen
 import '../../features/marketplace/presentation/screens/freelancer_profile_screen.dart';
 import '../../features/marketplace/presentation/screens/seller_profile_screen.dart';
 import '../../features/marketplace/presentation/screens/marketplace_admin_screen.dart';
+import '../../features/opportunities/presentation/screens/opportunities_home_screen.dart';
+import '../../features/opportunities/presentation/screens/opportunity_type_screen.dart';
+import '../../features/opportunities/presentation/screens/opportunity_detail_screen.dart';
+import '../../features/opportunities/presentation/screens/saved_opportunities_screen.dart';
+import '../../features/opportunities/presentation/screens/application_tracker_screen.dart';
+import '../../features/opportunities/presentation/screens/deadlines_screen.dart';
+import '../../features/opportunities/presentation/screens/opportunity_search_screen.dart';
+import '../../features/opportunities/presentation/screens/opportunities_admin_screen.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -143,6 +151,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/marketplace/seller/:id',
         builder: (_, state) =>
             SellerProfileScreen(sellerId: state.pathParameters['id']!),
+      ),
+
+      // ── Opportunities Hub ────────────────────────────────────
+      GoRoute(path: '/opportunities', builder: (_, __) => const OpportunitiesHomeScreen()),
+      GoRoute(path: '/opportunities/search', builder: (_, __) => const OpportunitySearchScreen()),
+      GoRoute(path: '/opportunities/saved', builder: (_, __) => const SavedOpportunitiesScreen()),
+      GoRoute(path: '/opportunities/tracker', builder: (_, __) => const ApplicationTrackerScreen()),
+      GoRoute(path: '/opportunities/deadlines', builder: (_, __) => const DeadlinesScreen()),
+      GoRoute(path: '/opportunities/admin', builder: (_, __) => const OpportunitiesAdminScreen()),
+      GoRoute(
+        path: '/opportunities/type/:key',
+        builder: (_, state) =>
+            OpportunityTypeScreen(typeKey: state.pathParameters['key']!),
+      ),
+      GoRoute(
+        path: '/opportunities/detail/:id',
+        builder: (_, state) =>
+            OpportunityDetailScreen(opportunityId: state.pathParameters['id']!),
       ),
 
       StatefulShellRoute.indexedStack(
