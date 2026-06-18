@@ -101,6 +101,8 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
 
   @override
   Widget build(BuildContext context) {
+    _inputFillColor = context.cardBg;
+    _labelColor = context.textPrimary;
     return Scaffold(
       appBar: AppBar(title: const Text('New Announcement'), centerTitle: true),
       body: Form(
@@ -181,7 +183,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
 
             SwitchListTile(
               title: const Text('Mark as Urgent', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-              subtitle: const Text('Urgent announcements are highlighted in red', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+              subtitle: Text('Urgent announcements are highlighted in red', style: TextStyle(fontSize: 11, color: context.textSecondary)),
               value: _isUrgent,
               activeThumbColor: AppColors.error,
               onChanged: (v) => setState(() => _isUrgent = v),
@@ -206,13 +208,16 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
     );
   }
 
-  Widget _label(String text) => Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark));
+  Color? _inputFillColor;
+  Color? _labelColor;
+
+  Widget _label(String text) => Text(text, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _labelColor));
 
   InputDecoration _input(String? hint) => InputDecoration(
     hintText: hint,
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
     filled: true,
-    fillColor: AppColors.white,
+    fillColor: _inputFillColor,
   );
 }

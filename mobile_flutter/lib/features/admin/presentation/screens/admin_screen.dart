@@ -189,7 +189,7 @@ class _PendingRequestsTab extends ConsumerWidget {
             children: [
               Icon(Icons.hourglass_empty_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              const Text('Pending Reviews', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Text('Pending Reviews', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -309,7 +309,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 6),
             Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 10, color: AppColors.grey2)),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary)),
           ],
         ),
       ),
@@ -732,7 +732,7 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
             children: [
               Icon(Icons.campaign_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              const Text('Pending Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Text('Pending Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1004,7 +1004,7 @@ class _VerificationTab extends ConsumerWidget {
             children: [
               Icon(Icons.verified_user_rounded, size: 16, color: context.primary),
               const SizedBox(width: 6),
-              const Text('Pending Verifications', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              Text('Pending Verifications', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),

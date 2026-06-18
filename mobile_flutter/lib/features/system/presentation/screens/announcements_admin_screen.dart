@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/system_models.dart';
@@ -139,13 +140,13 @@ class _AnnouncementsAdminScreenState
     final async = ref.watch(allAnnouncementsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: context.appBarBg,
         elevation: 0.6,
-        title: const Text(
+        title: Text(
           'Announcements',
-          style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.dark),
+          style: TextStyle(fontWeight: FontWeight.w800, color: context.textPrimary),
         ),
       ),
       body: async.when(
@@ -160,12 +161,12 @@ class _AnnouncementsAdminScreenState
               const SizedBox(height: 16),
               _composer(),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'All announcements',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.dark,
+                  color: context.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -202,9 +203,9 @@ class _AnnouncementsAdminScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -220,7 +221,7 @@ class _AnnouncementsAdminScreenState
           ),
           const SizedBox(height: 2),
           Text(label,
-              style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+              style: TextStyle(fontSize: 13, color: context.textSecondary)),
         ],
       ),
     );
@@ -230,20 +231,20 @@ class _AnnouncementsAdminScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'New announcement',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w800,
-              color: AppColors.dark,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 12),

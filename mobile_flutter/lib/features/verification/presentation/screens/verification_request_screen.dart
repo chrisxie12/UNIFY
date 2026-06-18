@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/verification_request_model.dart';
 class VerificationRequestScreen extends ConsumerStatefulWidget {
   const VerificationRequestScreen({super.key});
@@ -137,6 +138,8 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
 
   @override
   Widget build(BuildContext context) {
+    _inputFillColor = context.cardBg;
+    _labelColor = context.textPrimary;
     return Scaffold(
       appBar: AppBar(title: const Text('Request Verification'), centerTitle: true),
       body: Form(
@@ -223,10 +226,10 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 decoration: BoxDecoration(
-                  color: _evidenceFile != null ? const Color(0xFFEFF4FF) : AppColors.background,
+                  color: _evidenceFile != null ? const Color(0xFFEFF4FF) : context.bg,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.border,
+                    color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : context.borderCol,
                     width: _evidenceFile != null ? 1.5 : 1,
                   ),
                 ),
@@ -235,20 +238,20 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
                     Icon(
                       _evidenceFile != null ? Icons.check_circle_rounded : Icons.upload_file_rounded,
                       size: 32,
-                      color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.grey3,
+                      color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : context.textSecondary,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       _evidenceFile != null ? _evidenceFile!.path.split('/').last : 'Tap to upload evidence',
                       style: TextStyle(
                         fontSize: 13,
-                        color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : AppColors.grey2,
+                        color: _evidenceFile != null ? Theme.of(context).colorScheme.primary : context.textSecondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     if (_evidenceFile != null) ...[
                       const SizedBox(height: 4),
-                      const Text('Tap to change', style: TextStyle(fontSize: 11, color: AppColors.grey3)),
+                      Text('Tap to change', style: TextStyle(fontSize: 11, color: context.textSecondary)),
                     ],
                   ],
                 ),
@@ -274,13 +277,16 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
     );
   }
 
-  Widget _label(String text) => Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark));
+  Color? _inputFillColor;
+  Color? _labelColor;
+
+  Widget _label(String text) => Text(text, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _labelColor));
 
   InputDecoration _input({String? hint}) => InputDecoration(
     hintText: hint,
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
     filled: true,
-    fillColor: AppColors.white,
+    fillColor: _inputFillColor,
   );
 }

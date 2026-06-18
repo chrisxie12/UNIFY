@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ExamPrepCenterScreen extends ConsumerWidget {
   const ExamPrepCenterScreen({super.key});
@@ -44,13 +45,13 @@ class ExamPrepCenterScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Exam Timetable', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+              Text('Exam Timetable', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
               const SizedBox(height: 8),
               if (exams.isEmpty)
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(32),
-                    child: Text('No exam dates added yet', style: TextStyle(color: Colors.grey[500])),
+                    child: Text('No exam dates added yet', style: TextStyle(color: context.textSecondary)),
                   ),
                 )
               else
@@ -66,16 +67,16 @@ class ExamPrepCenterScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('${DateFormat('EEEE, MMM d, yyyy').format(exam.examDate)} · ${exam.examTime ?? 'TBA'}',
-                                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                style: TextStyle(fontSize: 12, color: context.textSecondary)),
                             if (exam.venue != null)
-                              Text('Venue: ${exam.venue}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                              Text('Venue: ${exam.venue}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                           ],
                         ),
                         trailing: Text('${_daysUntil(exam.examDate)}d', style: TextStyle(color: Colors.red[400], fontWeight: FontWeight.w600)),
                       ),
                     )),
               const SizedBox(height: 16),
-              Text('Study Resources', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+              Text('Study Resources', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -107,7 +108,7 @@ class _QuickActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: onTap,
@@ -116,7 +117,7 @@ class _QuickActionCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[200]!),
+              border: Border.all(color: context.borderCol),
             ),
             child: Column(
               children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class AssignmentHubScreen extends ConsumerWidget {
   const AssignmentHubScreen({super.key});
@@ -22,11 +23,11 @@ class AssignmentHubScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.assignment_outlined, size: 64, color: Colors.grey[300]),
+            Icon(Icons.assignment_outlined, size: 64, color: context.borderCol),
             const SizedBox(height: 16),
-            Text('Assignment tracking coming soon', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+            Text('Assignment tracking coming soon', style: TextStyle(color: context.textSecondary, fontSize: 16)),
             const SizedBox(height: 8),
-            Text('Select a course to view its assignments', style: TextStyle(color: Colors.grey[400], fontSize: 13)),
+            Text('Select a course to view its assignments', style: TextStyle(color: context.textSecondary, fontSize: 13)),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => context.push('/academic/courses'),

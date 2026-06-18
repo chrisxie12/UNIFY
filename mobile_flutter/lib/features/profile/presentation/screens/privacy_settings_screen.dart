@@ -83,9 +83,9 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: context.appBarBg,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Text('Privacy', style: AppTextStyles.h3),
@@ -154,10 +154,10 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: active ? context.primary.withValues(alpha: 0.07) : AppColors.white,
+                    color: active ? context.primary.withValues(alpha: 0.07) : context.cardBg,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: active ? context.primary : AppColors.border,
+                      color: active ? context.primary : context.borderCol,
                       width: active ? 1.5 : 0.5,
                     ),
                   ),
@@ -253,9 +253,9 @@ class _InfoTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border, width: 0.5),
+        border: Border.all(color: context.borderCol, width: 0.5),
       ),
       child: Row(
         children: [

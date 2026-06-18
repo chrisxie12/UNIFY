@@ -180,7 +180,7 @@ class _StudyPlanCard extends StatelessWidget {
                         Icon(
                           item.isCompleted ? Icons.check_circle : Icons.radio_button_off,
                           size: 16,
-                          color: item.isCompleted ? Colors.green : Colors.grey[400],
+                          color: item.isCompleted ? Colors.green : context.textSecondary,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -189,7 +189,7 @@ class _StudyPlanCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13,
                               decoration: item.isCompleted ? TextDecoration.lineThrough : null,
-                              color: item.isCompleted ? Colors.grey : Colors.black87,
+                              color: item.isCompleted ? context.textSecondary : context.textPrimary,
                             ),
                           ),
                         ),
@@ -197,7 +197,7 @@ class _StudyPlanCard extends StatelessWidget {
                     ),
                   )),
               if (plan.items.length > 3)
-                Text('+${plan.items.length - 3} more tasks', style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                Text('+${plan.items.length - 3} more tasks', style: TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ],
         ),

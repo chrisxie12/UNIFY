@@ -68,12 +68,12 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
     final referralsAsync = ref.watch(myReferralsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Invite Friends',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -103,11 +103,11 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                   onSend: () => _sendInvite(code),
                 ),
                 const SizedBox(height: 24),
-                const Text('Your Invites',
+                Text('Your Invites',
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.dark)),
+                        color: context.textPrimary)),
                 const SizedBox(height: 12),
                 referralsAsync.when(
                   loading: () => const Padding(
@@ -121,9 +121,9 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.cardBg,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: context.borderCol),
                         ),
                         child: const Text(
                           'No invites yet. Share your code to get started!',
@@ -305,18 +305,18 @@ class _InviteForm extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Invite a friend by email",
+          Text("Invite a friend by email",
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.dark)),
+                  color: context.textPrimary)),
           const SizedBox(height: 12),
           TextField(
             controller: emailController,
@@ -367,9 +367,9 @@ class _ReferralRow extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -382,10 +382,10 @@ class _ReferralRow extends StatelessWidget {
                   referral.referredEmail?.isNotEmpty == true
                       ? referral.referredEmail!
                       : 'Friend invite',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark),
+                      color: context.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(dateLabel,

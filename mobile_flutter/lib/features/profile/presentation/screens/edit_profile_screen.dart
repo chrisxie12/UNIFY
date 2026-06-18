@@ -744,7 +744,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 hint: 'https://github.com/yourusername',
                 controller: _githubCtrl,
                 icon: Icons.code,
-                iconColor: AppColors.dark,
+                iconColor: context.textPrimary,
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 20),
@@ -785,7 +785,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               'Select skills that represent what you can do',
-              style: AppTextStyles.caption.copyWith(color: AppColors.grey2),
+              style: AppTextStyles.caption.copyWith(color: context.textSecondary),
             ),
           ),
           _ToggleChipGrid(
@@ -977,7 +977,7 @@ class _UsernameField extends StatelessWidget {
           onChanged: onChanged,
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.none,
-          style: const TextStyle(fontSize: 14, color: AppColors.dark),
+          style: TextStyle(fontSize: 14, color: context.textPrimary),
           decoration: InputDecoration(
             hintText: 'yourhandle',
             prefixText: '@',
@@ -1039,7 +1039,7 @@ class _SocialField extends StatelessWidget {
           controller: controller,
           onChanged: onChanged,
           keyboardType: TextInputType.url,
-          style: const TextStyle(fontSize: 14, color: AppColors.dark),
+          style: TextStyle(fontSize: 14, color: context.textPrimary),
           decoration: InputDecoration(hintText: hint),
         ),
       ],
@@ -1119,8 +1119,8 @@ class _ToggleChipGrid extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.border, width: 0.5),
+        color: context.cardBg,
+        border: Border.all(color: context.borderCol, width: 0.5),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Wrap(
@@ -1198,10 +1198,10 @@ class _PrivacySelector extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: active ? context.primary.withValues(alpha: 0.07) : AppColors.white,
+              color: active ? context.primary.withValues(alpha: 0.07) : context.cardBg,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: active ? context.primary : AppColors.border,
+                color: active ? context.primary : context.borderCol,
                 width: active ? 1.5 : 0.5,
               ),
             ),
@@ -1215,7 +1215,7 @@ class _PrivacySelector extends StatelessWidget {
                     children: [
                       Text(opt.label, style: AppTextStyles.bodySemi),
                       const SizedBox(height: 2),
-                      Text(opt.desc, style: AppTextStyles.caption.copyWith(color: AppColors.grey2)),
+                      Text(opt.desc, style: AppTextStyles.caption.copyWith(color: context.textSecondary)),
                     ],
                   ),
                 ),
