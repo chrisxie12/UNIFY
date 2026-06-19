@@ -213,17 +213,17 @@ class _LeadershipHeader extends StatelessWidget {
           if (p != null) ...[
             Row(
               children: [
-                _infoChip(Icons.school_rounded, p.programme ?? 'N/A'),
+                _infoChip(context, Icons.school_rounded, p.programme ?? 'N/A'),
                 const SizedBox(width: 8),
-                _infoChip(Icons.grade_rounded, p.yearOfStudy != null ? 'Level ${p.yearOfStudy}' : 'N/A'),
+                _infoChip(context, Icons.grade_rounded, p.yearOfStudy != null ? 'Level ${p.yearOfStudy}' : 'N/A'),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                if (p.department != null) _infoChip(Icons.account_tree_rounded, p.department!),
+                if (p.department != null) _infoChip(context, Icons.account_tree_rounded, p.department!),
                 if (p.department != null) const SizedBox(width: 8),
-                if (p.faculty != null) _infoChip(Icons.business_rounded, p.faculty!),
+                if (p.faculty != null) _infoChip(context, Icons.business_rounded, p.faculty!),
               ],
             ),
           ],
@@ -232,7 +232,7 @@ class _LeadershipHeader extends StatelessWidget {
     );
   }
 
-  Widget _infoChip(IconData icon, String text) => Container(
+  Widget _infoChip(BuildContext context, IconData icon, String text) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     decoration: BoxDecoration(
       color: context.cardBg.withValues(alpha: 0.15),

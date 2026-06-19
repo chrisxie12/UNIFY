@@ -57,9 +57,9 @@ class ApplicationTrackerScreen extends ConsumerWidget {
                     Container(
                       width: 72,
                       height: 72,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           color: context.cardBg, shape: BoxShape.circle),
-                      child: const Icon(Icons.track_changes_rounded,
+                      child: Icon(Icons.track_changes_rounded,
                           size: 32, color: context.textDisabled),
                     ),
                     const SizedBox(height: 14),

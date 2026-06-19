@@ -77,7 +77,7 @@ class _ReportsTab extends ConsumerWidget {
                     style: TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
-                const Text('No pending listing reports.',
+                Text('No pending listing reports.',
                     style: TextStyle(fontSize: 13, color: context.textSecondary)),
               ],
             ),
@@ -132,7 +132,7 @@ class _ReportCard extends ConsumerWidget {
               ),
               const Spacer(),
               Text(report.createdAt.timeAgo,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 11, color: context.textDisabled)),
             ],
           ),
@@ -149,7 +149,7 @@ class _ReportCard extends ConsumerWidget {
           if (report.details != null && report.details!.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(report.details!,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 13, color: context.textPrimary)),
           ],
           const SizedBox(height: 6),
@@ -223,11 +223,11 @@ class _AnalyticsTab extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  _statCard('Active', stats.activeListings,
+                  _statCard(context, 'Active', stats.activeListings,
                       Icons.storefront_rounded, context.primary),
-                  _statCard('Sold', stats.soldListings,
+                  _statCard(context, 'Sold', stats.soldListings,
                       Icons.check_circle_rounded, AppColors.success),
-                  _statCard('Reports', stats.pendingReports,
+                  _statCard(context, 'Reports', stats.pendingReports,
                       Icons.flag_rounded, AppColors.error),
                 ],
               ),
@@ -237,7 +237,7 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (cats.isEmpty)
-                const Text('No data yet.',
+                Text('No data yet.',
                     style: TextStyle(color: context.textDisabled))
               else
                 ...cats.map((e) => _barRow(
@@ -251,7 +251,7 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (searches.isEmpty)
-                const Text('No searches recorded yet.',
+                Text('No searches recorded yet.',
                     style: TextStyle(color: context.textDisabled))
               else
                 Wrap(
@@ -280,7 +280,7 @@ class _AnalyticsTab extends ConsumerWidget {
     );
   }
 
-  Widget _statCard(String label, int value, IconData icon, Color color) =>
+  Widget _statCard(BuildContext context, String label, int value, IconData icon, Color color) =>
       Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -298,7 +298,7 @@ class _AnalyticsTab extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.w800)),
               Text(label,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 11, color: context.textSecondary)),
             ],
           ),
@@ -316,12 +316,12 @@ class _AnalyticsTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: context.textPrimary)),
               Text('$value',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13, color: context.textSecondary)),
             ],
           ),

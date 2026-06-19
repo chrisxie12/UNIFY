@@ -139,7 +139,7 @@ class _DauChartCard extends StatelessWidget {
       icon: Icons.show_chart_rounded,
       children: [
         if (series.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(
               child: Text('No activity data yet',
@@ -163,7 +163,7 @@ class _DauChartCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text('${p.active}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 8.5, color: context.textDisabled)),
                       const SizedBox(height: 2),
                       Container(
@@ -181,7 +181,7 @@ class _DauChartCard extends StatelessWidget {
                         height: 12,
                         child: showLabel
                             ? Text(label,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 7.5, color: context.textDisabled),
                                 textAlign: TextAlign.center)
                             : null,

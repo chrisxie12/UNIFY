@@ -105,6 +105,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       padding: EdgeInsets.all(24),
                       child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
                     );
+
                   }
                   final notification = _items[index];
                   return _NotificationTile(

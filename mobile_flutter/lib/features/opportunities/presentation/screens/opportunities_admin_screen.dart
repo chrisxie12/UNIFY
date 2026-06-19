@@ -70,7 +70,7 @@ class _ManageTab extends ConsumerWidget {
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
-          return const Center(
+          return Center(
             child: Text('No opportunities yet. Tap "New" to add one.',
                 style: TextStyle(color: context.textSecondary)),
           );
@@ -143,14 +143,14 @@ class _ManageRow extends ConsumerWidget {
                         size: 12, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${o.viewCount}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                     const SizedBox(width: 10),
                     Icon(Icons.bookmark_border_rounded,
                         size: 12, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${o.saveCount}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                     const SizedBox(width: 10),
                     Text(o.deadlineLabel,
@@ -386,11 +386,11 @@ class _AnalyticsTab extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  _statCard('Published', stats.published,
+                  _statCard(context, 'Published', stats.published,
                       Icons.public_rounded, context.primary),
-                  _statCard('Closing soon', stats.closingSoon,
+                  _statCard(context, 'Closing soon', stats.closingSoon,
                       Icons.alarm_rounded, AppColors.warning),
-                  _statCard('Reports', stats.pendingReports,
+                  _statCard(context, 'Reports', stats.pendingReports,
                       Icons.flag_rounded, AppColors.error),
                 ],
               ),
@@ -400,12 +400,12 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (types.isEmpty)
-                const Text('No data yet.',
+                Text('No data yet.',
                     style: TextStyle(color: context.textDisabled))
               else
                 ...types.map((e) {
                   final t = OpportunityType.fromKey(e.key);
-                  return _barRow(t.label, e.value, maxType, t.color);
+                  return _barRow(context, t.label, e.value, maxType, t.color);
                 }),
               const SizedBox(height: 24),
               const Text('Most searched',
@@ -413,7 +413,7 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (searches.isEmpty)
-                const Text('No searches recorded yet.',
+                Text('No searches recorded yet.',
                     style: TextStyle(color: context.textDisabled))
               else
                 Wrap(
@@ -442,7 +442,7 @@ class _AnalyticsTab extends ConsumerWidget {
     );
   }
 
-  Widget _statCard(String label, int value, IconData icon, Color color) =>
+  Widget _statCard(BuildContext context, String label, int value, IconData icon, Color color) =>
       Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -468,7 +468,7 @@ class _AnalyticsTab extends ConsumerWidget {
         ),
       );
 
-  Widget _barRow(String label, int value, int max, Color color) {
+  Widget _barRow(BuildContext context, String label, int value, int max, Color color) {
     final pct = max == 0 ? 0.0 : value / max;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -479,7 +479,7 @@ class _AnalyticsTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: context.textPrimary)),

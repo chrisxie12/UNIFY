@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class MessageRequestsScreen extends ConsumerWidget {
   const MessageRequestsScreen({super.key});
@@ -22,9 +23,9 @@ class MessageRequestsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.mail_outline, size: 64, color: context.textSecondary]),
+                  Icon(Icons.mail_outline, size: 64, color: context.textSecondary),
                   const SizedBox(height: 16),
-                  Text('No pending requests', style: TextStyle(color: context.textSecondary], fontSize: 16)),
+                  Text('No pending requests', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                 ],
               ),
             );

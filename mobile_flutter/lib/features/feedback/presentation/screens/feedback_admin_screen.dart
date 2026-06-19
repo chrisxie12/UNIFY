@@ -75,7 +75,7 @@ class _StatHeader extends ConsumerWidget {
           children: [
             for (final s in FeedbackStatus.all)
               Expanded(
-                child: _stat(FeedbackStatus.label(s), c[s] ?? 0,
+                child: _stat(context, FeedbackStatus.label(s), c[s] ?? 0,
                     FeedbackStatus.color(s)),
               ),
           ],
@@ -84,7 +84,7 @@ class _StatHeader extends ConsumerWidget {
     );
   }
 
-  Widget _stat(String label, int value, Color color) {
+  Widget _stat(BuildContext context, String label, int value, Color color) {
     return Column(
       children: [
         Text('$value',
@@ -160,7 +160,7 @@ class _FeedbackCard extends ConsumerWidget {
                     FeedbackStatus.color(item.status)),
                 const Spacer(),
                 Text('${item.voteCount} votes',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 12, color: context.textSecondary)),
               ],
             ),
@@ -186,7 +186,7 @@ class _FeedbackCard extends ConsumerWidget {
                     height: 120,
                     color: context.cardBg,
                     alignment: Alignment.center,
-                    child: const Icon(Icons.broken_image_outlined,
+                    child: Icon(Icons.broken_image_outlined,
                         color: context.textDisabled),
                   ),
                 ),
@@ -197,11 +197,11 @@ class _FeedbackCard extends ConsumerWidget {
               spacing: 12,
               runSpacing: 4,
               children: [
-                _meta(Icons.person_outline, item.reporterName ?? 'Unknown'),
+                _meta(context, Icons.person_outline, item.reporterName ?? 'Unknown'),
                 if (item.deviceInfo != null)
-                  _meta(Icons.smartphone_outlined, item.deviceInfo!),
+                  _meta(context, Icons.smartphone_outlined, item.deviceInfo!),
                 if (item.appVersion != null)
-                  _meta(Icons.tag, 'v${item.appVersion}'),
+                  _meta(context, Icons.tag, 'v${item.appVersion}'),
               ],
             ),
             if (item.adminResponse != null &&
@@ -215,7 +215,7 @@ class _FeedbackCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(item.adminResponse!,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13, color: context.textPrimary)),
               ),
             ],
@@ -259,7 +259,7 @@ class _FeedbackCard extends ConsumerWidget {
     );
   }
 
-  Widget _meta(IconData icon, String text) {
+  Widget _meta(BuildContext context, IconData icon, String text) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

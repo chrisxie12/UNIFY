@@ -69,7 +69,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
           const SizedBox(height: 4),
           Text(
             'Your report is anonymous. ${ReportModel.reportTypeLabels[widget.reportType] ?? ''} will be reviewed.',
-            style: TextStyle(color: context.textSecondary], fontSize: 13),
+            style: TextStyle(color: context.textSecondary, fontSize: 13),
           ),
           const SizedBox(height: 16),
           ..._reasons.map((reason) => RadioListTile<String>(
@@ -85,7 +85,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             controller: _reasonController,
             decoration: InputDecoration(
               hintText: 'Add more details (optional)',
-              hintStyle: TextStyle(color: context.textSecondary]),
+              hintStyle: TextStyle(color: context.textSecondary),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               contentPadding: const EdgeInsets.all(12),
             ),

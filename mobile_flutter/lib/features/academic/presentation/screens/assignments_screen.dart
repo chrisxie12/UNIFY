@@ -50,7 +50,7 @@ class AssignmentsScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
-                  const Text('Assignments from your courses appear here.',
+                  Text('Assignments from your courses appear here.',
                       style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
@@ -92,7 +92,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(bottom: 8, top: 4),
         child: Text(text,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: context.textSecondary)),
@@ -243,7 +243,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
           if (a.description != null && a.description!.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(a.description!,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 14, height: 1.4, color: context.textPrimary)),
           ],
           const SizedBox(height: 16),

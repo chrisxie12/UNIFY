@@ -65,7 +65,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.search_rounded,
+                  Icon(Icons.search_rounded,
                       color: context.textSecondary, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
@@ -288,7 +288,7 @@ class _CourseRow extends StatelessWidget {
                     Text(course.lecturerName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: context.textSecondary)),
                   ],
                 ],
@@ -301,7 +301,7 @@ class _CourseRow extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: context.primary)),
-                const Text('files',
+                Text('files',
                     style: TextStyle(fontSize: 10, color: context.textDisabled)),
               ],
             ),

@@ -202,7 +202,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
                         errorWidget: (_, __, ___) => Container(
                           width: 130,
                           color: context.cardBg,
-                          child: const Icon(Icons.broken_image_outlined,
+                          child: Icon(Icons.broken_image_outlined,
                               color: context.textDisabled),
                         ),
                       ),
@@ -221,7 +221,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
                 ),
                 error: (_, __) => const SizedBox.shrink(),
                 data: (reviews) => reviews.isEmpty
-                    ? const Text('No reviews yet.',
+                    ? Text('No reviews yet.',
                         style: TextStyle(color: context.textDisabled))
                     : Column(
                         children:

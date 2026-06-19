@@ -96,15 +96,15 @@ class _OverviewTab extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    _statTile('Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
-                    _statTile('DAU', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
+                    _statTile(context, 'Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
+                    _statTile(context, 'DAU', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    _statTile('MAU', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
-                    _statTile('Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
+                    _statTile(context, 'MAU', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
+                    _statTile(context, 'Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
                   ],
                 ),
               ],
@@ -153,7 +153,7 @@ class _OverviewTab extends ConsumerWidget {
     );
   }
 
-  Widget _statTile(String label, String value, Color color, IconData icon) {
+  Widget _statTile(BuildContext context, String label, String value, Color color, IconData icon) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.all(4),

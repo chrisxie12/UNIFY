@@ -132,7 +132,7 @@ class _BannerCard extends ConsumerWidget {
                             announcement.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
                               color: context.textPrimary,
@@ -143,7 +143,7 @@ class _BannerCard extends ConsumerWidget {
                             announcement.body,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12.5,
                               height: 1.3,
                               color: context.textSecondary,

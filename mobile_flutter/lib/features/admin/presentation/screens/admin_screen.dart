@@ -200,7 +200,7 @@ class _PendingRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
@@ -244,7 +244,7 @@ class _AllRequestsTab extends ConsumerWidget {
       child: allAsync.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -738,7 +738,7 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
@@ -1008,7 +1008,7 @@ class _VerificationTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(

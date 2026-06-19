@@ -31,13 +31,13 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      _statTile('Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
-                      _statTile('Daily Active', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
+                      _statTile(context, 'Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
+                      _statTile(context, 'Daily Active', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
                     ],
                   ),
                   Row(
                     children: [
-                      _statTile('Monthly Active', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
+                      _statTile(context, 'Monthly Active', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
                     ],
                   ),
                 ],
@@ -54,20 +54,20 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      _statTile('Communities', '${a.communities}', context.primary, Icons.groups_rounded),
-                      _statTile('Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
+                      _statTile(context, 'Communities', '${a.communities}', context.primary, Icons.groups_rounded),
+                      _statTile(context, 'Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
                     ],
                   ),
                   Row(
                     children: [
-                      _statTile('Posts', '${a.postsCount}', const Color(0xFF8B5CF6), Icons.article_rounded),
-                      _statTile('Marketplace', '${a.marketplaceCount}', const Color(0xFFFF6B35), Icons.shopping_bag_rounded),
+                      _statTile(context, 'Posts', '${a.postsCount}', const Color(0xFF8B5CF6), Icons.article_rounded),
+                      _statTile(context, 'Marketplace', '${a.marketplaceCount}', const Color(0xFFFF6B35), Icons.shopping_bag_rounded),
                     ],
                   ),
                   if (a.opportunitiesCount > 0)
                     Row(
                       children: [
-                        _statTile('Opportunities', '${a.opportunitiesCount}', const Color(0xFF10B981), Icons.work_rounded),
+                        _statTile(context, 'Opportunities', '${a.opportunitiesCount}', const Color(0xFF10B981), Icons.work_rounded),
                       ],
                     ),
                 ],
@@ -84,13 +84,13 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      _statTile('Verifications', '${counts['pending_verifications'] ?? 0}', AppColors.warning, Icons.verified_user_rounded),
-                      _statTile('Reports', '${counts['pending_moderation'] ?? 0}', AppColors.error, Icons.flag_rounded),
+                      _statTile(context, 'Verifications', '${counts['pending_verifications'] ?? 0}', AppColors.warning, Icons.verified_user_rounded),
+                      _statTile(context, 'Reports', '${counts['pending_moderation'] ?? 0}', AppColors.error, Icons.flag_rounded),
                     ],
                   ),
                   Row(
                     children: [
-                      _statTile('Opportunities', '${counts['pending_opportunities'] ?? 0}', const Color(0xFF10B981), Icons.work_rounded),
+                      _statTile(context, 'Opportunities', '${counts['pending_opportunities'] ?? 0}', const Color(0xFF10B981), Icons.work_rounded),
                     ],
                   ),
                 ],
@@ -105,7 +105,7 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _statTile(String label, String value, Color color, IconData icon) {
+  Widget _statTile(BuildContext context, String label, String value, Color color, IconData icon) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.all(4),

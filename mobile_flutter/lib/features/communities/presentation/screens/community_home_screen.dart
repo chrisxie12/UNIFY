@@ -247,7 +247,7 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
               Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: context.textSecondary],
+                  color: context.textSecondary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -354,11 +354,11 @@ class _AnnouncementsTab extends ConsumerWidget {
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.campaign, size: 48, color: context.textSecondary]),
+                    Icon(Icons.campaign, size: 48, color: context.textSecondary),
                     const SizedBox(height: 12),
                     Text('No announcements yet', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 4),
-                    Text('Announcements will appear here', style: TextStyle(color: context.textSecondary])),
+                    Text('Announcements will appear here', style: TextStyle(color: context.textSecondary)),
                   ],
                 ),
               ),
@@ -519,12 +519,12 @@ class _DiscussionsTab extends ConsumerWidget {
                 Center(
                   child: Column(
                     children: [
-                      Icon(Icons.forum, size: 48, color: context.textSecondary]),
+                      Icon(Icons.forum, size: 48, color: context.textSecondary),
                       const SizedBox(height: 12),
                       Text('No discussions yet', style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(height: 4),
                       Text('Start a conversation or create a poll',
-                          style: TextStyle(color: context.textSecondary])),
+                          style: TextStyle(color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -586,7 +586,7 @@ class _EventsTab extends ConsumerWidget {
               Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: context.textSecondary],
+                  color: context.textSecondary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -648,7 +648,7 @@ class _EventsTab extends ConsumerWidget {
                 const Divider(),
                 ListTile(
                   leading: Icon(Icons.remove_circle_outline, color: context.textSecondary),
-                  title: const Text('Clear RSVP',
+                  title: Text('Clear RSVP',
                       style: TextStyle(color: context.textSecondary)),
                   onTap: () async {
                     Navigator.pop(ctx);
@@ -688,11 +688,11 @@ class _EventsTab extends ConsumerWidget {
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.event, size: 48, color: context.textSecondary]),
+                    Icon(Icons.event, size: 48, color: context.textSecondary),
                     const SizedBox(height: 12),
                     Text('No events yet', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 4),
-                    Text('Events will appear here', style: TextStyle(color: context.textSecondary])),
+                    Text('Events will appear here', style: TextStyle(color: context.textSecondary)),
                   ],
                 ),
               ),
@@ -717,7 +717,7 @@ class _EventsTab extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                         ),
                       ),
                     ),
@@ -736,7 +736,7 @@ class _EventsTab extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                         ),
                       ),
                     ),
@@ -825,11 +825,11 @@ class _ResourcesTab extends ConsumerWidget {
                         Center(
                           child: Column(
                             children: [
-                              Icon(Icons.folder_open, size: 48, color: context.textSecondary]),
+                              Icon(Icons.folder_open, size: 48, color: context.textSecondary),
                               const SizedBox(height: 12),
                               Text('No resources yet', style: Theme.of(context).textTheme.titleMedium),
                               const SizedBox(height: 4),
-                              Text('Upload study resources', style: TextStyle(color: context.textSecondary])),
+                              Text('Upload study resources', style: TextStyle(color: context.textSecondary)),
                             ],
                           ),
                         ),
@@ -935,7 +935,7 @@ class _MembersTab extends ConsumerWidget {
                 onChanged: (v) => ref.read(_memberSearchProvider.notifier).state = v,
                 decoration: InputDecoration(
                   hintText: 'Search members...',
-                  prefixIcon: Icon(Icons.search, color: context.textSecondary]),
+                  prefixIcon: Icon(Icons.search, color: context.textSecondary),
                   filled: true,
                   fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
@@ -957,7 +957,7 @@ class _MembersTab extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: context.textSecondary],
+                        color: context.textSecondary,
                       ),
                     ),
                   ),
@@ -970,7 +970,7 @@ class _MembersTab extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                         ),
                       ),
                     ),
@@ -985,7 +985,7 @@ class _MembersTab extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                         ),
                       ),
                     ),
@@ -997,7 +997,7 @@ class _MembersTab extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           'No members found',
-                          style: TextStyle(color: context.textSecondary]),
+                          style: TextStyle(color: context.textSecondary),
                         ),
                       ),
                     ),
@@ -1062,7 +1062,7 @@ class _MemberTile extends StatelessWidget {
       subtitle: programme != null || level != null
           ? Text(
               [programme, level].nonNulls.join(' · '),
-              style: TextStyle(fontSize: 12, color: context.textSecondary]),
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             )
@@ -1121,7 +1121,7 @@ class _PostsShimmer extends StatelessWidget {
                     Container(
                       width: 40, height: 40,
                       decoration: BoxDecoration(
-                        color: context.textSecondary],
+                        color: context.textSecondary,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -1132,7 +1132,7 @@ class _PostsShimmer extends StatelessWidget {
                         Container(
                           width: 120, height: 12,
                           decoration: BoxDecoration(
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -1140,7 +1140,7 @@ class _PostsShimmer extends StatelessWidget {
                         Container(
                           width: 80, height: 10,
                           decoration: BoxDecoration(
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -1152,7 +1152,7 @@ class _PostsShimmer extends StatelessWidget {
                 Container(
                   width: double.infinity, height: 14,
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1160,7 +1160,7 @@ class _PostsShimmer extends StatelessWidget {
                 Container(
                   width: double.infinity, height: 14,
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1168,7 +1168,7 @@ class _PostsShimmer extends StatelessWidget {
                 Container(
                   width: 200, height: 14,
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1210,7 +1210,7 @@ class _EventsShimmer extends StatelessWidget {
                 Container(
                   width: 60, height: 72,
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -1222,7 +1222,7 @@ class _EventsShimmer extends StatelessWidget {
                       Container(
                         width: double.infinity, height: 14,
                         decoration: BoxDecoration(
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1230,7 +1230,7 @@ class _EventsShimmer extends StatelessWidget {
                       Container(
                         width: 160, height: 12,
                         decoration: BoxDecoration(
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1238,7 +1238,7 @@ class _EventsShimmer extends StatelessWidget {
                       Container(
                         width: 120, height: 12,
                         decoration: BoxDecoration(
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1283,7 +1283,7 @@ class _ResourcesShimmer extends StatelessWidget {
                 Container(
                   width: 48, height: 48,
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -1295,7 +1295,7 @@ class _ResourcesShimmer extends StatelessWidget {
                       Container(
                         width: double.infinity, height: 14,
                         decoration: BoxDecoration(
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1303,7 +1303,7 @@ class _ResourcesShimmer extends StatelessWidget {
                       Container(
                         width: 140, height: 12,
                         decoration: BoxDecoration(
-                          color: context.textSecondary],
+                          color: context.textSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1332,14 +1332,14 @@ class _MembersShimmer extends StatelessWidget {
           leading: Container(
             width: 44, height: 44,
             decoration: BoxDecoration(
-              color: context.textSecondary],
+              color: context.textSecondary,
               shape: BoxShape.circle,
             ),
           ),
           title: Container(
             width: 120, height: 14,
             decoration: BoxDecoration(
-              color: context.textSecondary],
+              color: context.textSecondary,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -1347,7 +1347,7 @@ class _MembersShimmer extends StatelessWidget {
             width: 180, height: 12,
             margin: const EdgeInsets.only(top: 6),
             decoration: BoxDecoration(
-              color: context.textSecondary],
+              color: context.textSecondary,
               borderRadius: BorderRadius.circular(4),
             ),
           ),

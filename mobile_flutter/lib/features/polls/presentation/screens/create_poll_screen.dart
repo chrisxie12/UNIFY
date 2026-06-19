@@ -6,6 +6,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/poll_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CreatePollScreen extends ConsumerStatefulWidget {
   final String communityId;
@@ -85,16 +86,16 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
               controller: _questionController,
               decoration: InputDecoration(
                 hintText: 'Ask a question...',
-                hintStyle: TextStyle(color: context.textSecondary]),
+                hintStyle: TextStyle(color: context.textSecondary),
                 filled: true,
                 fillColor: Colors.grey[50],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: context.textSecondary]!),
+                  borderSide: BorderSide(color: context.textSecondary),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: context.textSecondary]!),
+                  borderSide: BorderSide(color: context.textSecondary),
                 ),
                 contentPadding: const EdgeInsets.all(16),
               ),
@@ -107,16 +108,16 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
               controller: _descriptionController,
               decoration: InputDecoration(
                 hintText: 'Description (optional)',
-                hintStyle: TextStyle(color: context.textSecondary]),
+                hintStyle: TextStyle(color: context.textSecondary),
                 filled: true,
                 fillColor: Colors.grey[50],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: context.textSecondary]!),
+                  borderSide: BorderSide(color: context.textSecondary),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: context.textSecondary]!),
+                  borderSide: BorderSide(color: context.textSecondary),
                 ),
                 contentPadding: const EdgeInsets.all(16),
               ),
@@ -131,7 +132,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                   ),
                 ),
                 if (_optionControllers.length < 10)
@@ -177,16 +178,16 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                         controller: controller,
                         decoration: InputDecoration(
                           hintText: 'Option ${index + 1}',
-                          hintStyle: TextStyle(color: context.textSecondary], fontSize: 14),
+                          hintStyle: TextStyle(color: context.textSecondary, fontSize: 14),
                           filled: true,
                           fillColor: Colors.grey[50],
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: context.textSecondary]!),
+                            borderSide: BorderSide(color: context.textSecondary),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: context.textSecondary]!),
+                            borderSide: BorderSide(color: context.textSecondary),
                           ),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         ),
@@ -213,29 +214,29 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: context.textSecondary],
+                color: context.textSecondary,
               ),
             ),
             const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(
-                color: context.textSecondary],
+                color: context.textSecondary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
                   SwitchListTile(
                     title: const Text('Single choice', style: TextStyle(fontSize: 14)),
-                    subtitle: Text('Only one option can be selected', style: TextStyle(fontSize: 12, color: context.textSecondary])),
+                    subtitle: Text('Only one option can be selected', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     value: _pollType == 'single',
                     onChanged: (v) => setState(() => _pollType = v ? 'single' : 'multiple'),
                     activeThumbColor: Theme.of(context).colorScheme.primary,
                     dense: true,
                   ),
-                  Divider(height: 1, indent: 16, endIndent: 16, color: context.textSecondary]),
+                  Divider(height: 1, indent: 16, endIndent: 16, color: context.textSecondary),
                   SwitchListTile(
                     title: const Text('Anonymous voting', style: TextStyle(fontSize: 14)),
-                    subtitle: Text("Voters' identities are hidden", style: TextStyle(fontSize: 12, color: context.textSecondary])),
+                    subtitle: Text("Voters' identities are hidden", style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     value: _isAnonymous,
                     onChanged: (v) => setState(() => _isAnonymous = v),
                     activeThumbColor: Theme.of(context).colorScheme.primary,
@@ -250,12 +251,12 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: context.textSecondary],
+                  color: context.textSecondary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.schedule, size: 20, color: context.textSecondary]),
+                    Icon(Icons.schedule, size: 20, color: context.textSecondary),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -266,7 +267,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: context.textSecondary],
+                              color: context.textSecondary,
                             ),
                           ),
                           if (_expiryDate != null) ...[
@@ -284,7 +285,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                         onTap: () => setState(() => _expiryDate = null),
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          child: Icon(Icons.close, size: 18, color: context.textSecondary]),
+                          child: Icon(Icons.close, size: 18, color: context.textSecondary),
                         ),
                       ),
                   ],

@@ -46,20 +46,20 @@ class PollCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: context.textSecondary],
+                      color: context.textSecondary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.lock, size: 14, color: context.textSecondary]),
+                        Icon(Icons.lock, size: 14, color: context.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           'Locked',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                           ),
                         ),
                       ],
@@ -73,7 +73,7 @@ class PollCard extends ConsumerWidget {
                 poll.description!,
                 style: TextStyle(
                   fontSize: 13,
-                  color: context.textSecondary],
+                  color: context.textSecondary,
                 ),
               ),
             ],
@@ -188,7 +188,7 @@ class PollCard extends ConsumerWidget {
                   '${poll.totalVotes} votes',
                   style: TextStyle(
                     fontSize: 13,
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                   ),
                 ),
                 if (selectedOptionId == null && !poll.isLocked && !poll.isExpired) ...[

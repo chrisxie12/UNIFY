@@ -28,7 +28,7 @@ class AuditLogsScreen extends ConsumerWidget {
         child: logsAsync.when(
           data: (logs) {
             if (logs.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

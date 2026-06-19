@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/models/event_model.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class OrganizerDashboardScreen extends ConsumerWidget {
   final String eventId;
@@ -64,13 +65,13 @@ class _EventSummaryCard extends StatelessWidget {
             Text(event.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Row(children: [
-              Icon(Icons.calendar_today, size: 14, color: context.textSecondary]),
+              Icon(Icons.calendar_today, size: 14, color: context.textSecondary),
               const SizedBox(width: 4),
-              Text(event.formattedDate, style: TextStyle(fontSize: 13, color: context.textSecondary])),
+              Text(event.formattedDate, style: TextStyle(fontSize: 13, color: context.textSecondary)),
               const SizedBox(width: 12),
-              Icon(Icons.people, size: 14, color: context.textSecondary]),
+              Icon(Icons.people, size: 14, color: context.textSecondary),
               const SizedBox(width: 4),
-              Text('${event.attendeeCount} attendees', style: TextStyle(fontSize: 13, color: context.textSecondary])),
+              Text('${event.attendeeCount} attendees', style: TextStyle(fontSize: 13, color: context.textSecondary)),
             ]),
           ],
         ),
@@ -118,7 +119,7 @@ class _AnalyticCard extends StatelessWidget {
           children: [
             Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color)),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary])),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary)),
           ],
         ),
       ),
@@ -167,15 +168,15 @@ class _ActionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: context.textSecondary],
+          color: context.textSecondary,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: context.textSecondary]!),
+          border: Border.all(color: context.textSecondary),
         ),
         child: Column(
           children: [
-            Icon(icon, size: 28, color: context.textSecondary]),
+            Icon(icon, size: 28, color: context.textSecondary),
             const SizedBox(height: 6),
-            Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary], fontWeight: FontWeight.w500)),
+            Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary, fontWeight: FontWeight.w500)),
           ],
         ),
       ),
@@ -201,11 +202,11 @@ class _AttendeeListSection extends ConsumerWidget {
             Row(children: [
               const Text('Registrations', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               const Spacer(),
-              Text('$checkedIn / ${tickets.length}', style: TextStyle(fontSize: 12, color: context.textSecondary])),
+              Text('$checkedIn / ${tickets.length}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
             ]),
             const SizedBox(height: 8),
             if (tickets.isEmpty)
-              Center(child: Padding(padding: const EdgeInsets.all(32), child: Text('No registrations yet', style: TextStyle(color: context.textSecondary]))))
+              Center(child: Padding(padding: const EdgeInsets.all(32), child: Text('No registrations yet', style: TextStyle(color: context.textSecondary))))
             else
               SizedBox(
                 height: 300,
@@ -224,7 +225,7 @@ class _AttendeeListSection extends ConsumerWidget {
                         child: Icon(t.attended ? Icons.check : Icons.hourglass_empty, size: 16, color: t.attended ? Colors.green : Colors.orange),
                       ),
                       title: Text(t.ticketNumber, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                      subtitle: Text(t.registrationTimestamp.toString().substring(0, 16), style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                      subtitle: Text(t.registrationTimestamp.toString().substring(0, 16), style: TextStyle(fontSize: 11, color: context.textSecondary)),
                       trailing: Text(t.attended ? 'Checked In' : 'Pending', style: TextStyle(fontSize: 11, color: t.attended ? Colors.green : Colors.orange)),
                     );
                   },

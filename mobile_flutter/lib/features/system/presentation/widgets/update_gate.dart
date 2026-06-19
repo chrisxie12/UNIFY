@@ -75,7 +75,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'Update required',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -90,7 +90,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                       ? 'Version ${version!.version} is required to keep using UNIFY.'
                       : 'A newer version is required to keep using UNIFY.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     height: 1.4,
                     color: context.textSecondary,
@@ -109,7 +109,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "What's new",
                           style: TextStyle(
                             fontSize: 13,
@@ -120,7 +120,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                         const SizedBox(height: 6),
                         Text(
                           notes,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             height: 1.45,
                             color: context.textPrimary,
@@ -158,7 +158,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                 ),
                 if (!hasDownload) ...[
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     'Please update from your app store.',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: context.textDisabled),

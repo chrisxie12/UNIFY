@@ -125,7 +125,7 @@ class ExamPrepScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (_, __) => const SizedBox.shrink(),
               data: (exams) => exams.isEmpty
-                  ? const Text('No exams scheduled yet.',
+                  ? Text('No exams scheduled yet.',
                       style: TextStyle(color: context.textDisabled))
                   : Column(
                       children:
@@ -145,7 +145,7 @@ class ExamPrepScreen extends ConsumerWidget {
                     .take(10)
                     .toList();
                 if (revision.isEmpty) {
-                  return const Text('No revision materials yet.',
+                  return Text('No revision materials yet.',
                       style: TextStyle(color: context.textDisabled));
                 }
                 return Column(

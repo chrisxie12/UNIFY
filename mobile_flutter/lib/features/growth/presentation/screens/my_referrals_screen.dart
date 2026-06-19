@@ -126,7 +126,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: context.borderCol),
                         ),
-                        child: const Text(
+                        child: Text(
                           'No invites yet. Share your code to get started!',
                           textAlign: TextAlign.center,
                           style:

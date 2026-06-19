@@ -177,7 +177,7 @@ class _SnapshotComposerScreenState
         backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0,
-        title: const Text('New Snapshot',
+        title: Text('New Snapshot',
             style: TextStyle(fontWeight: FontWeight.w700, color: context.textPrimary)),
         leading: IconButton(
           icon: Icon(Icons.close_rounded, color: context.textPrimary),
@@ -279,7 +279,7 @@ class _SnapshotComposerScreenState
         children: [
           Icon(Icons.public_rounded, size: 18, color: context.primary),
           const SizedBox(width: 10),
-          const Text('Audience',
+          Text('Audience',
               style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const Spacer(),
           DropdownButtonHideUnderline(
@@ -384,7 +384,7 @@ class _SnapshotComposerScreenState
         ),
         const SizedBox(height: 14),
         if (!isQuestion) ...[
-          const Text('Background',
+          Text('Background',
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -415,7 +415,7 @@ class _SnapshotComposerScreenState
           ),
         ],
         const SizedBox(height: 16),
-        const Text('Quick templates',
+        Text('Quick templates',
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -465,7 +465,7 @@ class _SnapshotComposerScreenState
                       Icon(Icons.add_photo_alternate_rounded,
                           size: 44, color: context.primary),
                       const SizedBox(height: 10),
-                      const Text('Tap to choose a photo',
+                      Text('Tap to choose a photo',
                           style: TextStyle(color: context.textSecondary)),
                     ],
                   )
@@ -541,7 +541,7 @@ class _SnapshotComposerScreenState
                 ),
                 if (_pollOptions.length > 2)
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline_rounded,
+                    icon: Icon(Icons.remove_circle_outline_rounded,
                         color: context.textDisabled),
                     onPressed: () => setState(() {
                       _pollOptions.removeAt(i).dispose();

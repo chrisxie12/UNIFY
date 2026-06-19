@@ -65,7 +65,7 @@ class _HelpArticleScreenState extends ConsumerState<HelpArticleScreen> {
         error: (e, _) => AppErrorWidget(e),
         data: (a) {
           if (a == null) {
-            return const Center(
+            return Center(
                 child: Text('Article not found',
                     style: TextStyle(color: context.textSecondary)));
           }

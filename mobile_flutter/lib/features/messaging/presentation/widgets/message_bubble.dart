@@ -461,12 +461,12 @@ class _SingleImage extends StatelessWidget {
           fit: BoxFit.cover,
           placeholder: (_, __) => Container(
             height: 200,
-            color: context.textSecondary],
+            color: context.textSecondary,
             child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
           ),
           errorWidget: (_, __, ___) => Container(
             height: 100,
-            color: context.textSecondary],
+            color: context.textSecondary,
             child: const Icon(Icons.broken_image_outlined),
           ),
         ),

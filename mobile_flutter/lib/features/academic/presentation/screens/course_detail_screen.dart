@@ -183,7 +183,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.folder_open_rounded,
+            Icon(Icons.folder_open_rounded,
                 size: 44, color: context.textDisabled),
             const SizedBox(height: 12),
             Text(title,

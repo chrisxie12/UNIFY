@@ -53,7 +53,7 @@ class _ModerationList extends ConsumerWidget {
       child: asyncData.when(
         data: (items) {
           if (items.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

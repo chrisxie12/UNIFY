@@ -112,7 +112,7 @@ class _ConversationTile extends StatelessWidget {
               bottom: 0, right: 0,
               child: Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: context.cardBg,
                   shape: BoxShape.circle,
                 ),
@@ -148,7 +148,7 @@ class _ConversationTile extends StatelessWidget {
               '${conversation.lastMessageSenderName!}: ',
               style: TextStyle(
                 fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
-                fontSize: 13, color: context.textSecondary],
+                fontSize: 13, color: context.textSecondary,
               ),
             ),
           Flexible(
@@ -156,7 +156,7 @@ class _ConversationTile extends StatelessWidget {
               conversation.lastMessageContent ?? (conversation.type == 'channel' ? 'Tap to view' : 'No messages yet'),
               style: TextStyle(
                 fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
-                fontSize: 13, color: context.textSecondary],
+                fontSize: 13, color: context.textSecondary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class _ConversationTile extends StatelessWidget {
           if (conversation.lastMessageTime != null)
             Text(
               DateFormat('h:mm a').format(conversation.lastMessageTime!),
-              style: TextStyle(fontSize: 11, color: context.textSecondary]),
+              style: TextStyle(fontSize: 11, color: context.textSecondary),
             ),
           if (hasUnread)
             Container(
@@ -187,7 +187,7 @@ class _ConversationTile extends StatelessWidget {
               ),
             ),
           if (conversation.type == 'direct')
-            Icon(Icons.check, size: 14, color: context.textSecondary]),
+            Icon(Icons.check, size: 14, color: context.textSecondary),
         ],
       ),
     );

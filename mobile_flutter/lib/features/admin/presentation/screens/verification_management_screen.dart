@@ -52,7 +52,7 @@ class _VerificationList extends ConsumerWidget {
       child: asyncData.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

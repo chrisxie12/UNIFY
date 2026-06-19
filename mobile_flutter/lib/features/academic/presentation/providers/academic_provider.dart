@@ -39,6 +39,11 @@ final resourcesByTypeProvider = FutureProvider.family<List<AcademicResourceModel
   return repo.getResources(type: type);
 });
 
+final resourcesProvider = FutureProvider<List<AcademicResourceModel>>((ref) async {
+  final repo = ref.watch(academicRepositoryProvider);
+  return repo.getResources();
+});
+
 final searchResourcesProvider = FutureProvider.family<List<AcademicResourceModel>, String>((ref, query) async {
   if (query.length < 2) return [];
   final repo = ref.watch(academicRepositoryProvider);

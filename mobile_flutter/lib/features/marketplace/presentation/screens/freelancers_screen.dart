@@ -64,10 +64,10 @@ class FreelancersScreen extends ConsumerWidget {
                         Container(
                           width: 72,
                           height: 72,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                               color: context.cardBg,
                               shape: BoxShape.circle),
-                          child: const Icon(Icons.handyman_outlined,
+                          child: Icon(Icons.handyman_outlined,
                               size: 32, color: context.textDisabled),
                         ),
                         const SizedBox(height: 14),
@@ -245,7 +245,7 @@ class _FreelancerCard extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 12.5, fontWeight: FontWeight.w600)),
                 const SizedBox(width: 16),
-                const Icon(Icons.check_circle_outline_rounded,
+                Icon(Icons.check_circle_outline_rounded,
                     size: 15, color: context.textDisabled),
                 const SizedBox(width: 4),
                 Text('${profile.completedJobs} jobs',

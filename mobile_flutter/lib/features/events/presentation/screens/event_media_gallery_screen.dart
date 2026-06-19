@@ -144,7 +144,7 @@ class _VideoList extends StatelessWidget {
             leading: Container(
               width: UIcon.x4, height: UIcon.x4,
               decoration: BoxDecoration(
-                color: context.textSecondary],
+                color: context.textSecondary,
                 borderRadius: URadius.smAll,
               ),
               child: const Icon(Icons.play_circle_fill, color: Colors.white, size: UIcon.xl),

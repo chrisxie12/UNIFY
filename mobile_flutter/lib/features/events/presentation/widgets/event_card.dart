@@ -105,14 +105,14 @@ class EventCard extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(Icons.location_on_outlined,
-                                size: 16, color: context.textSecondary]),
+                                size: 16, color: context.textSecondary),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 event.location!,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: context.textSecondary],
+                                  color: context.textSecondary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -126,13 +126,13 @@ class EventCard extends ConsumerWidget {
                       child: Row(
                         children: [
                           Icon(Icons.access_time,
-                              size: 16, color: context.textSecondary]),
+                              size: 16, color: context.textSecondary),
                           const SizedBox(width: 4),
                           Text(
                             '${event.formattedDate} at ${event.formattedTime}',
                             style: TextStyle(
                               fontSize: 13,
-                              color: context.textSecondary],
+                              color: context.textSecondary,
                             ),
                           ),
                         ],
@@ -141,13 +141,13 @@ class EventCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(Icons.people_outline,
-                            size: 16, color: context.textSecondary]),
+                            size: 16, color: context.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           '${event.rsvpCount} attending',
                           style: TextStyle(
                             fontSize: 13,
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                           ),
                         ),
                         const Spacer(),

@@ -168,7 +168,7 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
                   child: Center(
                     child: Column(
                       children: [
-                        const Icon(Icons.wifi_off_rounded,
+                        Icon(Icons.wifi_off_rounded,
                             size: 40, color: context.textDisabled),
                         const SizedBox(height: 12),
                         const Text('Could not load opportunities',

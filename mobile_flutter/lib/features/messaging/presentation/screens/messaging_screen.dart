@@ -656,7 +656,7 @@ class _SkeletonTile extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: context.cardBg,
                 shape: BoxShape.circle,
               ),

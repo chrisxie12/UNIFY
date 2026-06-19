@@ -39,7 +39,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
         error: (e, _) => AppErrorWidget(e),
         data: (versions) {
           if (versions.isEmpty) {
-            return const Center(
+            return Center(
               child: Text('No versions yet',
                   style: TextStyle(color: context.textDisabled)),
             );
@@ -59,7 +59,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 8, top: 4),
                   child: Text(
                     p.toUpperCase(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: context.textSecondary,

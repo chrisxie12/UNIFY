@@ -35,28 +35,28 @@ class _ShimmerCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _box(60, 20, radius: 6),
+              _box(context, 60, 20, radius: 6),
               const SizedBox(width: 8),
-              _box(40, 20, radius: 6),
+              _box(context, 40, 20, radius: 6),
             ],
           ),
           const SizedBox(height: 12),
-          _box(double.infinity, 18, radius: 4),
+          _box(context, double.infinity, 18, radius: 4),
           const SizedBox(height: 8),
-          _box(double.infinity, 14, radius: 4),
+          _box(context, double.infinity, 14, radius: 4),
           const SizedBox(height: 4),
-          _box(200, 14, radius: 4),
+          _box(context, 200, 14, radius: 4),
           const SizedBox(height: 16),
           Row(
             children: [
-              _circle(28),
+              _circle(context, 28),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _box(80, 12, radius: 4),
+                  _box(context, 80, 12, radius: 4),
                   const SizedBox(height: 4),
-                  _box(60, 10, radius: 4),
+                  _box(context, 60, 10, radius: 4),
                 ],
               ),
             ],
@@ -66,7 +66,7 @@ class _ShimmerCard extends StatelessWidget {
     );
   }
 
-  Widget _box(double w, double h, {double radius = 4}) => Container(
+  Widget _box(BuildContext context, double w, double h, {double radius = 4}) => Container(
         width: w,
         height: h,
         decoration: BoxDecoration(
@@ -75,7 +75,7 @@ class _ShimmerCard extends StatelessWidget {
         ),
       );
 
-  Widget _circle(double size) => Container(
+  Widget _circle(BuildContext context, double size) => Container(
         width: size,
         height: size,
         decoration: BoxDecoration(color: context.cardBg, shape: BoxShape.circle),

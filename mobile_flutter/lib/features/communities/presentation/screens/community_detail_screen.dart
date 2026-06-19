@@ -322,10 +322,10 @@ class _HeaderJoinButton extends ConsumerWidget {
     final isOwner = role == 'owner';
 
     if (isOwner) {
-      return _pillButton('Manage', context.primary, Colors.white, null);
+      return _pillButton(context, 'Manage', context.primary, Colors.white, null);
     }
 
-    return _pillButton(
+    return _pillButton(context, 
       isMember ? 'Leave' : 'Join',
       isMember ? Colors.white.withValues(alpha: 0.2) : Colors.white,
       isMember ? Colors.white : context.primary,
@@ -335,7 +335,7 @@ class _HeaderJoinButton extends ConsumerWidget {
     );
   }
 
-  Widget _pillButton(
+  Widget _pillButton(BuildContext context, 
       String label, Color bg, Color fg, VoidCallback? onTap) {
     return GestureDetector(
       onTap: onTap,

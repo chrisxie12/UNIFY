@@ -162,7 +162,7 @@ class SystemHealthScreen extends ConsumerWidget {
               error: (e, _) => _ErrorText(error: e),
               data: (errors) {
                 if (errors.isEmpty) {
-                  return const Padding(
+                  return Padding(
                     padding: EdgeInsets.all(24),
                     child: Center(
                       child: Text('No recent errors logged',

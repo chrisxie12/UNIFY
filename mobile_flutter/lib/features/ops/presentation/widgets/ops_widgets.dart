@@ -38,7 +38,7 @@ class OpsStatCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
                 color: context.textPrimary,
@@ -135,7 +135,7 @@ class OpsSectionCard extends StatelessWidget {
               ],
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
                   color: context.textPrimary,

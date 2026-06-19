@@ -218,7 +218,7 @@ class _ProfileHeader extends StatelessWidget {
                   child: Container(
                     width: 24,
                     height: 24,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: context.cardBg,
                       shape: BoxShape.circle,
                     ),
@@ -375,7 +375,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: const Center(
+              child: Center(
                 child: Text('No documents submitted', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
@@ -500,18 +500,18 @@ class _VerificationHistorySection extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: const Center(
+              child: Center(
                 child: Text('No verification history', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
           else
-            ...logs.map((log) => _buildLogEntry(log)),
+            ...logs.map((log) => _buildLogEntry(context, log)),
         ],
       ),
     );
   }
 
-  Widget _buildLogEntry(Map<String, dynamic> log) {
+  Widget _buildLogEntry(BuildContext context, Map<String, dynamic> log) {
     final action = log['action'] as String? ?? 'unknown';
     final createdAt = log['created_at'] as String?;
     final performedBy = log['profiles'] is Map ? (log['profiles'] as Map)['display_name'] as String? : null;
@@ -607,7 +607,7 @@ class _ManagedCommunitiesSection extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: const Center(
+              child: Center(
                 child: Text('Not managing any communities', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
@@ -692,7 +692,7 @@ class _RecentActivitySection extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: const Center(
+              child: Center(
                 child: Text('No recent activity', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )

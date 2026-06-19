@@ -41,7 +41,7 @@ class ChatDateDivider extends ChatEntry {
 
 final List<ChatEntry> mockChatEntries = [
   // ── Newest (bottom) ──
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm10',
     senderName: 'Me',
     isMe: true,
@@ -49,7 +49,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(0),
     status: MessageStatus.delivered,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm9',
     senderName: 'Yaa Debby',
     isMe: false,
@@ -57,7 +57,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(3),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm8',
     senderName: 'Me',
     isMe: true,
@@ -65,7 +65,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(6),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm7',
     senderName: 'Yaa Debby',
     isMe: false,
@@ -73,7 +73,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(8),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm6',
     senderName: 'Yaa Debby',
     isMe: false,
@@ -81,7 +81,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(10),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm5',
     senderName: 'Me',
     isMe: true,
@@ -92,7 +92,7 @@ final List<ChatEntry> mockChatEntries = [
   // ── Date divider ──
   const ChatDateDivider('TODAY'),
   // ── Older (top) ──
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm4',
     senderName: 'Me',
     isMe: true,
@@ -100,7 +100,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(60),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm3',
     senderName: 'Yaa Debby',
     isMe: false,
@@ -108,7 +108,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(65),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm2',
     senderName: 'Me',
     isMe: true,
@@ -116,7 +116,7 @@ final List<ChatEntry> mockChatEntries = [
     timestamp: _t(120),
     status: MessageStatus.read,
   )),
-  const ChatMessage(Message(
+  ChatMessage(Message(
     id: 'm1',
     senderName: 'Yaa Debby',
     isMe: false,

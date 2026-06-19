@@ -42,9 +42,9 @@ class MyListingsScreen extends ConsumerWidget {
                   Container(
                     width: 72,
                     height: 72,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         color: context.cardBg, shape: BoxShape.circle),
-                    child: const Icon(Icons.inventory_2_outlined,
+                    child: Icon(Icons.inventory_2_outlined,
                         size: 32, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
@@ -129,14 +129,14 @@ class _MyListingRow extends ConsumerWidget {
                         size: 13, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${listing.viewCount}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                     const SizedBox(width: 8),
                     Icon(Icons.favorite_border_rounded,
                         size: 13, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${listing.saveCount}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                   ],
                 ),

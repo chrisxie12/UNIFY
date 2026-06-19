@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class QRCheckInScreen extends ConsumerStatefulWidget {
   final String eventId;
@@ -72,9 +73,9 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
           children: [
             Icon(Icons.qr_code_scanner, size: 80, color: context.textSecondary),
             const SizedBox(height: 16),
-            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textSecondary])),
+            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textSecondary)),
             const SizedBox(height: 8),
-            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: context.textSecondary]), textAlign: TextAlign.center),
+            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
             const SizedBox(height: 24),
             TextField(
               controller: _ticketCodeCtrl,
@@ -157,14 +158,14 @@ class _AttendeeListSection extends ConsumerWidget {
               children: [
                 Text('Attendees', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
                 const Spacer(),
-                Text('$checkedIn / ${tickets.length} checked in', style: TextStyle(fontSize: 12, color: context.textSecondary])),
+                Text('$checkedIn / ${tickets.length} checked in', style: TextStyle(fontSize: 12, color: context.textSecondary)),
               ],
             ),
             const SizedBox(height: 8),
             SizedBox(
               height: 300,
               child: tickets.isEmpty
-                  ? Center(child: Text('No registrations yet', style: TextStyle(color: context.textSecondary])))
+                  ? Center(child: Text('No registrations yet', style: TextStyle(color: context.textSecondary)))
                   : ListView.builder(
                       itemCount: tickets.length,
                       itemBuilder: (_, i) {
@@ -182,7 +183,7 @@ class _AttendeeListSection extends ConsumerWidget {
                           ),
                           title: Text('Ticket #${t.ticketNumber.substring(t.ticketNumber.length - 8)}', style: const TextStyle(fontSize: 13)),
                           subtitle: t.attended && t.checkedInAt != null
-                              ? Text('Checked in at ${t.checkedInAt!.hour}:${t.checkedInAt!.minute.toString().padLeft(2, '0')}', style: TextStyle(fontSize: 11, color: context.textSecondary]))
+                              ? Text('Checked in at ${t.checkedInAt!.hour}:${t.checkedInAt!.minute.toString().padLeft(2, '0')}', style: TextStyle(fontSize: 11, color: context.textSecondary))
                               : null,
                         );
                       },

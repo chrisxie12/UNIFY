@@ -64,7 +64,7 @@ class ResourceCard extends ConsumerWidget {
                           resource.uploaderName ?? 'Unknown',
                           style: TextStyle(
                             fontSize: 12,
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                           ),
                         ),
                         if (resource.uploaderName != null) ...[
@@ -73,7 +73,7 @@ class ResourceCard extends ConsumerWidget {
                             width: 3,
                             height: 3,
                             decoration: BoxDecoration(
-                              color: context.textSecondary],
+                              color: context.textSecondary,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -83,7 +83,7 @@ class ResourceCard extends ConsumerWidget {
                           DateFormat('MMM d, yyyy').format(resource.createdAt),
                           style: TextStyle(
                             fontSize: 12,
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                           ),
                         ),
                       ],
@@ -94,7 +94,7 @@ class ResourceCard extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -102,19 +102,19 @@ class ResourceCard extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: context.textSecondary],
+                              color: context.textSecondary,
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Icon(Icons.download_outlined,
-                            size: 14, color: context.textSecondary]),
+                            size: 14, color: context.textSecondary),
                         const SizedBox(width: 3),
                         Text(
                           '${resource.downloadCount}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: context.textSecondary],
+                            color: context.textSecondary,
                           ),
                         ),
                       ],

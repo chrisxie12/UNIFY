@@ -81,7 +81,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               controller: _titleController,
               decoration: InputDecoration(
                 hintText: 'Title (optional)',
-                hintStyle: TextStyle(color: context.textSecondary], fontSize: 18),
+                hintStyle: TextStyle(color: context.textSecondary, fontSize: 18),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -93,7 +93,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               controller: _bodyController,
               decoration: InputDecoration(
                 hintText: "What's on your mind?",
-                hintStyle: TextStyle(color: context.textSecondary]),
+                hintStyle: TextStyle(color: context.textSecondary),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -108,7 +108,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: context.textSecondary],
+                color: context.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
@@ -166,7 +166,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: context.textSecondary]!),
+                  border: Border.all(color: context.textSecondary),
                 ),
                 child: Stack(
                   children: [
@@ -202,17 +202,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 controller: _linkController,
                 decoration: InputDecoration(
                   hintText: 'https://',
-                  hintStyle: TextStyle(color: context.textSecondary]),
+                  hintStyle: TextStyle(color: context.textSecondary),
                   prefixIcon: Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
                   filled: true,
                   fillColor: Colors.grey[50],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: context.textSecondary]!),
+                    borderSide: BorderSide(color: context.textSecondary),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: context.textSecondary]!),
+                    borderSide: BorderSide(color: context.textSecondary),
                   ),
                 ),
                 keyboardType: TextInputType.url,

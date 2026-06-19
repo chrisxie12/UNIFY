@@ -167,7 +167,7 @@ class _OpportunityFormScreenState
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.event_rounded,
+                    Icon(Icons.event_rounded,
                         size: 18, color: context.textSecondary),
                     const SizedBox(width: 10),
                     Text(
@@ -180,7 +180,7 @@ class _OpportunityFormScreenState
                     if (_deadline != null)
                       GestureDetector(
                         onTap: () => setState(() => _deadline = null),
-                        child: const Icon(Icons.close_rounded,
+                        child: Icon(Icons.close_rounded,
                             size: 18, color: context.textDisabled),
                       ),
                   ],

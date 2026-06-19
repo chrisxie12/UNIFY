@@ -60,7 +60,7 @@ class _FlagTile extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 3),
                     child: Text(flag.description,
                         style: TextStyle(
-                            fontSize: 12, color: context.textSecondary.shade600)),
+                            fontSize: 12, color: context.textSecondary)),
                   ),
               ],
             ),

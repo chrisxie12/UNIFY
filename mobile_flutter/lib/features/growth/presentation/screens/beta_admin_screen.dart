@@ -178,7 +178,7 @@ class _WaitlistCard extends ConsumerWidget {
                       [entry.universityName, entry.programme, entry.level]
                           .where((s) => s != null && s.isNotEmpty)
                           .join(' • '),
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11, color: context.textDisabled),
                     ),
                   ),
@@ -401,7 +401,7 @@ class _InviteCodeCard extends ConsumerWidget {
                             color: context.textPrimary),
                       ),
                       const SizedBox(width: 6),
-                      const Icon(Icons.copy_rounded,
+                      Icon(Icons.copy_rounded,
                           size: 14, color: context.textDisabled),
                     ],
                   ),
@@ -412,7 +412,7 @@ class _InviteCodeCard extends ConsumerWidget {
                     _Pill(label: code.type, color: AppColors.info),
                     const SizedBox(width: 6),
                     Text(usesLabel,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: context.textSecondary)),
                   ],
                 ),
@@ -420,7 +420,7 @@ class _InviteCodeCard extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(code.note!,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                   ),
               ],

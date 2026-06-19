@@ -64,7 +64,7 @@ class OpportunityCard extends ConsumerWidget {
                               o.title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
                                   height: 1.25,
@@ -83,7 +83,7 @@ class OpportunityCard extends ConsumerWidget {
                         o.organization ?? o.type.label,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12.5, color: context.textSecondary),
                       ),
                     ],
@@ -102,7 +102,7 @@ class OpportunityCard extends ConsumerWidget {
                 if (o.isFunded) _tag('Funded', AppColors.success),
                 if (o.isRemote) _tag('Remote', AppColors.info),
                 if (o.location != null && o.location!.isNotEmpty)
-                  _metaText(Icons.location_on_outlined, o.location!),
+                  _metaText(context, Icons.location_on_outlined, o.location!),
               ],
             ),
             const SizedBox(height: 10),
@@ -143,7 +143,7 @@ class OpportunityCard extends ConsumerWidget {
                 fontSize: 10.5, fontWeight: FontWeight.w700, color: color)),
       );
 
-  Widget _metaText(IconData ic, String text) => Row(
+  Widget _metaText(BuildContext context, IconData ic, String text) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(ic, size: 13, color: context.textDisabled),

@@ -167,7 +167,7 @@ class AcademicHomeScreen extends ConsumerWidget {
                           const SizedBox(width: USpacing.md),
                       itemBuilder: (_, i) => _CourseChip(
                         code: courses[i].code,
-                        title: courses[i].title,
+                        title: courses[i].name,
                         count: courses[i].resourceCount,
                         onTap: () =>
                             context.push('/academic/course/${courses[i].id}'),

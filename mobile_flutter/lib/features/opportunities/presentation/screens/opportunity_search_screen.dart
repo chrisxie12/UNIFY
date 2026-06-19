@@ -80,7 +80,7 @@ class _OpportunitySearchScreenState
           ),
           child: Row(
             children: [
-              const Icon(Icons.search_rounded,
+              Icon(Icons.search_rounded,
                   color: context.textSecondary, size: 20),
               const SizedBox(width: 8),
               Expanded(
@@ -102,7 +102,7 @@ class _OpportunitySearchScreenState
                     _ctrl.clear();
                     _onChanged('');
                   },
-                  child: const Icon(Icons.close_rounded,
+                  child: Icon(Icons.close_rounded,
                       size: 18, color: context.textSecondary),
                 ),
             ],
@@ -116,7 +116,7 @@ class _OpportunitySearchScreenState
                   const Center(child: CircularProgressIndicator()),
               error: (e, _) => AppErrorWidget(e),
               data: (items) => items.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text('No results found',
                           style: TextStyle(color: context.textSecondary)))
                   : ListView.builder(

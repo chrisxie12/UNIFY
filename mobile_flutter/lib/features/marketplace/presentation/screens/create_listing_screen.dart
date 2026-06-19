@@ -508,7 +508,7 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
                         onTap: () =>
                             setState(() => _images.removeAt(e.key)),
                         child: Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                               color: context.textSecondary,
                               shape: BoxShape.circle),
                           child: const Icon(Icons.close,

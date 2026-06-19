@@ -188,7 +188,7 @@ final List<ChatItem> mockChats = [
 
 // ── Mock story data ───────────────────────────────────────────────────────────
 
-final List<StoryItem> mockStories = [
+const List<StoryItem> mockStories = [
   const StoryItem(id: 's0', name: 'Your Story', initials: 'ME', colorIndex: 0, isSelf: true),
   const StoryItem(id: 's1', name: 'Ama Asante', initials: 'AA', colorIndex: 0, hasUnviewed: true),
   const StoryItem(id: 's2', name: 'KNUST SRC',  initials: 'KS', colorIndex: 1, hasUnviewed: true),

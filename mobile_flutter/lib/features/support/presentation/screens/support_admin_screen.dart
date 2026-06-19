@@ -61,7 +61,7 @@ class _TicketsTab extends ConsumerWidget {
       error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         if (tickets.isEmpty) {
-          return const Center(
+          return Center(
               child: Text('No support tickets',
                   style: TextStyle(color: context.textSecondary)));
         }
@@ -115,7 +115,7 @@ class _TicketCard extends ConsumerWidget {
             if (ticket.adminResponse != null &&
                 ticket.adminResponse!.isNotEmpty) ...[
               const SizedBox(height: 10),
-              _responseBox(ticket.adminResponse!),
+              _responseBox(context, ticket.adminResponse!),
             ],
           ],
         ),
@@ -206,7 +206,7 @@ class _TicketManageSheetState extends ConsumerState<_TicketManageSheet> {
         const Text('Admin response',
             style: TextStyle(fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
-        _multiline(_responseCtrl, 'Reply to the user (optional)'),
+        _multiline(context, _responseCtrl, 'Reply to the user (optional)'),
       ],
     );
   }
@@ -225,7 +225,7 @@ class _AbuseTab extends ConsumerWidget {
       error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
-          return const Center(
+          return Center(
               child: Text('No abuse reports',
                   style: TextStyle(color: context.textSecondary)));
         }
@@ -403,7 +403,7 @@ class _ContentTab extends ConsumerWidget {
                                 const TextStyle(fontWeight: FontWeight.w700)),
                         const SizedBox(height: 4),
                         Text(f.answer,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13, color: context.textPrimary)),
                       ],
                     ),
@@ -449,7 +449,7 @@ class _ContentTab extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           '${a.viewCount} views · ${a.helpfulCount} helpful',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 12, color: context.textSecondary),
                         ),
                       ],
@@ -749,7 +749,7 @@ Widget _chip(String label, Color color) {
   );
 }
 
-Widget _responseBox(String text) {
+Widget _responseBox(BuildContext context, String text) {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(10),
@@ -762,7 +762,7 @@ Widget _responseBox(String text) {
   );
 }
 
-Widget _multiline(TextEditingController controller, String hint) {
+Widget _multiline(BuildContext context, TextEditingController controller, String hint) {
   return TextField(
     controller: controller,
     minLines: 2,

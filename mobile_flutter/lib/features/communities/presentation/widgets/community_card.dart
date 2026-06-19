@@ -32,7 +32,7 @@ class CommunityCard extends ConsumerWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: context.cardBg,
           borderRadius: BorderRadius.all(Radius.circular(16)),
           boxShadow: AppColors.cardShadow,
@@ -53,7 +53,7 @@ class CommunityCard extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           community.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: context.textPrimary,
@@ -73,7 +73,7 @@ class CommunityCard extends ConsumerWidget {
                         if (community.programme != null) community.programme!,
                         if (community.level != null) community.level!,
                       ].join(' · '),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: context.textDisabled,
                       ),
@@ -85,7 +85,7 @@ class CommunityCard extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       community.description!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         color: context.textSecondary,
                         height: 1.4,
@@ -97,12 +97,12 @@ class CommunityCard extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.people_outline_rounded,
+                      Icon(Icons.people_outline_rounded,
                           size: 13, color: context.textDisabled),
                       const SizedBox(width: 3),
                       Text(
                         '${community.memberCount} members',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           color: context.textDisabled,
                         ),
@@ -264,7 +264,7 @@ class _TypeChip extends StatelessWidget {
       ),
       child: Text(
         _labels[type] ?? type,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w500,
           color: context.textSecondary,

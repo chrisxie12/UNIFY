@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class NotesRepositoryScreen extends ConsumerWidget {
   final String? courseId;
@@ -38,9 +39,9 @@ class NotesRepositoryScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.library_books_outlined, size: 64, color: context.textSecondary]),
+                  Icon(Icons.library_books_outlined, size: 64, color: context.textSecondary),
                   const SizedBox(height: 16),
-                  Text('No resources yet', style: TextStyle(color: context.textSecondary], fontSize: 16)),
+                  Text('No resources yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {},
@@ -149,10 +150,10 @@ class _ResourceListTile extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.star, size: 12, color: Colors.amber),
-                      Text(' ${resource.averageRating.toStringAsFixed(1)}', style: TextStyle(fontSize: 11, color: context.textSecondary])),
-                      Text(' · ${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                      Text(' ${resource.averageRating.toStringAsFixed(1)}', style: TextStyle(fontSize: 11, color: context.textSecondary)),
+                      Text(' · ${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary)),
                       if (resource.lecturer != null) ...[
-                        Text(' · ${resource.lecturer}', style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                        Text(' · ${resource.lecturer}', style: TextStyle(fontSize: 11, color: context.textSecondary)),
                       ],
                     ],
                   ),

@@ -147,7 +147,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Device: ${AnalyticsService.platform} · v${AppConstants.appVersion}',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12, color: context.textSecondary),
                 ),
                 const SizedBox(height: 14),
@@ -190,7 +190,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 style: const TextStyle(color: AppColors.grey2)),
             data: (items) {
               if (items.isEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Text('You have not submitted any feedback yet.',
                       style: TextStyle(color: context.textSecondary)),
@@ -299,11 +299,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               if (f.voteCount > 0)
                 Row(
                   children: [
-                    const Icon(Icons.arrow_upward_rounded,
+                    Icon(Icons.arrow_upward_rounded,
                         size: 14, color: context.textSecondary),
                     const SizedBox(width: 2),
                     Text('${f.voteCount}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: context.textSecondary)),
                   ],
                 ),
@@ -314,7 +314,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               style: const TextStyle(fontWeight: FontWeight.w700)),
           const SizedBox(height: 4),
           Text(f.description,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 13, color: context.textPrimary)),
           if (f.adminResponse != null && f.adminResponse!.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -335,7 +335,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                           color: AppColors.info)),
                   const SizedBox(height: 4),
                   Text(f.adminResponse!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 13, color: context.textPrimary)),
                 ],
               ),

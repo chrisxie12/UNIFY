@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class StudentEventProfileScreen extends ConsumerWidget {
   final String? userId;
@@ -48,7 +49,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
                   ),
                   title: Text(t.eventTitle ?? 'Event', style: const TextStyle(fontSize: 14)),
                   subtitle: Text(t.attended ? 'Attended' : 'Registered', style: TextStyle(fontSize: 11, color: t.attended ? Colors.green : Colors.blue)),
-                  trailing: Text(t.formattedTimestamp, style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                  trailing: Text(t.formattedTimestamp, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 )).toList(),
               );
             },
@@ -75,7 +76,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
                     child: const Icon(Icons.card_membership, color: Colors.amber, size: 20),
                   ),
                   title: Text(c.title, style: const TextStyle(fontSize: 14)),
-                  subtitle: Text(c.certificateTypeLabel, style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                  subtitle: Text(c.certificateTypeLabel, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 )).toList(),
               );
             },
@@ -102,7 +103,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
                     child: Icon(Icons.event, color: theme.colorScheme.primary, size: 20),
                   ),
                   title: Text(e.title, style: const TextStyle(fontSize: 14)),
-                  subtitle: Text(e.formattedDate, style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                  subtitle: Text(e.formattedDate, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                   trailing: const Icon(Icons.chevron_right, size: 18),
                   onTap: () => context.push('/event/${e.id}'),
                 )).toList(),
@@ -160,7 +161,7 @@ class _StatCard extends StatelessWidget {
           children: [
             Text(value, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: color)),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary])),
+            Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
           ],
         ),
       ),
@@ -180,9 +181,9 @@ class _EmptyState extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(icon, size: 40, color: context.textSecondary]),
+            Icon(icon, size: 40, color: context.textSecondary),
             const SizedBox(height: 8),
-            Text(message, style: TextStyle(color: context.textSecondary], fontSize: 13)),
+            Text(message, style: TextStyle(color: context.textSecondary, fontSize: 13)),
           ],
         ),
       ),

@@ -109,9 +109,9 @@ class _FilteredConversationsList extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.chat_bubble_outline, size: 48, color: context.textSecondary]),
+                Icon(Icons.chat_bubble_outline, size: 48, color: context.textSecondary),
                 const SizedBox(height: 12),
-                Text('Nothing here yet', style: TextStyle(color: context.textSecondary])),
+                Text('Nothing here yet', style: TextStyle(color: context.textSecondary)),
               ],
             ),
           );
@@ -128,7 +128,7 @@ class _FilteredConversationsList extends ConsumerWidget {
             ),
             title: Text(filtered[i].title ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w500)),
             subtitle: Text(filtered[i].lastMessageContent ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, color: context.textSecondary])),
+                style: TextStyle(fontSize: 13, color: context.textSecondary)),
             trailing: filtered[i].unreadCount > 0
                 ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

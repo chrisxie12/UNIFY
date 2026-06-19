@@ -54,7 +54,7 @@ class _ReportList extends ConsumerWidget {
       child: asyncData.when(
         data: (_) {
           if (items.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

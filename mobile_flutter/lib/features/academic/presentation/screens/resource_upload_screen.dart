@@ -131,7 +131,7 @@ class _ResourceUploadScreenState
             const SizedBox(height: 16),
 
             _label('File'),
-            const Text(
+            Text(
                 'Upload an image, or paste a link (Google Drive, etc.)',
                 style: TextStyle(fontSize: 12, color: context.textSecondary)),
             const SizedBox(height: 8),

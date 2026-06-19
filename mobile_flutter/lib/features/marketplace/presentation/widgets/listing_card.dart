@@ -92,7 +92,7 @@ class ListingCard extends ConsumerWidget {
                     listing.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       height: 1.25,
@@ -110,7 +110,7 @@ class ListingCard extends ConsumerWidget {
                       ),
                     ),
                   if (listing.isNegotiable)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 1),
                       child: Text('Negotiable',
                           style:
@@ -126,7 +126,7 @@ class ListingCard extends ConsumerWidget {
                           listing.location ?? cat.label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 10.5, color: context.textSecondary),
                         ),
                       ),

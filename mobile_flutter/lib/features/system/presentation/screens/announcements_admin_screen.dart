@@ -172,7 +172,7 @@ class _AnnouncementsAdminScreenState
               ),
               const SizedBox(height: 8),
               if (list.isEmpty)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
                   child: Center(
                     child: Text(
@@ -292,7 +292,7 @@ class _AnnouncementsAdminScreenState
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.event_rounded,
+                  Icon(Icons.event_rounded,
                       size: 18, color: context.textSecondary),
                   const SizedBox(width: 10),
                   Text(
@@ -308,7 +308,7 @@ class _AnnouncementsAdminScreenState
                   if (_endsAt != null)
                     GestureDetector(
                       onTap: () => setState(() => _endsAt = null),
-                      child: const Icon(Icons.close_rounded,
+                      child: Icon(Icons.close_rounded,
                           size: 18, color: context.textDisabled),
                     ),
                 ],

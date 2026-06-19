@@ -30,12 +30,12 @@ class GetStartedScreen extends StatelessWidget {
           Positioned(
             top: screenH * 0.06,
             left: -40,
-            child: _glassCircle(200),
+            child: _glassCircle(context, 200),
           ),
           Positioned(
             top: screenH * 0.18,
             right: -60,
-            child: _glassCircle(160),
+            child: _glassCircle(context, 160),
           ),
 
           // Hero icon
@@ -48,7 +48,7 @@ class GetStartedScreen extends StatelessWidget {
                 Container(
                   width: 110,
                   height: 110,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: context.cardBg,
                     shape: BoxShape.circle,
                   ),
@@ -85,7 +85,7 @@ class GetStartedScreen extends StatelessWidget {
             right: 0,
             child: Container(
               height: screenH * 0.46,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: context.cardBg,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
               ),
@@ -127,7 +127,7 @@ class GetStartedScreen extends StatelessWidget {
     );
   }
 
-  Widget _glassCircle(double size) {
+  Widget _glassCircle(BuildContext context, double size) {
     return Container(
       width: size,
       height: size,

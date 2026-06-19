@@ -62,7 +62,7 @@ class ReferralAdminScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 if (referrals.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 60),
                     child: Center(
                       child: Column(

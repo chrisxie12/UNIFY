@@ -126,7 +126,7 @@ class ResourceCard extends StatelessWidget {
                             size: 13, color: AppColors.warning),
                         const SizedBox(width: 2),
                         Text(r.averageRating.toStringAsFixed(1),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 11.5, color: context.textSecondary)),
                         const SizedBox(width: 8),
                       ],
@@ -134,7 +134,7 @@ class ResourceCard extends StatelessWidget {
                           size: 13, color: context.textDisabled),
                       const SizedBox(width: 2),
                       Text('${r.downloadCount}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11.5, color: context.textDisabled)),
                     ],
                   ),
@@ -143,7 +143,7 @@ class ResourceCard extends StatelessWidget {
                     Text('by ${r.uploaderName}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11, color: context.textDisabled)),
                   ],
                 ],

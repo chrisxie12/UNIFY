@@ -216,7 +216,7 @@ class _HeaderSection extends StatelessWidget {
                   const SizedBox(width: 6), const _Badge(text: 'Featured', color: Colors.amber),
                 ],
                 if (!event.isApproved && event.scope != 'community') ...[
-                  SizedBox(width: 6), const _Badge(text: 'Pending', color: context.textSecondary),
+                  SizedBox(width: 6), _Badge(text: 'Pending', color: context.textSecondary),
                 ],
               ]),
               if (event.isCancelled) ...[

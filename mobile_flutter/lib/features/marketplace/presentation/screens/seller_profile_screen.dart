@@ -107,7 +107,7 @@ class SellerProfileScreen extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, __) => const SizedBox.shrink(),
             data: (items) => items.isEmpty
-                ? const Text('No active listings.',
+                ? Text('No active listings.',
                     style: TextStyle(color: context.textDisabled))
                 : GridView.builder(
                     shrinkWrap: true,
@@ -136,7 +136,7 @@ class SellerProfileScreen extends ConsumerWidget {
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
             data: (reviews) => reviews.isEmpty
-                ? const Text('No reviews yet.',
+                ? Text('No reviews yet.',
                     style: TextStyle(color: context.textDisabled))
                 : Column(
                     children: reviews

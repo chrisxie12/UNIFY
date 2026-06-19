@@ -33,7 +33,7 @@ class AdminManagementScreen extends ConsumerWidget {
         child: adminsAsync.when(
           data: (admins) {
             if (admins.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

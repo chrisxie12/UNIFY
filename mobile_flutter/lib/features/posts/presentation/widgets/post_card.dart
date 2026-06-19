@@ -91,7 +91,7 @@ class PostCard extends ConsumerWidget {
                             Text(
                               _formatTime(post.createdAt),
                               style: TextStyle(
-                                color: context.textSecondary],
+                                color: context.textSecondary,
                                 fontSize: 12,
                               ),
                             ),
@@ -137,7 +137,7 @@ class PostCard extends ConsumerWidget {
                     ),
                   ),
                   if (post.isPinned)
-                    Icon(Icons.push_pin, size: 18, color: context.textSecondary]),
+                    Icon(Icons.push_pin, size: 18, color: context.textSecondary),
                 ],
               ),
               if (post.title != null) ...[
@@ -155,7 +155,7 @@ class PostCard extends ConsumerWidget {
                 post.body,
                 style: TextStyle(
                   fontSize: 14,
-                  color: context.textSecondary],
+                  color: context.textSecondary,
                   height: 1.4,
                 ),
                 maxLines: 4,
@@ -187,16 +187,16 @@ class PostCard extends ConsumerWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
                       height: 200,
-                      color: context.textSecondary],
+                      color: context.textSecondary,
                       child: Center(
-                        child: Icon(Icons.broken_image, color: context.textSecondary]),
+                        child: Icon(Icons.broken_image, color: context.textSecondary),
                       ),
                     ),
                     loadingBuilder: (_, child, progress) {
                       if (progress == null) return child;
                       return Container(
                         height: 200,
-                        color: context.textSecondary],
+                        color: context.textSecondary,
                         child: const Center(child: CircularProgressIndicator()),
                       );
                     },
@@ -208,9 +208,9 @@ class PostCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: context.textSecondary]!),
+                    border: Border.all(color: context.textSecondary),
                   ),
                   child: Row(
                     children: [
@@ -246,7 +246,7 @@ class PostCard extends ConsumerWidget {
                   _ActionButton(
                     icon: Icons.chat_bubble_outline,
                     label: _formatCount(post.commentsCount),
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     onPressed: onTap,
                   ),
                   const SizedBox(width: 12),
@@ -263,7 +263,7 @@ class PostCard extends ConsumerWidget {
                   const SizedBox(width: 12),
                   _ActionButton(
                     icon: Icons.share_outlined,
-                    color: context.textSecondary],
+                    color: context.textSecondary,
                     onPressed: onShare,
                   ),
                 ],

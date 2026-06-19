@@ -188,13 +188,13 @@ class _UniversityCard extends ConsumerWidget {
                 children: [
                   if (university.website != null)
                     Expanded(
-                      child: _infoChip(Icons.language_rounded, university.website!),
+                      child: _infoChip(context, Icons.language_rounded, university.website!),
                     ),
                   if (university.website != null && university.verificationDomain != null)
                     const SizedBox(width: 8),
                   if (university.verificationDomain != null)
                     Expanded(
-                      child: _infoChip(Icons.verified_rounded, university.verificationDomain!),
+                      child: _infoChip(context, Icons.verified_rounded, university.verificationDomain!),
                     ),
                 ],
               ),
@@ -206,7 +206,7 @@ class _UniversityCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoChip(IconData icon, String text) {
+  Widget _infoChip(BuildContext context, IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -225,7 +225,7 @@ class _UniversityCard extends ConsumerWidget {
 
   Widget _actionRow(BuildContext context, WidgetRef ref) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(top: BorderSide(color: context.borderCol)),
       ),
       child: Row(

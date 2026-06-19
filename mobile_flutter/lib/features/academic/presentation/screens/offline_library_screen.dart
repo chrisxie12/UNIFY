@@ -36,9 +36,9 @@ class OfflineLibraryScreen extends ConsumerWidget {
                   Container(
                     width: 72,
                     height: 72,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         color: context.cardBg, shape: BoxShape.circle),
-                    child: const Icon(Icons.cloud_download_outlined,
+                    child: Icon(Icons.cloud_download_outlined,
                         size: 32, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
@@ -46,7 +46,7 @@ class OfflineLibraryScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                       'Tap the cloud icon on any resource to save it here.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13, color: context.textSecondary)),

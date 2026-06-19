@@ -36,9 +36,9 @@ class SavedListingsScreen extends ConsumerWidget {
                   Container(
                     width: 72,
                     height: 72,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         color: context.cardBg, shape: BoxShape.circle),
-                    child: const Icon(Icons.favorite_border_rounded,
+                    child: Icon(Icons.favorite_border_rounded,
                         size: 34, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),

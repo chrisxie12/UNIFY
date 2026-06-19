@@ -86,7 +86,7 @@ class SupportCenterScreen extends ConsumerWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(items[i].answer,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 13, color: context.textPrimary)),
                           ),
                         ],
@@ -179,7 +179,7 @@ class SupportCenterScreen extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.w700)),
                   if (a.category != null && a.category!.isNotEmpty)
                     Text(a.category!,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: context.textSecondary)),
                 ],
               ),

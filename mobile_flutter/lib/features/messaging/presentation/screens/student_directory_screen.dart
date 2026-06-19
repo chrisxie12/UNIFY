@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class StudentDirectoryScreen extends ConsumerStatefulWidget {
   const StudentDirectoryScreen({super.key});
@@ -67,17 +68,17 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.people_outline, size: 64, color: context.textSecondary]),
+                        Icon(Icons.people_outline, size: 64, color: context.textSecondary),
                         const SizedBox(height: 16),
                         Text('Search for students by name,\nprogramme, or department',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: context.textSecondary])),
+                            style: TextStyle(color: context.textSecondary)),
                       ],
                     ),
                   );
                 }
                 if (users.isEmpty) {
-                  return Center(child: Text('No results for "$_query"', style: TextStyle(color: context.textSecondary])));
+                  return Center(child: Text('No results for "$_query"', style: TextStyle(color: context.textSecondary)));
                 }
                 return ListView.builder(
                   itemCount: users.length,
@@ -98,7 +99,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                           user['level'],
                           user['department'],
                         ].whereType<String>().join(' · '),
-                        style: TextStyle(fontSize: 13, color: context.textSecondary]),
+                        style: TextStyle(fontSize: 13, color: context.textSecondary),
                       ),
                       onTap: () {
                         final userId = user['id'] as String;

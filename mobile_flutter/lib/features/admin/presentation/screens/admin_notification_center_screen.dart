@@ -78,7 +78,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
           error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_adminNotificationsProvider)),
           data: (notifications) {
             if (notifications.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

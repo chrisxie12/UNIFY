@@ -24,7 +24,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
       maxChildSize: 0.92,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: context.cardBg,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
@@ -41,13 +41,13 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             data: (a) => CustomScrollView(
               controller: scrollController,
               slivers: [
-                SliverToBoxAdapter(child: _grabber()),
-                SliverToBoxAdapter(child: _statsRow(a)),
+                SliverToBoxAdapter(child: _grabber(context)),
+                SliverToBoxAdapter(child: _statsRow(context, a)),
                 if (a.reactionsByEmoji.isNotEmpty)
-                  SliverToBoxAdapter(child: _reactionsRow(a)),
-                SliverToBoxAdapter(child: _viewersHeader(a.viewers.length)),
+                  SliverToBoxAdapter(child: _reactionsRow(context, a)),
+                SliverToBoxAdapter(child: _viewersHeader(context, a.viewers.length)),
                 if (a.viewers.isEmpty)
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.all(32),
                       child: Center(
@@ -70,7 +70,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
     );
   }
 
-  Widget _grabber() => Center(
+  Widget _grabber(BuildContext context) => Center(
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
           width: 40,
@@ -82,20 +82,20 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
         ),
       );
 
-  Widget _statsRow(SnapshotAnalytics a) {
+  Widget _statsRow(BuildContext context, SnapshotAnalytics a) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Row(
         children: [
-          _stat('Views', a.viewCount, Icons.remove_red_eye_rounded),
-          _stat('Reactions', a.reactionCount, Icons.favorite_rounded),
-          _stat('Replies', a.replyCount, Icons.reply_rounded),
+          _stat(context, 'Views', a.viewCount, Icons.remove_red_eye_rounded),
+          _stat(context, 'Reactions', a.reactionCount, Icons.favorite_rounded),
+          _stat(context, 'Replies', a.replyCount, Icons.reply_rounded),
         ],
       ),
     );
   }
 
-  Widget _stat(String label, int value, IconData icon) {
+  Widget _stat(BuildContext context, String label, int value, IconData icon) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -109,7 +109,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             Icon(icon, color: AppColors.primary, size: 20),
             const SizedBox(height: 6),
             Text('$value',
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 20, fontWeight: FontWeight.w800, color: context.textPrimary)),
             Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
           ],
@@ -118,7 +118,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
     );
   }
 
-  Widget _reactionsRow(SnapshotAnalytics a) {
+  Widget _reactionsRow(BuildContext context, SnapshotAnalytics a) {
     final entries = a.reactionsByEmoji.entries.toList()
       ..sort((x, y) => y.value.compareTo(x.value));
     return Padding(
@@ -141,7 +141,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
     );
   }
 
-  Widget _viewersHeader(int count) {
+  Widget _viewersHeader(BuildContext context, int count) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
@@ -149,7 +149,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
           Icon(Icons.visibility_rounded, size: 18, color: context.textSecondary),
           const SizedBox(width: 8),
           Text('Viewed by $count',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   final String? communityId;
@@ -80,7 +81,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text('Type', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
+          Text('Type', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -90,7 +91,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          Text('Add Members', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
+          Text('Add Members', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary)),
           const SizedBox(height: 8),
           if (_selectedNames.isNotEmpty)
             Padding(

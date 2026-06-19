@@ -195,7 +195,7 @@ class _ResourceDetailScreenState
               errorWidget: (_, __, ___) => Container(
                 height: 200,
                 color: context.cardBg,
-                child: const Icon(Icons.broken_image_outlined,
+                child: Icon(Icons.broken_image_outlined,
                     color: context.textDisabled),
               ),
             ),
@@ -205,7 +205,7 @@ class _ResourceDetailScreenState
         if (r.description != null && r.description!.isNotEmpty) ...[
           const SizedBox(height: 16),
           _card('Description', child: Text(r.description!,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, height: 1.5, color: context.textPrimary))),
         ],
 
@@ -240,7 +240,7 @@ class _ResourceDetailScreenState
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
           data: (ratings) => ratings.isEmpty
-              ? const Text('No reviews yet.',
+              ? Text('No reviews yet.',
                   style: TextStyle(color: context.textDisabled))
               : Column(
                   children: ratings
@@ -255,7 +255,7 @@ class _ResourceDetailScreenState
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: context.cardBg,
           border: Border(top: BorderSide(color: context.borderCol)),
         ),
@@ -380,12 +380,12 @@ class _ResourceDetailScreenState
             SizedBox(
               width: 110,
               child: Text(k,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13, color: context.textSecondary)),
             ),
             Expanded(
               child: Text(v,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: context.textPrimary)),
@@ -429,7 +429,7 @@ class _ResourceDetailScreenState
             if (rt.review != null && rt.review!.isNotEmpty) ...[
               const SizedBox(height: 6),
               Text(rt.review!,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13, color: context.textPrimary)),
             ],
           ],

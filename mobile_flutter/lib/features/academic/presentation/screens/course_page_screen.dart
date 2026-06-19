@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CoursePageScreen extends ConsumerWidget {
   final String courseId;
@@ -76,9 +77,9 @@ class _ResourceTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.folder_open, size: 48, color: context.textSecondary]),
+                Icon(Icons.folder_open, size: 48, color: context.textSecondary),
                 const SizedBox(height: 12),
-                Text('No ${type}s yet', style: TextStyle(color: context.textSecondary])),
+                Text('No ${type}s yet', style: TextStyle(color: context.textSecondary)),
               ],
             ),
           );
@@ -112,7 +113,7 @@ class _ResourceItem extends StatelessWidget {
                 padding: EdgeInsets.only(right: 4),
                 child: Icon(Icons.verified, size: 12, color: Colors.blue),
               ),
-            Text('${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary])),
+            Text('${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
         trailing: const Icon(Icons.download_outlined, size: 20),
@@ -147,9 +148,9 @@ class _AssignmentTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.assignment_outlined, size: 48, color: context.textSecondary]),
+                Icon(Icons.assignment_outlined, size: 48, color: context.textSecondary),
                 const SizedBox(height: 12),
-                Text('No assignments yet', style: TextStyle(color: context.textSecondary])),
+                Text('No assignments yet', style: TextStyle(color: context.textSecondary)),
               ],
             ),
           );
@@ -225,9 +226,9 @@ class _CourseInfoTab extends StatelessWidget {
           if (course.semester != null) _InfoRow(label: 'Semester', value: course.semester!),
           if (course.description != null) ...[
             const SizedBox(height: 16),
-            Text('Description', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
+            Text('Description', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary)),
             const SizedBox(height: 4),
-            Text(course.description!, style: TextStyle(color: context.textSecondary], fontSize: 14)),
+            Text(course.description!, style: TextStyle(color: context.textSecondary, fontSize: 14)),
           ],
         ],
       ),
@@ -247,7 +248,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text(label, style: TextStyle(color: context.textSecondary], fontSize: 14))),
+          SizedBox(width: 120, child: Text(label, style: TextStyle(color: context.textSecondary, fontSize: 14))),
           Expanded(child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
         ],
       ),

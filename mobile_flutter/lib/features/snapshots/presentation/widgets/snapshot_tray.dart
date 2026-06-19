@@ -114,7 +114,7 @@ class _AddSnapshotButton extends StatelessWidget {
               child: Icon(Icons.add_rounded, color: context.primary, size: 28),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Your Snap',
               style: TextStyle(fontSize: 11, color: context.textPrimary, fontWeight: FontWeight.w500),
               overflow: TextOverflow.ellipsis,
@@ -172,7 +172,7 @@ class _SnapshotRing extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(2.5),
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: context.cardBg,
                     ),
@@ -186,7 +186,7 @@ class _SnapshotRing extends StatelessWidget {
                     right: -1,
                     child: Container(
                       padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: context.cardBg,
                         shape: BoxShape.circle,
                       ),

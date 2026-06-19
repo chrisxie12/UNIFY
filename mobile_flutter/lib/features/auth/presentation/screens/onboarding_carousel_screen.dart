@@ -187,7 +187,7 @@ class _OnboardingPage extends StatelessWidget {
         Expanded(
           child: Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: context.cardBg,
               borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             ),

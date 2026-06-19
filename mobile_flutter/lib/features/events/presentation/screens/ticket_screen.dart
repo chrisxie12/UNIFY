@@ -62,7 +62,7 @@ class _TicketCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.textSecondary]!),
+        border: Border.all(color: context.textSecondary),
         boxShadow: [
           BoxShadow(color: context.textPrimary.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 8)),
         ],
@@ -96,7 +96,7 @@ class _TicketCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: context.cardBg,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.textSecondary]!),
+                border: Border.all(color: context.textSecondary),
               ),
               child: CustomPaint(
                 painter: _QRPainter(ticket.qrCode as String),
@@ -108,12 +108,12 @@ class _TicketCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: context.textSecondary]!), bottom: BorderSide(color: context.textSecondary]!)),
+              border: Border(top: BorderSide(color: context.textSecondary), bottom: BorderSide(color: context.textSecondary)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Ticket #', style: TextStyle(fontSize: 12, color: context.textSecondary])),
+                Text('Ticket #', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 Text(ticket.ticketNumber as String, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 1)),
               ],
             ),
@@ -150,7 +150,7 @@ class _TicketInfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary])),
+          Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
           Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: valueColor)),
         ],
       ),

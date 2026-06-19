@@ -125,11 +125,11 @@ class _OpportunityDetailScreenState
                       ),
                     const Spacer(),
                     Row(children: [
-                      const Icon(Icons.remove_red_eye_outlined,
+                      Icon(Icons.remove_red_eye_outlined,
                           size: 14, color: context.textDisabled),
                       const SizedBox(width: 4),
                       Text('${o.viewCount}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 12, color: context.textDisabled)),
                     ]),
                   ],

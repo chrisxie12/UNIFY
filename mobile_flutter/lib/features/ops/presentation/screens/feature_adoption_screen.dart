@@ -45,7 +45,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
           data: (features) {
             if (features.isEmpty) {
               return ListView(
-                children: const [
+                children: [
                   SizedBox(height: 120),
                   Icon(Icons.insights_rounded,
                       size: 56, color: context.borderCol),
@@ -86,7 +86,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
             return ListView(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
                   child: Text(
                     'Active users per feature (last 30 days)',
