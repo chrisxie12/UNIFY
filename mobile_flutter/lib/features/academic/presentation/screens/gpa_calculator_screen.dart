@@ -232,7 +232,7 @@ class _CourseInputCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<int>(
-                    initialValue: entry.credits,
+                    value: entry.credits,
                     items: [1, 2, 3, 4, 5, 6].map((c) => DropdownMenuItem(value: c, child: Text('$c credits'))).toList(),
                     onChanged: (v) => entry.credits = v ?? 3,
                     decoration: const InputDecoration(
@@ -245,7 +245,7 @@ class _CourseInputCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    initialValue: entry.grade,
+                    value: entry.grade,
                     items: _gradeMap.keys.map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
                     onChanged: (v) => entry.grade = v ?? 'A',
                     decoration: const InputDecoration(

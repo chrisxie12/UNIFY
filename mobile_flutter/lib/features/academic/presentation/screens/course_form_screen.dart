@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
-/// Add a course to the catalogue (University → Faculty → Department → Course).
 class CourseFormScreen extends ConsumerStatefulWidget {
   const CourseFormScreen({super.key});
 
@@ -141,24 +141,22 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
     setState(() => _busy = true);
-    final ctx = ref.read(academicContextProvider).valueOrNull;
     try {
-      await ref.read(academicRepositoryProvider).createCourse({
-        'created_by': user.id,
-        'university_id': ctx?.universityId,
-        'code': _codeCtrl.text.trim().toUpperCase(),
-        'title': _titleCtrl.text.trim(),
-        'faculty': _facultyCtrl.text.trim().isEmpty
-            ? null
-            : _facultyCtrl.text.trim(),
-        'department':
-            _deptCtrl.text.trim().isEmpty ? null : _deptCtrl.text.trim(),
-        'level': _levelCtrl.text.trim().isEmpty ? null : _levelCtrl.text.trim(),
-        'credits': int.tryParse(_creditsCtrl.text.trim()),
-        'lecturer': _lecturerCtrl.text.trim().isEmpty
-            ? null
-            : _lecturerCtrl.text.trim(),
-      });
+      final course = CourseModel(
+        id: '',
+        code: _codeCtrl.text.trim().toUpperCase(),
+        name: _titleCtrl.text.trim(),
+        credits: int.tryParse(_creditsCtrl.text.trim()) ?? 3,
+        faculty: _facultyCtrl.text.trim().isEmpty ? null : _facultyCtrl.text.trim(),
+        department: _deptCtrl.text.trim().isEmpty ? null : _deptCtrl.text.trim(),
+        level: _levelCtrl.text.trim().isEmpty ? null : _levelCtrl.text.trim(),
+        lecturerName: _lecturerCtrl.text.trim().isEmpty ? null : _lecturerCtrl.text.trim(),
+        lecturerId: user.id,
+        communityId: null,
+        createdBy: user.id,
+        createdAt: DateTime.now(),
+      );
+      await ref.read(academicRepositoryProvider).createCourse(course);
       ref.invalidate(coursesProvider);
       ref.invalidate(facultiesProvider);
       if (mounted) {

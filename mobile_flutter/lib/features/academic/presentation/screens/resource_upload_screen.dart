@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -24,7 +26,7 @@ class _ResourceUploadScreenState
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
 
-  ResourceType _type = ResourceType.lectureNote;
+  String _type = 'lecture_note';
   final _titleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   final _linkCtrl = TextEditingController();
@@ -34,6 +36,15 @@ class _ResourceUploadScreenState
   String _semester = 'Semester 1';
   File? _image;
   bool _busy = false;
+
+  static const _types = [
+    ('lecture_note', 'Lecture Note', Icons.article_rounded, AppColors.primary),
+    ('past_question', 'Past Question', Icons.quiz_rounded, AppColors.warning),
+    ('study_guide', 'Study Guide', Icons.menu_book_rounded, AppColors.success),
+    ('textbook', 'Textbook', Icons.book_rounded, AppColors.info),
+    ('video', 'Video', Icons.play_circle_rounded, AppColors.error),
+    ('reference', 'Reference', Icons.link_rounded, AppColors.catEvents),
+  ];
 
   @override
   void initState() {
@@ -73,15 +84,15 @@ class _ResourceUploadScreenState
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: ResourceType.values.map((t) {
-                final sel = _type == t;
+              children: _types.map((t) {
+                final sel = _type == t.$1;
                 return ChoiceChip(
-                  avatar: Icon(t.icon,
-                      size: 16, color: sel ? Colors.white : t.color),
-                  label: Text(t.label),
+                  avatar: Icon(t.$3,
+                      size: 16, color: sel ? Colors.white : t.$4),
+                  label: Text(t.$2),
                   selected: sel,
-                  onSelected: (_) => setState(() => _type = t),
-                  selectedColor: t.color,
+                  onSelected: (_) => setState(() => _type = t.$1),
+                  selectedColor: t.$4,
                   labelStyle: TextStyle(
                       color: sel ? Colors.white : AppColors.grey1,
                       fontWeight: FontWeight.w600,
@@ -101,14 +112,14 @@ class _ResourceUploadScreenState
             _label('Course (optional)'),
             coursesAsync.maybeWhen(
               data: (courses) => DropdownButtonFormField<String>(
-                initialValue: _courseId,
+                value: _courseId,
                 isExpanded: true,
                 decoration: _dec('Link to a course'),
                 items: [
                   const DropdownMenuItem(value: null, child: Text('None')),
                   ...courses.map((c) => DropdownMenuItem(
                       value: c.id,
-                      child: Text('${c.code} · ${c.title}',
+                      child: Text('${c.code} · ${c.name}',
                           overflow: TextOverflow.ellipsis))),
                 ],
                 onChanged: (v) => setState(() => _courseId = v),
@@ -117,7 +128,6 @@ class _ResourceUploadScreenState
             ),
             const SizedBox(height: 16),
 
-            // File: image upload OR link
             _label('File'),
             const Text(
                 'Upload an image, or paste a link (Google Drive, etc.)',
@@ -174,7 +184,7 @@ class _ResourceUploadScreenState
                     children: [
                       _label('Semester'),
                       DropdownButtonFormField<String>(
-                        initialValue: _semester,
+                        value: _semester,
                         decoration: _dec(),
                         items: const [
                           DropdownMenuItem(
@@ -232,8 +242,6 @@ class _ResourceUploadScreenState
     final user = ref.read(currentUserProvider);
     if (user == null) return;
     setState(() => _busy = true);
-    final repo = ref.read(academicRepositoryProvider);
-    final ctx = ref.read(academicContextProvider).valueOrNull;
 
     try {
       String? fileUrl;
@@ -241,33 +249,35 @@ class _ResourceUploadScreenState
       if (_image != null) {
         final bytes = await _image!.readAsBytes();
         final ext = _image!.path.split('.').last;
-        fileUrl = await repo.uploadFile(user.id, bytes, ext);
+        final tempDir = await getTemporaryDirectory();
+        final tempFile = File('${tempDir.path}/upload.$ext');
+        await tempFile.writeAsBytes(bytes);
+        final uploadResult = await Supabase.instance.client.storage
+            .from('academic-resources')
+            .upload('${user.id}/${DateTime.now().millisecondsSinceEpoch}.$ext', tempFile);
+        await tempFile.delete();
+        fileUrl = Supabase.instance.client.storage
+            .from('academic-resources')
+            .getPublicUrl(uploadResult);
         fileType = 'image';
       }
 
-      await repo.createResource({
-        'uploader_id': user.id,
-        'university_id': ctx?.universityId,
-        'department': ctx?.department,
-        if (_courseId != null) 'course_id': _courseId,
-        'title': _titleCtrl.text.trim(),
-        'description':
-            _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
-        'resource_type': _type.key,
-        'file_type': fileType,
-        if (fileUrl != null) 'file_url': fileUrl,
-        if (_linkCtrl.text.trim().isNotEmpty) 'link_url': _linkCtrl.text.trim(),
-        if (_lecturerCtrl.text.trim().isNotEmpty)
-          'lecturer': _lecturerCtrl.text.trim(),
-        if (_yearCtrl.text.trim().isNotEmpty)
-          'academic_year': _yearCtrl.text.trim(),
-        'semester': _semester,
-        'verification': 'student',
-      });
+      final resource = AcademicResourceModel(
+        id: '',
+        courseId: _courseId ?? '',
+        title: _titleCtrl.text.trim(),
+        description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
+        type: _type,
+        fileUrl: fileUrl ?? _linkCtrl.text.trim(),
+        fileType: fileType,
+        uploadedBy: user.id,
+        createdAt: DateTime.now(),
+      );
+      await ref.read(academicRepositoryProvider).uploadResource(resource);
 
-      ref.invalidate(resourcesProvider);
+      ref.invalidate(searchResourcesProvider(''));
       if (_courseId != null) {
-        ref.invalidate(courseResourcesProvider(_courseId!));
+        ref.invalidate(resourcesByCourseProvider(_courseId!));
       }
       if (mounted) {
         context.pop();

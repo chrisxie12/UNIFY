@@ -81,6 +81,17 @@ class AcademicRepositoryImpl implements AcademicRepository {
   }
 
   @override
+  Future<AcademicResourceModel?> getResource(String resourceId) async {
+    final data = await _client.from('academic_resources').select('''
+      *,
+      average_rating:resource_ratings(rating.avg),
+      rating_count:resource_ratings(count)
+    ''').eq('id', resourceId).maybeSingle();
+    if (data == null) return null;
+    return AcademicResourceModel.fromMap(data);
+  }
+
+  @override
   Future<AcademicResourceModel> uploadResource(AcademicResourceModel resource) async {
     final data = await _client.from('academic_resources').insert({
       'course_id': resource.courseId,

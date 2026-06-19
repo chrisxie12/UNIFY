@@ -7,10 +7,16 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
-/// Assignment Hub — every assignment across the student's courses, with
-/// deadlines, submission links and reminders.
 class AssignmentsScreen extends ConsumerWidget {
   const AssignmentsScreen({super.key});
+
+  String _dueLabel(AssignmentModel a) {
+    if (a.isOverdue) return 'Overdue';
+    final diff = a.dueDate.difference(DateTime.now());
+    if (diff.inDays == 0) return 'Due today';
+    if (diff.inDays == 1) return 'Due tomorrow';
+    return 'Due in ${diff.inDays} days';
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,8 +53,8 @@ class AssignmentsScreen extends ConsumerWidget {
               ),
             );
           }
-          final pending = items.where((a) => !a.isDone).toList();
-          final done = items.where((a) => a.isDone).toList();
+          final pending = items.where((a) => !a.isSubmitted).toList();
+          final done = items.where((a) => a.isSubmitted).toList();
           return RefreshIndicator(
             color: context.primary,
             onRefresh: () async => ref.invalidate(myAssignmentsProvider),
@@ -57,12 +63,14 @@ class AssignmentsScreen extends ConsumerWidget {
               children: [
                 if (pending.isNotEmpty) ...[
                   const _SectionLabel('Pending'),
-                  ...pending.map((a) => _AssignmentCard(assignment: a)),
+                  ...pending.map((a) => _AssignmentCard(
+                      assignment: a, dueLabel: _dueLabel(a))),
                 ],
                 if (done.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   const _SectionLabel('Submitted'),
-                  ...done.map((a) => _AssignmentCard(assignment: a)),
+                  ...done.map((a) => _AssignmentCard(
+                      assignment: a, dueLabel: _dueLabel(a))),
                 ],
               ],
             ),
@@ -90,7 +98,8 @@ class _SectionLabel extends StatelessWidget {
 
 class _AssignmentCard extends ConsumerWidget {
   final AssignmentModel assignment;
-  const _AssignmentCard({required this.assignment});
+  final String dueLabel;
+  const _AssignmentCard({required this.assignment, required this.dueLabel});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -111,7 +120,7 @@ class _AssignmentCard extends ConsumerWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: (a.isDone
+                color: (a.isSubmitted
                         ? AppColors.success
                         : a.isOverdue
                             ? AppColors.error
@@ -120,10 +129,10 @@ class _AssignmentCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(11),
               ),
               child: Icon(
-                a.isDone
+                a.isSubmitted
                     ? Icons.check_circle_rounded
                     : Icons.assignment_rounded,
-                color: a.isDone
+                color: a.isSubmitted
                     ? AppColors.success
                     : a.isOverdue
                         ? AppColors.error
@@ -142,12 +151,13 @@ class _AssignmentCard extends ConsumerWidget {
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 3),
-                  Text(a.dueLabel,
+                  Text(dueLabel,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color:
-                              a.isOverdue ? AppColors.error : AppColors.grey2)),
+                          color: a.isOverdue
+                              ? AppColors.error
+                              : AppColors.grey2)),
                 ],
               ),
             ),
@@ -188,6 +198,14 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
     super.dispose();
   }
 
+  String _dueLabel(AssignmentModel a) {
+    if (a.isOverdue) return 'Overdue';
+    final diff = a.dueDate.difference(DateTime.now());
+    if (diff.inDays == 0) return 'Due today';
+    if (diff.inDays == 1) return 'Due tomorrow';
+    return 'Due in ${diff.inDays} days';
+  }
+
   @override
   Widget build(BuildContext context) {
     final a = widget.assignment;
@@ -214,7 +232,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
           Text(a.title,
               style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text(a.dueLabel,
+          Text(_dueLabel(a),
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -241,36 +259,18 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              if (a.dueAt != null)
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _busy ? null : _remind,
-                    icon: const Icon(Icons.alarm_add_rounded, size: 18),
-                    label: const Text('Remind me'),
-                    style: OutlinedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48)),
-                  ),
-                ),
-              if (a.dueAt != null) const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: FilledButton(
-                  onPressed: _busy ? null : _submit,
-                  style: FilledButton.styleFrom(
-                      backgroundColor: context.primary,
-                      minimumSize: const Size.fromHeight(48)),
-                  child: _busy
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white))
-                      : const Text('Mark submitted'),
-                ),
-              ),
-            ],
+          FilledButton(
+            onPressed: _busy ? null : _submit,
+            style: FilledButton.styleFrom(
+                backgroundColor: context.primary,
+                minimumSize: const Size.fromHeight(48)),
+            child: _busy
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white))
+                : const Text('Mark submitted'),
           ),
         ],
       ),
@@ -283,17 +283,11 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
     setState(() => _busy = true);
     try {
       await ref.read(academicRepositoryProvider).submitAssignment(
-            assignmentId: widget.assignment.id,
-            userId: user.id,
-            linkUrl: _linkCtrl.text.trim().isEmpty
-                ? null
-                : _linkCtrl.text.trim(),
+            widget.assignment.id,
+            user.id,
+            url: _linkCtrl.text.trim().isEmpty ? null : _linkCtrl.text.trim(),
           );
       ref.invalidate(myAssignmentsProvider);
-      if (widget.assignment.courseId != null) {
-        ref.invalidate(
-            courseAssignmentsProvider(widget.assignment.courseId!));
-      }
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -309,24 +303,6 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
           behavior: SnackBarBehavior.floating,
         ));
       }
-    }
-  }
-
-  Future<void> _remind() async {
-    final user = ref.read(currentUserProvider);
-    if (user == null || widget.assignment.dueAt == null) return;
-    final remindAt =
-        widget.assignment.dueAt!.subtract(const Duration(days: 1));
-    await ref.read(academicRepositoryProvider).setAssignmentReminder(
-          assignmentId: widget.assignment.id,
-          userId: user.id,
-          remindAt: remindAt,
-        );
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Reminder set for 1 day before the deadline'),
-        behavior: SnackBarBehavior.floating,
-      ));
     }
   }
 }

@@ -9,15 +9,13 @@ import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
-/// Exam Preparation Center: upcoming exam timetable, revision materials
-/// (study guides + past questions) and a route into study groups.
 class ExamPrepScreen extends ConsumerWidget {
   const ExamPrepScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final examsAsync = ref.watch(examsProvider);
-    final resourcesAsync = ref.watch(resourcesProvider);
+    final examsAsync = ref.watch(examTimetablesProvider);
+    final resourcesAsync = ref.watch(searchResourcesProvider(''));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -32,22 +30,20 @@ class ExamPrepScreen extends ConsumerWidget {
       body: RefreshIndicator(
         color: context.primary,
         onRefresh: () async {
-          ref.invalidate(examsProvider);
-          ref.invalidate(resourcesProvider);
+          ref.invalidate(examTimetablesProvider);
+          ref.invalidate(searchResourcesProvider(''));
         },
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
           children: [
-            // Next exam countdown
             examsAsync.maybeWhen(
               data: (exams) {
                 final upcoming = exams
-                    .where((e) =>
-                        e.examDate != null &&
-                        e.examDate!.isAfter(DateTime.now()))
+                    .where((e) => e.examDate.isAfter(DateTime.now()))
                     .toList();
                 if (upcoming.isEmpty) return const SizedBox.shrink();
                 final next = upcoming.first;
+                final daysLeft = next.examDate.difference(DateTime.now()).inDays;
                 return Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
@@ -67,23 +63,21 @@ class ExamPrepScreen extends ConsumerWidget {
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 13)),
                           const SizedBox(height: 4),
-                          Text(next.title,
+                          Text(next.courseName ?? next.courseCode ?? 'Exam',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800)),
-                          if (next.examDate != null) ...[
-                            const SizedBox(height: 4),
-                            Text(next.examDate!.shortDateTime,
-                                style: const TextStyle(
-                                    color: Colors.white70, fontSize: 12)),
-                          ],
+                          const SizedBox(height: 4),
+                          Text(next.examDate.shortDateTime,
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 12)),
                         ],
                       ),
                       const Spacer(),
                       Column(
                         children: [
-                          Text('${next.daysLeft ?? 0}',
+                          Text('${daysLeft >= 0 ? daysLeft : 0}',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 34,
@@ -146,8 +140,8 @@ class ExamPrepScreen extends ConsumerWidget {
               data: (all) {
                 final revision = all
                     .where((r) =>
-                        r.resourceType == ResourceType.studyGuide ||
-                        r.resourceType == ResourceType.pastQuestion)
+                        r.type == 'study_guide' ||
+                        r.type == 'past_question')
                     .take(10)
                     .toList();
                 if (revision.isEmpty) {
@@ -220,12 +214,12 @@ class _QuickAction extends StatelessWidget {
 }
 
 class _ExamRow extends StatelessWidget {
-  final ExamModel exam;
+  final ExamTimetable exam;
   const _ExamRow({required this.exam});
 
   @override
   Widget build(BuildContext context) {
-    final days = exam.daysLeft;
+    final days = exam.examDate.difference(DateTime.now()).inDays;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -246,7 +240,7 @@ class _ExamRow extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(days != null && days >= 0 ? '$days' : '—',
+                Text(days >= 0 ? '$days' : '—',
                     style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
@@ -262,7 +256,7 @@ class _ExamRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exam.title,
+                Text(exam.courseName ?? exam.courseCode ?? 'Exam',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -270,10 +264,9 @@ class _ExamRow extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   [
-                    exam.examType.toUpperCase(),
-                    if (exam.examDate != null) exam.examDate!.shortDateTime,
+                    exam.examDate.shortDateTime,
                     if (exam.venue != null) exam.venue,
-                  ].whereType<String>().join(' · '),
+                  ].join(' · '),
                   style:
                       const TextStyle(fontSize: 12, color: AppColors.grey2),
                 ),

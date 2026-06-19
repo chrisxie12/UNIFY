@@ -8,8 +8,6 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
-/// Course browser. Lets students search or drill the hierarchy
-/// (Faculty → Department → Course).
 class CoursesScreen extends ConsumerStatefulWidget {
   const CoursesScreen({super.key});
 
@@ -54,7 +52,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       ),
       body: Column(
         children: [
-          // Search
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Container(
@@ -93,7 +90,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             ),
           ),
 
-          // Faculty / department filter chips
           facultiesAsync.maybeWhen(
             data: (faculties) {
               if (faculties.isEmpty) return const SizedBox.shrink();
@@ -123,7 +119,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             orElse: () => const SizedBox.shrink(),
           ),
 
-          // Department sub-chips
           if (_faculty != null)
             Consumer(builder: (context, ref, _) {
               final depsAsync = ref.watch(departmentsProvider(_faculty!));
@@ -155,21 +150,30 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
                   const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error: $e')),
               data: (all) {
-                final courses = all.where((c) {
+                final searchQuery = ref.watch(courseSearchProvider);
+                var filtered = all.where((c) {
                   if (_faculty != null && c.faculty != _faculty) return false;
                   if (_department != null && c.department != _department) {
                     return false;
                   }
+                  if (searchQuery.isNotEmpty) {
+                    final q = searchQuery.toLowerCase();
+                    if (!c.code.toLowerCase().contains(q) &&
+                        !c.name.toLowerCase().contains(q) &&
+                        !(c.lecturerName?.toLowerCase().contains(q) ?? false)) {
+                      return false;
+                    }
+                  }
                   return true;
                 }).toList();
-                if (courses.isEmpty) {
+                if (filtered.isEmpty) {
                   return _empty(context);
                 }
                 return ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  itemCount: courses.length,
+                  itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (_, i) => _CourseRow(course: courses[i]),
+                  itemBuilder: (_, i) => _CourseRow(course: filtered[i]),
                 );
               },
             ),
@@ -272,14 +276,15 @@ class _CourseRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${course.code} · ${course.title}',
+                  Text('${course.code} · ${course.name}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w700)),
-                  if (course.subtitle.isNotEmpty) ...[
+                  if (course.lecturerName != null &&
+                      course.lecturerName!.isNotEmpty) ...[
                     const SizedBox(height: 3),
-                    Text(course.subtitle,
+                    Text(course.lecturerName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

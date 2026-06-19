@@ -9,7 +9,6 @@ import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
-/// A course page: Notes, Past Questions, Assignments, Exams.
 class CourseDetailScreen extends ConsumerStatefulWidget {
   final String courseId;
   const CourseDetailScreen({super.key, required this.courseId});
@@ -21,19 +20,10 @@ class CourseDetailScreen extends ConsumerStatefulWidget {
 
 class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(academicRepositoryProvider).recordCourseView(widget.courseId);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final courseAsync = ref.watch(courseDetailProvider(widget.courseId));
-    final resourcesAsync = ref.watch(courseResourcesProvider(widget.courseId));
-    final assignmentsAsync =
-        ref.watch(courseAssignmentsProvider(widget.courseId));
+    final courseAsync = ref.watch(courseProvider(widget.courseId));
+    final resourcesAsync = ref.watch(resourcesByCourseProvider(widget.courseId));
+    final assignmentsAsync = ref.watch(assignmentsProvider(widget.courseId));
 
     return DefaultTabController(
       length: 4,
@@ -79,16 +69,16 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700)),
                         const SizedBox(height: 2),
-                        Text(c?.title ?? 'Course',
+                        Text(c?.name ?? 'Course',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w800)),
-                        if (c?.subtitle.isNotEmpty == true) ...[
+                        if (c?.credits != null) ...[
                           const SizedBox(height: 4),
-                          Text(c!.subtitle,
+                          Text('${c!.credits} credits',
                               style: const TextStyle(
                                   color: Colors.white70, fontSize: 12)),
                         ],
@@ -115,9 +105,8 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           ],
           body: TabBarView(
             children: [
-              _resourceList(
-                  resourcesAsync, ResourceType.lectureNote),
-              _resourceList(resourcesAsync, ResourceType.pastQuestion),
+              _resourceList(resourcesAsync, 'lecture_note'),
+              _resourceList(resourcesAsync, 'past_question'),
               _assignmentList(assignmentsAsync),
               _examList(),
             ],
@@ -128,15 +117,15 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   }
 
   Widget _resourceList(
-      AsyncValue<List<ResourceModel>> async, ResourceType type) {
+      AsyncValue<List<AcademicResourceModel>> async, String type) {
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (all) {
-        final items = all.where((r) => r.resourceType == type).toList();
+        final items = all.where((r) => r.type == type).toList();
         if (items.isEmpty) {
-          return _empty('No ${type.label.toLowerCase()} yet',
-              'Upload to share with your class.');
+          final label = type == 'lecture_note' ? 'Notes' : 'Past Questions';
+          return _empty('No $label yet', 'Upload to share with your class.');
         }
         return ListView.builder(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
@@ -170,13 +159,11 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   }
 
   Widget _examList() {
-    final async = ref.watch(examsProvider);
+    final async = ref.watch(examTimetablesForCourseProvider(widget.courseId));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Error: $e')),
-      data: (all) {
-        final items =
-            all.where((e) => e.courseId == widget.courseId).toList();
+      data: (items) {
         if (items.isEmpty) {
           return _empty('No exams scheduled',
               'Quizzes, midsems and exams appear here.');
@@ -248,7 +235,10 @@ class _AssignmentTile extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 3),
-                Text(a.dueLabel,
+                Text({
+                  if (a.isOverdue) 'Overdue',
+                  if (!a.isOverdue) 'Due ${a.dueDate.shortDateTime}',
+                }.join(' · '),
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -257,7 +247,7 @@ class _AssignmentTile extends StatelessWidget {
               ],
             ),
           ),
-          if (a.isDone)
+          if (a.isSubmitted)
             const Icon(Icons.check_circle_rounded,
                 color: AppColors.success, size: 22),
         ],
@@ -267,7 +257,7 @@ class _AssignmentTile extends StatelessWidget {
 }
 
 class _ExamTile extends StatelessWidget {
-  final ExamModel exam;
+  final ExamTimetable exam;
   const _ExamTile({required this.exam});
 
   @override
@@ -296,7 +286,7 @@ class _ExamTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exam.title,
+                Text(exam.courseName ?? exam.courseCode ?? 'Exam',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -304,10 +294,9 @@ class _ExamTile extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   [
-                    exam.examType.toUpperCase(),
-                    if (exam.examDate != null) exam.examDate!.shortDateTime,
+                    exam.examDate.shortDateTime,
                     if (exam.venue != null) exam.venue,
-                  ].whereType<String>().join(' · '),
+                  ].join(' · '),
                   style: const TextStyle(fontSize: 12, color: AppColors.grey2),
                 ),
               ],

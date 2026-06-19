@@ -85,6 +85,87 @@ final resourceRatingsProvider = FutureProvider.family<List<ResourceRating>, Stri
   return repo.getRatings(resourceId);
 });
 
+// ─── All-in-one provider ───────────────────────────────────────────
+final myAssignmentsProvider = FutureProvider<List<AssignmentModel>>((ref) async {
+  final repo = ref.watch(academicRepositoryProvider);
+  final courses = await repo.getCourses();
+  final results = <AssignmentModel>[];
+  for (final course in courses) {
+    try {
+      final assignments = await repo.getAssignments(course.id);
+      results.addAll(assignments);
+    } catch (_) {}
+  }
+  return results;
+});
+
+final resourceDetailProvider = FutureProvider.family<AcademicResourceModel?, String>((ref, resourceId) async {
+  final repo = ref.watch(academicRepositoryProvider);
+  return repo.getResource(resourceId);
+});
+
+final examTimetablesForCourseProvider = FutureProvider.family<List<ExamTimetable>, String>((ref, courseId) async {
+  final repo = ref.watch(academicRepositoryProvider);
+  final all = await repo.getExamTimetables();
+  return all.where((e) => e.courseId == courseId).toList();
+});
+
+class AcademicStats {
+  final int courses;
+  final int resources;
+  final int downloads;
+  final int views;
+  final int topDownloads;
+  final AcademicResourceModel? topResource;
+  final List<AcademicResourceModel> mostDownloaded;
+  final Map<String, int> topSearches;
+  AcademicStats({
+    this.courses = 0,
+    this.resources = 0,
+    this.downloads = 0,
+    this.views = 0,
+    this.topDownloads = 0,
+    this.topResource,
+    this.mostDownloaded = const [],
+    this.topSearches = const {},
+  });
+}
+
+final facultiesProvider = FutureProvider<List<String>>((ref) async {
+  final courses = await ref.watch(coursesProvider.future);
+  return courses.map((c) => c.faculty).whereType<String>().toSet().toList()..sort();
+});
+
+final departmentsProvider = FutureProvider.family<List<String>, String>((ref, faculty) async {
+  final courses = await ref.watch(coursesProvider.future);
+  return courses.where((c) => c.faculty == faculty).map((c) => c.department).whereType<String>().toSet().toList()..sort();
+});
+
+final courseSearchProvider = StateProvider<String>((ref) => '');
+
+final offlineResourcesProvider = FutureProvider<List<AcademicResourceModel>>((ref) async {
+  return [];
+});
+
+final academicStatsProvider = FutureProvider<AcademicStats>((ref) async {
+  final repo = ref.watch(academicRepositoryProvider);
+  final courses = await repo.getCourses();
+  final resources = await repo.getResources();
+  final sorted = List<AcademicResourceModel>.from(resources)..sort((a, b) => b.downloadCount.compareTo(a.downloadCount));
+  final topResource = sorted.isNotEmpty ? sorted.first : null;
+  final totalDownloads = resources.fold<int>(0, (s, r) => s + r.downloadCount);
+  final totalViews = resources.fold<int>(0, (s, r) => s + r.viewCount);
+  return AcademicStats(
+    courses: courses.length,
+    resources: resources.length,
+    downloads: totalDownloads,
+    views: totalViews,
+    topDownloads: topResource?.downloadCount ?? 0,
+    topResource: topResource,
+    mostDownloaded: sorted.take(10).toList(),
+  );
+});
+
 // ─── Notifier ─────────────────────────────────────────────────────
 class AcademicNotifier extends StateNotifier<AcademicState> {
   final AcademicRepository _repo;

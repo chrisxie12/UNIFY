@@ -9,6 +9,7 @@ abstract class AcademicRepository {
     String? courseId, String? type, String? department,
     String? verificationStatus, String? searchQuery,
   });
+  Future<AcademicResourceModel?> getResource(String resourceId);
   Future<AcademicResourceModel> uploadResource(AcademicResourceModel resource);
   Future<void> deleteResource(String resourceId);
   Future<void> incrementDownload(String resourceId, String userId);

@@ -978,17 +978,16 @@ class _BrandIconBox extends StatelessWidget {
 /// to [color] at [size]. All glyphs use a 0 0 24 24 viewBox.
 class _BrandSvg extends StatelessWidget {
   final String path;
-  final double size;
   final Color color;
-  const _BrandSvg(this.path, {this.size = 22, this.color = Colors.white});
+  const _BrandSvg(this.path, {this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.string(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
       '<path d="$path"/></svg>',
-      width: size,
-      height: size,
+      width: 22,
+      height: 22,
       colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     );
   }

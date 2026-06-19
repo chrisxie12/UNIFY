@@ -180,3 +180,11 @@ Complete full production-readiness audit and fix all errors/warnings for GCTU la
 - `auth.uid()` returns a UUID matching `auth.users.id` — this is the value stored in all `created_by`, `user_id`, `author_id` columns
 - `push_notification_queue` table: `id UUID, user_id UUID, title TEXT, body TEXT, data JSONB, status TEXT, created_at TIMESTAMPTZ`
 - `device_tokens` table: `token TEXT, user_id UUID, platform TEXT, is_active BOOLEAN, created_at TIMESTAMPTZ`
+
+### Done — Session 2026-06-19 (Audit + Fix)
+- **Full audit delivered** — 14-module scoring, top-20 issues, GCTU launch verdict (🟡 CONDITIONAL PASS).
+- **Academic hub fixed** — 90→0 errors across 8 screen files + 1 widget file + repository + providers. Fixed model references (`ResourceModel`→`AcademicResourceModel`, `title`→`name`, `isDone`→`isSubmitted`, `dueAt`→`dueDate`, `comment`→`review`, `ResourceType`→string, `ResourceVerification`→string, `examsProvider`→`examTimetablesProvider`, etc.). Added `getResource()` to repository, `myAssignmentsProvider`, `resourceDetailProvider`, `academicStatsProvider`, `facultiesProvider`, `departmentsProvider`, `offlineResourcesProvider` to provider layer.
+- **`step16_admin_system.sql` created** — 12 tables (universities, faculties, departments, admin_roles, university_administrators, audit_logs, moderation_queue, admin_announcements, admin_announcement_recipients, opportunities, marketplace_reports, analytics_snapshots), 30+ RLS policies, 4 helper functions (is_admin, is_super_admin, get_user_admin_scope, log_admin_action), seeded admin roles, ALTER TABLE for verification_requests.
+- **`flutter analyze`** — **0 errors, 0 warnings, 39 infos** (down from 90 errors + 3 warnings + 35 infos).
+- **`flutter build apk --debug`** — builds successfully.
+- **Remaining infos**: 35 `prefer_const_constructors`, 2 `dangling_library_doc_comments`, 2 deprecated Radio groupValue/onChanged in verification_request_screen, 1 deprecated anonKey in main.dart.

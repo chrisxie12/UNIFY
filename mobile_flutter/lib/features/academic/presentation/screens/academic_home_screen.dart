@@ -13,7 +13,7 @@ class AcademicHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coursesAsync = ref.watch(coursesProvider);
-    final resourcesAsync = ref.watch(resourcesProvider);
+    final resourcesAsync = ref.watch(searchResourcesProvider(''));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -28,7 +28,7 @@ class AcademicHomeScreen extends ConsumerWidget {
         color: context.primary,
         onRefresh: () async {
           ref.invalidate(coursesProvider);
-          ref.invalidate(resourcesProvider);
+          ref.invalidate(searchResourcesProvider(''));
         },
         child: CustomScrollView(
           slivers: [
@@ -161,7 +161,7 @@ class AcademicHomeScreen extends ConsumerWidget {
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (_, i) => _CourseChip(
                         code: courses[i].code,
-                        title: courses[i].title,
+                        title: courses[i].name,
                         count: courses[i].resourceCount,
                         onTap: () =>
                             context.push('/academic/course/${courses[i].id}'),

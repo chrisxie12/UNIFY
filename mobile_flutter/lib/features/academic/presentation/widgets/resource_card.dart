@@ -3,9 +3,65 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/academic_models.dart';
 
-/// Compact list tile for an academic resource.
+IconData _resourceIcon(String type) {
+  switch (type) {
+    case 'lecture_note':
+    case 'notes':
+      return Icons.article_rounded;
+    case 'past_question':
+      return Icons.quiz_rounded;
+    case 'study_guide':
+      return Icons.menu_book_rounded;
+    case 'textbook':
+      return Icons.book_rounded;
+    case 'video':
+      return Icons.play_circle_rounded;
+    case 'assignment':
+      return Icons.assignment_rounded;
+    case 'reference':
+      return Icons.link_rounded;
+    default:
+      return Icons.description_rounded;
+  }
+}
+
+Color _resourceColor(String type) {
+  switch (type) {
+    case 'lecture_note':
+    case 'notes':
+      return AppColors.primary;
+    case 'past_question':
+      return AppColors.warning;
+    case 'study_guide':
+      return AppColors.success;
+    case 'textbook':
+      return AppColors.info;
+    case 'video':
+      return AppColors.error;
+    case 'assignment':
+      return AppColors.catUrgent;
+    case 'reference':
+      return AppColors.catEvents;
+    default:
+      return AppColors.grey2;
+  }
+}
+
+Color _verificationColor(String status) {
+  switch (status) {
+    case 'verified_course_rep':
+      return AppColors.success;
+    case 'verified_faculty_admin':
+      return AppColors.info;
+    case 'official':
+      return AppColors.success;
+    default:
+      return AppColors.grey3;
+  }
+}
+
 class ResourceCard extends StatelessWidget {
-  final ResourceModel resource;
+  final AcademicResourceModel resource;
   final VoidCallback onTap;
   const ResourceCard({super.key, required this.resource, required this.onTap});
 
@@ -29,11 +85,11 @@ class ResourceCard extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: r.resourceType.color.withValues(alpha: 0.10),
+                color: _resourceColor(r.type).withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(11),
               ),
-              child: Icon(r.resourceType.icon,
-                  color: r.resourceType.color, size: 22),
+              child: Icon(_resourceIcon(r.type),
+                  color: _resourceColor(r.type), size: 22),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -51,10 +107,11 @@ class ResourceCard extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                                 height: 1.2)),
                       ),
-                      if (r.verification.isVerified) ...[
+                      if (r.isVerified) ...[
                         const SizedBox(width: 4),
                         Icon(Icons.verified_rounded,
-                            size: 15, color: r.verification.color),
+                            size: 15,
+                            color: _verificationColor(r.verificationStatus)),
                       ],
                     ],
                   ),
@@ -67,7 +124,7 @@ class ResourceCard extends StatelessWidget {
                         const Icon(Icons.star_rounded,
                             size: 13, color: AppColors.warning),
                         const SizedBox(width: 2),
-                        Text(r.rating.toStringAsFixed(1),
+                        Text(r.averageRating.toStringAsFixed(1),
                             style: const TextStyle(
                                 fontSize: 11.5, color: AppColors.grey2)),
                         const SizedBox(width: 8),

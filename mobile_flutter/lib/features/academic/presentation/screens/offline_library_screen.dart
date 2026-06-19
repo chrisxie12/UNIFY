@@ -6,9 +6,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
-/// Resources saved for offline access. Metadata is read from Hive so this
-/// screen works without a network connection; images use the
-/// cached_network_image disk cache.
 class OfflineLibraryScreen extends ConsumerWidget {
   const OfflineLibraryScreen({super.key});
 

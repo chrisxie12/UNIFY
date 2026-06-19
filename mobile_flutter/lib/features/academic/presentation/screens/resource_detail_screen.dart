@@ -10,6 +10,76 @@ import '../../../../core/extensions/datetime_extensions.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
+IconData _resourceIcon(String type) {
+  switch (type) {
+    case 'lecture_note':
+    case 'notes':
+      return Icons.article_rounded;
+    case 'past_question':
+      return Icons.quiz_rounded;
+    case 'study_guide':
+      return Icons.menu_book_rounded;
+    case 'textbook':
+      return Icons.book_rounded;
+    case 'video':
+      return Icons.play_circle_rounded;
+    case 'assignment':
+      return Icons.assignment_rounded;
+    case 'reference':
+      return Icons.link_rounded;
+    default:
+      return Icons.description_rounded;
+  }
+}
+
+Color _resourceColor(String type) {
+  switch (type) {
+    case 'lecture_note':
+    case 'notes':
+      return AppColors.primary;
+    case 'past_question':
+      return AppColors.warning;
+    case 'study_guide':
+      return AppColors.success;
+    case 'textbook':
+      return AppColors.info;
+    case 'video':
+      return AppColors.error;
+    case 'assignment':
+      return AppColors.catUrgent;
+    case 'reference':
+      return AppColors.catEvents;
+    default:
+      return AppColors.grey2;
+  }
+}
+
+Color _verificationColor(String status) {
+  switch (status) {
+    case 'verified_course_rep':
+      return AppColors.success;
+    case 'verified_faculty_admin':
+      return AppColors.info;
+    case 'official':
+      return AppColors.success;
+    default:
+      return AppColors.grey3;
+  }
+}
+
+String _verificationLabel(String status) {
+  switch (status) {
+    case 'verified_course_rep':
+      return 'Verified by Course Rep';
+    case 'verified_faculty_admin':
+      return 'Verified by Faculty Admin';
+    case 'official':
+      return 'Official Resource';
+    default:
+      return 'Student Uploaded';
+  }
+}
+
 class ResourceDetailScreen extends ConsumerStatefulWidget {
   final String resourceId;
   const ResourceDetailScreen({super.key, required this.resourceId});
@@ -27,7 +97,7 @@ class _ResourceDetailScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(academicRepositoryProvider)
-          .recordResourceView(widget.resourceId);
+          .incrementView(widget.resourceId);
     });
   }
 
@@ -64,7 +134,7 @@ class _ResourceDetailScreenState
     );
   }
 
-  Widget _content(ResourceModel r) {
+  Widget _content(AcademicResourceModel r) {
     final ratingsAsync = ref.watch(resourceRatingsProvider(r.id));
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -75,11 +145,11 @@ class _ResourceDetailScreenState
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: r.resourceType.color.withValues(alpha: 0.10),
+                color: _resourceColor(r.type).withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(r.resourceType.icon,
-                  color: r.resourceType.color, size: 28),
+              child: Icon(_resourceIcon(r.type),
+                  color: _resourceColor(r.type), size: 28),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -92,7 +162,7 @@ class _ResourceDetailScreenState
                           fontWeight: FontWeight.w800,
                           height: 1.25)),
                   const SizedBox(height: 6),
-                  _verificationBadge(r.verification),
+                  _verificationBadge(r.verificationStatus),
                 ],
               ),
             ),
@@ -105,17 +175,17 @@ class _ResourceDetailScreenState
           children: [
             _stat('${r.downloadCount}', 'Downloads', Icons.download_rounded),
             _stat('${r.viewCount}', 'Views', Icons.remove_red_eye_rounded),
-            _stat(r.ratingCount == 0 ? '—' : r.rating.toStringAsFixed(1),
+            _stat(r.ratingCount == 0 ? '—' : r.averageRating.toStringAsFixed(1),
                 'Rating', Icons.star_rounded),
           ],
         ),
 
-        if (r.isImage && r.url != null) ...[
+        if (r.fileType == 'image' && r.fileUrl.isNotEmpty) ...[
           const SizedBox(height: 16),
           ClipRRect(
             borderRadius: BorderRadius.circular(14),
             child: CachedNetworkImage(
-              imageUrl: r.url!,
+              imageUrl: r.fileUrl,
               fit: BoxFit.cover,
               placeholder: (_, __) => Container(
                   height: 200, color: AppColors.surface),
@@ -139,7 +209,7 @@ class _ResourceDetailScreenState
         const SizedBox(height: 12),
         _card('Details', child: Column(
           children: [
-            _row('Type', r.resourceType.label),
+            _row('Type', r.type),
             if (r.lecturer != null) _row('Lecturer', r.lecturer!),
             if (r.academicYear != null) _row('Academic year', r.academicYear!),
             if (r.semester != null) _row('Semester', r.semester!),
@@ -151,7 +221,6 @@ class _ResourceDetailScreenState
         )),
 
         const SizedBox(height: 16),
-        // Rate
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -179,8 +248,7 @@ class _ResourceDetailScreenState
     );
   }
 
-  Widget _bottomBar(ResourceModel r) {
-    final offline = ref.watch(offlineFlagProvider(r.id)).valueOrNull ?? false;
+  Widget _bottomBar(AcademicResourceModel r) {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
@@ -190,38 +258,6 @@ class _ResourceDetailScreenState
         ),
         child: Row(
           children: [
-            GestureDetector(
-              onTap: () async {
-                final on = await ref
-                    .read(offlineControllerProvider.notifier)
-                    .toggle(r);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(on
-                        ? 'Saved for offline access'
-                        : 'Removed from offline library'),
-                    behavior: SnackBarBehavior.floating,
-                  ));
-                }
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: offline
-                      ? context.primary.withValues(alpha: 0.12)
-                      : AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(
-                  offline
-                      ? Icons.cloud_done_rounded
-                      : Icons.cloud_download_outlined,
-                  color: offline ? context.primary : AppColors.grey1,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
             Expanded(
               child: FilledButton.icon(
                 onPressed: () => _open(r),
@@ -244,12 +280,12 @@ class _ResourceDetailScreenState
     );
   }
 
-  Future<void> _open(ResourceModel r) async {
+  Future<void> _open(AcademicResourceModel r) async {
     final user = ref.read(currentUserProvider);
-    await ref.read(academicRepositoryProvider).recordDownload(r.id, user?.id);
+    await ref.read(academicRepositoryProvider).incrementDownload(r.id, user?.id ?? '');
     ref.invalidate(resourceDetailProvider(r.id));
-    if (r.url != null) {
-      await Clipboard.setData(ClipboardData(text: r.url!));
+    if (r.fileUrl.isNotEmpty) {
+      await Clipboard.setData(ClipboardData(text: r.fileUrl));
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Link copied — paste in your browser to open'),
@@ -259,7 +295,7 @@ class _ResourceDetailScreenState
     }
   }
 
-  void _rate(ResourceModel r) {
+  void _rate(AcademicResourceModel r) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -270,25 +306,23 @@ class _ResourceDetailScreenState
     );
   }
 
-  // ── UI bits ──────────────────────────────────────────────────
-
-  Widget _verificationBadge(ResourceVerification v) => Container(
+  Widget _verificationBadge(String status) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
-          color: v.color.withValues(alpha: 0.12),
+          color: _verificationColor(status).withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (v.isVerified)
-              Icon(Icons.verified_rounded, size: 13, color: v.color),
-            if (v.isVerified) const SizedBox(width: 4),
-            Text(v.label,
+            if (status != 'student_uploaded')
+              Icon(Icons.verified_rounded, size: 13, color: _verificationColor(status)),
+            if (status != 'student_uploaded') const SizedBox(width: 4),
+            Text(_verificationLabel(status),
                 style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: v.color)),
+                    color: _verificationColor(status))),
           ],
         ),
       );
@@ -371,7 +405,7 @@ class _ResourceDetailScreenState
             Row(
               children: [
                 Expanded(
-                  child: Text(rt.userName ?? 'Student',
+                  child: Text(rt.userId,
                       style: const TextStyle(
                           fontSize: 13, fontWeight: FontWeight.w600)),
                 ),
@@ -389,9 +423,9 @@ class _ResourceDetailScreenState
                 ),
               ],
             ),
-            if (rt.comment != null && rt.comment!.isNotEmpty) ...[
+            if (rt.review != null && rt.review!.isNotEmpty) ...[
               const SizedBox(height: 6),
-              Text(rt.comment!,
+              Text(rt.review!,
                   style: const TextStyle(
                       fontSize: 13, color: AppColors.grey1)),
             ],
@@ -400,37 +434,62 @@ class _ResourceDetailScreenState
       );
 }
 
-// ── Verify menu (course reps / admins) ─────────────────────────
-
 class _VerifyMenu extends ConsumerWidget {
-  final ResourceModel resource;
+  final AcademicResourceModel resource;
   const _VerifyMenu({required this.resource});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PopupMenuButton<ResourceVerification>(
+    return PopupMenuButton<String>(
       icon: const Icon(Icons.verified_outlined, color: AppColors.dark),
       tooltip: 'Set verification',
-      onSelected: (v) async {
-        await ref
-            .read(academicRepositoryProvider)
-            .setVerification(resource.id, v);
+      onSelected: (status) async {
+        final updated = AcademicResourceModel(
+          id: resource.id,
+          courseId: resource.courseId,
+          title: resource.title,
+          description: resource.description,
+          type: resource.type,
+          fileUrl: resource.fileUrl,
+          fileType: resource.fileType,
+          fileSize: resource.fileSize,
+          thumbnailUrl: resource.thumbnailUrl,
+          university: resource.university,
+          faculty: resource.faculty,
+          department: resource.department,
+          academicYear: resource.academicYear,
+          semester: resource.semester,
+          lecturer: resource.lecturer,
+          uploadedBy: resource.uploadedBy,
+          uploaderName: resource.uploaderName,
+          verificationStatus: status,
+          verifiedBy: resource.verifiedBy,
+          verifiedAt: resource.verifiedAt,
+          downloadCount: resource.downloadCount,
+          viewCount: resource.viewCount,
+          createdAt: resource.createdAt,
+          averageRating: resource.averageRating,
+          ratingCount: resource.ratingCount,
+          isOffline: resource.isOffline,
+        );
+        await ref.read(academicRepositoryProvider).uploadResource(updated);
         ref.invalidate(resourceDetailProvider(resource.id));
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Marked as ${v.label}'),
+            content: Text('Marked as ${_verificationLabel(status)}'),
             behavior: SnackBarBehavior.floating,
           ));
         }
       },
-      itemBuilder: (_) => ResourceVerification.values
-          .map((v) => PopupMenuItem(value: v, child: Text(v.label)))
-          .toList(),
+      itemBuilder: (_) => [
+        'student_uploaded',
+        'verified_course_rep',
+        'verified_faculty_admin',
+        'official',
+      ].map((s) => PopupMenuItem(value: s, child: Text(_verificationLabel(s)))).toList(),
     );
   }
 }
-
-// ── Rate sheet ─────────────────────────────────────────────────
 
 class _RateSheet extends ConsumerStatefulWidget {
   final String resourceId;
@@ -442,12 +501,12 @@ class _RateSheet extends ConsumerStatefulWidget {
 
 class _RateSheetState extends ConsumerState<_RateSheet> {
   int _rating = 5;
-  final _commentCtrl = TextEditingController();
+  final _reviewCtrl = TextEditingController();
   bool _busy = false;
 
   @override
   void dispose() {
-    _commentCtrl.dispose();
+    _reviewCtrl.dispose();
     super.dispose();
   }
 
@@ -496,7 +555,7 @@ class _RateSheetState extends ConsumerState<_RateSheet> {
           ),
           const SizedBox(height: 16),
           TextField(
-            controller: _commentCtrl,
+            controller: _reviewCtrl,
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'How useful was this? (optional)',
@@ -532,10 +591,10 @@ class _RateSheetState extends ConsumerState<_RateSheet> {
     setState(() => _busy = true);
     try {
       await ref.read(academicRepositoryProvider).rateResource(
-            resourceId: widget.resourceId,
-            userId: user.id,
-            rating: _rating,
-            comment: _commentCtrl.text.trim(),
+            widget.resourceId,
+            user.id,
+            _rating,
+            review: _reviewCtrl.text.trim().isEmpty ? null : _reviewCtrl.text.trim(),
           );
       ref.invalidate(resourceRatingsProvider(widget.resourceId));
       ref.invalidate(resourceDetailProvider(widget.resourceId));
