@@ -19,7 +19,7 @@ DECLARE
   v_user_id     UUID;
   v_university_id UUID;
   v_role_id     UUID;
-  v_admin_email TEXT := 'gyanchris131@gmail.com';  -- ← your email
+  v_admin_email TEXT := '2526405041@live.gctu.edu.gh';  -- ← your email
 BEGIN
 
   -- ── 1. Resolve user UID from email ───────────────────────────
