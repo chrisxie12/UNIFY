@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 
 final _repProfileProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
   final client = ref.read(supabaseProvider);
@@ -113,25 +115,25 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
                       const SizedBox(height: 24),
                       verifReqsAsync.when(
                         data: (reqs) => _VerificationDocumentsSection(requests: reqs),
-                        error: (e, _) => _SectionError(message: 'Error loading documents: $e'),
+                        error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
                         loading: () => _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       verifLogAsync.when(
                         data: (logs) => _VerificationHistorySection(logs: logs),
-                        error: (e, _) => _SectionError(message: 'Error loading history: $e'),
+                        error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
                         loading: () => _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       managedAsync.when(
                         data: (managers) => _ManagedCommunitiesSection(managers: managers),
-                        error: (e, _) => _SectionError(message: 'Error loading communities: $e'),
+                        error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
                         loading: () => _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       postsAsync.when(
                         data: (posts) => _RecentActivitySection(posts: posts),
-                        error: (e, _) => _SectionError(message: 'Error loading activity: $e'),
+                        error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
                         loading: () => _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
@@ -154,7 +156,7 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
                 const SizedBox(height: 12),
                 const Text('Error loading profile', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
-                Text('$e', style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
+                Text(ErrorMapper.toUserMessage(e), style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
                 const SizedBox(height: 16),
                 FilledButton.tonalIcon(
                   onPressed: () => ref.invalidate(_repProfileProvider(widget.userId)),
@@ -907,9 +909,7 @@ class _ActionButtons extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

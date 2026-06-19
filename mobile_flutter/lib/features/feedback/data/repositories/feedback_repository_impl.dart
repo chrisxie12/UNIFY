@@ -87,7 +87,7 @@ class FeedbackRepositoryImpl {
   }
 
   Future<Map<String, int>> countsByStatus() async {
-    final data = await _client.from('feedback_items').select('status');
+    final data = await _client.from('feedback_items').select('status').limit(100);
     final counts = <String, int>{
       for (final s in FeedbackStatus.all) s: 0,
     };

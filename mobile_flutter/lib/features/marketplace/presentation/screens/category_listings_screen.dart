@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
@@ -216,7 +217,7 @@ class _CategoryListingsScreenState
               const Icon(Icons.error_outline_rounded,
                   size: 40, color: AppColors.grey3),
               const SizedBox(height: 12),
-              Text('Could not load listings\n$e',
+              Text(ErrorMapper.toUserMessage(e),
                   textAlign: TextAlign.center,
                   style:
                       TextStyle(fontSize: 13, color: context.textSecondary)),

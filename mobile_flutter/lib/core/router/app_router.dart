@@ -24,6 +24,7 @@ import '../../features/profile/presentation/screens/privacy_settings_screen.dart
 import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/notifications/presentation/screens/notification_preferences_screen.dart';
 import '../../features/reputation/presentation/screens/reputation_dashboard_screen.dart';
 import '../../features/reputation/presentation/screens/skills_management_screen.dart';
 import '../../features/admin/presentation/screens/admin_screen.dart';
@@ -181,6 +182,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+      GoRoute(path: '/notifications/preferences', builder: (_, __) => const NotificationPreferencesScreen()),
       GoRoute(
         path: '/post/:id',
         builder: (_, state) => PostDetailScreen(postId: state.pathParameters['id']!),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../leadership/data/models/community_request_model.dart';
@@ -22,7 +23,8 @@ final _myUniversityIdProvider = FutureProvider.autoDispose<String?>((ref) async 
         .eq('id', user.id)
         .maybeSingle();
     return p?['university_id'] as String?;
-  } catch (_) {
+  } catch (e) {
+    debugPrint('[CommunitiesProvider] Error: $e');
     return null;
   }
 });

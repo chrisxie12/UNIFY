@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../communities/presentation/providers/communities_provider.dart';
 import '../providers/snapshots_provider.dart';
@@ -162,12 +164,7 @@ class _SnapshotComposerScreenState
     } catch (e) {
       if (mounted) {
         setState(() => _posting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not post: $e'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

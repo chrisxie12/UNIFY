@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
@@ -29,7 +30,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           ticketsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Text('$e'),
+            error: (e, _) => AppErrorWidget(e),
             data: (tickets) {
               if (tickets.isEmpty) {
                 return const _EmptyState(icon: Icons.confirmation_number_outlined, message: 'No events registered yet');
@@ -57,7 +58,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           certsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Text('$e'),
+            error: (e, _) => AppErrorWidget(e),
             data: (certs) {
               if (certs.isEmpty) {
                 return const _EmptyState(icon: Icons.card_membership_outlined, message: 'No certificates yet');
@@ -84,7 +85,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           savedAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Text('$e'),
+            error: (e, _) => AppErrorWidget(e),
             data: (events) {
               if (events.isEmpty) {
                 return const _EmptyState(icon: Icons.bookmark_border, message: 'No saved events');
@@ -123,7 +124,7 @@ class _StatsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return ticketsAsync.when(
       loading: () => const SizedBox(height: 80, child: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Text('$e'),
+      error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         final registered = tickets.length;
         final attended = tickets.where((t) => t.attended).length;

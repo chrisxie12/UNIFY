@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 
@@ -30,7 +31,7 @@ class NotesRepositoryScreen extends ConsumerWidget {
       ),
       body: resources.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (items) {
           if (items.isEmpty) {
             return Center(

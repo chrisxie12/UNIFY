@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 
@@ -54,7 +55,7 @@ class _ReportsTab extends ConsumerWidget {
     final async = ref.watch(marketplaceReportQueueProvider);
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load reports\n$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
           return Center(
@@ -208,7 +209,7 @@ class _AnalyticsTab extends ConsumerWidget {
     final async = ref.watch(marketplaceStatsProvider);
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load analytics\n$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (stats) {
         final cats = stats.categoryCounts.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));

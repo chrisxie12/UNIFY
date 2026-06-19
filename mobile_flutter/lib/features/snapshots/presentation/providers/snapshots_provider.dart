@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/snapshot_models.dart';
@@ -21,7 +22,8 @@ final _myUniversityIdProvider = FutureProvider.autoDispose<String?>((ref) async 
         .eq('id', user.id)
         .maybeSingle();
     return p?['university_id'] as String?;
-  } catch (_) {
+  } catch (e) {
+    debugPrint('[SnapshotsProvider] _myUniversityIdProvider error: $e');
     return null;
   }
 });
@@ -39,7 +41,8 @@ final _amVerifiedLeaderProvider = FutureProvider.autoDispose<bool>((ref) async {
         .eq('id', user.id)
         .maybeSingle();
     return p?['is_verified_leader'] as bool? ?? false;
-  } catch (_) {
+  } catch (e) {
+    debugPrint('[SnapshotsProvider] _amVerifiedLeaderProvider error: $e');
     return false;
   }
 });

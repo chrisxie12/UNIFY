@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/message_model.dart';
 
@@ -350,7 +349,7 @@ class _ReadReceipt extends StatelessWidget {
       return const Icon(Icons.hourglass_empty_rounded, size: 12, color: Colors.white60);
     }
     if (message.hasFailed) {
-      return const Icon(Icons.error_outline_rounded, size: 12, color: AppColors.error);
+      return Icon(Icons.error_outline_rounded, size: 12, color: context.error);
     }
     return const Icon(Icons.done_rounded, size: 12, color: Colors.white70);
   }
@@ -557,7 +556,7 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? AppColors.error : context.textPrimary;
+    final color = isDestructive ? context.error : context.textPrimary;
     return Row(
       children: [
         Icon(icon, size: 18, color: color),

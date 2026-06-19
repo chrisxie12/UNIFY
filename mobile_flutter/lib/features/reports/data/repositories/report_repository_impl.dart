@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../data/repositories/report_repository.dart';
 import '../models/report_model.dart';
@@ -22,6 +23,7 @@ class ReportRepositoryImpl implements ReportRepository {
     final response = await _client
         .from('reports')
         .select('*')
+        .limit(100)
         .order('created_at', ascending: false) as List;
 
     if (status != null && status != 'all') {
@@ -29,6 +31,10 @@ class ReportRepositoryImpl implements ReportRepository {
           .where((r) => r['status'] == status)
           .map((json) => ReportModel.fromJson(json))
           .toList();
+    }
+
+    if (response.length == 100) {
+      debugPrint('[ReportRepositoryImpl] getReports: result set truncated at 100, consider adding filters');
     }
 
     return response.map((json) => ReportModel.fromJson(json)).toList();
@@ -39,10 +45,11 @@ class ReportRepositoryImpl implements ReportRepository {
     final response = await _client
         .from('reports')
         .select('*')
+        .eq('reporter_id', userId)
+        .limit(100)
         .order('created_at', ascending: false) as List;
 
     return response
-        .where((r) => r['reporter_id'] == userId)
         .map((json) => ReportModel.fromJson(json))
         .toList();
   }
@@ -60,7 +67,8 @@ class ReportRepositoryImpl implements ReportRepository {
       }
       await _client.from('reports').update(updates).filter('id', 'eq', reportId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReportRepositoryImpl] Error: $e');
       return false;
     }
   }

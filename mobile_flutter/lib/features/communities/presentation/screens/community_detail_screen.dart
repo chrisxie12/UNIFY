@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/verified_badge.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/community_content_models.dart';
 import '../providers/communities_provider.dart';
@@ -33,7 +34,7 @@ class CommunityDetailScreen extends ConsumerWidget {
       ),
       error: (e, _) => Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text('Error: $e')),
+        body: AppErrorWidget(e),
       ),
     );
   }
@@ -426,7 +427,7 @@ class _AnnouncementsTab extends ConsumerWidget {
           child: Center(child: CircularProgressIndicator()),
         ),
         error: (e, _) => SliverFillRemaining(
-          child: Center(child: Text('Error: $e')),
+          child: AppErrorWidget(e),
         ),
       ),
     );
@@ -672,11 +673,11 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
               child: Center(child: CircularProgressIndicator()),
             ),
             error: (e, _) => SliverFillRemaining(
-              child: Center(child: Text('Error: $e')),
+              child: AppErrorWidget(e),
             ),
           ),
         ),
-
+ 
         // Compose panel at bottom
         if (widget.isMember)
           Positioned(
@@ -994,7 +995,7 @@ class _ResourcesTab extends ConsumerWidget {
         loading: () => const SliverFillRemaining(
             child: Center(child: CircularProgressIndicator())),
         error: (e, _) =>
-            SliverFillRemaining(child: Center(child: Text('Error: $e'))),
+            SliverFillRemaining(child: AppErrorWidget(e)),
       ),
     );
   }
@@ -1173,7 +1174,7 @@ class _MembersTab extends ConsumerWidget {
         loading: () => const SliverFillRemaining(
             child: Center(child: CircularProgressIndicator())),
         error: (e, _) =>
-            SliverFillRemaining(child: Center(child: Text('Error: $e'))),
+            SliverFillRemaining(child: AppErrorWidget(e)),
       ),
     );
   }

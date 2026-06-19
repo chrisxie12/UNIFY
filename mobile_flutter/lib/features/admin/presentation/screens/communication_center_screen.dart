@@ -4,6 +4,9 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/errors/error_mapper.dart';
 
 class CommunicationCenterScreen extends ConsumerStatefulWidget {
   const CommunicationCenterScreen({super.key});
@@ -238,9 +241,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
 
@@ -268,7 +269,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
                 )).toList(),
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
+              error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(adminAnnouncementsProvider)),
             ),
           ],
         ),

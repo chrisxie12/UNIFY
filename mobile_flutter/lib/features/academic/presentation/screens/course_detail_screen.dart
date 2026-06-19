@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
@@ -120,7 +121,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
       AsyncValue<List<AcademicResourceModel>> async, String type) {
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (all) {
         final items = all.where((r) => r.type == type).toList();
         if (items.isEmpty) {
@@ -143,7 +144,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   Widget _assignmentList(AsyncValue<List<AssignmentModel>> async) {
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
           return _empty('No assignments', 'Course assignments appear here.');
@@ -162,7 +163,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     final async = ref.watch(examTimetablesForCourseProvider(widget.courseId));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
           return _empty('No exams scheduled',
@@ -216,12 +217,11 @@ class _AssignmentTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: (a.isOverdue ? AppColors.error : AppColors.warning)
-                  .withValues(alpha: 0.10),
+              color: a.isOverdue ? context.errorBg : context.warningBg,
               borderRadius: BorderRadius.circular(11),
             ),
             child: Icon(Icons.assignment_rounded,
-                color: a.isOverdue ? AppColors.error : AppColors.warning,
+                color: a.isOverdue ? context.error : context.warning,
                 size: 22),
           ),
           const SizedBox(width: 12),
@@ -243,13 +243,13 @@ class _AssignmentTile extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color:
-                            a.isOverdue ? AppColors.error : AppColors.grey2)),
+                            a.isOverdue ? context.error : AppColors.grey2)),
               ],
             ),
           ),
           if (a.isSubmitted)
-            const Icon(Icons.check_circle_rounded,
-                color: AppColors.success, size: 22),
+            Icon(Icons.check_circle_rounded,
+                color: context.success, size: 22),
         ],
       ),
     );

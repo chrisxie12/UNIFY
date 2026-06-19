@@ -9,6 +9,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profile_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -257,13 +260,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       setState(() => _pendingAvatarUrl = url);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Photo upload failed: $e'),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _isUploadingPhoto = false);
@@ -304,13 +301,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       setState(() => _pendingCoverUrl = url);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Cover upload failed: $e'),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _isUploadingCover = false);
@@ -430,17 +421,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final repo = ref.read(profileRepositoryProvider);
       await repo.updateProfile(userId, updates);
 
-      ref.invalidate(profileProvider);
-      if (mounted) context.pop();
+      if (mounted) {
+        UnifySnackbar.success(context, 'Profile updated!');
+        ref.invalidate(profileProvider);
+        context.pop();
+      }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save: $e'),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -464,7 +452,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Discard', style: TextStyle(color: AppColors.error)),
+            child: Text('Discard', style: TextStyle(color: context.error)),
           ),
         ],
       ),
@@ -527,7 +515,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: Text(
                         'Save',
                         style: AppTextStyles.bodySemi.copyWith(
-                          color: _hasChanges ? context.primary : AppColors.grey3,
+                          color: _hasChanges ? context.primary : context.textDisabled,
                         ),
                       ),
                     ),
@@ -538,7 +526,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           children: [
             profileAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error loading profile: $e', style: AppTextStyles.body)),
+              error: (e, _) => AppErrorWidget(e),
               data: (_) => _buildForm(currentAvatarUrl, currentCoverUrl, initials),
             ),
             if (_isUploadingPhoto || _isUploadingCover)
@@ -753,7 +741,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 hint: 'https://yourportfolio.com',
                 controller: _portfolioCtrl,
                 icon: Icons.language,
-                iconColor: AppColors.accent,
+                iconColor: context.primary,
                 onChanged: (_) => setState(() {}),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/models/marketplace_models.dart';
@@ -23,7 +24,8 @@ final marketUniversityIdProvider =
         .eq('id', user.id)
         .maybeSingle();
     return p?['university_id'] as String?;
-  } catch (_) {
+  } catch (e) {
+    debugPrint('[MarketplaceProvider] Error: $e');
     return null;
   }
 });
@@ -42,7 +44,8 @@ final canPostListingProvider = FutureProvider.autoDispose<bool>((ref) async {
         .maybeSingle();
     return (p?['is_verified'] as bool? ?? false) &&
         (p?['is_active'] as bool? ?? true);
-  } catch (_) {
+  } catch (e) {
+    debugPrint('[MarketplaceProvider] canPostListingProvider error: $e');
     return false;
   }
 });

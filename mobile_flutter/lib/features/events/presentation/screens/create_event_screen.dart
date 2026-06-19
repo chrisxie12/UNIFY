@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/event_provider.dart';
 
 class CreateEventScreen extends ConsumerStatefulWidget {
@@ -88,9 +90,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create event: $e')),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _saving = false);

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../notifications/data/models/notification_model.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 
 final _adminNotificationsProvider = FutureProvider.autoDispose<List<NotificationModel>>((ref) async {
   ref.watch(authStateProvider);
@@ -73,7 +74,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
         },
         child: notificationsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e', style: TextStyle(color: context.error))),
+          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_adminNotificationsProvider)),
           data: (notifications) {
             if (notifications.isEmpty) {
               return Center(
@@ -105,7 +106,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                       ref.invalidate(_adminNotificationsProvider);
                       ref.invalidate(_adminUnreadNotificationsProvider);
                     }
-                    if (n.type == 'admin_new_request' || n.referenceType == 'community_request') {
+                    if (n.type == 'admin_new_request') {
                       context.push('/admin');
                     }
                   },

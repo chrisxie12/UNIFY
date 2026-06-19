@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/ops_provider.dart';
 import '../widgets/ops_widgets.dart';
 
@@ -27,14 +28,7 @@ class LaunchReadinessScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(launchReadinessProvider),
         child: readinessAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Center(child: Text('Could not load: $e')),
-              ),
-            ],
-          ),
+          error: (e, _) => AppErrorWidget(e),
           data: (m) {
             final verificationPending = opsInt(m['verification_pending']);
             final totalUsers = opsInt(m['total_users']);

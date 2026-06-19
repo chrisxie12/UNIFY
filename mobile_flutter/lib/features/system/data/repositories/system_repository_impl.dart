@@ -57,6 +57,7 @@ class SystemRepositoryImpl {
     final response = await _client
         .from('system_announcements')
         .select('*')
+        .limit(100)
         .order('created_at', ascending: false) as List;
 
     return response
@@ -113,6 +114,7 @@ class SystemRepositoryImpl {
     final response = await _client
         .from('app_versions')
         .select('*')
+        .limit(100)
         .order('released_at', ascending: false) as List;
 
     return response

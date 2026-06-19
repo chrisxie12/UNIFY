@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 
 class _AnalyticsData {
   final int totalCommunities;
@@ -163,7 +164,7 @@ class FounderAnalyticsScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(_analyticsProvider),
         child: analyticsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_analyticsProvider)),
           data: (data) => ListView(
             padding: const EdgeInsets.all(16),
             children: [

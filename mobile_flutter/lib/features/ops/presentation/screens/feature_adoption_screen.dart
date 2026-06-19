@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
 
@@ -40,14 +41,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(featureAdoptionProvider),
         child: adoptionAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Center(child: Text('Could not load: $e')),
-              ),
-            ],
-          ),
+          error: (e, _) => AppErrorWidget(e),
           data: (features) {
             if (features.isEmpty) {
               return ListView(

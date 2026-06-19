@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 
@@ -17,7 +18,7 @@ class CoursePageScreen extends ConsumerWidget {
 
     return courseAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Scaffold(body: Center(child: Text('$e'))),
+      error: (e, _) => Scaffold(body: AppErrorWidget(e, onRetry: () => ref.invalidate(courseProvider(courseId)))),
       data: (course) {
         if (course == null) return const Scaffold(body: Center(child: Text('Course not found')));
         return DefaultTabController(
@@ -67,7 +68,7 @@ class _ResourceTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return resources.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         final filtered = items.where((r) => r.type == type).toList();
         if (filtered.isEmpty) {
@@ -139,7 +140,7 @@ class _AssignmentTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return assignments.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
           return Center(

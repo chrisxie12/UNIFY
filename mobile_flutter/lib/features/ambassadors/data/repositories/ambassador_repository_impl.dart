@@ -16,6 +16,7 @@ class AmbassadorRepository {
     final data = await _client
         .from('ambassadors')
         .select(_join)
+        .limit(100)
         .order('joined_at', ascending: false);
 
     final list = (data as List)
@@ -131,7 +132,8 @@ class AmbassadorRepository {
   Future<Map<String, int>> stats() async {
     final data = await _client
         .from('ambassadors')
-        .select('status, referral_count, events_organized');
+        .select('status, referral_count, events_organized')
+        .limit(100);
 
     final rows = (data as List).cast<Map<String, dynamic>>();
     var active = 0;

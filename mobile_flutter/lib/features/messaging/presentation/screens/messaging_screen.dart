@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/messaging_provider.dart';
 import '../../data/models/conversation_model.dart';
@@ -56,7 +55,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundColor: context.primary.withOpacity(0.12),
+                backgroundColor: context.primary.withValues(alpha: 0.12),
                 child: Icon(Icons.person_add_rounded, color: context.primary),
               ),
               title: Text(
@@ -77,7 +76,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundColor: context.primary.withOpacity(0.12),
+                backgroundColor: context.primary.withValues(alpha: 0.12),
                 child: Icon(Icons.group_add_rounded, color: context.primary),
               ),
               title: Text(
@@ -169,13 +168,13 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.delete_outline_rounded,
-                color: AppColors.error,
+                color: context.error,
               ),
-              title: const Text(
+              title: Text(
                 'Delete',
-                style: TextStyle(color: AppColors.error),
+                style: TextStyle(color: context.error),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -276,7 +275,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
-                              color: AppColors.error,
+                              color: context.error,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: context.appBarBg,
@@ -348,8 +347,8 @@ class _ConversationsSliver extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline_rounded,
-                  size: 48, color: AppColors.error),
+              Icon(Icons.error_outline_rounded,
+                  size: 48, color: context.error),
               const SizedBox(height: 12),
               Text(
                 'Failed to load conversations',
@@ -458,9 +457,9 @@ class _SwipeableTile extends ConsumerWidget {
     return Dismissible(
       key: ValueKey('dismiss_${conversation.id}'),
       // End→Start (right→left): delete — red background
-      background: const _SwipeBg(
+      background: _SwipeBg(
         alignment: Alignment.centerRight,
-        color: AppColors.error,
+        color: context.error,
         icon: Icons.delete_outline_rounded,
         label: 'Delete',
         padding: EdgeInsets.only(right: 24),
@@ -468,7 +467,7 @@ class _SwipeableTile extends ConsumerWidget {
       // Start→End (left→right): pin/unpin — blue background
       secondaryBackground: _SwipeBg(
         alignment: Alignment.centerLeft,
-        color: AppColors.primary,
+        color: context.primary,
         icon: isPinned ? Icons.push_pin_outlined : Icons.push_pin_rounded,
         label: isPinned ? 'Unpin' : 'Pin',
         padding: const EdgeInsets.only(left: 24),

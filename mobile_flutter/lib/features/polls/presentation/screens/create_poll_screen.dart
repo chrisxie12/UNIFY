@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/poll_provider.dart';
 
 class CreatePollScreen extends ConsumerStatefulWidget {
@@ -359,9 +361,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create poll: $e')),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

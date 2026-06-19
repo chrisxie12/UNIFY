@@ -44,6 +44,7 @@ class LeadershipRepositoryImpl {
     final data = await _client
         .from('leadership_roles')
         .select()
+        .limit(100)
         .order('priority', ascending: false);
 
     return (data as List).map((row) => LeadershipRoleModel.fromJson(row as Map<String, dynamic>)).toList();
@@ -87,7 +88,7 @@ class LeadershipRepositoryImpl {
         .from('community_requests')
         .select('*, profiles!community_requests_requester_id_fkey(full_name, avatar_url, programme, level)');
 
-    final data = await query.order('created_at', ascending: false);
+    final data = await query.limit(100).order('created_at', ascending: false);
 
     // Filter in Dart for compatibility with current Supabase client version
     if (statuses != null && statuses.isNotEmpty) {
@@ -196,7 +197,7 @@ class LeadershipRepositoryImpl {
         .from('announcement_requests')
         .select('*, profiles!announcement_requests_requester_id_fkey(full_name, avatar_url, programme)');
 
-    final data = await query.order('created_at', ascending: false);
+    final data = await query.limit(100).order('created_at', ascending: false);
 
     if (statuses != null && statuses.isNotEmpty) {
       return (data as List)

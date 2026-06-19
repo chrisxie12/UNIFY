@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/reputation_models.dart';
 import '../providers/reputation_provider.dart';
 
@@ -29,7 +30,7 @@ class ReputationDashboardScreen extends ConsumerWidget {
       body: summaryAsync.when(
         data: (summary) => _DashboardContent(summary: summary, ref: ref, userId: userId),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Failed to load: $err')),
+        error: (err, _) => AppErrorWidget(err),
       ),
     );
   }

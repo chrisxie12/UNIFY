@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 import '../widgets/opportunity_constants.dart';
@@ -252,7 +254,9 @@ class _OpportunityFormScreenState
             .eq('id', user.id)
             .maybeSingle();
         uniId = p?['university_id'] as String?;
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Failed to fetch university_id: $e');
+      }
     }
 
     final payload = <String, dynamic>{
@@ -306,10 +310,7 @@ class _OpportunityFormScreenState
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Could not save: $e'),
-          behavior: SnackBarBehavior.floating,
-        ));
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

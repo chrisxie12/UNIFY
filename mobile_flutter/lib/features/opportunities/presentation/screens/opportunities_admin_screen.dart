@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 import 'opportunity_form_screen.dart';
@@ -66,7 +67,7 @@ class _ManageTab extends ConsumerWidget {
     final async = ref.watch(opportunitiesProvider);
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
           return const Center(
@@ -227,7 +228,7 @@ class _ReportsTab extends ConsumerWidget {
     final async = ref.watch(opportunityReportQueueProvider);
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
           return Center(
@@ -370,7 +371,7 @@ class _AnalyticsTab extends ConsumerWidget {
     final async = ref.watch(opportunityStatsProvider);
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (stats) {
         final types = stats.typeCounts.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));

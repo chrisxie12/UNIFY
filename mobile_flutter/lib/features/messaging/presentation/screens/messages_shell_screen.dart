@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 
 class MessagesShellScreen extends ConsumerStatefulWidget {
@@ -99,7 +100,7 @@ class _FilteredConversationsList extends ConsumerWidget {
 
     return convAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
+      error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(conversationsProvider)),
       data: (convs) {
         final filtered = convs.where(filter).toList();
         if (filtered.isEmpty) {

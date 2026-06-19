@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../providers/community_provider.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../../posts/presentation/widgets/post_card.dart';
 import '../../../posts/presentation/providers/post_provider.dart';
 import '../../../events/presentation/widgets/event_card.dart';
@@ -51,7 +52,7 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
       ),
       error: (e, _) => Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text('Error: $e')),
+        body: AppErrorWidget(e),
       ),
       data: (community) {
         final theme = Theme.of(context);

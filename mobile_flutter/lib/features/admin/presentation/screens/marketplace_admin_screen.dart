@@ -4,6 +4,7 @@ import '../../data/models/marketplace_report_model.dart';
 import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 
 class MarketplaceAdminScreen extends ConsumerWidget {
   const MarketplaceAdminScreen({super.key});
@@ -70,7 +71,7 @@ class _ReportList extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(marketplaceReportsProvider)),
       ),
     );
   }

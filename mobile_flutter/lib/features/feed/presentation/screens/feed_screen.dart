@@ -9,7 +9,9 @@ import '../../domain/entities/announcement.dart';
 import '../widgets/announcement_card.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
+import '../../../notifications/presentation/providers/notification_provider.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -120,31 +122,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               actions: [
                 IconButton(
                   icon: Icon(Icons.search_rounded, color: context.textPrimary, size: 22),
-                  onPressed: () {},
+                  onPressed: () => context.push('/search'),
                   tooltip: 'Search',
                 ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 22),
-                      onPressed: () => context.push('/notifications'),
-                      tooltip: 'Notifications',
-                    ),
-                    Positioned(
-                      top: 11,
-                      right: 11,
-                      child: Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFEF4444),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _NotifBadgeIcon(),
                 const SizedBox(width: 4),
               ],
               bottom: PreferredSize(
@@ -203,7 +184,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          e.toString(),
+                          ErrorMapper.toUserMessage(e),
                           style: TextStyle(fontSize: 13, color: context.textSecondary),
                           textAlign: TextAlign.center,
                           maxLines: 3,
@@ -685,4 +666,49 @@ class _ShimmerCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius),
     ),
   );
+}
+
+class _NotifBadgeIcon extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unread = ref.watch(unreadCountProvider).valueOrNull ?? 0;
+
+    return Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      children: [
+        IconButton(
+          icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 22),
+          onPressed: () => context.push('/notifications'),
+          tooltip: 'Notifications',
+        ),
+        if (unread > 0)
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              height: 16,
+              constraints: const BoxConstraints(minWidth: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                color: context.error,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: context.surfaceCard, width: 2),
+              ),
+              child: Center(
+                child: Text(
+                  unread > 9 ? '9+' : '$unread',
+                  style: TextStyle(
+                    color: context.textInverse,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    height: 1,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }

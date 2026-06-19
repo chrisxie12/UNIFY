@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
 
@@ -33,7 +36,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (versions) {
           if (versions.isEmpty) {
             return const Center(
@@ -221,9 +224,7 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _submitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     }
   }
 

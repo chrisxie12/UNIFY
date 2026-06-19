@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/ambassador_models.dart';
 import '../providers/ambassador_provider.dart';
 import 'ambassador_admin_screen.dart' show statusColor;
@@ -57,8 +60,9 @@ class AmbassadorDetailScreen extends ConsumerWidget {
       ),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (ambassador) {
+          final primary = context.textPrimary;
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(ambassadorDetailProvider(ambassadorId));
@@ -75,7 +79,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: context.textPrimary)),
+                          color: primary)),
                 ),
                 const SizedBox(height: 8),
                 eventsAsync.when(
@@ -85,7 +89,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                   ),
                   error: (e, _) => Padding(
                     padding: const EdgeInsets.only(top: 24),
-                    child: Center(child: Text('Could not load events: $e')),
+                    child: AppErrorWidget(e),
                   ),
                   data: (events) {
                     if (events.isEmpty) {
@@ -494,9 +498,7 @@ Future<void> showAddEventDialog(
                     navigator.pop();
                   } catch (e) {
                     if (ctx.mounted) {
-                      ScaffoldMessenger.of(ctx).showSnackBar(
-                        SnackBar(content: Text('Could not add event: $e')),
-                      );
+                      UnifySnackbar.error(ctx, ErrorMapper.toUserMessage(e));
                     }
                   }
                 },

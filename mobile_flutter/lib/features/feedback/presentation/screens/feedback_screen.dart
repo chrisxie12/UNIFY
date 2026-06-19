@@ -9,6 +9,8 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/services/analytics_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/feedback_models.dart';
 import '../providers/feedback_provider.dart';
 
@@ -89,9 +91,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not submit: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -186,7 +186,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 child: Padding(
                     padding: EdgeInsets.all(24),
                     child: CircularProgressIndicator())),
-            error: (e, _) => Text('Could not load submissions\n$e',
+            error: (e, _) => Text(ErrorMapper.toUserMessage(e),
                 style: const TextStyle(color: AppColors.grey2)),
             data: (items) {
               if (items.isEmpty) {
@@ -278,7 +278,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           onPressed: () => setState(() => _screenshot = null),
           icon: const Icon(Icons.close_rounded, size: 16),
           label: const Text('Remove'),
-          style: TextButton.styleFrom(foregroundColor: AppColors.error),
+          style: TextButton.styleFrom(foregroundColor: context.error),
         ),
       ],
     );

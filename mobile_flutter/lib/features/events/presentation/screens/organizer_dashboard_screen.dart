@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/models/event_model.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class OrganizerDashboardScreen extends ConsumerWidget {
@@ -18,7 +19,7 @@ class OrganizerDashboardScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Organizer Dashboard')),
       body: eventAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(eventDetailProvider(eventId))),
         data: (event) {
           final userId = ref.read(currentUserIdProvider);
           final isOrganizer = event.creatorId == userId;
@@ -32,7 +33,7 @@ class OrganizerDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               analyticsAsync.when(
                 loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
-                error: (e, _) => Text('$e'),
+                error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: AppErrorWidget(e)),
                 data: (analytics) => _AnalyticsCards(analytics: analytics, theme: theme),
               ),
               const SizedBox(height: 16),
@@ -191,7 +192,7 @@ class _AttendeeListSection extends ConsumerWidget {
     final ticketsAsync = ref.watch(eventTicketsProvider(eventId));
     return ticketsAsync.when(
       loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Text('$e'),
+      error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         final checkedIn = tickets.where((t) => t.attended).length;
         return Column(

@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
 
@@ -52,9 +55,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not send invite: $e')),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _sending = false);
@@ -79,7 +80,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
       ),
       body: codeAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (code) {
           if (code == null) {
             return const Center(child: Text('Please sign in to invite friends'));
@@ -114,7 +115,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                     padding: EdgeInsets.all(24),
                     child: Center(child: CircularProgressIndicator()),
                   ),
-                  error: (e, _) => Text('Could not load: $e'),
+                  error: (e, _) => AppErrorWidget(e),
                   data: (referrals) {
                     if (referrals.isEmpty) {
                       return Container(

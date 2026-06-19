@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class QRCheckInScreen extends ConsumerStatefulWidget {
@@ -144,7 +145,7 @@ class _AttendeeListSection extends ConsumerWidget {
     final ticketsAsync = ref.watch(eventTicketsProvider(eventId));
     return ticketsAsync.when(
       loading: () => const CircularProgressIndicator(),
-      error: (e, _) => Text('$e'),
+      error: (e, _) => Center(child: AppErrorWidget(e)),
       data: (tickets) {
         final checkedIn = tickets.where((t) => t.attended).length;
         return Column(

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/leadership_provider.dart';
 
@@ -90,9 +92,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);

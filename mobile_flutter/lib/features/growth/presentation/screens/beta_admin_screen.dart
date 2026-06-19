@@ -7,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
 
@@ -105,7 +108,7 @@ class _WaitlistTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return waitlistAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (entries) {
         if (entries.isEmpty) {
           return const _EmptyState(
@@ -226,7 +229,7 @@ class _InviteCodesTab extends ConsumerWidget {
       ),
       body: codesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (codes) {
           if (codes.isEmpty) {
             return const _EmptyState(
@@ -342,9 +345,7 @@ class _InviteCodesTab extends ConsumerWidget {
                       navigator.pop();
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Could not create code: $e')),
-                        );
+                        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
                       }
                     }
                   },
@@ -453,7 +454,7 @@ class _BetaTestersTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return testersAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load: $e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (testers) {
         if (testers.isEmpty) {
           return const _EmptyState(

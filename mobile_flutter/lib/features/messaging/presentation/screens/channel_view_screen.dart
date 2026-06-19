@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 
@@ -28,7 +29,7 @@ class ChannelViewScreen extends ConsumerWidget {
               Expanded(
                 child: channelsAsync.when(
                   loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(child: Text('$e')),
+                  error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(channelsProvider(conversationId))),
                   data: (channels) {
                     if (channels.isEmpty) {
                       return Padding(

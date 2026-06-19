@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
 
@@ -25,7 +26,7 @@ class SavedListingsScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (items) {
           if (items.isEmpty) {
             return Center(

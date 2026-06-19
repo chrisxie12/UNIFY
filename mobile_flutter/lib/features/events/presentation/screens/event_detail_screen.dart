@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
@@ -20,7 +22,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
     return eventAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Scaffold(body: Center(child: Text('$e'))),
+      error: (e, _) => Scaffold(body: AppErrorWidget(e)),
       data: (event) => _EventDetailContent(
         event: event, theme: theme, ref: ref, eventId: widget.eventId,
       ),
@@ -412,7 +414,7 @@ class _QuickLinks extends StatelessWidget {
             ref.read(eventRepositoryProvider).setReminder(event.id, userId, remindAt);
           }
         }
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reminders set!')));
+        UnifySnackbar.success(context, 'Reminders set!');
       }),
     ]);
   }

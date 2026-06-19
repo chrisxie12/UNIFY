@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/event_repository.dart';
 import '../models/event_model.dart';
@@ -320,7 +321,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('community_events').update(updates).filter('id', 'eq', eventId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -330,7 +332,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('community_events').delete().filter('id', 'eq', eventId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -340,7 +343,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('community_events').update({'is_approved': true}).filter('id', 'eq', eventId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -350,7 +354,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('community_events').update({'is_featured': true}).filter('id', 'eq', eventId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -365,7 +370,8 @@ class EventRepositoryImpl implements EventRepository {
         'event_id': eventId, 'user_id': userId, 'status': status,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -375,7 +381,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('event_rsvps').delete().filter('event_id', 'eq', eventId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -394,7 +401,8 @@ class EventRepositoryImpl implements EventRepository {
         'qr_code': qrCode,
       }).select().single();
       return EventTicketModel.fromJson(response);
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] registerForEvent error: $e');
       return null;
     }
   }
@@ -462,7 +470,8 @@ class EventRepositoryImpl implements EventRepository {
         'checked_in_by': organizerId,
       }).filter('id', 'eq', ticketId).filter('attended', 'eq', false);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -493,7 +502,8 @@ class EventRepositoryImpl implements EventRepository {
         'event_id': eventId, 'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -503,7 +513,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('event_saves').delete().filter('event_id', 'eq', eventId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -571,7 +582,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('event_discussions').delete().filter('id', 'eq', discussionId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -609,7 +621,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('event_media').delete().filter('id', 'eq', mediaId).filter('uploaded_by', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -623,7 +636,8 @@ class EventRepositoryImpl implements EventRepository {
         'event_id': eventId, 'user_id': userId, 'remind_at': remindAt.toIso8601String(),
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -633,7 +647,8 @@ class EventRepositoryImpl implements EventRepository {
     try {
       await _client.from('event_reminders').delete().filter('id', 'eq', reminderId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] Error: $e');
       return false;
     }
   }

@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/marketplace_constants.dart';
@@ -404,12 +406,7 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not post: $e'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

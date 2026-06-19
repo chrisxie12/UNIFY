@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/poll_repository.dart';
 import '../models/poll_model.dart';
@@ -13,14 +14,15 @@ class PollRepositoryImpl implements PollRepository {
     final response = await _client
         .from('community_polls')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
+        .eq('community_id', communityId)
+        .limit(100)
         .order('created_at', ascending: false) as List;
 
-    final filtered = response.where((p) {
-      final json = p as Map<String, dynamic>;
-      return json['community_id'] == communityId;
-    }).toList();
+    if (response.length == 100) {
+      debugPrint('[PollRepositoryImpl] getPolls: result set truncated at 100, consider adding filters');
+    }
 
-    final polls = await Future.wait(filtered.map((json) async {
+    final polls = await Future.wait(response.map((json) async {
       final profile = json['profiles'] as Map<String, dynamic>?;
       if (profile != null) {
         json['creator_name'] = profile['display_name'];
@@ -113,7 +115,8 @@ class PollRepositoryImpl implements PollRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PollRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -123,7 +126,8 @@ class PollRepositoryImpl implements PollRepository {
     try {
       await _client.from('poll_votes').delete().filter('poll_id', 'eq', pollId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PollRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -133,7 +137,8 @@ class PollRepositoryImpl implements PollRepository {
     try {
       await _client.from('community_polls').update({'is_locked': true}).filter('id', 'eq', pollId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PollRepositoryImpl] Error: $e');
       return false;
     }
   }

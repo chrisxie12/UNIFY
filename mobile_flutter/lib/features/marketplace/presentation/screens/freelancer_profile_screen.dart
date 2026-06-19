@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/marketplace_constants.dart';
 
@@ -52,7 +55,7 @@ class _FreelancerProfileScreenState
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (profile) {
           if (!_loaded && profile != null) {
             _headlineCtrl.text = profile.headline ?? '';
@@ -167,12 +170,7 @@ class _FreelancerProfileScreenState
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not save: $e'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

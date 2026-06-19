@@ -45,7 +45,7 @@ class AnalyticsService {
           .single();
       _sessionId = row['id'] as String;
       _sessionStart = DateTime.now();
-    } catch (_) {/* telemetry must never break the app */}
+    } catch (e) { debugPrint('[AnalyticsService] startSession error: $e'); /* telemetry must never break the app */}
   }
 
   /// Closes the current session, stamping its duration.
@@ -57,7 +57,7 @@ class AnalyticsService {
         'ended_at': DateTime.now().toUtc().toIso8601String(),
         'duration_seconds': secs,
       }).eq('id', _sessionId!);
-    } catch (_) {}
+    } catch (e) { debugPrint('[AnalyticsService] endSession error: $e'); }
     _sessionId = null;
     _sessionStart = null;
   }
@@ -78,7 +78,7 @@ class AnalyticsService {
         'app_version': AppConstants.appVersion,
         'platform': platform,
       });
-    } catch (_) {}
+    } catch (e) { debugPrint('[AnalyticsService] log error: $e'); }
   }
 
   /// Convenience for screen-view tracking.
@@ -103,7 +103,7 @@ class AnalyticsService {
         'app_version': AppConstants.appVersion,
         'platform': platform,
       });
-    } catch (_) {}
+    } catch (e) { debugPrint('[AnalyticsService] logError error: $e'); }
   }
 }
 

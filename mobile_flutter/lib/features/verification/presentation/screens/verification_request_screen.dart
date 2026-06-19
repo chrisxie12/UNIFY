@@ -6,7 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/verification_request_model.dart';
 class VerificationRequestScreen extends ConsumerStatefulWidget {
@@ -127,9 +128,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);

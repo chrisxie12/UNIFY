@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/reputation_repository.dart';
 import '../models/reputation_models.dart';
@@ -38,7 +39,11 @@ class ReputationRepositoryImpl implements ReputationRepository {
     final data = await _client
         .from('achievement_definitions')
         .select()
+        .limit(100)
         .order('points', ascending: false) as List;
+    if (data.length == 100) {
+      debugPrint('[ReputationRepositoryImpl] getAchievementDefinitions: result set truncated at 100');
+    }
     return data.map((j) => AchievementDefinition.fromJson(j as Map<String, dynamic>)).toList();
   }
 
@@ -82,6 +87,7 @@ class ReputationRepositoryImpl implements ReputationRepository {
           if (table != 'community_members' && table != 'event_tickets') {
             query = query.filter('user_id', 'eq', userId);
           }
+          query = query.limit(100);
           final result = await query;
           final count = (result as List).length;
           if (count >= threshold) earned = true;
@@ -120,7 +126,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         }
       }
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -186,7 +193,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('user_skills').update({'proficiency_level': proficiency}).filter('id', 'eq', skillId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -196,7 +204,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('user_skills').delete().filter('id', 'eq', skillId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -228,7 +237,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         'skill_id': skillId, 'endorsed_by': endorserId, 'message': message,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -238,7 +248,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('skill_endorsements').delete().filter('id', 'eq', endorsementId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -312,7 +323,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('portfolio_projects').update(updates).filter('id', 'eq', projectId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -322,7 +334,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('portfolio_projects').delete().filter('id', 'eq', projectId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -354,7 +367,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('leadership_history').update(updates).filter('id', 'eq', entryId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -364,7 +378,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('leadership_history').delete().filter('id', 'eq', entryId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -396,7 +411,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
     try {
       await _client.from('user_certificates').delete().filter('id', 'eq', certificateId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationRepositoryImpl] Error: $e');
       return false;
     }
   }

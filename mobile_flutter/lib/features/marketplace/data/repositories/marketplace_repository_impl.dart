@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/marketplace_models.dart';
 
@@ -201,7 +202,7 @@ class MarketplaceRepositoryImpl {
     try {
       await _client.rpc('increment_listing_view',
           params: {'p_listing_id': listingId});
-    } catch (_) {/* analytics best-effort */}
+    } catch (e) { debugPrint('[MarketplaceRepositoryImpl] recordView error: $e'); /* analytics best-effort */}
   }
 
   // ── Saved listings (wishlist) ────────────────────────────────
@@ -331,7 +332,7 @@ class MarketplaceRepositoryImpl {
           total: row['total'] as int? ?? 0,
         );
       }
-    } catch (_) {/* fall through */}
+    } catch (e) { debugPrint('[MarketplaceRepositoryImpl] getSellerRating error: $e'); /* fall through */}
     return const SellerRating();
   }
 
@@ -379,7 +380,7 @@ class MarketplaceRepositoryImpl {
         'query': query.trim(),
         if (category != null) 'category': category,
       });
-    } catch (_) {/* best-effort */}
+    } catch (e) { debugPrint('[MarketplaceRepositoryImpl] logSearch error: $e'); /* best-effort */}
   }
 
   // ── Admin moderation ─────────────────────────────────────────
@@ -431,7 +432,7 @@ class MarketplaceRepositoryImpl {
         categoryCounts[row['category'] as String] =
             (row['total'] as num).toInt();
       }
-    } catch (_) {/* ignore */}
+    } catch (e) { debugPrint('[MarketplaceRepositoryImpl] getStats categoryCounts error: $e'); /* ignore */}
 
     final topSearches = <String, int>{};
     try {
@@ -439,7 +440,7 @@ class MarketplaceRepositoryImpl {
       for (final row in (ts as List)) {
         topSearches[row['query'] as String] = (row['total'] as num).toInt();
       }
-    } catch (_) {/* ignore */}
+    } catch (e) { debugPrint('[MarketplaceRepositoryImpl] getStats topSearches error: $e'); /* ignore */}
 
     final pendingReports = (await _client
             .from('listing_reports')

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class EventMediaGalleryScreen extends ConsumerWidget {
@@ -25,7 +26,7 @@ class EventMediaGalleryScreen extends ConsumerWidget {
       ),
       body: mediaAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(eventMediaProvider(eventId))),
         data: (media) {
           if (media.isEmpty) {
             return Center(

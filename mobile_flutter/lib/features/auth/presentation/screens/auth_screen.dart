@@ -5,7 +5,9 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   final String mode; // 'signup' | 'login'
@@ -63,9 +65,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final state = ref.read(authNotifierProvider);
     if (!mounted) return;
     state.whenOrNull(
-      error: (e, _) => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-      ),
+      error: (e, _) => UnifySnackbar.error(context, ErrorMapper.toUserMessage(e)),
     );
     // Router redirect handles navigation on success
   }

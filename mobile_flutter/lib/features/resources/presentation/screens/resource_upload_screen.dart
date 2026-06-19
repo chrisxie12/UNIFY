@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/resource_provider.dart';
 
 class ResourceUploadScreen extends ConsumerStatefulWidget {
@@ -291,9 +293,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Upload failed: $e')),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _isUploading = false);

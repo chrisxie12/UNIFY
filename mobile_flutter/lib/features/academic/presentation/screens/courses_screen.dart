@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
@@ -148,7 +149,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             child: coursesAsync.when(
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(coursesProvider)),
               data: (all) {
                 final searchQuery = ref.watch(courseSearchProvider);
                 var filtered = all.where((c) {

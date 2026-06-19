@@ -9,20 +9,19 @@ class ResourceRepositoryImpl implements ResourceRepository {
 
   @override
   Future<List<CommunityResourceModel>> getResources(String communityId, {String? resourceType}) async {
-    final response = await _client
+    var query = _client
         .from('community_resources')
         .select('*, profiles(display_name, avatar_url)')
-        .order('created_at', ascending: false) as List;
+        .eq('community_id', communityId)
+        .eq('is_approved', true);
 
-    final filtered = response.where((r) {
-      final json = r as Map<String, dynamic>;
-      if (json['community_id'] != communityId) return false;
-      if (json['is_approved'] != true) return false;
-      if (resourceType != null && resourceType != 'all' && json['resource_type'] != resourceType) return false;
-      return true;
-    }).toList();
+    if (resourceType != null && resourceType != 'all') {
+      query = query.eq('resource_type', resourceType);
+    }
 
-    return filtered.map((json) {
+    final response = await query.limit(100).order('created_at', ascending: false) as List;
+
+    return response.map((json) {
       final profile = json['profiles'] as Map<String, dynamic>?;
       if (profile != null) {
         json['uploader_name'] = profile['display_name'];

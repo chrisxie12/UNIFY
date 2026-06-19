@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/discussion_model.dart';
 import '../models/discussion_repository.dart';
@@ -12,13 +13,13 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     final response = await _client
         .from('discussions')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
+        .eq('community_id', communityId)
         .order('is_pinned', ascending: false)
         .order(sortBy == 'popular' ? 'likes_count' : 'created_at', ascending: false)
+        .limit(50)
         as List;
 
-    final filtered = response.where((d) => d['community_id'] == communityId).toList();
-
-    final discussions = filtered.map((json) {
+    final discussions = response.map((json) {
       final profile = json['profiles'] as Map<String, dynamic>?;
       if (profile != null) {
         json['author_name'] = profile['display_name'];
@@ -91,11 +92,12 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     final response = await _client
         .from('discussion_comments')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
-        .order('created_at', ascending: true) as List;
+        .eq('discussion_id', discussionId)
+        .order('created_at', ascending: true)
+        .limit(100)
+        as List;
 
-    final filtered = response.where((c) => c['discussion_id'] == discussionId).toList();
-
-    final allComments = filtered.map((json) {
+    final allComments = response.map((json) {
       final profile = json['profiles'] as Map<String, dynamic>?;
       if (profile != null) {
         json['author_name'] = profile['display_name'];
@@ -170,7 +172,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -180,7 +183,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussion_likes').delete().filter('discussion_id', 'eq', discussionId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -193,7 +197,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -203,7 +208,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussion_comment_likes').delete().filter('comment_id', 'eq', commentId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -213,7 +219,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussions').update({'is_pinned': isPinned}).filter('id', 'eq', discussionId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -223,7 +230,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussions').update({'is_locked': isLocked}).filter('id', 'eq', discussionId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -233,7 +241,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussions').delete().filter('id', 'eq', discussionId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -243,7 +252,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.from('discussion_comments').delete().filter('id', 'eq', commentId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -253,7 +263,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
     try {
       await _client.rpc('increment_discussion_view', params: {'p_discussion_id': discussionId});
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[DiscussionRepositoryImpl] Error: $e');
       return false;
     }
   }

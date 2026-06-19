@@ -15,6 +15,7 @@ class GrowthRepositoryImpl {
     final data = await _client
         .from('waitlist')
         .select('*')
+        .limit(100)
         .order('created_at', ascending: false);
 
     final entries = (data as List)
@@ -41,6 +42,7 @@ class GrowthRepositoryImpl {
     final data = await _client
         .from('invite_codes')
         .select('*')
+        .limit(100)
         .order('created_at', ascending: false);
 
     return (data as List)
@@ -85,6 +87,7 @@ class GrowthRepositoryImpl {
     final data = await _client
         .from('beta_testers')
         .select('*, profiles!beta_testers_user_id_fkey(full_name, avatar_url)')
+        .limit(100)
         .order('joined_at', ascending: false);
 
     return (data as List)
@@ -194,6 +197,7 @@ class GrowthRepositoryImpl {
     final data = await _client
         .from('referrals')
         .select('*, profiles!referrals_referrer_id_fkey(full_name)')
+        .limit(100)
         .order('created_at', ascending: false);
 
     return (data as List)

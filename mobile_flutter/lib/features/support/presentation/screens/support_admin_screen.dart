@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/support_models.dart';
 import '../providers/support_provider.dart';
 
@@ -55,7 +58,7 @@ class _TicketsTab extends ConsumerWidget {
     final async = ref.watch(allTicketsProvider(null));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load\n$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         if (tickets.isEmpty) {
           return const Center(
@@ -172,9 +175,7 @@ class _TicketManageSheetState extends ConsumerState<_TicketManageSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -221,7 +222,7 @@ class _AbuseTab extends ConsumerWidget {
     final async = ref.watch(abuseReportsProvider(null));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load\n$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
           return const Center(
@@ -325,9 +326,7 @@ class _AbuseManageSheetState extends ConsumerState<_AbuseManageSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -388,7 +387,7 @@ class _ContentTab extends ConsumerWidget {
         const SizedBox(height: 6),
         faqs.when(
           loading: () => const _Loading(),
-          error: (e, _) => Text('Could not load\n$e',
+          error: (e, _) => Text(ErrorMapper.toUserMessage(e),
               style: const TextStyle(color: AppColors.grey2)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No FAQs yet.');
@@ -433,7 +432,7 @@ class _ContentTab extends ConsumerWidget {
         const SizedBox(height: 6),
         articles.when(
           loading: () => const _Loading(),
-          error: (e, _) => Text('Could not load\n$e',
+          error: (e, _) => Text(ErrorMapper.toUserMessage(e),
               style: const TextStyle(color: AppColors.grey2)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No articles yet.');
@@ -548,9 +547,7 @@ class _CreateDialogState extends State<_CreateDialog> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not create: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     }
   }
 

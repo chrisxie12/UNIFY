@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 
@@ -46,7 +47,7 @@ class ApplicationTrackerScreen extends ConsumerWidget {
         ),
         body: async.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Could not load: $e')),
+          error: (e, _) => AppErrorWidget(e),
           data: (apps) {
             if (apps.isEmpty) {
               return Center(

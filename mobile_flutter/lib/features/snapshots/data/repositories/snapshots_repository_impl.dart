@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/snapshot_models.dart';
 
@@ -205,7 +206,8 @@ class SnapshotsRepositoryImpl {
         'snapshot_id': snapshotId,
         'viewer_id': viewerId,
       });
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[SnapshotsRepositoryImpl] recordView error: $e');
       // already viewed
     }
   }

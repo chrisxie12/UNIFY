@@ -6,7 +6,9 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -58,9 +60,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (!mounted) return;
     final state = ref.read(authNotifierProvider);
     state.whenOrNull(
-      error: (e, _) => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      ),
+      error: (e, _) => UnifySnackbar.error(context, ErrorMapper.toUserMessage(e)),
       data: (_) => context.go('/app/feed'),
     );
   }

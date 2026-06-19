@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
 
@@ -25,7 +26,7 @@ class ReferralAdminScreen extends ConsumerWidget {
       ),
       body: referralsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (referrals) {
           final total = referrals.length;
           final accepted =

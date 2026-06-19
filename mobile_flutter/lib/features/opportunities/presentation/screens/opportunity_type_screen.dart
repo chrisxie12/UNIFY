@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 import '../widgets/opportunity_card.dart';
@@ -99,7 +100,7 @@ class _OpportunityTypeScreenState
             child: async.when(
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => AppErrorWidget(e),
               data: (items) {
                 if (items.isEmpty) {
                   return Center(

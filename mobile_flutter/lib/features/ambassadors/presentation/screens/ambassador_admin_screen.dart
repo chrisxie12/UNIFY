@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/ambassador_models.dart';
 import '../providers/ambassador_provider.dart';
 
@@ -38,7 +41,7 @@ class AmbassadorAdminScreen extends ConsumerWidget {
       ),
       body: ambassadorsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (ambassadors) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -236,8 +239,7 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
       if (mounted) setState(() => _results = results);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Search failed: $e')));
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     } finally {
       if (mounted) setState(() => _searching = false);
@@ -264,8 +266,7 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
     } catch (e) {
       if (mounted) {
         setState(() => _saving = false);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Could not add: $e')));
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

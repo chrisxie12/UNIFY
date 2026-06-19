@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
@@ -29,7 +30,7 @@ class AcademicAdminScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(academicStatsProvider)),
         data: (stats) {
           final searches = stats.topSearches.entries.toList()
             ..sort((a, b) => b.value.compareTo(a.value));

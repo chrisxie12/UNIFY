@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class EventSearchScreen extends ConsumerStatefulWidget {
@@ -59,7 +60,7 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
             )
           : resultsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
+              error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(searchEventsProvider(_query))),
               data: (events) {
                 if (events.isEmpty) {
                   return Center(

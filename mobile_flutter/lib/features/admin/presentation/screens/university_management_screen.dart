@@ -5,6 +5,9 @@ import '../../presentation/providers/admin_provider.dart';
 import '../../presentation/widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/errors/error_mapper.dart';
 
 class UniversityManagementScreen extends ConsumerWidget {
   const UniversityManagementScreen({super.key});
@@ -52,7 +55,7 @@ class UniversityManagementScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(universitiesProvider)),
         ),
       ),
     );
@@ -115,7 +118,7 @@ class UniversityManagementScreen extends ConsumerWidget {
                   if (ctx.mounted) Navigator.pop(ctx, true);
                 } catch (e) {
                   if (ctx.mounted) {
-                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error));
+                    UnifySnackbar.error(ctx, ErrorMapper.toUserMessage(e));
                   }
                 }
                 isLoading.value = false;

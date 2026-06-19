@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 
@@ -33,7 +36,7 @@ class AssignmentsScreen extends ConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(myAssignmentsProvider)),
         data: (items) {
           if (items.isEmpty) {
             return Center(
@@ -121,10 +124,10 @@ class _AssignmentCard extends ConsumerWidget {
               height: 44,
               decoration: BoxDecoration(
                 color: (a.isSubmitted
-                        ? AppColors.success
+                        ? context.success
                         : a.isOverdue
-                            ? AppColors.error
-                            : AppColors.warning)
+                            ? context.error
+                            : context.warning)
                     .withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(11),
               ),
@@ -133,10 +136,10 @@ class _AssignmentCard extends ConsumerWidget {
                     ? Icons.check_circle_rounded
                     : Icons.assignment_rounded,
                 color: a.isSubmitted
-                    ? AppColors.success
+                    ? context.success
                     : a.isOverdue
-                        ? AppColors.error
-                        : AppColors.warning,
+                        ? context.error
+                        : context.warning,
                 size: 22,
               ),
             ),
@@ -156,7 +159,7 @@ class _AssignmentCard extends ConsumerWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: a.isOverdue
-                              ? AppColors.error
+                              ? context.error
                               : AppColors.grey2)),
                 ],
               ),
@@ -298,10 +301,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Could not submit: $e'),
-          behavior: SnackBarBehavior.floating,
-        ));
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

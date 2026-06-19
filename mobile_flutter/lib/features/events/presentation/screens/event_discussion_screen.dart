@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class EventDiscussionScreen extends ConsumerStatefulWidget {
@@ -48,7 +49,7 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
           Expanded(
             child: discussionsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
+              error: (e, _) => AppErrorWidget(e),
               data: (discussions) {
                 if (discussions.isEmpty) {
                   return Center(

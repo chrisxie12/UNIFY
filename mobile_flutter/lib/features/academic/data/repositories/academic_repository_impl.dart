@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/domain/repositories/academic_repository.dart';
@@ -265,7 +266,9 @@ class AcademicRepositoryImpl implements AcademicRepository {
         final c = counts[r.id] ?? 0;
         r.averageRating = c > 0 ? (sums[r.id]! / c) : 0.0;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[AcademicRepositoryImpl] _attachAverageRatings error: $e');
+    }
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../../system/data/models/system_models.dart';
 import '../../../system/presentation/providers/feature_flags_provider.dart';
 
@@ -30,7 +31,7 @@ class FeatureFlagsScreen extends ConsumerWidget {
           itemBuilder: (_, i) => _FlagTile(flag: list[i]),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(allFeatureFlagsProvider)),
       ),
     );
   }

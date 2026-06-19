@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 
 class CommunityMembersScreen extends ConsumerStatefulWidget {
   final String communityId;
@@ -31,7 +32,7 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
       ),
       body: membersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (members) {
           final searchQuery = _searchController.text;
           final filtered = searchQuery.isEmpty

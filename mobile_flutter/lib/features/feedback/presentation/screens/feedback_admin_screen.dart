@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/feedback_models.dart';
 import '../providers/feedback_provider.dart';
 
@@ -105,7 +108,7 @@ class _QueueTab extends ConsumerWidget {
     final async = ref.watch(feedbackQueueProvider(status));
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Could not load\n$e')),
+      error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
           return Center(
@@ -312,9 +315,7 @@ class _ManageSheetState extends ConsumerState<_ManageSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }

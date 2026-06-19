@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../extensions/theme_extensions.dart';
+import '../../features/notifications/presentation/providers/notification_provider.dart' as notif;
+import '../../features/messaging/presentation/providers/messaging_provider.dart' as msg;
 
-class MainShell extends StatelessWidget {
+class MainShell extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
   const MainShell({super.key, required this.navigationShell});
@@ -18,12 +21,16 @@ class MainShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifBadge = ref.watch(notif.unreadCountProvider).valueOrNull ?? 0;
+    final msgBadge = ref.watch(msg.unreadCountProvider).valueOrNull ?? 0;
+
     return Scaffold(
       extendBody: true,
       body: navigationShell,
       bottomNavigationBar: _UnifyBottomNav(
         currentIndex: navigationShell.currentIndex,
+        badges: [notifBadge, 0, msgBadge, 0, 0, 0],
         onTap: (index) => navigationShell.goBranch(
           index,
           initialLocation: index == navigationShell.currentIndex,
@@ -37,9 +44,14 @@ class MainShell extends StatelessWidget {
 
 class _UnifyBottomNav extends StatelessWidget {
   final int currentIndex;
+  final List<int> badges;
   final ValueChanged<int> onTap;
 
-  const _UnifyBottomNav({required this.currentIndex, required this.onTap});
+  const _UnifyBottomNav({
+    required this.currentIndex,
+    required this.badges,
+    required this.onTap,
+  }) : assert(badges.length == MainShell._tabs.length);
 
   static const double _pillHeight = 50;
   static const double _pillHPad  = 24;
@@ -73,7 +85,7 @@ class _UnifyBottomNav extends StatelessWidget {
                   (i) => _NavItem(
                     tab: MainShell._tabs[i],
                     active: currentIndex == i,
-                    badge: i == 2 ? 3 : 0,
+                    badge: badges[i],
                     onTap: () => onTap(i),
                     primaryColor: primary,
                     inactiveColor: context.textSecondary,

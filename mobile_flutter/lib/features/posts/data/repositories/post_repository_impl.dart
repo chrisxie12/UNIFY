@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../models/post_model.dart';
@@ -13,12 +14,14 @@ class PostRepositoryImpl implements PostRepository {
     final response = await _client
         .from('community_posts')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
+        .eq('community_id', communityId)
         .order('is_pinned', ascending: false)
-        .order('created_at', ascending: false) as List;
+        .order('created_at', ascending: false)
+        .limit(50)
+        as List;
 
     final filtered = response.where((p) {
       final json = p as Map<String, dynamic>;
-      if (json['community_id'] != communityId) return false;
       if (pinned != null && json['is_pinned'] != pinned) return false;
       return true;
     }).toList();
@@ -124,7 +127,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('community_posts').delete().filter('id', 'eq', postId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -134,7 +138,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('community_posts').update({'is_pinned': isPinned}).filter('id', 'eq', postId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -148,7 +153,8 @@ class PostRepositoryImpl implements PostRepository {
         'vote_type': 'upvote',
       }, onConflict: 'post_id,user_id');
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -162,7 +168,8 @@ class PostRepositoryImpl implements PostRepository {
         'vote_type': 'downvote',
       }, onConflict: 'post_id,user_id');
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -172,7 +179,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('post_votes').delete().filter('post_id', 'eq', postId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -185,7 +193,8 @@ class PostRepositoryImpl implements PostRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -195,7 +204,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('post_bookmarks').delete().filter('post_id', 'eq', postId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -205,14 +215,15 @@ class PostRepositoryImpl implements PostRepository {
     final response = await _client
         .from('post_comments')
         .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role)')
+        .eq('post_id', postId)
+        .limit(100)
         .order('created_at', ascending: true) as List;
 
-    final filtered = response.where((c) {
-      final json = c as Map<String, dynamic>;
-      return json['post_id'] == postId;
-    }).toList();
+    if (response.length == 100) {
+      debugPrint('[PostRepositoryImpl] getComments: result set truncated at 100, consider adding filters');
+    }
 
-    final allComments = filtered.map((json) {
+    final allComments = response.map((json) {
       final profile = json['profiles'] as Map<String, dynamic>?;
       if (profile != null) {
         json['author_name'] = profile['display_name'];
@@ -286,7 +297,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('post_comments').delete().filter('id', 'eq', commentId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -299,7 +311,8 @@ class PostRepositoryImpl implements PostRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -309,7 +322,8 @@ class PostRepositoryImpl implements PostRepository {
     try {
       await _client.from('comment_likes').delete().filter('comment_id', 'eq', commentId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -324,7 +338,8 @@ class PostRepositoryImpl implements PostRepository {
       await _client.from('post_comments').update({'is_best_answer': true}).filter('id', 'eq', commentId);
       await _client.from('community_posts').update({'best_answer_id': commentId}).filter('id', 'eq', postId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -335,7 +350,8 @@ class PostRepositoryImpl implements PostRepository {
       await _client.from('post_comments').update({'is_best_answer': false}).filter('id', 'eq', commentId);
       await _client.from('community_posts').update({'best_answer_id': null}).filter('id', 'eq', postId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[PostRepositoryImpl] Error: $e');
       return false;
     }
   }

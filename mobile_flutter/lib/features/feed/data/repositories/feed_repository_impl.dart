@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -89,7 +90,8 @@ class FeedRepositoryImpl implements FeedRepository {
       return list
           .map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[FeedRepositoryImpl] _loadCache error: $e');
       return null;
     }
   }
@@ -113,6 +115,8 @@ class FeedRepositoryImpl implements FeedRepository {
         'is_read': a.isRead,
       }).toList();
       await box.put(_cacheKey, jsonEncode(json));
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[FeedRepositoryImpl] _saveCache error: $e');
+    }
   }
 }

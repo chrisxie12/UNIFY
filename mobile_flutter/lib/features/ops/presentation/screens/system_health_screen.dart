@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
 import '../widgets/ops_widgets.dart';
@@ -261,6 +262,6 @@ class _ErrorText extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(24),
-        child: Center(child: Text('Could not load: $error')),
+        child: Center(child: Text(ErrorMapper.toUserMessage(error))),
       );
 }

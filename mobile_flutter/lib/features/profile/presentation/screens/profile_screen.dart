@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -36,9 +38,9 @@ class ProfileScreen extends ConsumerWidget {
       backgroundColor: context.bg,
       body: profileAsync.when(
         loading: () => const _Skeleton(),
-        error: (e, _) => _ErrorView(message: e.toString()),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(profileProvider)),
         data: (profile) {
-          if (profile == null) return const _ErrorView(message: 'Profile not found.');
+          if (profile == null) return const AppErrorWidget('Profile not found.');
           return _Body(
             profile: profile,
             postCount: statsAsync.valueOrNull?.postCount ?? 0,
@@ -360,9 +362,7 @@ class _Header extends StatelessWidget {
             children: [
               _ActionBtn(
                 icon: Icons.ios_share_outlined,
-                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sharing coming soon'), behavior: SnackBarBehavior.floating),
-                ),
+                onTap: () => UnifySnackbar.info(context, 'Sharing coming soon'),
               ),
               const SizedBox(width: 8),
               _ActionBtn(
@@ -1096,7 +1096,7 @@ class _SkillsCard extends StatelessWidget {
               ? _EmptyPrompt('Showcase your technical and soft skills', onTap: () => context.push('/app/profile/edit'))
               : Wrap(
                   spacing: 8, runSpacing: 8,
-                  children: profile.skills.map((s) => _Chip(label: s, color: AppColors.success, prefix: '✦ ')).toList(),
+                  children: profile.skills.map((s) => _Chip(label: s, color: context.success, prefix: '✦ ')).toList(),
                 ),
         ],
       ),
@@ -1265,6 +1265,7 @@ class _LeadershipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = context.textPrimary;
     return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1273,7 +1274,7 @@ class _LeadershipCard extends StatelessWidget {
             children: [
               const Icon(Icons.shield_rounded, size: 16, color: Color(0xFFFF6B35)),
               const SizedBox(width: 6),
-              Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+              Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: primary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1359,10 +1360,10 @@ class _VerificationStatusCard extends StatelessWidget {
             Container(
               width: 42, height: 42,
               decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.1),
+                color: context.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.access_time_rounded, color: AppColors.warning, size: 22),
+              child: Icon(Icons.access_time_rounded, color: context.warning, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -1388,17 +1389,17 @@ class _VerificationStatusCard extends StatelessWidget {
             Container(
               width: 42, height: 42,
               decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
+                color: context.error.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.cancel_rounded, color: AppColors.error, size: 22),
+              child: Icon(Icons.cancel_rounded, color: context.error, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Verification Rejected', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.error)),
+                  Text('Verification Rejected', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.error)),
                   const SizedBox(height: 2),
                   Text('Your request was not approved. You can reapply.',
                       style: TextStyle(fontSize: 12, color: context.textSecondary, height: 1.4)),
@@ -1430,10 +1431,10 @@ class _VerificationStatusCard extends StatelessWidget {
             Container(
               width: 42, height: 42,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: context.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.verified_rounded, color: Colors.white, size: 22),
+              child: Icon(Icons.verified_rounded, color: Colors.white, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -1517,7 +1518,7 @@ class _AccountCard extends StatelessWidget {
         children: [
           _Tile(icon: Icons.edit_outlined, label: 'Edit Profile', iconColor: context.primary, onTap: () => context.push('/app/profile/edit')),
           Divider(height: 1, color: context.borderCol, indent: 58),
-          _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: AppColors.success, onTap: () => context.push('/app/profile/privacy')),
+          _Tile(icon: Icons.lock_outline, label: 'Privacy', iconColor: context.success, onTap: () => context.push('/app/profile/privacy')),
           Divider(height: 1, color: context.borderCol, indent: 58),
           _Tile(icon: Icons.palette_outlined, label: 'Appearance', iconColor: const Color(0xFF8B5CF6), onTap: () => context.push('/app/profile/settings')),
           if (isAdmin) ...[
@@ -1533,8 +1534,8 @@ class _AccountCard extends StatelessWidget {
           _Tile(
             icon: Icons.logout_rounded,
             label: 'Sign Out',
-            iconColor: AppColors.error,
-            labelColor: AppColors.error,
+            iconColor: context.error,
+            labelColor: context.error,
             showChevron: false,
             onTap: () async {
               final confirmed = await showDialog<bool>(
@@ -1545,7 +1546,7 @@ class _AccountCard extends StatelessWidget {
                   content: Text("You'll need to sign in again to access your account.", style: TextStyle(color: context.textSecondary, fontSize: 14, height: 1.5)),
                   actions: [
                     TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel', style: TextStyle(color: context.textSecondary))),
-                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign Out', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600))),
+                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Sign Out', style: TextStyle(color: context.error, fontWeight: FontWeight.w600))),
                   ],
                 ),
               );
@@ -1669,28 +1670,6 @@ class _SBox extends StatelessWidget {
       Container(height: h, width: w, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(r)));
 }
 
-// ---------------------------------------------------------------------------
-// Error view
-// ---------------------------------------------------------------------------
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  const _ErrorView({required this.message});
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
-            const SizedBox(height: 12),
-            Text(message, style: TextStyle(color: context.textSecondary, fontSize: 14), textAlign: TextAlign.center),
-          ],
-        ),
-      ),
-    );
-  }
-}
+

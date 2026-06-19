@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/post_model.dart';
 import '../../data/models/post_comment_model.dart';
 import '../providers/post_provider.dart';
@@ -59,7 +60,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       ),
       body: postAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (post) => Column(
           children: [
             Expanded(

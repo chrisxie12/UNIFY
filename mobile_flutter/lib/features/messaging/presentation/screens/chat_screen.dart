@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/messaging_provider.dart';
 import '../../data/models/message_model.dart';
 import '../widgets/message_bubble.dart';
@@ -112,9 +112,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: messagesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Text('Error: $e', style: TextStyle(color: context.textSecondary)),
-              ),
+              error: (e, _) => AppErrorWidget(e),
               data: (messages) {
                 // Mark as read on first load
                 if (messages.isNotEmpty && _lastMessageCount == 0) {
@@ -458,9 +456,9 @@ class _ChatAppBarTitle extends ConsumerWidget {
                         ),
                       ),
                       if (conv?.isVerified == true)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 3),
-                          child: Icon(Icons.verified_rounded, size: 13, color: AppColors.primary),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3),
+                          child: Icon(Icons.verified_rounded, size: 13, color: context.primary),
                         ),
                     ],
                   ),
@@ -468,7 +466,7 @@ class _ChatAppBarTitle extends ConsumerWidget {
                     statusText,
                     style: TextStyle(
                       fontSize: 11,
-                      color: typingCount > 0 ? context.primary : AppColors.success,
+                      color: typingCount > 0 ? context.primary : context.success,
                       fontStyle: typingCount > 0 ? FontStyle.italic : FontStyle.normal,
                     ),
                   ),

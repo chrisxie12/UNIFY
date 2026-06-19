@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/ambassador_models.dart';
 import '../providers/ambassador_provider.dart';
 import 'ambassador_admin_screen.dart' show statusColor;
@@ -40,7 +41,7 @@ class AmbassadorProfileScreen extends ConsumerWidget {
       ),
       body: myAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Could not load: $e')),
+        error: (e, _) => AppErrorWidget(e),
         data: (ambassador) {
           if (ambassador == null) return const _EmptyState();
           return _AmbassadorBody(ambassador: ambassador);
@@ -173,7 +174,7 @@ class _AmbassadorBody extends ConsumerWidget {
             ),
             error: (e, _) => Padding(
               padding: const EdgeInsets.only(top: 24),
-              child: Center(child: Text('Could not load events: $e')),
+              child: AppErrorWidget(e),
             ),
             data: (events) {
               if (events.isEmpty) {

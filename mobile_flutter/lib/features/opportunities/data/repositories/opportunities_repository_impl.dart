@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -154,7 +155,7 @@ class OpportunitiesRepositoryImpl {
   Future<void> recordView(String id) async {
     try {
       await _client.rpc('increment_opportunity_view', params: {'p_id': id});
-    } catch (_) {/* best-effort */}
+    } catch (e) { debugPrint('[OpportunitiesRepositoryImpl] recordView error: $e'); /* best-effort */}
   }
 
   // ── Saves ────────────────────────────────────────────────────
@@ -325,7 +326,7 @@ class OpportunitiesRepositoryImpl {
         'query': query.trim(),
         if (type != null) 'type': type,
       });
-    } catch (_) {/* best-effort */}
+    } catch (e) { debugPrint('[OpportunitiesRepositoryImpl] logSearch error: $e'); /* best-effort */}
   }
 
   // ── Admin: management ────────────────────────────────────────
@@ -380,7 +381,7 @@ class OpportunitiesRepositoryImpl {
       for (final r in (tc as List)) {
         typeCounts[r['type'] as String] = (r['total'] as num).toInt();
       }
-    } catch (_) {/* ignore */}
+    } catch (e) { debugPrint('[OpportunitiesRepositoryImpl] getStats typeCounts error: $e'); /* ignore */}
 
     final topSearches = <String, int>{};
     try {
@@ -388,7 +389,7 @@ class OpportunitiesRepositoryImpl {
       for (final r in (ts as List)) {
         topSearches[r['query'] as String] = (r['total'] as num).toInt();
       }
-    } catch (_) {/* ignore */}
+    } catch (e) { debugPrint('[OpportunitiesRepositoryImpl] getStats topSearches error: $e'); /* ignore */}
 
     final pendingReports = (await _client
             .from('opportunity_reports')
@@ -422,7 +423,7 @@ class OpportunitiesRepositoryImpl {
       final box = await Hive.openBox(_boxName);
       await box.put(_feedCacheKey,
           jsonEncode(items.map((o) => o.toCache()).toList()));
-    } catch (_) {/* non-fatal */}
+    } catch (e) { debugPrint('[OpportunitiesRepositoryImpl] _saveCache error: $e'); /* non-fatal */}
   }
 
   Future<List<OpportunityModel>?> _loadCache() async {
@@ -434,7 +435,8 @@ class OpportunitiesRepositoryImpl {
       return list
           .map((e) => OpportunityModel.fromJson(e as Map<String, dynamic>))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[OpportunitiesRepositoryImpl] _loadCache error: $e');
       return null;
     }
   }

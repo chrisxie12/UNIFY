@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
@@ -216,7 +219,7 @@ class _PendingRequestsTab extends ConsumerWidget {
                 children: requests.map((r) => _RequestCard(request: r)).toList(),
               );
             },
-            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+            error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_pendingRequestsProvider)),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ],
@@ -260,7 +263,7 @@ class _AllRequestsTab extends ConsumerWidget {
             )).toList(),
           );
         },
-        error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_allRequestsProvider)),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
@@ -608,9 +611,7 @@ class _RequestCard extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }
@@ -695,9 +696,7 @@ class _RequestCard extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }
@@ -761,7 +760,7 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
                 )).toList(),
               );
             },
-            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+            error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(pendingAnnouncementRequestsProvider)),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ],
@@ -967,9 +966,7 @@ class _AnnouncementRequestCard extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }
@@ -1031,7 +1028,7 @@ class _VerificationTab extends ConsumerWidget {
                 )).toList(),
               );
             },
-            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColors.error))),
+            error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_pendingVerificationProvider)),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ],
@@ -1338,9 +1335,7 @@ class _VerificationCard extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
-        );
+        UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
       }
     }
   }

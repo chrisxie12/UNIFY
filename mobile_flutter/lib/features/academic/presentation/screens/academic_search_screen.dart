@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 
 class AcademicSearchScreen extends ConsumerStatefulWidget {
@@ -76,7 +77,10 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                   const _SectionHeader(title: 'Courses'),
                   coursesAsync.when(
                     loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
-                    error: (e, _) => Text('$e'),
+                    error: (e, _) => Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppErrorWidget(e),
+                    ),
                     data: (courses) {
                       if (courses.isEmpty) {
                         return Padding(
@@ -101,7 +105,10 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                   const _SectionHeader(title: 'Resources'),
                   resourcesAsync.when(
                     loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
-                    error: (e, _) => Text('$e'),
+                    error: (e, _) => Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppErrorWidget(e),
+                    ),
                     data: (resources) {
                       if (resources.isEmpty) {
                         return Padding(

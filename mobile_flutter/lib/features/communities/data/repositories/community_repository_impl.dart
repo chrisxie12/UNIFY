@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/community_repository.dart';
 import '../models/community_detail_model.dart';
@@ -77,14 +78,13 @@ class CommunityRepositoryImpl implements CommunityRepository {
     final response = await _client
         .from('communities')
         .select('*')
-        .order('member_count', ascending: false).limit(20) as List;
+        .ilike('name', '%$query%')
+        .eq('is_active', true)
+        .order('member_count', ascending: false)
+        .limit(20)
+        as List;
 
-    final results = response.where((c) {
-      final name = (c['name'] as String?)?.toLowerCase() ?? '';
-      return name.contains(query.toLowerCase()) && c['is_active'] == true;
-    }).toList();
-
-    return results.map((json) => CommunityDetailModel.fromJson(json)).toList();
+    return response.map((json) => CommunityDetailModel.fromJson(json)).toList();
   }
 
   @override
@@ -95,7 +95,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
         'user_id': userId,
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[CommunityRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -105,7 +106,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
     try {
       await _client.from('community_members').delete().filter('community_id', 'eq', communityId).filter('user_id', 'eq', userId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[CommunityRepositoryImpl] Error: $e');
       return false;
     }
   }

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/support_models.dart';
 import '../providers/support_provider.dart';
 
@@ -302,9 +304,7 @@ class _TicketSheetState extends ConsumerState<_TicketSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not send: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -396,9 +396,7 @@ class _AbuseSheetState extends ConsumerState<_AbuseSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not submit: $e')),
-      );
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -618,8 +616,10 @@ class _ErrorText extends StatelessWidget {
   const _ErrorText(this.error);
   final Object error;
   @override
-  Widget build(BuildContext context) => Text('Could not load\n$error',
-      style: const TextStyle(color: AppColors.grey2));
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(24),
+    child: Center(child: Text(ErrorMapper.toUserMessage(error), style: const TextStyle(color: AppColors.grey2))),
+  );
 }
 
 class _EmptyText extends StatelessWidget {

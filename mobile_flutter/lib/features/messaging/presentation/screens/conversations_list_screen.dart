@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:unify/core/theme/app_colors.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
+import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 
@@ -37,7 +39,7 @@ class ConversationsListScreen extends ConsumerWidget {
         onRefresh: () async => ref.refresh(conversationsProvider),
         child: conversationsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('$e')),
+          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(conversationsProvider)),
           data: (conversations) {
             if (conversations.isEmpty) {
               return Center(
@@ -113,7 +115,7 @@ class _ConversationTile extends StatelessWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.verified, size: 12, color: AppColors.primary),
+                child: Icon(Icons.verified, size: 12, color: context.primary),
               ),
             ),
         ],

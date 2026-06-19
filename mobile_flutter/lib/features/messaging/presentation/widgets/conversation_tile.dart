@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/conversation_model.dart';
 
@@ -220,9 +219,9 @@ class ConversationTile extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: muted
-                                        ? textSecondary.withOpacity(0.6)
+                                        ? textSecondary.withValues(alpha: 0.6)
                                         : isUnread
-                                            ? textPrimary.withOpacity(0.85)
+                                            ? textPrimary.withValues(alpha: 0.85)
                                             : textSecondary,
                                     fontWeight: isUnread && !muted
                                         ? FontWeight.w500
@@ -294,7 +293,7 @@ class ConversationTile extends StatelessWidget {
           thickness: 0.5,
           indent: 76,
           endIndent: 0,
-          color: context.borderCol.withOpacity(0.5),
+          color: context.borderCol.withValues(alpha: 0.5),
         ),
       ],
     );
@@ -378,7 +377,7 @@ class _Avatar extends StatelessWidget {
                 width: 16,
                 height: 16,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: context.primary,
                   shape: BoxShape.circle,
                   border: Border.all(color: context.bg, width: 1.5),
                 ),
@@ -443,7 +442,7 @@ class _UnreadBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = count > 99 ? '99+' : count.toString();
-    final bg = muted ? context.textSecondary.withOpacity(0.4) : primary;
+    final bg = muted ? context.textSecondary.withValues(alpha: 0.4) : primary;
     return Container(
       constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
       padding: const EdgeInsets.symmetric(horizontal: 5),

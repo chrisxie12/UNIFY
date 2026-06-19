@@ -516,13 +516,16 @@ class _Page2 extends _PageData {
     const _FloatingItem(-120, 45, '📍 Hidden Spots'),
   ];
 
-  @override LinearGradient gradient(BuildContext context) => LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [context.primaryDark, context.primary, const Color(0xFF10B981)],
-  );
+  @override LinearGradient gradient(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [c.primary, c.primaryContainer, c.secondaryContainer],
+    );
+  }
 
-  @override Color accentColor(BuildContext context) => const Color(0xFF059669);
+  @override Color accentColor(BuildContext context) => Theme.of(context).colorScheme.secondary;
 }
 
 class _Page3 extends _PageData {
@@ -544,13 +547,17 @@ class _Page3 extends _PageData {
     const _FloatingItem(-118, 48, '🎵 Music Society'),
   ];
 
-  @override LinearGradient gradient(BuildContext context) => LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [context.primaryDark, context.primary, const Color(0xFF8B5CF6)],
-  );
+  @override LinearGradient gradient(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    final primary = c.primary;
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [c.primary.withValues(alpha: 0.9), primary, c.tertiaryContainer],
+    );
+  }
 
-  @override Color accentColor(BuildContext context) => const Color(0xFF7C3AED);
+  @override Color accentColor(BuildContext context) => Theme.of(context).colorScheme.tertiary;
 }
 
 class _Page4 extends _PageData {
@@ -572,11 +579,14 @@ class _Page4 extends _PageData {
     const _FloatingItem(-120, 45, '🏆 Leaderboard'),
   ];
 
-  @override LinearGradient gradient(BuildContext context) => LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [context.primaryDark, context.primary, const Color(0xFFFBBF24)],
-  );
+  @override LinearGradient gradient(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [c.primary, c.primaryContainer, c.primary.withValues(alpha: 0.7)],
+    );
+  }
 
-  @override Color accentColor(BuildContext context) => context.primary;
+  @override Color accentColor(BuildContext context) => Theme.of(context).colorScheme.primary;
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/repositories/admin_repository.dart';
 import '../models/university_model.dart';
@@ -54,7 +55,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('universities').update(updates).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -64,7 +66,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('universities').delete().filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -107,7 +110,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('faculties').update(updates).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -117,7 +121,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('faculties').delete().filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -160,7 +165,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('departments').update(updates).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -170,7 +176,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('departments').delete().filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -214,7 +221,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('university_administrators').update({'is_active': isActive}).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -224,7 +232,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('university_administrators').delete().filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -268,7 +277,8 @@ class AdminRepositoryImpl implements AdminRepository {
       final request = await _client.from('verification_requests').select('user_id').filter('id', 'eq', requestId).single();
       await _client.from('profiles').update({'is_verified': true}).filter('id', 'eq', request['user_id']);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -283,7 +293,8 @@ class AdminRepositoryImpl implements AdminRepository {
         if (notes != null) 'admin_notes': notes,
       }).filter('id', 'eq', requestId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -295,7 +306,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'user_id': userId, 'badge_id': badgeId, 'awarded_at': DateTime.now().toIso8601String(),
       });
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -307,7 +319,8 @@ class AdminRepositoryImpl implements AdminRepository {
           .filter('user_id', 'eq', userId)
           .filter('badge_id', 'eq', badgeId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -337,7 +350,8 @@ class AdminRepositoryImpl implements AdminRepository {
         if (resolution != null) 'resolution': resolution,
       }).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -365,7 +379,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'reviewed_by': reviewedBy,
       }).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -394,7 +409,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'reviewed_at': DateTime.now().toIso8601String(),
       }).filter('id', 'eq', id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -458,7 +474,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'university_id': universityId,
         'details': details ?? {},
       });
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] logAction (rpc) error: $e');
       try {
         await _client.from('audit_logs').insert({
           'actor_id': actorId,
@@ -468,7 +485,9 @@ class AdminRepositoryImpl implements AdminRepository {
           'university_id': universityId,
           'details': details ?? {},
         });
-      } catch (_) {}
+      } catch (e2) {
+        debugPrint('[AdminRepositoryImpl] logAction (fallback) error: $e2');
+      }
     }
   }
 
@@ -502,7 +521,8 @@ class AdminRepositoryImpl implements AdminRepository {
     try {
       await _client.from('admin_announcements').update({'send_push': true}).filter('id', 'eq', announcementId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] Error: $e');
       return false;
     }
   }
@@ -525,7 +545,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'pending_moderation': pendingModeration.length,
         'pending_opportunities': pendingOpportunities.length,
       };
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] getDashboardCounts error: $e');
       return {};
     }
   }

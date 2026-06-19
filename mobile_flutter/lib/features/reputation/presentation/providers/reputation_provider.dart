@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../data/repositories/reputation_repository_impl.dart';
@@ -86,7 +87,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.addSkill(userId, skillName, proficiency: proficiency);
       ref.invalidate(userSkillsProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -98,7 +100,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.removeSkill(skillId);
       ref.invalidate(userSkillsProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -110,7 +113,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.updateSkillProficiency(skillId, proficiency);
       ref.invalidate(userSkillsProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -120,7 +124,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
     if (userId == null) return false;
     try {
       return await _repo.endorseSkill(skillId, userId);
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -132,7 +137,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.addProject(project);
       ref.invalidate(portfolioProjectsProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -144,7 +150,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.deleteProject(projectId);
       ref.invalidate(portfolioProjectsProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -156,7 +163,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.addLeadershipEntry(entry);
       ref.invalidate(leadershipHistoryProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -168,7 +176,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.deleteLeadershipEntry(entryId);
       ref.invalidate(leadershipHistoryProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -180,7 +189,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.addCertificate(certificate);
       ref.invalidate(userCertificatesProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -192,7 +202,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       await _repo.deleteCertificate(certificateId);
       ref.invalidate(userCertificatesProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }
@@ -205,7 +216,8 @@ class ReputationNotifier extends AsyncNotifier<void> {
       ref.invalidate(userAchievementsProvider(userId));
       ref.invalidate(reputationScoreProvider(userId));
       return true;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ReputationNotifier] Error: $e');
       return false;
     }
   }

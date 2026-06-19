@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 import '../widgets/event_card.dart';
@@ -131,7 +132,7 @@ class _EventList extends ConsumerWidget {
     final eventsAsync = ref.watch(provider);
     return eventsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
+      error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(provider)),
       data: (events) {
         var filtered = events;
         if (scope != 'all') {

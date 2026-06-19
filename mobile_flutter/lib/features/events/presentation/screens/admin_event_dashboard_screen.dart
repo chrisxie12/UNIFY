@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
 
 class AdminEventDashboardScreen extends ConsumerWidget {
@@ -15,7 +16,7 @@ class AdminEventDashboardScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Event Admin')),
       body: eventsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(upcomingEventsProvider)),
         data: (events) {
           final pending = events.where((e) => !e.isApproved && e.scope != 'community').toList();
 
