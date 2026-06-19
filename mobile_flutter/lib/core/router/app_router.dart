@@ -18,6 +18,7 @@ import '../../screens/chat_list_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
 import '../../features/messaging/presentation/screens/student_directory_screen.dart';
 import '../../features/messaging/presentation/screens/chat_screen.dart';
+import '../../screens/chat_conversation_screen.dart';
 import '../../features/messaging/presentation/screens/create_group_screen.dart';
 import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
@@ -243,13 +244,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/messaging/search', builder: (_, __) => const StudentDirectoryScreen()),
       GoRoute(
         path: '/messaging/chat/:id',
-        builder: (_, state) => ChatScreen(conversationId: state.pathParameters['id']!),
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ChatConversationScreen(
+            contactName: extra?['name'] as String? ?? 'Chat',
+            isOnline: extra?['isOnline'] as bool? ?? false,
+            isVerified: extra?['isVerified'] as bool? ?? false,
+          );
+        },
       ),
       GoRoute(
         path: '/messaging/chat/new',
         builder: (_, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return ChatScreen(conversationId: extra?['conversation_id'] as String? ?? 'new');
+          return ChatConversationScreen(
+            contactName: extra?['name'] as String? ?? 'New Chat',
+            isOnline: extra?['isOnline'] as bool? ?? false,
+            isVerified: extra?['isVerified'] as bool? ?? false,
+          );
         },
       ),
       GoRoute(path: '/messaging/create-group', builder: (_, __) => const CreateGroupScreen()),
