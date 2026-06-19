@@ -69,8 +69,10 @@ class LaunchControlScreen extends ConsumerWidget {
           ]),
           const SizedBox(height: 22),
 
-          _section(context, 'Moderation'),
+          _section(context, 'Configure'),
           _grid(context, const [
+            _Item('Feature Flags', Icons.toggle_on_rounded,
+                Color(0xFF7C3AED), '/launch/feature-flags'),
             _Item('Requests & Verification', Icons.verified_user_rounded,
                 Color(0xFF16A34A), '/admin'),
           ]),

@@ -40,6 +40,7 @@ import '../../features/admin/presentation/screens/community_admin_screen.dart';
 import '../../features/admin/presentation/screens/marketplace_admin_screen.dart';
 import '../../features/admin/presentation/screens/events_admin_screen.dart';
 import '../../features/admin/presentation/screens/academic_admin_screen.dart';
+import '../../features/admin/presentation/screens/feature_flags_screen.dart';
 import '../../features/leadership/presentation/screens/community_request_screen.dart';
 import '../../features/leadership/presentation/screens/class_rep_dashboard_screen.dart';
 import '../../features/leadership/presentation/screens/announcement_request_screen.dart';
@@ -299,6 +300,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/launch/feedback', builder: (_, __) => const FeedbackAdminScreen()),
       GoRoute(path: '/launch/support', builder: (_, __) => const SupportAdminScreen()),
       GoRoute(path: '/launch/app-versions', builder: (_, __) => const AppVersionAdminScreen()),
+      GoRoute(path: '/launch/feature-flags', builder: (_, __) => const FeatureFlagsScreen()),
       GoRoute(
         path: '/launch/ambassador/:id',
         builder: (_, state) =>

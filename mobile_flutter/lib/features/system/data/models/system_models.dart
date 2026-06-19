@@ -118,3 +118,41 @@ class AppUpdateStatus {
   bool get isRequired => level == AppUpdateLevel.required;
   bool get isOptional => level == AppUpdateLevel.optional;
 }
+
+/// Runtime feature flag — toggled by super-admins without redeploying.
+class FeatureFlag {
+  final String id;
+  final String key;
+  final String label;
+  final String description;
+  final bool enabled;
+
+  const FeatureFlag({
+    required this.id,
+    required this.key,
+    required this.label,
+    required this.description,
+    required this.enabled,
+  });
+
+  factory FeatureFlag.fromJson(Map<String, dynamic> json) {
+    return FeatureFlag(
+      id: json['id'] as String,
+      key: json['key'] as String,
+      label: json['label'] as String,
+      description: (json['description'] as String?) ?? '',
+      enabled: json['enabled'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'key': key,
+        'label': label,
+        'description': description,
+        'enabled': enabled,
+      };
+
+  FeatureFlag copyWith({bool? enabled}) =>
+      FeatureFlag(id: id, key: key, label: label, description: description, enabled: enabled ?? this.enabled);
+}
