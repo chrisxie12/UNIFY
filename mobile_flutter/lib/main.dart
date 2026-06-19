@@ -9,7 +9,7 @@ import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: 'assets/.env');
+await dotenv.load(fileName: 'assets/.env');
   await bootstrap(() async {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     await Hive.initFlutter();
