@@ -75,22 +75,10 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Logo — blue circle with two white person figures
-                        Container(
+                        Image.asset(
+                          'assets/images/logo.png',
                           width: 120,
                           height: 120,
-                          decoration: const BoxDecoration(
-                            color: _primaryBlue,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x401D4ED8),
-                                blurRadius: 24,
-                                offset: Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: const Center(child: _UnifyLogo()),
                         ),
                         const SizedBox(height: 24),
                         Text(
@@ -181,105 +169,6 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 // ── Two-person UNIFY logo ─────────────────────────────────────────────────────
-
-class _UnifyLogo extends StatelessWidget {
-  const _UnifyLogo();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 70,
-      height: 56,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          // Left figure
-          Positioned(
-            left: 0,
-            child: _PersonFigure(size: 28),
-          ),
-          // Right figure
-          Positioned(
-            right: 0,
-            child: _PersonFigure(size: 28),
-          ),
-          // Connecting arc / "U" bridge between them
-          Positioned(
-            bottom: 0,
-            left: 8,
-            right: 8,
-            child: CustomPaint(
-              size: const Size(54, 14),
-              painter: _BridgePainter(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PersonFigure extends StatelessWidget {
-  const _PersonFigure({required this.size});
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final headR = size * 0.22;
-    final bodyW = size * 0.30;
-    final bodyH = size * 0.30;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          // Head
-          Container(
-            width: headR * 2,
-            height: headR * 2,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-          ),
-          // Body
-          Positioned(
-            top: headR * 2 + 3,
-            child: Container(
-              width: bodyW,
-              height: bodyH,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BridgePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final path = Path()
-      ..moveTo(0, 0)
-      ..quadraticBezierTo(size.width / 2, size.height * 1.6, size.width, 0);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
 
 // ── Decorative faint circle ───────────────────────────────────────────────────
 
