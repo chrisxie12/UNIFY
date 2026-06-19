@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/report_model.dart';
 import '../../presentation/providers/report_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ReportScreen extends ConsumerStatefulWidget {
   final String targetId;
@@ -68,7 +69,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
           const SizedBox(height: 4),
           Text(
             'Your report is anonymous. ${ReportModel.reportTypeLabels[widget.reportType] ?? ''} will be reviewed.',
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            style: TextStyle(color: context.textSecondary], fontSize: 13),
           ),
           const SizedBox(height: 16),
           ..._reasons.map((reason) => RadioListTile<String>(
@@ -84,7 +85,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             controller: _reasonController,
             decoration: InputDecoration(
               hintText: 'Add more details (optional)',
-              hintStyle: TextStyle(color: Colors.grey[400]),
+              hintStyle: TextStyle(color: context.textSecondary]),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               contentPadding: const EdgeInsets.all(12),
             ),

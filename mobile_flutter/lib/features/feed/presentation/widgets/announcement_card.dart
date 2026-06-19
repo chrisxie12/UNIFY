@@ -18,7 +18,7 @@ class AnnouncementCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           border: Border.all(color: const Color(0xFFF3F4F6)),
           boxShadow: const [
@@ -62,11 +62,11 @@ class _PinnedBanner extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
         children: [
-          Icon(Icons.push_pin_rounded, size: 12, color: AppColors.grey2),
+          Icon(Icons.push_pin_rounded, size: 12, color: context.textSecondary),
           SizedBox(width: 5),
           Text(
             'Pinned announcement',
-            style: TextStyle(fontSize: 11, color: AppColors.grey2, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 11, color: context.textSecondary, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -112,7 +112,7 @@ class _Header extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: const Color(0xFFF5F7FA),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.borderCol),
           ),
           child: item.authorAvatar != null
               ? ClipOval(
@@ -135,7 +135,7 @@ class _Header extends StatelessWidget {
                   Flexible(
                     child: Text(
                       item.authorName ?? 'Campus Admin',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -149,7 +149,7 @@ class _Header extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 _timeLabel(item.createdAt),
-                style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                style: const TextStyle(fontSize: 12, color: context.textSecondary),
               ),
             ],
           ),
@@ -196,7 +196,7 @@ class _AuthorInitial extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       name?.isNotEmpty == true ? name![0].toUpperCase() : 'U',
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.dark),
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary),
     ),
   );
 }
@@ -243,7 +243,7 @@ class _Content extends StatelessWidget {
         Text(
           item.title,
           style: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark, height: 1.35,
+            fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary, height: 1.35,
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -251,7 +251,7 @@ class _Content extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           item.body,
-          style: const TextStyle(fontSize: 13.5, color: AppColors.grey2, height: 1.5),
+          style: const TextStyle(fontSize: 13.5, color: context.textSecondary, height: 1.5),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
@@ -293,11 +293,11 @@ class _Footer extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
       child: Row(
         children: [
-          const Icon(Icons.remove_red_eye_outlined, size: 14, color: AppColors.grey3),
+          const Icon(Icons.remove_red_eye_outlined, size: 14, color: context.textDisabled),
           const SizedBox(width: 4),
           Text(
             '${item.viewCount}',
-            style: const TextStyle(fontSize: 12, color: AppColors.grey3),
+            style: const TextStyle(fontSize: 12, color: context.textDisabled),
           ),
           const Spacer(),
           const _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),

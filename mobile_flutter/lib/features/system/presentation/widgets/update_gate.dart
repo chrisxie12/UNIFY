@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// Wraps [child]; if a mandatory update is required for the running build it
 /// shows a full-screen blocking screen instead. Optional updates and any
@@ -51,7 +52,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
         version?.downloadUrl != null && version!.downloadUrl!.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -80,7 +81,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.dark,
+                    color: context.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -92,7 +93,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     height: 1.4,
-                    color: AppColors.grey2,
+                    color: context.textSecondary,
                   ),
                 ),
                 if (notes != null && notes.isNotEmpty) ...[
@@ -101,9 +102,9 @@ class _RequiredUpdateScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: context.cardBg,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.borderCol),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +114,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.dark,
+                            color: context.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -122,7 +123,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 13,
                             height: 1.45,
-                            color: AppColors.grey1,
+                            color: context.textPrimary,
                           ),
                         ),
                       ],
@@ -160,7 +161,7 @@ class _RequiredUpdateScreen extends StatelessWidget {
                   const Text(
                     'Please update from your app store.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: AppColors.grey3),
+                    style: TextStyle(fontSize: 12, color: context.textDisabled),
                   ),
                 ],
               ],

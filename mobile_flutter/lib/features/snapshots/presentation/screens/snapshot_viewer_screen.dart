@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/snapshot_models.dart';
 import '../providers/snapshots_provider.dart';
 import '../widgets/snapshot_analytics_sheet.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 const _reactionEmojis = ['👍', '🔥', '😂', '👏', '❤️', '🎉'];
 
@@ -252,7 +253,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.volume_off_rounded, color: AppColors.grey1),
+                leading: const Icon(Icons.volume_off_rounded, color: context.textPrimary),
                 title: Text('Mute ${_snap.authorName ?? 'this user'}'),
                 onTap: () async {
                   Navigator.pop(context);
@@ -482,7 +483,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
     final snap = _snap;
     if (snap.type == 'photo' || snap.type == 'video') {
       return Container(
-        color: Colors.black,
+        color: context.textPrimary,
         alignment: Alignment.center,
         child: Stack(
           alignment: Alignment.bottomLeft,
@@ -506,7 +507,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.black54,
+                    color: context.textSecondary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -598,7 +599,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.35),
+                    color: context.cardBg.withValues(alpha: 0.35),
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
@@ -695,7 +696,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                               : 'Reply to ${_snap.authorName?.split(' ').first ?? 'story'}…',
                           hintStyle: const TextStyle(color: Colors.white60),
                           filled: true,
-                          fillColor: Colors.white.withValues(alpha: 0.15),
+                          fillColor: context.inputFill.withValues(alpha: 0.15),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           border: OutlineInputBorder(
@@ -708,7 +709,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide: const BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: context.cardBg),
                           ),
                         ),
                       ),
@@ -728,7 +729,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: context.cardBg.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -760,14 +761,14 @@ class _ProgressSegment extends StatelessWidget {
           children: [
             Container(color: Colors.white38),
             if (state == 1)
-              Container(color: Colors.white)
+              Container(color: context.cardBg)
             else if (state == 2)
               AnimatedBuilder(
                 animation: controller,
                 builder: (_, __) => FractionallySizedBox(
                   widthFactor: controller.value,
                   alignment: Alignment.centerLeft,
-                  child: Container(color: Colors.white),
+                  child: Container(color: context.cardBg),
                 ),
               ),
           ],

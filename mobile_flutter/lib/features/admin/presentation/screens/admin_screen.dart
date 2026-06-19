@@ -202,11 +202,11 @@ class _PendingRequestsTab extends ConsumerWidget {
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
                         SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                         SizedBox(height: 4),
-                        Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                        Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
                   ),
@@ -245,9 +245,9 @@ class _AllRequestsTab extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.inbox_rounded, size: 48, color: AppColors.grey4),
+                  Icon(Icons.inbox_rounded, size: 48, color: context.borderCol),
                   SizedBox(height: 12),
-                  Text('No requests yet', style: TextStyle(fontSize: 15, color: AppColors.grey2)),
+                  Text('No requests yet', style: TextStyle(fontSize: 15, color: context.textSecondary)),
                 ],
               ),
             );
@@ -277,7 +277,7 @@ class _StatsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _StatTile(label: 'Total', value: '${stats.total}', color: AppColors.dark, icon: Icons.inbox_rounded),
+        _StatTile(label: 'Total', value: '${stats.total}', color: context.textPrimary, icon: Icons.inbox_rounded),
         _StatTile(label: 'Pending', value: '${stats.pending}', color: AppColors.warning, icon: Icons.hourglass_empty_rounded),
         _StatTile(label: 'Approved', value: '${stats.approved}', color: AppColors.success, icon: Icons.check_circle_rounded),
         _StatTile(label: 'Rejected', value: '${stats.rejected}', color: AppColors.error, icon: Icons.cancel_rounded),
@@ -744,11 +744,11 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
                         SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                         SizedBox(height: 4),
-                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
                   ),
@@ -1016,9 +1016,9 @@ class _VerificationTab extends ConsumerWidget {
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
                         SizedBox(height: 12),
-                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),
@@ -1215,7 +1215,7 @@ class _VerificationCard extends ConsumerWidget {
                   : 'The user will be notified of the rejection.'),
               if (status == 'approved' && roles.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                const Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: selectedRoleId,
@@ -1232,7 +1232,7 @@ class _VerificationCard extends ConsumerWidget {
                   onChanged: (v) => setDialogState(() => selectedRoleId = v),
                 ),
                 const SizedBox(height: 8),
-                Text('Default: ${request.position}', style: const TextStyle(fontSize: 11, color: AppColors.grey3, fontStyle: FontStyle.italic)),
+                Text('Default: ${request.position}', style: const TextStyle(fontSize: 11, color: context.textDisabled, fontStyle: FontStyle.italic)),
               ],
               const SizedBox(height: 12),
               TextField(

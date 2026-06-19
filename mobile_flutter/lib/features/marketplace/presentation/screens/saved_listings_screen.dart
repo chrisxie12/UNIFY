@@ -36,9 +36,9 @@ class SavedListingsScreen extends ConsumerWidget {
                     width: 72,
                     height: 72,
                     decoration: const BoxDecoration(
-                        color: AppColors.surface, shape: BoxShape.circle),
+                        color: context.cardBg, shape: BoxShape.circle),
                     child: const Icon(Icons.favorite_border_rounded,
-                        size: 34, color: AppColors.grey3),
+                        size: 34, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
                   const Text('No saved listings',

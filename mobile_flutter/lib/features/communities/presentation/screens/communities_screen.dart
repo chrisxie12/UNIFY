@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
 import '../../../../features/auth/presentation/providers/auth_provider.dart';
 import '../../../../features/leadership/presentation/providers/leadership_provider.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CommunitiesScreen extends ConsumerWidget {
   const CommunitiesScreen({super.key});
@@ -29,7 +32,7 @@ class CommunitiesScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (communities) {
           final isVerified = isVerifiedAsync.valueOrNull ?? false;
-          
+
           Widget requestButton() {
             if (isVerified) {
               return FilledButton.icon(
@@ -38,7 +41,7 @@ class CommunitiesScreen extends ConsumerWidget {
                 label: const Text('Request New Community'),
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                 ),
               );
             }
@@ -50,13 +53,13 @@ class CommunitiesScreen extends ConsumerWidget {
                   label: const Text('Get Verified'),
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFF6B35),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: USpacing.sm),
                 Text(
                   'Community creation is restricted to verified student representatives.',
-                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  style: UText.tiny.copyWith(color: context.textSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -68,12 +71,12 @@ class CommunitiesScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.groups, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 12),
-                  Text('No communities yet', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[500])),
-                  const SizedBox(height: 4),
-                  Text('Join or create a community', style: TextStyle(color: Colors.grey[400])),
-                  const SizedBox(height: 24),
+                  Icon(Icons.groups, size: 64, color: context.textSecondary),
+                  const SizedBox(height: USpacing.md),
+                  Text('No communities yet', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: context.textSecondary)),
+                  const SizedBox(height: USpacing.xs),
+                  Text('Join or create a community', style: UText.bodyS.copyWith(color: context.textSecondary)),
+                  const SizedBox(height: USpacing.xl),
                   requestButton(),
                 ],
               ),
@@ -83,25 +86,25 @@ class CommunitiesScreen extends ConsumerWidget {
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(myCommunitiesProvider(userId)),
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(USpacing.base),
               itemCount: communities.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(bottom: USpacing.base),
                     child: requestButton(),
                   );
                 }
 
                 final community = communities[index - 1];
                 return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  margin: const EdgeInsets.only(bottom: USpacing.md),
+                  shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: URadius.mdAll,
                     onTap: () => context.push('/community/${community.id}'),
                     child: Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(USpacing.md),
                       child: Row(
                         children: [
                           CircleAvatar(
@@ -115,23 +118,23 @@ class CommunitiesScreen extends ConsumerWidget {
                                   )
                                 : null,
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: USpacing.md),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(community.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                                Text(community.name, style: UText.labelL),
                                 const SizedBox(height: 2),
                                 Text(
                                   community.communityTypeLabel,
-                                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                                  style: UText.caption.copyWith(color: context.textSecondary),
                                 ),
                               ],
                             ),
                           ),
                           Text(
                             '${community.memberCount} members',
-                            style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                            style: UText.caption.copyWith(color: context.textSecondary),
                           ),
                         ],
                       ),

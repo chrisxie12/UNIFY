@@ -39,11 +39,11 @@ class NotificationsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.notifications_none, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.notifications_none, size: 64, color: context.textSecondary]),
                   const SizedBox(height: 12),
-                  Text('No notifications yet', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[500])),
+                  Text('No notifications yet', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: context.textSecondary])),
                   const SizedBox(height: 4),
-                  Text('Stay tuned for updates', style: TextStyle(color: Colors.grey[400])),
+                  Text('Stay tuned for updates', style: TextStyle(color: context.textSecondary])),
                 ],
               ),
             );

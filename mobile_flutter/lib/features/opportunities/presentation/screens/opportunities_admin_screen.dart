@@ -18,9 +18,9 @@ class OpportunitiesAdminScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: context.bg,
           surfaceTintColor: Colors.white,
           elevation: 0.6,
           shadowColor: AppColors.border,
@@ -71,7 +71,7 @@ class _ManageTab extends ConsumerWidget {
         if (items.isEmpty) {
           return const Center(
             child: Text('No opportunities yet. Tap "New" to add one.',
-                style: TextStyle(color: AppColors.grey2)),
+                style: TextStyle(color: context.textSecondary)),
           );
         }
         return RefreshIndicator(
@@ -99,7 +99,7 @@ class _ManageRow extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -139,18 +139,18 @@ class _ManageRow extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(Icons.remove_red_eye_outlined,
-                        size: 12, color: AppColors.grey3),
+                        size: 12, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${o.viewCount}',
                         style: const TextStyle(
-                            fontSize: 11, color: AppColors.grey3)),
+                            fontSize: 11, color: context.textDisabled)),
                     const SizedBox(width: 10),
                     Icon(Icons.bookmark_border_rounded,
-                        size: 12, color: AppColors.grey3),
+                        size: 12, color: context.textDisabled),
                     const SizedBox(width: 3),
                     Text('${o.saveCount}',
                         style: const TextStyle(
-                            fontSize: 11, color: AppColors.grey3)),
+                            fontSize: 11, color: context.textDisabled)),
                     const SizedBox(width: 10),
                     Text(o.deadlineLabel,
                         style: TextStyle(
@@ -164,7 +164,7 @@ class _ManageRow extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey2),
+            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (v) => _action(context, ref, v),
             itemBuilder: (_) => [
               const PopupMenuItem(value: 'edit', child: Text('Edit')),
@@ -276,7 +276,7 @@ class _ReportCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -301,7 +301,7 @@ class _ReportCard extends ConsumerWidget {
               const Spacer(),
               Text(report.createdAt.timeAgo,
                   style:
-                      const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                      const TextStyle(fontSize: 11, color: context.textDisabled)),
             ],
           ),
           const SizedBox(height: 10),
@@ -316,7 +316,7 @@ class _ReportCard extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text('Reported by ${report.reporterName ?? 'a student'}',
-              style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              style: const TextStyle(fontSize: 12, color: context.textSecondary)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -400,7 +400,7 @@ class _AnalyticsTab extends ConsumerWidget {
               const SizedBox(height: 12),
               if (types.isEmpty)
                 const Text('No data yet.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
               else
                 ...types.map((e) {
                   final t = OpportunityType.fromKey(e.key);
@@ -413,7 +413,7 @@ class _AnalyticsTab extends ConsumerWidget {
               const SizedBox(height: 12),
               if (searches.isEmpty)
                 const Text('No searches recorded yet.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
               else
                 Wrap(
                   spacing: 8,
@@ -423,7 +423,7 @@ class _AnalyticsTab extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 7),
                             decoration: BoxDecoration(
-                              color: AppColors.surface,
+                              color: context.cardBg,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text('${e.key}  ·  ${e.value}',
@@ -447,7 +447,7 @@ class _AnalyticsTab extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: const Color(0xFFF0F1F3)),
           ),
@@ -461,7 +461,7 @@ class _AnalyticsTab extends ConsumerWidget {
               Text(label,
                   textAlign: TextAlign.center,
                   style:
-                      const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                      const TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -481,10 +481,10 @@ class _AnalyticsTab extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
               Text('$value',
                   style:
-                      const TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      const TextStyle(fontSize: 13, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 6),

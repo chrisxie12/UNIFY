@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/community_resource_model.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ResourceCard extends ConsumerWidget {
   final CommunityResourceModel resource;
@@ -21,7 +22,7 @@ class ResourceCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 1,
       shadowColor: Colors.black.withValues(alpha: 0.08),
-      color: Colors.white,
+      color: context.cardBg,
       child: InkWell(
         onTap: onDownload,
         borderRadius: BorderRadius.circular(16),
@@ -63,7 +64,7 @@ class ResourceCard extends ConsumerWidget {
                           resource.uploaderName ?? 'Unknown',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: context.textSecondary],
                           ),
                         ),
                         if (resource.uploaderName != null) ...[
@@ -72,7 +73,7 @@ class ResourceCard extends ConsumerWidget {
                             width: 3,
                             height: 3,
                             decoration: BoxDecoration(
-                              color: Colors.grey[400],
+                              color: context.textSecondary],
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -82,7 +83,7 @@ class ResourceCard extends ConsumerWidget {
                           DateFormat('MMM d, yyyy').format(resource.createdAt),
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: context.textSecondary],
                           ),
                         ),
                       ],
@@ -93,7 +94,7 @@ class ResourceCard extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: context.textSecondary],
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -101,19 +102,19 @@ class ResourceCard extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: Colors.grey[600],
+                              color: context.textSecondary],
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Icon(Icons.download_outlined,
-                            size: 14, color: Colors.grey[500]),
+                            size: 14, color: context.textSecondary]),
                         const SizedBox(width: 3),
                         Text(
                           '${resource.downloadCount}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: context.textSecondary],
                           ),
                         ),
                       ],

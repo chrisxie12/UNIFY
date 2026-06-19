@@ -60,7 +60,7 @@ class _TicketsTab extends ConsumerWidget {
         if (tickets.isEmpty) {
           return const Center(
               child: Text('No support tickets',
-                  style: TextStyle(color: AppColors.grey2)));
+                  style: TextStyle(color: context.textSecondary)));
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(allTicketsProvider(null)),
@@ -105,10 +105,10 @@ class _TicketCard extends ConsumerWidget {
             Text(ticket.message,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: AppColors.grey1)),
+                style: const TextStyle(fontSize: 13, color: context.textPrimary)),
             const SizedBox(height: 8),
             Text('From: ${ticket.userName ?? 'Unknown'}',
-                style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                style: const TextStyle(fontSize: 12, color: context.textSecondary)),
             if (ticket.adminResponse != null &&
                 ticket.adminResponse!.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -226,7 +226,7 @@ class _AbuseTab extends ConsumerWidget {
         if (reports.isEmpty) {
           return const Center(
               child: Text('No abuse reports',
-                  style: TextStyle(color: AppColors.grey2)));
+                  style: TextStyle(color: context.textSecondary)));
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(abuseReportsProvider(null)),
@@ -272,13 +272,13 @@ class _AbuseCard extends ConsumerWidget {
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style:
-                      const TextStyle(fontSize: 13, color: AppColors.grey1)),
+                      const TextStyle(fontSize: 13, color: context.textPrimary)),
             ],
             const SizedBox(height: 8),
             Text(
               'Reporter: ${report.reporterName ?? 'Unknown'}'
               '${report.targetId != null ? ' · Target: ${report.targetId}' : ''}',
-              style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+              style: const TextStyle(fontSize: 12, color: context.textSecondary),
             ),
           ],
         ),
@@ -389,7 +389,7 @@ class _ContentTab extends ConsumerWidget {
         faqs.when(
           loading: () => const _Loading(),
           error: (e, _) => Text('Could not load\n$e',
-              style: const TextStyle(color: AppColors.grey2)),
+              style: const TextStyle(color: context.textSecondary)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No FAQs yet.');
             return Column(
@@ -405,7 +405,7 @@ class _ContentTab extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(f.answer,
                             style: const TextStyle(
-                                fontSize: 13, color: AppColors.grey1)),
+                                fontSize: 13, color: context.textPrimary)),
                       ],
                     ),
                   ),
@@ -434,7 +434,7 @@ class _ContentTab extends ConsumerWidget {
         articles.when(
           loading: () => const _Loading(),
           error: (e, _) => Text('Could not load\n$e',
-              style: const TextStyle(color: AppColors.grey2)),
+              style: const TextStyle(color: context.textSecondary)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No articles yet.');
             return Column(
@@ -451,7 +451,7 @@ class _ContentTab extends ConsumerWidget {
                         Text(
                           '${a.viewCount} views · ${a.helpfulCount} helpful',
                           style: const TextStyle(
-                              fontSize: 12, color: AppColors.grey2),
+                              fontSize: 12, color: context.textSecondary),
                         ),
                       ],
                     ),
@@ -614,14 +614,14 @@ class _DialogField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
       ),
     );
@@ -679,7 +679,7 @@ class _SheetShell extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.grey4,
+                color: context.borderCol,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -735,7 +735,7 @@ class _Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(text, style: const TextStyle(color: AppColors.grey2)),
+        child: Text(text, style: const TextStyle(color: context.textSecondary)),
       );
 }
 
@@ -761,7 +761,7 @@ Widget _responseBox(String text) {
       borderRadius: BorderRadius.circular(10),
     ),
     child: Text(text,
-        style: const TextStyle(fontSize: 13, color: AppColors.grey1)),
+        style: const TextStyle(fontSize: 13, color: context.textPrimary)),
   );
 }
 
@@ -773,14 +773,14 @@ Widget _multiline(TextEditingController controller, String hint) {
     decoration: InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: AppColors.surface,
+      fillColor: context.inputFill,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: context.borderCol),
       ),
     ),
   );

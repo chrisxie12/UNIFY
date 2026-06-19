@@ -49,7 +49,7 @@ class GetStartedScreen extends StatelessWidget {
                   width: 110,
                   height: 110,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: context.cardBg,
                     shape: BoxShape.circle,
                   ),
                   padding: const EdgeInsets.all(18),
@@ -86,7 +86,7 @@ class GetStartedScreen extends StatelessWidget {
             child: Container(
               height: screenH * 0.46,
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
               ),
               padding: const EdgeInsets.fromLTRB(28, 36, 28, 32),
@@ -133,7 +133,7 @@ class GetStartedScreen extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: 0.07),
+        color: context.cardBg.withValues(alpha: 0.07),
       ),
     );
   }

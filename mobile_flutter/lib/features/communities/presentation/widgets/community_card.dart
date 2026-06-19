@@ -33,7 +33,7 @@ class CommunityCard extends ConsumerWidget {
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.all(Radius.circular(16)),
           boxShadow: AppColors.cardShadow,
         ),
@@ -56,7 +56,7 @@ class CommunityCard extends ConsumerWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.dark,
+                            color: context.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -75,7 +75,7 @@ class CommunityCard extends ConsumerWidget {
                       ].join(' · '),
                       style: const TextStyle(
                         fontSize: 12,
-                        color: AppColors.grey3,
+                        color: context.textDisabled,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -87,7 +87,7 @@ class CommunityCard extends ConsumerWidget {
                       community.description!,
                       style: const TextStyle(
                         fontSize: 13,
-                        color: AppColors.grey2,
+                        color: context.textSecondary,
                         height: 1.4,
                       ),
                       maxLines: 2,
@@ -98,13 +98,13 @@ class CommunityCard extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(Icons.people_outline_rounded,
-                          size: 13, color: AppColors.grey3),
+                          size: 13, color: context.textDisabled),
                       const SizedBox(width: 3),
                       Text(
                         '${community.memberCount} members',
                         style: const TextStyle(
                           fontSize: 12,
-                          color: AppColors.grey3,
+                          color: context.textDisabled,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -259,7 +259,7 @@ class _TypeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
@@ -267,7 +267,7 @@ class _TypeChip extends StatelessWidget {
         style: const TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w500,
-          color: AppColors.grey2,
+          color: context.textSecondary,
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:unify/core/theme/app_colors.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ConversationsListScreen extends ConsumerWidget {
   const ConversationsListScreen({super.key});
@@ -110,7 +111,7 @@ class _ConversationTile extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: context.cardBg,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.verified, size: 12, color: AppColors.primary),
@@ -145,7 +146,7 @@ class _ConversationTile extends StatelessWidget {
               '${conversation.lastMessageSenderName!}: ',
               style: TextStyle(
                 fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
-                fontSize: 13, color: Colors.grey[600],
+                fontSize: 13, color: context.textSecondary],
               ),
             ),
           Flexible(
@@ -153,7 +154,7 @@ class _ConversationTile extends StatelessWidget {
               conversation.lastMessageContent ?? (conversation.type == 'channel' ? 'Tap to view' : 'No messages yet'),
               style: TextStyle(
                 fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
-                fontSize: 13, color: Colors.grey[600],
+                fontSize: 13, color: context.textSecondary],
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -168,7 +169,7 @@ class _ConversationTile extends StatelessWidget {
           if (conversation.lastMessageTime != null)
             Text(
               DateFormat('h:mm a').format(conversation.lastMessageTime!),
-              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              style: TextStyle(fontSize: 11, color: context.textSecondary]),
             ),
           if (hasUnread)
             Container(
@@ -184,7 +185,7 @@ class _ConversationTile extends StatelessWidget {
               ),
             ),
           if (conversation.type == 'direct')
-            Icon(Icons.check, size: 14, color: Colors.grey[400]),
+            Icon(Icons.check, size: 14, color: context.textSecondary]),
         ],
       ),
     );

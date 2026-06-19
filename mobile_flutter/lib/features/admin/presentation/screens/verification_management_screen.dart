@@ -55,9 +55,9 @@ class _VerificationList extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.verified_user_rounded, size: 48, color: AppColors.grey4),
+                  Icon(Icons.verified_user_rounded, size: 48, color: context.borderCol),
                   SizedBox(height: 12),
-                  Text('No verification requests', style: TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                  Text('No verification requests', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 ],
               ),
             );
@@ -87,9 +87,9 @@ class _VerificationCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,8 +111,8 @@ class _VerificationCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(profile?['full_name'] as String? ?? 'Unknown', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                      Text(profile?['programme'] as String? ?? '', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text(profile?['full_name'] as String? ?? 'Unknown', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(profile?['programme'] as String? ?? '', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -125,7 +125,7 @@ class _VerificationCard extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   children: [
                     Icon(Icons.link_rounded, size: 16, color: context.primary),
@@ -139,15 +139,15 @@ class _VerificationCard extends ConsumerWidget {
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Text(timeAgo(DateTime.parse(request['created_at'] as String)), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+            child: Text(timeAgo(DateTime.parse(request['created_at'] as String)), style: const TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (reqStatus == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Reject', AppColors.error, () => _handle(context, ref, 'rejected'))),
-                  Container(width: 1, height: 36, color: AppColors.border),
+                  Container(width: 1, height: 36, color: context.borderCol),
                   Expanded(child: _actionBtn(context, 'Approve', AppColors.success, () => _handle(context, ref, 'approved'))),
                 ],
               ),
@@ -234,17 +234,17 @@ class _BadgeManagement extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.borderCol),
           ),
           child: Column(
             children: [
               Icon(Icons.workspace_premium_rounded, size: 48, color: context.primary.withValues(alpha: 0.3)),
               const SizedBox(height: 12),
-              const Text('Badge Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Badge Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
               const SizedBox(height: 4),
-              const Text('Assign and revoke leadership badges', style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+              const Text('Assign and revoke leadership badges', style: TextStyle(fontSize: 13, color: context.textSecondary)),
               const SizedBox(height: 16),
               OutlinedButton.icon(
                 onPressed: () {

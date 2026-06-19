@@ -6,6 +6,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/snapshot_models.dart';
 import '../providers/snapshots_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// Bottom sheet showing reach, reactions and viewer list for a leader's
 /// snapshot. Opened from the viewer's "Insights" action.
@@ -24,7 +25,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: async.when(
@@ -35,7 +36,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             error: (e, _) => Center(
               heightFactor: 6,
               child: Text('Could not load insights',
-                  style: TextStyle(color: AppColors.grey2)),
+                  style: TextStyle(color: context.textSecondary)),
             ),
             data: (a) => CustomScrollView(
               controller: scrollController,
@@ -51,7 +52,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
                       padding: EdgeInsets.all(32),
                       child: Center(
                         child: Text('No views yet',
-                            style: TextStyle(color: AppColors.grey3)),
+                            style: TextStyle(color: context.textDisabled)),
                       ),
                     ),
                   )
@@ -75,7 +76,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
           width: 40,
           height: 4,
           decoration: BoxDecoration(
-            color: AppColors.border,
+            color: context.borderCol,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -100,7 +101,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: context.bg,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -109,8 +110,8 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             const SizedBox(height: 6),
             Text('$value',
                 style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.dark)),
-            Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                    fontSize: 20, fontWeight: FontWeight.w800, color: context.textPrimary)),
+            Text(label, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
           ],
         ),
       ),
@@ -129,7 +130,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
+                    color: context.cardBg,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text('${e.key} ${e.value}',
@@ -145,11 +146,11 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          const Icon(Icons.visibility_rounded, size: 18, color: AppColors.grey2),
+          const Icon(Icons.visibility_rounded, size: 18, color: context.textSecondary),
           const SizedBox(width: 8),
           Text('Viewed by $count',
               style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                  fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
         ],
       ),
     );
@@ -180,7 +181,7 @@ class _ViewerRow extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
       trailing: Text(
         timeago.format(viewer.viewedAt),
-        style: const TextStyle(fontSize: 12, color: AppColors.grey3),
+        style: const TextStyle(fontSize: 12, color: context.textDisabled),
       ),
     );
   }

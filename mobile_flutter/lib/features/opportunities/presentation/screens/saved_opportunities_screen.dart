@@ -36,9 +36,9 @@ class SavedOpportunitiesScreen extends ConsumerWidget {
                     width: 72,
                     height: 72,
                     decoration: const BoxDecoration(
-                        color: AppColors.surface, shape: BoxShape.circle),
+                        color: context.cardBg, shape: BoxShape.circle),
                     child: const Icon(Icons.bookmark_border_rounded,
-                        size: 32, color: AppColors.grey3),
+                        size: 32, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
                   const Text('No saved opportunities',
@@ -46,7 +46,7 @@ class SavedOpportunitiesScreen extends ConsumerWidget {
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
                   const Text('Bookmark opportunities to revisit them here.',
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
             );

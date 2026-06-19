@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class AdminEventDashboardScreen extends ConsumerWidget {
@@ -20,33 +23,33 @@ class AdminEventDashboardScreen extends ConsumerWidget {
           final pending = events.where((e) => !e.isApproved && e.scope != 'community').toList();
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(USpacing.base),
             children: [
-              Text('Pending Approval', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
-              const SizedBox(height: 8),
+              Text('Pending Approval', style: UText.h4.copyWith(color: theme.colorScheme.primary)),
+              const SizedBox(height: USpacing.sm),
               if (pending.isEmpty)
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(USpacing.xl),
                     child: Center(
-                      child: Text('No pending events', style: TextStyle(color: Colors.grey[500])),
+                      child: Text('No pending events', style: UText.bodyS.copyWith(color: context.textSecondary)),
                     ),
                   ),
                 )
               else
                 ...pending.map((event) => Card(
-                  margin: const EdgeInsets.only(bottom: 8),
+                  margin: const EdgeInsets.only(bottom: USpacing.sm),
                   child: ListTile(
                     leading: Container(
                       width: 40, height: 40,
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: URadius.smAll,
                       ),
                       child: const Icon(Icons.pending, color: Colors.orange, size: 20),
                     ),
-                    title: Text(event.title, style: const TextStyle(fontSize: 14)),
-                    subtitle: Text('${event.scopeLabel} · ${event.formattedDate}', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                    title: Text(event.title, style: UText.bodyS),
+                    subtitle: Text('${event.scopeLabel} · ${event.formattedDate}', style: UText.bodyXS.copyWith(color: context.textSecondary)),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -68,15 +71,15 @@ class AdminEventDashboardScreen extends ConsumerWidget {
                     ),
                   ),
                 )),
-              const SizedBox(height: 24),
-              Text('All Events', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
-              const SizedBox(height: 8),
+              const SizedBox(height: USpacing.xl),
+              Text('All Events', style: UText.h4.copyWith(color: theme.colorScheme.primary)),
+              const SizedBox(height: USpacing.sm),
               ...events.map((event) => Card(
-                margin: const EdgeInsets.only(bottom: 4),
+                margin: const EdgeInsets.only(bottom: USpacing.xs),
                 child: ListTile(
                   dense: true,
-                  title: Text(event.title, style: const TextStyle(fontSize: 13)),
-                  subtitle: Text('${event.scopeLabel} · ${event.attendeeCount} attendees · ${event.isApproved ? "Approved" : "Pending"}', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                  title: Text(event.title, style: UText.bodyXS),
+                  subtitle: Text('${event.scopeLabel} · ${event.attendeeCount} attendees · ${event.isApproved ? "Approved" : "Pending"}', style: UText.bodyXS.copyWith(color: context.textSecondary)),
                   trailing: PopupMenuButton<String>(
                     onSelected: (v) {
                       if (v == 'feature') {

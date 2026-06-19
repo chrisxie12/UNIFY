@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 import '../widgets/event_card.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
   const EventsScreen({super.key});
@@ -58,7 +62,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                   Tab(text: 'Upcoming'), Tab(text: 'Trending'), Tab(text: 'Featured'),
                 ],
                 labelColor: theme.colorScheme.primary,
-                unselectedLabelColor: Colors.grey,
+                unselectedLabelColor: context.textSecondary,
                 indicatorColor: theme.colorScheme.primary,
               ),
             ],
@@ -94,17 +98,17 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
       height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: USpacing.base),
         children: [
           'all', 'community', 'faculty', 'university', 'campus',
         ].map((scope) {
           final active = _selectedScope == scope;
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: USpacing.sm),
             child: ChoiceChip(
               label: Text(
                 scope == 'all' ? 'All' : scope[0].toUpperCase() + scope.substring(1),
-                style: TextStyle(fontSize: 12, color: active ? Colors.white : null),
+                style: UText.caption.copyWith(color: active ? Colors.white : null),
               ),
               selected: active,
               selectedColor: theme.colorScheme.primary,
@@ -141,22 +145,16 @@ class _EventList extends ConsumerWidget {
           filtered = filtered.where((e) => e.category == category).toList();
         }
         if (filtered.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.event_busy, size: 64, color: Colors.grey[300]),
-                const SizedBox(height: 16),
-                Text('No events found', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
-              ],
-            ),
+          return const UEmptyState(
+            icon: Icons.event_busy,
+            title: 'No events found',
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(USpacing.md),
           itemCount: filtered.length,
           itemBuilder: (_, i) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: USpacing.md),
             child: EventCard(event: filtered[i]),
           ),
         );
@@ -164,5 +162,3 @@ class _EventList extends ConsumerWidget {
     );
   }
 }
-
-

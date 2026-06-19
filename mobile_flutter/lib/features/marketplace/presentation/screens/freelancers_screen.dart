@@ -64,10 +64,10 @@ class FreelancersScreen extends ConsumerWidget {
                           width: 72,
                           height: 72,
                           decoration: const BoxDecoration(
-                              color: AppColors.surface,
+                              color: context.cardBg,
                               shape: BoxShape.circle),
                           child: const Icon(Icons.handyman_outlined,
-                              size: 32, color: AppColors.grey3),
+                              size: 32, color: context.textDisabled),
                         ),
                         const SizedBox(height: 14),
                         const Text('No freelancers yet',
@@ -221,7 +221,7 @@ class _FreelancerCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.surface,
+                            color: context.cardBg,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(s,
@@ -245,7 +245,7 @@ class _FreelancerCard extends StatelessWidget {
                         fontSize: 12.5, fontWeight: FontWeight.w600)),
                 const SizedBox(width: 16),
                 const Icon(Icons.check_circle_outline_rounded,
-                    size: 15, color: AppColors.grey3),
+                    size: 15, color: context.textDisabled),
                 const SizedBox(width: 4),
                 Text('${profile.completedJobs} jobs',
                     style: TextStyle(

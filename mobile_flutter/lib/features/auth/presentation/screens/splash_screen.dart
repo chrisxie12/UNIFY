@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Splash Screen — 4-scene animated intro
@@ -307,7 +308,7 @@ class _LogoWidget extends StatelessWidget {
                 spreadRadius: 10,
               ),
               BoxShadow(
-                color: Colors.white.withValues(alpha: 0.10),
+                color: context.cardBg.withValues(alpha: 0.10),
                 blurRadius: 28,
                 spreadRadius: 5,
               ),
@@ -334,11 +335,11 @@ class _LogoWidget extends StatelessWidget {
           width: 90,
           height: 90,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.18),
+                color: context.textPrimary.withValues(alpha: 0.18),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),

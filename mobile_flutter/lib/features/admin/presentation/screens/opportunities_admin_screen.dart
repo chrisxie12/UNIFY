@@ -58,11 +58,11 @@ class _OpportunityList extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.work_outline_rounded, size: 48, color: AppColors.grey4),
+                  const Icon(Icons.work_outline_rounded, size: 48, color: context.borderCol),
                   const SizedBox(height: 12),
                   Text(
                     status == 'pending' ? 'No pending opportunities' : 'No opportunities found',
-                    style: const TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600),
+                    style: const TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -98,9 +98,9 @@ class _OpportunityCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,9 +119,9 @@ class _OpportunityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(opportunity.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(opportunity.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text(opportunity.opportunityTypeLabel, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text(opportunity.opportunityTypeLabel, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -134,8 +134,8 @@ class _OpportunityCard extends ConsumerWidget {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10)),
-              child: Text(opportunity.description, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis),
+              decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
+              child: Text(opportunity.description, style: const TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis),
             ),
           ),
           Padding(
@@ -143,7 +143,7 @@ class _OpportunityCard extends ConsumerWidget {
             child: Row(
               children: [
                 if (opportunity.organizerName != null)
-                  Text(opportunity.organizerName!, style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                  Text(opportunity.organizerName!, style: const TextStyle(fontSize: 11, color: context.textSecondary)),
                 if (opportunity.deadline != null) ...[
                   const SizedBox(width: 12),
                   Icon(Icons.access_time_rounded, size: 12, color: opportunity.isExpired ? AppColors.error : AppColors.grey2),
@@ -158,11 +158,11 @@ class _OpportunityCard extends ConsumerWidget {
           ),
           if (opportunity.isPending)
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Reject', AppColors.error, () => _handle(context, ref, 'rejected'))),
-                  Container(width: 1, height: 36, color: AppColors.border),
+                  Container(width: 1, height: 36, color: context.borderCol),
                   Expanded(child: _actionBtn(context, 'Approve', AppColors.success, () => _handle(context, ref, 'approved'))),
                 ],
               ),

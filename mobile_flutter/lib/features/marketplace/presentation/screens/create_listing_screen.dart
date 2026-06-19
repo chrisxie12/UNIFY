@@ -513,7 +513,7 @@ class _CreateFormState extends ConsumerState<_CreateForm> {
                             setState(() => _images.removeAt(e.key)),
                         child: Container(
                           decoration: const BoxDecoration(
-                              color: Colors.black54,
+                              color: context.textSecondary,
                               shape: BoxShape.circle),
                           child: const Icon(Icons.close,
                               size: 16, color: Colors.white),

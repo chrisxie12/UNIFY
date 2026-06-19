@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 import '../widgets/opportunity_card.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class OpportunitySearchScreen extends ConsumerStatefulWidget {
   const OpportunitySearchScreen({super.key});
@@ -72,13 +73,13 @@ class _OpportunitySearchScreenState
           margin: const EdgeInsets.only(right: 12),
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             children: [
               const Icon(Icons.search_rounded,
-                  color: AppColors.grey2, size: 20),
+                  color: context.textSecondary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
@@ -100,7 +101,7 @@ class _OpportunitySearchScreenState
                     _onChanged('');
                   },
                   child: const Icon(Icons.close_rounded,
-                      size: 18, color: AppColors.grey2),
+                      size: 18, color: context.textSecondary),
                 ),
             ],
           ),
@@ -115,7 +116,7 @@ class _OpportunitySearchScreenState
               data: (items) => items.isEmpty
                   ? const Center(
                       child: Text('No results found',
-                          style: TextStyle(color: AppColors.grey2)))
+                          style: TextStyle(color: context.textSecondary)))
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                       itemCount: items.length,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/event_model.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class EventCard extends ConsumerWidget {
   final EventModel event;
@@ -22,7 +23,7 @@ class EventCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 1,
       shadowColor: Colors.black.withValues(alpha: 0.08),
-      color: Colors.white,
+      color: context.cardBg,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -104,14 +105,14 @@ class EventCard extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(Icons.location_on_outlined,
-                                size: 16, color: Colors.grey[500]),
+                                size: 16, color: context.textSecondary]),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 event.location!,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Colors.grey[600],
+                                  color: context.textSecondary],
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -125,13 +126,13 @@ class EventCard extends ConsumerWidget {
                       child: Row(
                         children: [
                           Icon(Icons.access_time,
-                              size: 16, color: Colors.grey[500]),
+                              size: 16, color: context.textSecondary]),
                           const SizedBox(width: 4),
                           Text(
                             '${event.formattedDate} at ${event.formattedTime}',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.grey[600],
+                              color: context.textSecondary],
                             ),
                           ),
                         ],
@@ -140,13 +141,13 @@ class EventCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(Icons.people_outline,
-                            size: 16, color: Colors.grey[500]),
+                            size: 16, color: context.textSecondary]),
                         const SizedBox(width: 4),
                         Text(
                           '${event.rsvpCount} attending',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey[600],
+                            color: context.textSecondary],
                           ),
                         ),
                         const Spacer(),

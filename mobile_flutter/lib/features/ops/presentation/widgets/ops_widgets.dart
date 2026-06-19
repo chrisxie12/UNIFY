@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// Reusable stat card used across the OPS dashboards.
 ///
@@ -26,9 +27,9 @@ class OpsStatCard extends StatelessWidget {
         margin: const EdgeInsets.all(4),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,12 +41,12 @@ class OpsStatCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
-                color: AppColors.dark,
+                color: context.textPrimary,
               ),
             ),
             Text(
               label,
-              style: const TextStyle(fontSize: 11, color: AppColors.grey2),
+              style: const TextStyle(fontSize: 11, color: context.textSecondary),
             ),
           ],
         ),
@@ -76,13 +77,13 @@ class OpsMetricRow extends StatelessWidget {
       child: Row(
         children: [
           if (leading != null) ...[
-            Icon(leading, size: 16, color: AppColors.grey3),
+            Icon(leading, size: 16, color: context.textDisabled),
             const SizedBox(width: 8),
           ],
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 13.5, color: AppColors.grey1),
+              style: const TextStyle(fontSize: 13.5, color: context.textPrimary),
             ),
           ),
           Text(
@@ -118,9 +119,9 @@ class OpsSectionCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       child: Column(
@@ -137,7 +138,7 @@ class OpsSectionCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.dark,
+                  color: context.textPrimary,
                 ),
               ),
             ],

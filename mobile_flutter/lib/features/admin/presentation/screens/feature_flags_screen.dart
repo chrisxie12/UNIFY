@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../system/data/models/system_models.dart';
 import '../../../system/presentation/providers/feature_flags_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class FeatureFlagsScreen extends ConsumerWidget {
   const FeatureFlagsScreen({super.key});
@@ -12,9 +13,9 @@ class FeatureFlagsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final flags = ref.watch(allFeatureFlagsProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -57,7 +58,7 @@ class _FlagTile extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 3),
                     child: Text(flag.description,
                         style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600)),
+                            fontSize: 12, color: context.textSecondary.shade600)),
                   ),
               ],
             ),

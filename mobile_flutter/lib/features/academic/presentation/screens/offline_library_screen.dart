@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class OfflineLibraryScreen extends ConsumerWidget {
   const OfflineLibraryScreen({super.key});
@@ -13,9 +14,9 @@ class OfflineLibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(offlineResourcesProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -35,9 +36,9 @@ class OfflineLibraryScreen extends ConsumerWidget {
                     width: 72,
                     height: 72,
                     decoration: const BoxDecoration(
-                        color: AppColors.surface, shape: BoxShape.circle),
+                        color: context.cardBg, shape: BoxShape.circle),
                     child: const Icon(Icons.cloud_download_outlined,
-                        size: 32, color: AppColors.grey3),
+                        size: 32, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
                   const Text('No offline resources',
@@ -47,7 +48,7 @@ class OfflineLibraryScreen extends ConsumerWidget {
                   const Text(
                       'Tap the cloud icon on any resource to save it here.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
             );

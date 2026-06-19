@@ -38,9 +38,9 @@ class DeadlinesScreen extends ConsumerWidget {
                     width: 72,
                     height: 72,
                     decoration: const BoxDecoration(
-                        color: AppColors.surface, shape: BoxShape.circle),
+                        color: context.cardBg, shape: BoxShape.circle),
                     child: const Icon(Icons.alarm_off_rounded,
-                        size: 32, color: AppColors.grey3),
+                        size: 32, color: context.textDisabled),
                   ),
                   const SizedBox(height: 14),
                   const Text('No upcoming deadlines',
@@ -48,7 +48,7 @@ class DeadlinesScreen extends ConsumerWidget {
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
                   const Text('Save opportunities to see their deadlines here.',
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
             );
@@ -130,7 +130,7 @@ class _DeadlineRow extends StatelessWidget {
                   const SizedBox(height: 3),
                   Row(
                     children: [
-                      Icon(o.type.icon, size: 13, color: AppColors.grey3),
+                      Icon(o.type.icon, size: 13, color: context.textDisabled),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(o.organization ?? o.type.label,

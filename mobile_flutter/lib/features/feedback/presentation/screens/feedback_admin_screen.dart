@@ -90,7 +90,7 @@ class _StatHeader extends ConsumerWidget {
         const SizedBox(height: 2),
         Text(label,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+            style: const TextStyle(fontSize: 11, color: context.textSecondary)),
       ],
     );
   }
@@ -110,7 +110,7 @@ class _QueueTab extends ConsumerWidget {
         if (items.isEmpty) {
           return Center(
             child: Text('No ${FeedbackStatus.label(status).toLowerCase()} items',
-                style: const TextStyle(color: AppColors.grey2)),
+                style: const TextStyle(color: context.textSecondary)),
           );
         }
         return RefreshIndicator(
@@ -158,7 +158,7 @@ class _FeedbackCard extends ConsumerWidget {
                 const Spacer(),
                 Text('${item.voteCount} votes',
                     style: const TextStyle(
-                        fontSize: 12, color: AppColors.grey2)),
+                        fontSize: 12, color: context.textSecondary)),
               ],
             ),
             const SizedBox(height: 10),
@@ -168,7 +168,7 @@ class _FeedbackCard extends ConsumerWidget {
             Text(item.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: AppColors.grey1)),
+                style: const TextStyle(fontSize: 13, color: context.textPrimary)),
             if (item.screenshotUrl != null &&
                 item.screenshotUrl!.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -181,10 +181,10 @@ class _FeedbackCard extends ConsumerWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     height: 120,
-                    color: AppColors.surface,
+                    color: context.cardBg,
                     alignment: Alignment.center,
                     child: const Icon(Icons.broken_image_outlined,
-                        color: AppColors.grey3),
+                        color: context.textDisabled),
                   ),
                 ),
               ),
@@ -213,7 +213,7 @@ class _FeedbackCard extends ConsumerWidget {
                 ),
                 child: Text(item.adminResponse!,
                     style: const TextStyle(
-                        fontSize: 13, color: AppColors.grey1)),
+                        fontSize: 13, color: context.textPrimary)),
               ),
             ],
           ],
@@ -260,10 +260,10 @@ class _FeedbackCard extends ConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: AppColors.grey3),
+        Icon(icon, size: 14, color: context.textDisabled),
         const SizedBox(width: 4),
         Text(text,
-            style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+            style: const TextStyle(fontSize: 12, color: context.textSecondary)),
       ],
     );
   }
@@ -338,7 +338,7 @@ class _ManageSheetState extends ConsumerState<_ManageSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.grey4,
+                color: context.borderCol,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -375,14 +375,14 @@ class _ManageSheetState extends ConsumerState<_ManageSheet> {
             decoration: InputDecoration(
               hintText: 'Reply to the reporter (optional)',
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: const BorderSide(color: context.borderCol),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.border),
+                borderSide: const BorderSide(color: context.borderCol),
               ),
             ),
           ),

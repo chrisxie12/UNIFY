@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ambassador_models.dart';
@@ -28,7 +30,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
         actions: [
           detailAsync.maybeWhen(
             data: (a) => PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey2),
+              icon: Icon(Icons.more_vert_rounded, color: context.textSecondary),
               onSelected: (status) async {
                 await ref
                     .read(ambassadorRepositoryProvider)
@@ -65,19 +67,16 @@ class AmbassadorDetailScreen extends ConsumerWidget {
               ref.invalidate(ambassadorEventsProvider(ambassadorId));
             },
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 88),
+              padding: const EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
               children: [
                 _Header(ambassador: ambassador),
-                const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
+                const SizedBox(height: USpacing.base),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text('Events',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: context.textPrimary)),
+                      style: UText.h4.copyWith(color: context.textPrimary)),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: USpacing.sm),
                 eventsAsync.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.only(top: 24),
@@ -89,12 +88,11 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                   ),
                   data: (events) {
                     if (events.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 40),
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 40),
                         child: Center(
                           child: Text('No events yet',
-                              style: TextStyle(
-                                  fontSize: 13, color: AppColors.grey3)),
+                              style: UText.bodyXS.copyWith(color: context.textSecondary)),
                         ),
                       );
                     }
@@ -139,7 +137,7 @@ class _Header extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: context.borderCol),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(USpacing.base),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -170,17 +168,13 @@ class _Header extends StatelessWidget {
                       ambassador.fullName?.isNotEmpty == true
                           ? ambassador.fullName!
                           : 'Ambassador',
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                          color: context.textPrimary),
+                      style: UText.h3.copyWith(color: context.textPrimary),
                     ),
                     if (subtitle.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(subtitle,
-                            style: const TextStyle(
-                                fontSize: 12, color: AppColors.grey2)),
+                            style: UText.caption.copyWith(color: context.textSecondary)),
                       ),
                   ],
                 ),
@@ -190,7 +184,7 @@ class _Header extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: URadius.mdAll,
                 ),
                 child: Text(ambassador.status.toUpperCase(),
                     style: TextStyle(
@@ -201,22 +195,21 @@ class _Header extends StatelessWidget {
             ],
           ),
           if (ambassador.bio != null && ambassador.bio!.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             Text(ambassador.bio!,
-                style: const TextStyle(fontSize: 13, color: AppColors.grey1)),
+                style: UText.bodyXS.copyWith(color: context.textSecondary)),
           ],
           if (ambassador.contact != null &&
               ambassador.contact!.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: USpacing.sm),
             Row(
               children: [
-                const Icon(Icons.alternate_email_rounded,
-                    size: 15, color: AppColors.grey3),
+                Icon(Icons.alternate_email_rounded,
+                    size: 15, color: context.textSecondary),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(ambassador.contact!,
-                      style: const TextStyle(
-                          fontSize: 12, color: AppColors.grey2)),
+                      style: UText.caption.copyWith(color: context.textSecondary)),
                 ),
               ],
             ),
@@ -274,16 +267,13 @@ class _EventCard extends ConsumerWidget {
             child: const Icon(Icons.event_rounded,
                 color: AppColors.warning, size: 20),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: USpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(event.title,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.dark)),
+                    style: UText.label.copyWith(color: context.textPrimary)),
                 if (event.description != null &&
                     event.description!.isNotEmpty)
                   Padding(
@@ -291,8 +281,7 @@ class _EventCard extends ConsumerWidget {
                     child: Text(event.description!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                        style: UText.caption.copyWith(color: context.textSecondary)),
                   ),
                 const SizedBox(height: 4),
                 Text(
@@ -300,15 +289,14 @@ class _EventCard extends ConsumerWidget {
                     if (dateLabel != null) dateLabel,
                     '${event.attendance} attended',
                   ].join(' • '),
-                  style:
-                      const TextStyle(fontSize: 11, color: AppColors.grey3),
+                  style: UText.tiny.copyWith(color: context.textSecondary),
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.delete_outline_rounded,
-                color: AppColors.grey3),
+            icon: Icon(Icons.delete_outline_rounded,
+                color: context.textSecondary),
             onPressed: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
@@ -361,19 +349,18 @@ class _StatTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: URadius.mdAll,
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 22),
             const SizedBox(height: 6),
             Text(value,
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w800, color: color)),
+                style: UText.h2.copyWith(color: color)),
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: UText.tiny.copyWith(color: context.textSecondary)),
           ],
         ),
       ),
@@ -414,7 +401,7 @@ Future<void> showAddEventDialog(
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: USpacing.md),
                   TextField(
                     controller: descriptionController,
                     maxLines: 2,
@@ -423,7 +410,7 @@ Future<void> showAddEventDialog(
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: USpacing.md),
                   InkWell(
                     onTap: () async {
                       final now = DateTime.now();
@@ -448,13 +435,13 @@ Future<void> showAddEventDialog(
                             : '${eventDate!.day}/${eventDate!.month}/${eventDate!.year}',
                         style: TextStyle(
                           color: eventDate == null
-                              ? AppColors.grey3
-                              : AppColors.dark,
+                              ? ctx.textSecondary
+                              : ctx.textPrimary,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: USpacing.md),
                   TextField(
                     controller: attendanceController,
                     keyboardType: TextInputType.number,

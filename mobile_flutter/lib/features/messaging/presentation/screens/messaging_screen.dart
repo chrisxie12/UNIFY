@@ -658,7 +658,7 @@ class _SkeletonTile extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 shape: BoxShape.circle,
               ),
             ),
@@ -672,7 +672,7 @@ class _SkeletonTile extends StatelessWidget {
                   Container(
                     height: 14,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.cardBg,
                       borderRadius: BorderRadius.circular(7),
                     ),
                   ),
@@ -681,7 +681,7 @@ class _SkeletonTile extends StatelessWidget {
                     height: 12,
                     width: 180,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.cardBg,
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
@@ -694,7 +694,7 @@ class _SkeletonTile extends StatelessWidget {
               height: 10,
               width: 36,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(5),
               ),
             ),

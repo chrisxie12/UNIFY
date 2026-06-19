@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class CreateEventScreen extends ConsumerStatefulWidget {
@@ -104,25 +107,25 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(USpacing.base),
           children: [
             TextFormField(
               controller: _titleCtrl,
               decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
               validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             TextFormField(
               controller: _descCtrl,
               decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
               maxLines: 3,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             TextFormField(
               controller: _venueCtrl,
               decoration: const InputDecoration(labelText: 'Venue / Location', border: OutlineInputBorder()),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             Row(
               children: [
                 Expanded(
@@ -140,7 +143,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: USpacing.md),
                 Expanded(
                   child: _TimePickerField(
                     label: 'Time',
@@ -156,45 +159,45 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: USpacing.base),
             DropdownButtonFormField<String>(
               initialValue: _eventType,
               decoration: const InputDecoration(labelText: 'Event Type', border: OutlineInputBorder()),
               items: _eventTypes.map((t) => DropdownMenuItem(value: t, child: Text(t.replaceAll('_', ' ').split(' ').map((w) => w[0].toUpperCase() + w.substring(1)).join(' ')))).toList(),
               onChanged: (v) => setState(() => _eventType = v!),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             DropdownButtonFormField<String>(
               initialValue: _category,
               decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder()),
               items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(_categoryLabels[c] ?? c))).toList(),
               onChanged: (v) => setState(() => _category = v!),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             DropdownButtonFormField<String>(
               initialValue: _scope,
               decoration: const InputDecoration(labelText: 'Scope', border: OutlineInputBorder()),
               items: ['community', 'faculty', 'university', 'campus'].map((s) => DropdownMenuItem(value: s, child: Text(s[0].toUpperCase() + s.substring(1)))).toList(),
               onChanged: (v) => setState(() => _scope = v!),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             TextFormField(
               controller: _capacityCtrl,
               decoration: const InputDecoration(labelText: 'Capacity (optional)', border: OutlineInputBorder()),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             SwitchListTile(
               title: const Text('Virtual Event'),
               value: _isVirtual,
               onChanged: (v) => setState(() => _isVirtual = v),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: USpacing.md),
             TextFormField(
               controller: _contactCtrl,
               decoration: const InputDecoration(labelText: 'Contact Info (optional)', border: OutlineInputBorder()),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: USpacing.xl),
             FilledButton.icon(
               onPressed: _saving ? null : _create,
               icon: _saving ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.check),

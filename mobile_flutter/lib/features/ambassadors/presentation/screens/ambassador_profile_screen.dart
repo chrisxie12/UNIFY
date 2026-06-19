@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/design_system/components.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ambassador_models.dart';
@@ -16,12 +19,12 @@ class AmbassadorProfileScreen extends ConsumerWidget {
     final myAsync = ref.watch(myAmbassadorProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Ambassador',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -42,46 +45,13 @@ class AmbassadorProfileScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Could not load: $e')),
         data: (ambassador) {
-          if (ambassador == null) return const _EmptyState();
+          if (ambassador == null) return UEmptyState(
+            icon: Icons.campaign_rounded,
+            title: "You're not a campus ambassador yet",
+            subtitle: 'Campus ambassadors represent UNIFY at their university — organising events, growing the community and earning rewards. Reach out to the UNIFY team to get involved.',
+          );
           return _AmbassadorBody(ambassador: ambassador);
         },
-      ),
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.campaign_rounded,
-                size: 56, color: context.primary.withValues(alpha: 0.4)),
-            const SizedBox(height: 16),
-            const Text(
-              "You're not a campus ambassador yet",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.dark),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Campus ambassadors represent UNIFY at their university — '
-              'organising events, growing the community and earning rewards. '
-              'Reach out to the UNIFY team to get involved.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: AppColors.grey2),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -102,24 +72,21 @@ class _AmbassadorBody extends ConsumerWidget {
         ref.invalidate(ambassadorEventsProvider(ambassador.id));
       },
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 88),
+        padding: const EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.cardBg,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: context.borderCol),
             ),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(USpacing.base),
             child: Column(
               children: [
                 Row(
                   children: [
-                    const Text('Your status',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.dark)),
+                    Text('Your status',
+                        style: UText.label.copyWith(color: context.textPrimary)),
                     const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -156,16 +123,13 @@ class _AmbassadorBody extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          const SizedBox(height: USpacing.base),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: USpacing.xs),
             child: Text('Your events',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.dark)),
+                style: UText.h4.copyWith(color: context.textPrimary)),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: USpacing.sm),
           eventsAsync.when(
             loading: () => const Padding(
               padding: EdgeInsets.only(top: 24),
@@ -177,12 +141,11 @@ class _AmbassadorBody extends ConsumerWidget {
             ),
             data: (events) {
               if (events.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.only(top: 40),
+                return Padding(
+                  padding: const EdgeInsets.only(top: 40),
                   child: Center(
                     child: Text('No events yet — add your first one',
-                        style:
-                            TextStyle(fontSize: 13, color: AppColors.grey3)),
+                        style: UText.bodyXS.copyWith(color: context.textSecondary)),
                   ),
                 );
               }
@@ -214,9 +177,9 @@ class _EventCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -237,10 +200,7 @@ class _EventCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(event.title,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.dark)),
+                    style: UText.label.copyWith(color: context.textPrimary)),
                 if (event.description != null &&
                     event.description!.isNotEmpty)
                   Padding(
@@ -248,8 +208,7 @@ class _EventCard extends StatelessWidget {
                     child: Text(event.description!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                        style: UText.caption.copyWith(color: context.textSecondary)),
                   ),
                 const SizedBox(height: 4),
                 Text(
@@ -257,8 +216,7 @@ class _EventCard extends StatelessWidget {
                     if (dateLabel != null) dateLabel,
                     '${event.attendance} attended',
                   ].join(' • '),
-                  style:
-                      const TextStyle(fontSize: 11, color: AppColors.grey3),
+                  style: UText.tiny.copyWith(color: context.textSecondary),
                 ),
               ],
             ),
@@ -289,19 +247,18 @@ class _StatTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: URadius.mdAll,
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 22),
             const SizedBox(height: 6),
             Text(value,
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w800, color: color)),
+                style: UText.h2.copyWith(color: color)),
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: UText.tiny.copyWith(color: context.textSecondary)),
           ],
         ),
       ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class EventMediaGalleryScreen extends ConsumerWidget {
   final String eventId;
@@ -28,17 +32,10 @@ class EventMediaGalleryScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('$e')),
         data: (media) {
           if (media.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text('No media yet', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Text('Photos and videos will appear here after the event.', style: TextStyle(color: Colors.grey[400], fontSize: 13), textAlign: TextAlign.center),
-                ],
-              ),
+            return const UEmptyState(
+              icon: Icons.photo_library_outlined,
+              title: 'No media yet',
+              subtitle: 'Photos and videos will appear here after the event.',
             );
           }
           final photos = media.where((m) => m.isPhoto).toList();
@@ -53,7 +50,7 @@ class EventMediaGalleryScreen extends ConsumerWidget {
                     Tab(text: 'Videos (${videos.length})'),
                   ],
                   labelColor: theme.colorScheme.primary,
-                  unselectedLabelColor: Colors.grey,
+                  unselectedLabelColor: context.textSecondary,
                   indicatorColor: theme.colorScheme.primary,
                 ),
                 Expanded(
@@ -80,14 +77,14 @@ class _PhotoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (photos.isEmpty) {
-      return Center(child: Text('No photos', style: TextStyle(color: Colors.grey[500])));
+      return Center(child: Text('No photos', style: UText.bodyS.copyWith(color: context.textSecondary)));
     }
     return GridView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(USpacing.sm),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
+        crossAxisSpacing: USpacing.xs,
+        mainAxisSpacing: USpacing.xs,
       ),
       itemCount: photos.length,
       itemBuilder: (_, i) {
@@ -95,7 +92,7 @@ class _PhotoGrid extends StatelessWidget {
         return GestureDetector(
           onTap: () => _showPhotoViewer(context, photo),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: URadius.smAll,
             child: Image.network(photo.url as String, fit: BoxFit.cover),
           ),
         );
@@ -112,12 +109,12 @@ class _PhotoGrid extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: URadius.mdAll,
               child: Image.network(photo.url as String, fit: BoxFit.contain),
             ),
             if (photo.caption != null) ...[
-              const SizedBox(height: 8),
-              Text(photo.caption as String, style: const TextStyle(color: Colors.white, fontSize: 14)),
+              const SizedBox(height: USpacing.sm),
+              Text(photo.caption as String, style: UText.bodyS.copyWith(color: Colors.white)),
             ],
           ],
         ),
@@ -133,25 +130,25 @@ class _VideoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (videos.isEmpty) {
-      return Center(child: Text('No videos', style: TextStyle(color: Colors.grey[500])));
+      return Center(child: Text('No videos', style: UText.bodyS.copyWith(color: context.textSecondary)));
     }
     return ListView.builder(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(USpacing.md),
       itemCount: videos.length,
       itemBuilder: (_, i) {
         final video = videos[i];
         return Card(
-          margin: const EdgeInsets.only(bottom: 8),
+          margin: const EdgeInsets.only(bottom: USpacing.sm),
           child: ListTile(
             leading: Container(
-              width: 48, height: 48,
+              width: UIcon.x4, height: UIcon.x4,
               decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(8),
+                color: context.textSecondary],
+                borderRadius: URadius.smAll,
               ),
-              child: const Icon(Icons.play_circle_fill, color: Colors.white, size: 28),
+              child: const Icon(Icons.play_circle_fill, color: Colors.white, size: UIcon.xl),
             ),
-            title: Text(video.caption as String? ?? 'Video', style: const TextStyle(fontSize: 14)),
+            title: Text(video.caption as String? ?? 'Video', style: UText.bodyS),
             trailing: const Icon(Icons.play_arrow),
             onTap: () {
               // Video player placeholder

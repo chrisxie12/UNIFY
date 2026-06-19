@@ -34,9 +34,9 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     final facultiesAsync = ref.watch(facultiesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -44,7 +44,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             style: TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: AppColors.dark),
+            icon: const Icon(Icons.add_rounded, color: context.textPrimary),
             tooltip: 'Add course',
             onPressed: () => context.push('/academic/course-new'),
           ),
@@ -58,14 +58,14 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
               height: 44,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.borderCol),
               ),
               child: Row(
                 children: [
                   const Icon(Icons.search_rounded,
-                      color: AppColors.grey2, size: 20),
+                      color: context.textSecondary, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
@@ -247,7 +247,7 @@ class _CourseRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -288,7 +288,7 @@ class _CourseRow extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                            fontSize: 12, color: context.textSecondary)),
                   ],
                 ],
               ),
@@ -301,7 +301,7 @@ class _CourseRow extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                         color: context.primary)),
                 const Text('files',
-                    style: TextStyle(fontSize: 10, color: AppColors.grey3)),
+                    style: TextStyle(fontSize: 10, color: context.textDisabled)),
               ],
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Onboarding Carousel — 4 premium scenes
@@ -187,7 +188,7 @@ class _OnboardingPage extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: context.cardBg,
               borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             ),
             padding: const EdgeInsets.fromLTRB(32, 36, 32, 120),
@@ -303,7 +304,7 @@ class _IllustrationWidget extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: context.cardBg.withValues(alpha: 0.15),
                 blurRadius: 60,
                 spreadRadius: 20,
               ),
@@ -315,9 +316,9 @@ class _IllustrationWidget extends StatelessWidget {
           width: 140,
           height: 140,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.18),
+            color: context.cardBg.withValues(alpha: 0.18),
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1.5),
+            border: Border.all(color: context.cardBg.withValues(alpha: 0.35), width: 1.5),
           ),
           child: Center(
             child: Text(page.emoji, style: const TextStyle(fontSize: 64)),
@@ -332,11 +333,11 @@ class _IllustrationWidget extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
+                    color: context.textPrimary.withValues(alpha: 0.12),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -425,7 +426,7 @@ class _BottomControls extends StatelessWidget {
     final bottomPad = MediaQuery.of(context).padding.bottom;
 
     return Container(
-      color: Colors.white,
+      color: context.cardBg,
       padding: EdgeInsets.fromLTRB(24, 16, 24, bottomPad + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,

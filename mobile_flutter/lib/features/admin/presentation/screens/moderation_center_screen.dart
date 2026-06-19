@@ -56,9 +56,9 @@ class _ModerationList extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                  Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
                   SizedBox(height: 12),
-                  Text('All clear!', style: TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                  Text('All clear!', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 ],
               ),
             );
@@ -94,9 +94,9 @@ class _ModerationCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,9 +115,9 @@ class _ModerationCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.reportTypeLabel, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(item.reportTypeLabel, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text('by ${item.reporterName ?? "Unknown"}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text('by ${item.reporterName ?? "Unknown"}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -131,21 +131,21 @@ class _ModerationCard extends ConsumerWidget {
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10)),
-                child: Text(item.reason!, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.4)),
+                decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
+                child: Text(item.reason!, style: const TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4)),
               ),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Text(timeAgo(item.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+            child: Text(timeAgo(item.createdAt), style: const TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (item.status == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Dismiss', AppColors.grey1, () => _resolve(context, ref, 'dismissed'))),
-                  Container(width: 1, height: 36, color: AppColors.border),
+                  Container(width: 1, height: 36, color: context.borderCol),
                   Expanded(child: _actionBtn(context, 'Resolve', AppColors.success, () => _resolve(context, ref, 'resolved'))),
                 ],
               ),

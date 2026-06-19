@@ -332,12 +332,8 @@ class _UShimmerBoxState extends State<UShimmerBox>
 
   @override
   Widget build(BuildContext context) {
-    final base = context.isDark
-        ? const Color(0xFF2C313B)
-        : const Color(0xFFE9EBF0);
-    final highlight = context.isDark
-        ? const Color(0xFF3A3F4A)
-        : const Color(0xFFF5F7FA);
+    final base = context.shimmerBase;
+    final highlight = context.shimmerHighlight;
 
     return AnimatedBuilder(
       animation: _anim,

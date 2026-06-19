@@ -347,7 +347,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 8),
                   decoration: BoxDecoration(
-                    color: AppColors.grey4,
+                    color: context.borderCol,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -844,15 +844,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.black.withValues(alpha: 0.22),
+                color: context.textPrimary.withValues(alpha: 0.22),
               ),
               child: Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.45),
+                    color: context.textPrimary.withValues(alpha: 0.45),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 0.8),
+                    border: Border.all(color: context.cardBg.withValues(alpha: 0.3), width: 0.8),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -903,7 +903,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 decoration: BoxDecoration(
                   color: context.primary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.white, width: 2),
+                  border: Border.all(color: context.cardBg, width: 2),
                 ),
                 child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
               ),

@@ -21,9 +21,9 @@ class MessageRequestsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.mail_outline, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.mail_outline, size: 64, color: context.textSecondary]),
                   const SizedBox(height: 16),
-                  Text('No pending requests', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('No pending requests', style: TextStyle(color: context.textSecondary], fontSize: 16)),
                 ],
               ),
             );

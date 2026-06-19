@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
@@ -13,10 +16,10 @@ class AcademicHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coursesAsync = ref.watch(coursesProvider);
-    final resourcesAsync = ref.watch(searchResourcesProvider(''));
+    final resourcesAsync = ref.watch(resourcesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/academic/upload'),
         backgroundColor: context.primary,
@@ -28,55 +31,53 @@ class AcademicHomeScreen extends ConsumerWidget {
         color: context.primary,
         onRefresh: () async {
           ref.invalidate(coursesProvider);
-          ref.invalidate(searchResourcesProvider(''));
+          ref.invalidate(resourcesProvider);
         },
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
+              backgroundColor: context.cardBg,
+              surfaceTintColor: context.cardBg,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0.6,
-              shadowColor: AppColors.border,
-              title: const Text('Academic Hub',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 19,
-                      color: AppColors.dark)),
+              shadowColor: context.borderCol,
+              title: Text('Academic Hub',
+                  style: UText.h3.copyWith(color: context.textPrimary)),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.cloud_download_outlined,
-                      color: AppColors.dark),
+                  icon: Icon(Icons.cloud_download_outlined,
+                      color: context.textPrimary),
                   tooltip: 'Offline library',
                   onPressed: () => context.push('/academic/offline'),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: USpacing.xs),
               ],
             ),
 
             // Search
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                padding: const EdgeInsets.fromLTRB(
+                    USpacing.base, USpacing.md, USpacing.base, USpacing.xs),
                 child: GestureDetector(
                   onTap: () => context.push('/academic/search'),
                   child: Container(
                     height: 46,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border),
+                      color: context.cardBg,
+                      borderRadius: URadius.mdAll,
+                      border: Border.all(color: context.borderCol),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.search_rounded,
-                            color: AppColors.grey2, size: 21),
-                        SizedBox(width: 10),
+                            color: context.textSecondary, size: 21),
+                        const SizedBox(width: 10),
                         Text('Search courses, notes, past questions…',
-                            style: TextStyle(
-                                color: AppColors.grey2, fontSize: 14)),
+                            style: UText.bodyS.copyWith(
+                                color: context.textSecondary)),
                       ],
                     ),
                   ),
@@ -87,7 +88,8 @@ class AcademicHomeScreen extends ConsumerWidget {
             // Tools grid
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+                padding: const EdgeInsets.fromLTRB(
+                    USpacing.base, 14, USpacing.base, USpacing.xs),
                 child: GridView.count(
                   crossAxisCount: 4,
                   shrinkWrap: true,
@@ -128,7 +130,8 @@ class AcademicHomeScreen extends ConsumerWidget {
             // Courses
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                padding: const EdgeInsets.fromLTRB(
+                    USpacing.base, 14, USpacing.base, USpacing.sm),
                 child: _Header(
                   title: 'Your Courses',
                   actionLabel: 'Browse all',
@@ -139,29 +142,32 @@ class AcademicHomeScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: coursesAsync.when(
                 loading: () => const Padding(
-                  padding: EdgeInsets.all(24),
+                  padding: EdgeInsets.all(USpacing.xl),
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (_, __) => const SizedBox.shrink(),
                 data: (courses) {
                   if (courses.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          USpacing.base, 0, USpacing.base, USpacing.sm),
                       child: Text('No courses yet. Browse to add one.',
-                          style:
-                              TextStyle(color: AppColors.grey2, fontSize: 13)),
+                          style: UText.bodyXS.copyWith(
+                              color: context.textSecondary)),
                     );
                   }
                   return SizedBox(
                     height: 120,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: USpacing.base),
                       itemCount: courses.length.clamp(0, 10),
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(width: USpacing.md),
                       itemBuilder: (_, i) => _CourseChip(
                         code: courses[i].code,
-                        title: courses[i].name,
+                        title: courses[i].title,
                         count: courses[i].resourceCount,
                         onTap: () =>
                             context.push('/academic/course/${courses[i].id}'),
@@ -175,33 +181,35 @@ class AcademicHomeScreen extends ConsumerWidget {
             // Recent resources
             const SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
+                padding: EdgeInsets.fromLTRB(
+                    USpacing.base, 14, USpacing.base, USpacing.sm),
                 child: _Header(title: 'Recent Resources'),
               ),
             ),
             resourcesAsync.when(
               loading: () => const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(24),
+                  padding: EdgeInsets.all(USpacing.xl),
                   child: Center(child: CircularProgressIndicator()),
                 ),
               ),
               error: (e, _) => SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(USpacing.xl),
                   child: Center(
                     child: Column(
                       children: [
-                        const Icon(Icons.wifi_off_rounded,
-                            size: 36, color: AppColors.grey3),
+                        Icon(Icons.wifi_off_rounded,
+                            size: 36, color: context.textSecondary),
                         const SizedBox(height: 10),
-                        const Text('Could not load resources',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        const Text('Cached items show when offline.',
-                            style: TextStyle(
-                                fontSize: 12, color: AppColors.grey2)),
+                        Text('Could not load resources',
+                            style: UText.bodyS.copyWith(
+                                color: context.textPrimary,
+                                fontWeight: FontWeight.w600)),
+                        const SizedBox(height: USpacing.xs),
+                        Text('Cached items show when offline.',
+                            style: UText.caption.copyWith(
+                                color: context.textSecondary)),
                       ],
                     ),
                   ),
@@ -209,18 +217,21 @@ class AcademicHomeScreen extends ConsumerWidget {
               ),
               data: (items) {
                 if (items.isEmpty) {
-                  return const SliverToBoxAdapter(
+                  return SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(USpacing.xl),
                       child: Center(
-                        child: Text('No resources yet. Be the first to upload.',
-                            style: TextStyle(color: AppColors.grey2)),
+                        child: Text(
+                            'No resources yet. Be the first to upload.',
+                            style: UText.bodyS.copyWith(
+                                color: context.textSecondary)),
                       ),
                     ),
                   );
                 }
                 return SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                  padding: const EdgeInsets.fromLTRB(
+                      USpacing.base, 0, USpacing.base, 100),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (_, i) => ResourceCard(
@@ -258,9 +269,9 @@ class _Tool extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFF0F1F3)),
+          border: Border.all(color: context.borderCol),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -277,10 +288,9 @@ class _Tool extends StatelessWidget {
             const SizedBox(height: 6),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 10.5,
+                style: UText.caption.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.dark)),
+                    color: context.textPrimary)),
           ],
         ),
       ),
@@ -300,18 +310,14 @@ class _Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: AppColors.dark)),
+            style: UText.h4.copyWith(color: context.textPrimary)),
         if (actionLabel != null)
           GestureDetector(
             onTap: onAction,
             child: Text(actionLabel!,
-                style: TextStyle(
+                style: UText.labelS.copyWith(
                     color: context.primary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13)),
+                    fontWeight: FontWeight.w600)),
           ),
       ],
     );
@@ -352,11 +358,10 @@ class _CourseChip extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(code,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
+                style: UText.labelL.copyWith(
+                    color: context.cardBg,
                     fontWeight: FontWeight.w800)),
-            const SizedBox(height: 4),
+            const SizedBox(height: USpacing.xs),
             Text(title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -369,7 +374,7 @@ class _CourseChip extends StatelessWidget {
               children: [
                 const Icon(Icons.folder_rounded,
                     color: Colors.white70, size: 14),
-                const SizedBox(width: 4),
+                const SizedBox(width: USpacing.xs),
                 Text('$count resources',
                     style: const TextStyle(
                         color: Colors.white70, fontSize: 11)),

@@ -85,7 +85,7 @@ class SupportCenterScreen extends ConsumerWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(items[i].answer,
                                 style: const TextStyle(
-                                    fontSize: 13, color: AppColors.grey1)),
+                                    fontSize: 13, color: context.textPrimary)),
                           ),
                         ],
                       ),
@@ -178,11 +178,11 @@ class SupportCenterScreen extends ConsumerWidget {
                   if (a.category != null && a.category!.isNotEmpty)
                     Text(a.category!,
                         style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                            fontSize: 12, color: context.textSecondary)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.grey3),
+            const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),
@@ -474,7 +474,7 @@ class _SheetScaffold extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.grey4,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -540,14 +540,14 @@ class _SheetField extends StatelessWidget {
         labelText: label,
         hintText: hint,
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
       ),
     );
@@ -574,14 +574,14 @@ class _SheetDropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: const BorderSide(color: context.borderCol),
         ),
       ),
       items: [
@@ -619,7 +619,7 @@ class _ErrorText extends StatelessWidget {
   final Object error;
   @override
   Widget build(BuildContext context) => Text('Could not load\n$error',
-      style: const TextStyle(color: AppColors.grey2));
+      style: const TextStyle(color: context.textSecondary));
 }
 
 class _EmptyText extends StatelessWidget {
@@ -628,6 +628,6 @@ class _EmptyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(text, style: const TextStyle(color: AppColors.grey2)),
+        child: Text(text, style: const TextStyle(color: context.textSecondary)),
       );
 }

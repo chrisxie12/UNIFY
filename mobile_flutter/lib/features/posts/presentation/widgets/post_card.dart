@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/post_model.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class PostCard extends ConsumerWidget {
   final PostModel post;
@@ -28,7 +29,7 @@ class PostCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 1,
       shadowColor: Colors.black.withValues(alpha: 0.08),
-      color: Colors.white,
+      color: context.cardBg,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -90,7 +91,7 @@ class PostCard extends ConsumerWidget {
                             Text(
                               _formatTime(post.createdAt),
                               style: TextStyle(
-                                color: Colors.grey[500],
+                                color: context.textSecondary],
                                 fontSize: 12,
                               ),
                             ),
@@ -136,7 +137,7 @@ class PostCard extends ConsumerWidget {
                     ),
                   ),
                   if (post.isPinned)
-                    Icon(Icons.push_pin, size: 18, color: Colors.grey[400]),
+                    Icon(Icons.push_pin, size: 18, color: context.textSecondary]),
                 ],
               ),
               if (post.title != null) ...[
@@ -154,7 +155,7 @@ class PostCard extends ConsumerWidget {
                 post.body,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[800],
+                  color: context.textSecondary],
                   height: 1.4,
                 ),
                 maxLines: 4,
@@ -186,16 +187,16 @@ class PostCard extends ConsumerWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
                       height: 200,
-                      color: Colors.grey[100],
+                      color: context.textSecondary],
                       child: Center(
-                        child: Icon(Icons.broken_image, color: Colors.grey[400]),
+                        child: Icon(Icons.broken_image, color: context.textSecondary]),
                       ),
                     ),
                     loadingBuilder: (_, child, progress) {
                       if (progress == null) return child;
                       return Container(
                         height: 200,
-                        color: Colors.grey[100],
+                        color: context.textSecondary],
                         child: const Center(child: CircularProgressIndicator()),
                       );
                     },
@@ -207,9 +208,9 @@ class PostCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: context.textSecondary],
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(color: context.textSecondary]!),
                   ),
                   child: Row(
                     children: [
@@ -245,7 +246,7 @@ class PostCard extends ConsumerWidget {
                   _ActionButton(
                     icon: Icons.chat_bubble_outline,
                     label: _formatCount(post.commentsCount),
-                    color: Colors.grey[600],
+                    color: context.textSecondary],
                     onPressed: onTap,
                   ),
                   const SizedBox(width: 12),
@@ -262,7 +263,7 @@ class PostCard extends ConsumerWidget {
                   const SizedBox(width: 12),
                   _ActionButton(
                     icon: Icons.share_outlined,
-                    color: Colors.grey[600],
+                    color: context.textSecondary],
                     onPressed: onShare,
                   ),
                 ],

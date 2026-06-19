@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/feed_provider.dart';
 import '../../domain/entities/announcement.dart';
@@ -10,6 +9,9 @@ import '../widgets/announcement_card.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -98,7 +100,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                       letterSpacing: 3,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: USpacing.sm),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
@@ -107,11 +109,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                     ),
                     child: Text(
                       firstName.isNotEmpty ? '$_greeting, $firstName' : _greeting,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: context.primary,
-                      ),
+                      style: UText.tiny.copyWith(color: context.primary),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -145,7 +143,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                     ),
                   ],
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: USpacing.xs),
               ],
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(1),
@@ -190,26 +188,26 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                         Container(
                           width: 72,
                           height: 72,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF3F4F6),
+                          decoration: BoxDecoration(
+                            color: context.cardBg,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.wifi_off_rounded, size: 36, color: Color(0xFF9CA3AF)),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: USpacing.base),
                         Text(
                           'Could not load feed',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary),
+                          style: UText.h4.copyWith(color: context.textPrimary),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: USpacing.sm),
                         Text(
                           e.toString(),
-                          style: TextStyle(fontSize: 13, color: context.textSecondary),
+                          style: UText.bodyXS.copyWith(color: context.textSecondary),
                           textAlign: TextAlign.center,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: USpacing.lg),
                         FilledButton(
                           onPressed: () => ref.invalidate(feedProvider),
                           style: FilledButton.styleFrom(
@@ -241,15 +239,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                             ),
                             child: Icon(Icons.campaign_outlined, size: 36, color: context.primary),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: USpacing.base),
                           Text(
                             'Nothing here yet',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary),
+                            style: UText.h4.copyWith(color: context.textPrimary),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             'Check back soon for campus updates.',
-                            style: TextStyle(fontSize: 13, color: context.textSecondary),
+                            style: UText.bodyXS.copyWith(color: context.textSecondary),
                           ),
                         ],
                       ),
@@ -259,7 +257,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                 return SliverMainAxisGroup(
                   slivers: [
                     SliverPadding(
-                      padding: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.only(top: USpacing.sm),
                       sliver: SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (_, i) => AnnouncementCard(
@@ -273,11 +271,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                     if (feedState.isLoadingMore)
                       SliverToBoxAdapter(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          padding: const EdgeInsets.symmetric(vertical: USpacing.lg),
                           child: Center(
                             child: SizedBox(
-                              width: 24,
-                              height: 24,
+                              width: USpacing.xl,
+                              height: USpacing.xl,
                               child: CircularProgressIndicator(color: context.primary, strokeWidth: 2),
                             ),
                           ),
@@ -297,22 +295,22 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                                 ),
                                 child: Icon(Icons.check_circle_outline_rounded, size: 32, color: context.textSecondary),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: USpacing.md),
                               Text(
                                 "You're all caught up",
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.textSecondary),
+                                style: UText.labelL.copyWith(color: context.textSecondary),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: USpacing.xs),
                               Text(
                                 'Pull down to refresh for new updates',
-                                style: TextStyle(fontSize: 12, color: context.textSecondary),
+                                style: UText.caption.copyWith(color: context.textSecondary),
                               ),
                             ],
                           ),
                         ),
                       )
                     else
-                      const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                      const SliverToBoxAdapter(child: SizedBox(height: USpacing.x2)),
                   ],
                 );
               },
@@ -344,7 +342,7 @@ class _StoriesRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+      padding: const EdgeInsets.fromLTRB(USpacing.base, 14, 0, 14),
       child: SizedBox(
         height: 84,
         child: ListView(
@@ -392,7 +390,7 @@ class _MyStory extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: context.borderCol, width: 2),
-                  color: const Color(0xFFF5F7FA),
+                  color: context.bg,
                 ),
                 child: avatarUrl != null
                     ? ClipOval(
@@ -413,7 +411,7 @@ class _MyStory extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: context.primary,
                     shape: BoxShape.circle,
-                    boxShadow: const [BoxShadow(color: Colors.white, blurRadius: 0, spreadRadius: 2)],
+                    boxShadow: const [BoxShadow(color: context.cardBg, blurRadius: 0, spreadRadius: 2)],
                   ),
                   child: const Icon(Icons.add, size: 13, color: Colors.white),
                 ),
@@ -422,7 +420,7 @@ class _MyStory extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Text('Your Story', style: TextStyle(fontSize: 10, color: context.textSecondary, fontWeight: FontWeight.w500)),
+        Text('Your Story', style: UText.tiny.copyWith(color: context.textSecondary)),
       ],
     );
   }
@@ -480,7 +478,7 @@ class _StoryBubble extends StatelessWidget {
         decoration: const BoxDecoration(shape: BoxShape.circle, gradient: _ring),
         padding: const EdgeInsets.all(2.5),
         child: Container(
-          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          decoration: const BoxDecoration(shape: BoxShape.circle, color: context.cardBg),
           padding: const EdgeInsets.all(1.5),
           child: inner,
         ),
@@ -493,7 +491,7 @@ class _StoryBubble extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           data.name.split(' ').first,
-          style: TextStyle(fontSize: 10, color: context.textPrimary, fontWeight: FontWeight.w500),
+          style: UText.tiny.copyWith(color: context.textPrimary),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -525,15 +523,15 @@ class _ComposerBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      padding: const EdgeInsets.fromLTRB(USpacing.base, 0, USpacing.base, 14),
       child: Material(
         elevation: 2,
         shadowColor: Colors.black.withValues(alpha: 0.07),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: URadius.baseAll,
         color: context.cardBg,
         child: InkWell(
           onTap: () {},
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: URadius.baseAll,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
             child: Row(
@@ -541,7 +539,7 @@ class _ComposerBar extends StatelessWidget {
                 Container(
                   width: 32,
                   height: 32,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.surface),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: context.cardBg),
                   child: avatarUrl != null
                       ? ClipOval(
                           child: CachedNetworkImage(
@@ -552,14 +550,14 @@ class _ComposerBar extends StatelessWidget {
                         )
                       : _Initials(firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: USpacing.md),
                 Expanded(
                   child: Text(
                     'Share an update, idea or question…',
-                    style: TextStyle(fontSize: 13.5, color: context.textSecondary),
+                    style: UText.bodyXS.copyWith(color: context.textSecondary),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: USpacing.sm),
                 Icon(Icons.photo_camera_outlined, color: context.textSecondary, size: 20),
               ],
             ),
@@ -595,11 +593,11 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
               tabAlignment: TabAlignment.start,
               labelColor: context.primary,
               unselectedLabelColor: context.textSecondary,
-              labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-              unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              labelStyle: UText.labelS,
+              unselectedLabelStyle: UText.bodyXS,
               indicator: BoxDecoration(
                 color: context.primary.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: URadius.lgAll,
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 7),
@@ -625,64 +623,6 @@ class _ShimmerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: const Color(0xFFE5E7EB),
-      highlightColor: const Color(0xFFF3F4F6),
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _box(42, 42, radius: 21),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _box(130, 13),
-                      const SizedBox(height: 6),
-                      _box(80, 11),
-                    ],
-                  ),
-                ),
-                _box(60, 22, radius: 6),
-              ],
-            ),
-            const SizedBox(height: 14),
-            _box(double.infinity, 15),
-            const SizedBox(height: 8),
-            _box(double.infinity, 13),
-            const SizedBox(height: 5),
-            _box(200, 13),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                _box(56, 11),
-                const SizedBox(width: 20),
-                _box(64, 11),
-                const SizedBox(width: 12),
-                _box(52, 11),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return const UShimmerCard();
   }
-
-  Widget _box(double w, double h, {double radius = 6}) => Container(
-    width: w, height: h,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(radius),
-    ),
-  );
 }

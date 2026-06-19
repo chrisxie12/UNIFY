@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/event_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class TicketScreen extends ConsumerWidget {
   final String ticketId;
@@ -57,11 +58,11 @@ class _TicketCard extends StatelessWidget {
       width: double.infinity,
       constraints: const BoxConstraints(maxWidth: 340),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: context.textSecondary]!),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 8)),
+          BoxShadow(color: context.textPrimary.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 8)),
         ],
       ),
       child: Column(
@@ -91,9 +92,9 @@ class _TicketCard extends StatelessWidget {
             child: Container(
               width: 160, height: 160,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[200]!),
+                border: Border.all(color: context.textSecondary]!),
               ),
               child: CustomPaint(
                 painter: _QRPainter(ticket.qrCode as String),
@@ -105,12 +106,12 @@ class _TicketCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.grey[200]!), bottom: BorderSide(color: Colors.grey[200]!)),
+              border: Border(top: BorderSide(color: context.textSecondary]!), bottom: BorderSide(color: context.textSecondary]!)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Ticket #', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                Text('Ticket #', style: TextStyle(fontSize: 12, color: context.textSecondary])),
                 Text(ticket.ticketNumber as String, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 1)),
               ],
             ),
@@ -147,7 +148,7 @@ class _TicketInfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+          Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary])),
           Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: valueColor)),
         ],
       ),

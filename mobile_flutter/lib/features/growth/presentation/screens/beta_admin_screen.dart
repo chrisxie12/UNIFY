@@ -167,7 +167,7 @@ class _WaitlistCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(entry.email,
                     style:
-                        const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                        const TextStyle(fontSize: 12, color: context.textSecondary)),
                 if (entry.programme != null || entry.universityName != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
@@ -176,7 +176,7 @@ class _WaitlistCard extends ConsumerWidget {
                           .where((s) => s != null && s.isNotEmpty)
                           .join(' • '),
                       style: const TextStyle(
-                          fontSize: 11, color: AppColors.grey3),
+                          fontSize: 11, color: context.textDisabled),
                     ),
                   ),
               ],
@@ -185,7 +185,7 @@ class _WaitlistCard extends ConsumerWidget {
           const SizedBox(width: 8),
           _StatusChip(label: entry.status, color: color),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey2),
+            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (status) async {
               await ref
                   .read(growthRepositoryProvider)
@@ -401,7 +401,7 @@ class _InviteCodeCard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 6),
                       const Icon(Icons.copy_rounded,
-                          size: 14, color: AppColors.grey3),
+                          size: 14, color: context.textDisabled),
                     ],
                   ),
                 ),
@@ -412,7 +412,7 @@ class _InviteCodeCard extends ConsumerWidget {
                     const SizedBox(width: 6),
                     Text(usesLabel,
                         style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                            fontSize: 12, color: context.textSecondary)),
                   ],
                 ),
                 if (code.note != null && code.note!.isNotEmpty)
@@ -420,7 +420,7 @@ class _InviteCodeCard extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(code.note!,
                         style: const TextStyle(
-                            fontSize: 11, color: AppColors.grey3)),
+                            fontSize: 11, color: context.textDisabled)),
                   ),
               ],
             ),
@@ -516,7 +516,7 @@ class _BetaTesterCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${tester.cohort.isEmpty ? 'No cohort' : tester.cohort} • ${tester.feedbackCount} feedback',
-                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                  style: const TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),
@@ -524,7 +524,7 @@ class _BetaTesterCard extends ConsumerWidget {
           const SizedBox(width: 8),
           _StatusChip(label: tester.status, color: color),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey2),
+            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (status) async {
               await ref
                   .read(growthRepositoryProvider)
@@ -579,7 +579,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: const TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),
@@ -638,10 +638,10 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 48, color: AppColors.grey4),
+          Icon(icon, size: 48, color: context.borderCol),
           const SizedBox(height: 12),
           Text(message,
-              style: const TextStyle(fontSize: 14, color: AppColors.grey3)),
+              style: const TextStyle(fontSize: 14, color: context.textDisabled)),
         ],
       ),
     );

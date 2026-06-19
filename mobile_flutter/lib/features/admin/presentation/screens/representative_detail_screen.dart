@@ -70,7 +70,7 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
     final postsAsync = ref.watch(_repRecentPostsProvider(widget.userId));
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.bg,
       appBar: AppBar(
         title: const Text('Representative Detail'),
         actions: [
@@ -152,9 +152,9 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
               children: [
                 const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
                 const SizedBox(height: 12),
-                const Text('Error loading profile', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                const Text('Error loading profile', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
-                Text('$e', style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
+                Text('$e', style: const TextStyle(fontSize: 13, color: context.textDisabled)),
                 const SizedBox(height: 16),
                 FilledButton.tonalIcon(
                   onPressed: () => ref.invalidate(_repProfileProvider(widget.userId)),
@@ -217,7 +217,7 @@ class _ProfileHeader extends StatelessWidget {
                     width: 24,
                     height: 24,
                     decoration: const BoxDecoration(
-                      color: AppColors.white,
+                      color: context.cardBg,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.verified_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
@@ -226,14 +226,14 @@ class _ProfileHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.white)),
+          Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
           const SizedBox(height: 4),
           if (profile['email'] != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Text(
                 profile['email'] as String,
-                style: TextStyle(fontSize: 13, color: AppColors.white.withValues(alpha: 0.8)),
+                style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.8)),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -253,7 +253,7 @@ class _VerificationBadge extends StatelessWidget {
       'verified' => (const Icon(Icons.check_circle_rounded, size: 16, color: AppColors.success), 'Verified', AppColors.success),
       'pending' => (const Icon(Icons.access_time_rounded, size: 16, color: AppColors.warning), 'Pending', AppColors.warning),
       'rejected' => (const Icon(Icons.cancel_rounded, size: 16, color: AppColors.error), 'Rejected', AppColors.error),
-      _ => (const Icon(Icons.person_outline_rounded, size: 16, color: AppColors.grey2), 'Regular Student', AppColors.grey2),
+      _ => (const Icon(Icons.person_outline_rounded, size: 16, color: context.textSecondary), 'Regular Student', AppColors.grey2),
     };
 
     return Container(
@@ -294,9 +294,9 @@ class _DetailSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -306,7 +306,7 @@ class _DetailSection extends StatelessWidget {
             children: [
               Icon(Icons.person_outline_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Profile Details', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Profile Details', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -317,10 +317,10 @@ class _DetailSection extends StatelessWidget {
               children: [
                 SizedBox(
                   width: 110,
-                  child: Text(item.key, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                  child: Text(item.key, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
                 ),
                 Expanded(
-                  child: Text(item.value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                  child: Text(item.value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 ),
               ],
             ),
@@ -351,9 +351,9 @@ class _VerificationDocumentsSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -363,9 +363,9 @@ class _VerificationDocumentsSection extends StatelessWidget {
             children: [
               Icon(Icons.description_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Verification Documents', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Verification Documents', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
               const Spacer(),
-              Text('${urls.length}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              Text('${urls.length}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -374,7 +374,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: const Center(
-                child: Text('No documents submitted', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                child: Text('No documents submitted', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
           else
@@ -441,9 +441,9 @@ class _VerificationDocumentsSection extends StatelessWidget {
               errorBuilder: (_, __, ___) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.link_rounded, size: 40, color: AppColors.grey3),
+                  const Icon(Icons.link_rounded, size: 40, color: context.textDisabled),
                   const SizedBox(height: 8),
-                  const Text('Could not load image', style: TextStyle(color: AppColors.grey3)),
+                  const Text('Could not load image', style: TextStyle(color: context.textDisabled)),
                   const SizedBox(height: 12),
                   FilledButton.tonal(
                     onPressed: () => _openUrl(url),
@@ -476,9 +476,9 @@ class _VerificationHistorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -488,9 +488,9 @@ class _VerificationHistorySection extends StatelessWidget {
             children: [
               Icon(Icons.history_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Verification History', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Verification History', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
               const Spacer(),
-              Text('${logs.length}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              Text('${logs.length}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -499,7 +499,7 @@ class _VerificationHistorySection extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: const Center(
-                child: Text('No verification history', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                child: Text('No verification history', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
           else
@@ -546,17 +546,17 @@ class _VerificationHistorySection extends StatelessWidget {
                 if (performedBy != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
-                    child: Text('by $performedBy', style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                    child: Text('by $performedBy', style: const TextStyle(fontSize: 11, color: context.textSecondary)),
                   ),
                 if (notes != null && notes.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(notes, style: const TextStyle(fontSize: 11, color: AppColors.grey3, fontStyle: FontStyle.italic)),
+                    child: Text(notes, style: const TextStyle(fontSize: 11, color: context.textDisabled, fontStyle: FontStyle.italic)),
                   ),
                 if (createdAt != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
-                    child: Text(_timeAgo(DateTime.parse(createdAt)), style: const TextStyle(fontSize: 10, color: AppColors.grey3)),
+                    child: Text(_timeAgo(DateTime.parse(createdAt)), style: const TextStyle(fontSize: 10, color: context.textDisabled)),
                   ),
               ],
             ),
@@ -583,9 +583,9 @@ class _ManagedCommunitiesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -595,9 +595,9 @@ class _ManagedCommunitiesSection extends StatelessWidget {
             children: [
               Icon(Icons.groups_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Communities Managed', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Communities Managed', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
               const Spacer(),
-              Text('${managers.length}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              Text('${managers.length}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -606,7 +606,7 @@ class _ManagedCommunitiesSection extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: const Center(
-                child: Text('Not managing any communities', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                child: Text('Not managing any communities', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
           else
@@ -633,11 +633,11 @@ class _ManagedCommunitiesSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                          Text(name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                           if (typeLabel != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 1),
-                              child: Text(typeLabel, style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                              child: Text(typeLabel, style: const TextStyle(fontSize: 11, color: context.textSecondary)),
                             ),
                         ],
                       ),
@@ -670,9 +670,9 @@ class _RecentActivitySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -682,7 +682,7 @@ class _RecentActivitySection extends StatelessWidget {
             children: [
               Icon(Icons.article_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Recent Activity', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Recent Activity', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -691,7 +691,7 @@ class _RecentActivitySection extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: const Center(
-                child: Text('No recent activity', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                child: Text('No recent activity', style: TextStyle(fontSize: 13, color: context.textDisabled)),
               ),
             )
           else
@@ -720,13 +720,13 @@ class _RecentActivitySection extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (title != null && title.isNotEmpty)
-                            Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                            Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                           if (body != null && body.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 2),
                               child: Text(
                                 body,
-                                style: const TextStyle(fontSize: 11, color: AppColors.grey2),
+                                style: const TextStyle(fontSize: 11, color: context.textSecondary),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -734,7 +734,7 @@ class _RecentActivitySection extends StatelessWidget {
                           if (createdAt != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 2),
-                              child: Text(_timeAgo(DateTime.parse(createdAt)), style: const TextStyle(fontSize: 10, color: AppColors.grey3)),
+                              child: Text(_timeAgo(DateTime.parse(createdAt)), style: const TextStyle(fontSize: 10, color: context.textDisabled)),
                             ),
                         ],
                       ),
@@ -766,9 +766,9 @@ class _ActionButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -778,7 +778,7 @@ class _ActionButtons extends ConsumerWidget {
             children: [
               Icon(Icons.gavel_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
-              const Text('Verification Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+              const Text('Verification Actions', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
           const SizedBox(height: 12),
@@ -934,16 +934,16 @@ class _SectionError extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.error_outline_rounded, size: 24, color: AppColors.error),
           const SizedBox(height: 8),
-          Text(message, style: const TextStyle(fontSize: 13, color: AppColors.grey2), textAlign: TextAlign.center),
+          Text(message, style: const TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
         ],
       ),
     );

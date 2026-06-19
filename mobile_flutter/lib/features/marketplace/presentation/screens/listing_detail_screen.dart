@@ -100,7 +100,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                           imageUrl: l.images[i],
                           fit: BoxFit.cover,
                           placeholder: (_, __) =>
-                              Container(color: AppColors.surface),
+                              Container(color: context.cardBg),
                         ),
                       ),
                       if (l.images.length > 1)
@@ -167,11 +167,11 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                     Row(
                       children: [
                         const Icon(Icons.remove_red_eye_outlined,
-                            size: 14, color: AppColors.grey3),
+                            size: 14, color: context.textDisabled),
                         const SizedBox(width: 4),
                         Text('${l.viewCount}',
                             style: const TextStyle(
-                                fontSize: 12, color: AppColors.grey3)),
+                                fontSize: 12, color: context.textDisabled)),
                       ],
                     ),
                   ],
@@ -197,7 +197,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: AppColors.surface,
+                            color: context.cardBg,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text('Negotiable',
@@ -427,7 +427,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                   ),
                 ),
                 const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.grey3),
+                    color: context.textDisabled),
               ],
             ),
             const SizedBox(height: 12),
@@ -534,7 +534,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
   Widget _circleBtn(IconData icon, VoidCallback onTap) => Padding(
         padding: const EdgeInsets.all(6),
         child: Material(
-          color: Colors.white.withValues(alpha: 0.92),
+          color: context.cardBg.withValues(alpha: 0.92),
           shape: const CircleBorder(),
           child: IconButton(
             icon: Icon(icon, color: context.textPrimary, size: 20),
@@ -547,7 +547,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -613,7 +613,7 @@ class _SaveToggleState extends ConsumerState<_SaveToggle> {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Icon(

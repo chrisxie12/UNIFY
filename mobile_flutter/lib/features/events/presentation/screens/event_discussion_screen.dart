@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class EventDiscussionScreen extends ConsumerStatefulWidget {
@@ -52,20 +56,15 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
               data: (discussions) {
                 if (discussions.isEmpty) {
                   return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[300]),
-                        const SizedBox(height: 16),
-                        Text('No discussions yet', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
-                        const SizedBox(height: 8),
-                        Text('Be the first to ask a question!', style: TextStyle(color: Colors.grey[400], fontSize: 13)),
-                      ],
+                    child: UEmptyState(
+                      icon: Icons.chat_bubble_outline,
+                      title: 'No discussions yet',
+                      subtitle: 'Be the first to ask a question!',
                     ),
                   );
                 }
                 return ListView.builder(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(USpacing.md),
                   itemCount: discussions.length,
                   itemBuilder: (_, i) {
                     final d = discussions[i];
@@ -86,13 +85,13 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
           ),
           if (_replyToId != null)
             Container(
-              color: Colors.grey[100],
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: context.cardBg,
+              padding: const EdgeInsets.symmetric(horizontal: USpacing.base, vertical: USpacing.sm),
               child: Row(
                 children: [
                   Icon(Icons.reply, size: 16, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Text('Replying to a comment', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  const SizedBox(width: USpacing.sm),
+                  Text('Replying to a comment', style: UText.caption.copyWith(color: context.textSecondary)),
                   const Spacer(),
                   GestureDetector(
                     onTap: () => setState(() => _replyToId = null),
@@ -103,12 +102,12 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
             ),
           Container(
             padding: EdgeInsets.only(
-              left: 16, right: 16, top: 8,
-              bottom: MediaQuery.of(context).padding.bottom + 8,
+              left: USpacing.base, right: USpacing.base, top: USpacing.sm,
+              bottom: MediaQuery.of(context).padding.bottom + USpacing.sm,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey[200]!)),
+              color: context.cardBg,
+              border: Border(top: BorderSide(color: context.borderCol)),
             ),
             child: Row(
               children: [
@@ -118,7 +117,7 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Ask a question or share...',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      contentPadding: EdgeInsets.symmetric(horizontal: USpacing.md, vertical: 10),
                       isDense: true,
                     ),
                     maxLines: 3,
@@ -127,7 +126,7 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
                     onSubmitted: (_) => _postComment(),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: USpacing.sm),
                 IconButton(
                   icon: Icon(Icons.send, color: theme.colorScheme.primary),
                   onPressed: _postComment,
@@ -155,9 +154,9 @@ class _DiscussionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: USpacing.sm),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(USpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -169,48 +168,48 @@ class _DiscussionCard extends StatelessWidget {
                       ? NetworkImage(discussion.userAvatar as String)
                       : null,
                   child: discussion.userAvatar == null
-                      ? Text((discussion.userName as String? ?? '?')[0], style: const TextStyle(fontSize: 12))
+                      ? Text((discussion.userName as String? ?? '?')[0], style: UText.caption)
                       : null,
                 ),
-                const SizedBox(width: 8),
-                Text(discussion.userName as String? ?? 'User', style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                const SizedBox(width: USpacing.sm),
+                Text(discussion.userName as String? ?? 'User', style: UText.bodyXS.copyWith(fontWeight: FontWeight.w500)),
                 const Spacer(),
-                Text(discussion.formattedDate as String, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                Text(discussion.formattedDate as String, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 if (currentUserId == discussion.userId) ...[
-                  const SizedBox(width: 4),
+                  const SizedBox(width: USpacing.xs),
                   GestureDetector(
                     onTap: onDelete,
-                    child: Icon(Icons.delete_outline, size: 16, color: Colors.grey[400]),
+                    child: Icon(Icons.delete_outline, size: 16, color: context.textSecondary),
                   ),
                 ],
               ],
             ),
-            const SizedBox(height: 8),
-            Text(discussion.content as String, style: const TextStyle(fontSize: 14)),
-            const SizedBox(height: 8),
+            const SizedBox(height: USpacing.sm),
+            Text(discussion.content as String, style: UText.bodyS),
+            const SizedBox(height: USpacing.sm),
             GestureDetector(
               onTap: onReply,
-              child: Text('Reply', style: TextStyle(fontSize: 12, color: theme.colorScheme.primary)),
+              child: Text('Reply', style: UText.caption.copyWith(color: theme.colorScheme.primary)),
             ),
             if (discussion.replies != null && (discussion.replies as List).isNotEmpty) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: USpacing.sm),
               Container(
-                margin: const EdgeInsets.only(left: 16),
-                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.only(left: USpacing.base),
+                padding: const EdgeInsets.all(USpacing.sm),
                 decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(8),
+                  color: context.cardBg,
+                  borderRadius: URadius.smAll,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: (discussion.replies as List).map((reply) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: USpacing.xs),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(radius: 10, child: Text((reply.userName as String? ?? '?')[0], style: const TextStyle(fontSize: 9))),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: USpacing.sm),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,9 +217,9 @@ class _DiscussionCard extends StatelessWidget {
                                 Row(children: [
                                   Text(reply.userName as String? ?? 'User', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
                                   const Spacer(),
-                                  Text(reply.formattedDate as String, style: TextStyle(fontSize: 9, color: Colors.grey[500])),
+                                  Text(reply.formattedDate as String, style: TextStyle(fontSize: 9, color: context.textSecondary)),
                                 ]),
-                                Text(reply.content as String, style: const TextStyle(fontSize: 12)),
+                                Text(reply.content as String, style: UText.caption),
                               ],
                             ),
                           ),

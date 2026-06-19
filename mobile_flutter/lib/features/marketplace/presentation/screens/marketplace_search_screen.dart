@@ -73,7 +73,7 @@ class _MarketplaceSearchScreenState
           margin: const EdgeInsets.only(right: 12),
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(

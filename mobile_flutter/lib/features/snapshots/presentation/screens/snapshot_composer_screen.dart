@@ -175,15 +175,15 @@ class _SnapshotComposerScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0,
         title: const Text('New Snapshot',
-            style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.dark)),
+            style: TextStyle(fontWeight: FontWeight.w700, color: context.textPrimary)),
         leading: IconButton(
-          icon: const Icon(Icons.close_rounded, color: AppColors.dark),
+          icon: const Icon(Icons.close_rounded, color: context.textPrimary),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         actions: [
@@ -274,16 +274,16 @@ class _SnapshotComposerScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         children: [
           Icon(Icons.public_rounded, size: 18, color: context.primary),
           const SizedBox(width: 10),
           const Text('Audience',
-              style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+              style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const Spacer(),
           DropdownButtonHideUnderline(
             child: DropdownButton<String?>(
@@ -391,7 +391,7 @@ class _SnapshotComposerScreenState
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.grey2)),
+                  color: context.textSecondary)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 10,
@@ -422,7 +422,7 @@ class _SnapshotComposerScreenState
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.grey2)),
+                color: context.textSecondary)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -431,7 +431,7 @@ class _SnapshotComposerScreenState
             return ActionChip(
               label: Text(t.$1, style: const TextStyle(fontSize: 12)),
               backgroundColor: Colors.white,
-              side: const BorderSide(color: AppColors.border),
+              side: const BorderSide(color: context.borderCol),
               onPressed: () {
                 _textCtrl.text = t.$2;
                 setState(() {});
@@ -453,9 +453,9 @@ class _SnapshotComposerScreenState
             height: 320,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.cardBg,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: context.borderCol),
               image: _photo != null
                   ? DecorationImage(
                       image: FileImage(_photo!), fit: BoxFit.cover)
@@ -469,7 +469,7 @@ class _SnapshotComposerScreenState
                           size: 44, color: context.primary),
                       const SizedBox(height: 10),
                       const Text('Tap to choose a photo',
-                          style: TextStyle(color: AppColors.grey2)),
+                          style: TextStyle(color: context.textSecondary)),
                     ],
                   )
                 : null,
@@ -481,14 +481,14 @@ class _SnapshotComposerScreenState
           decoration: InputDecoration(
             hintText: 'Add a caption (optional)',
             filled: true,
-            fillColor: Colors.white,
+            fillColor: context.inputFill,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: context.borderCol),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: context.borderCol),
             ),
           ),
         ),
@@ -506,14 +506,14 @@ class _SnapshotComposerScreenState
           decoration: InputDecoration(
             hintText: 'Ask a question…',
             filled: true,
-            fillColor: Colors.white,
+            fillColor: context.inputFill,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: context.borderCol),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: context.borderCol),
             ),
           ),
         ),
@@ -530,14 +530,14 @@ class _SnapshotComposerScreenState
                     decoration: InputDecoration(
                       hintText: 'Option ${i + 1}',
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: context.inputFill,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide: const BorderSide(color: context.borderCol),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide: const BorderSide(color: context.borderCol),
                       ),
                     ),
                   ),
@@ -545,7 +545,7 @@ class _SnapshotComposerScreenState
                 if (_pollOptions.length > 2)
                   IconButton(
                     icon: const Icon(Icons.remove_circle_outline_rounded,
-                        color: AppColors.grey3),
+                        color: context.textDisabled),
                     onPressed: () => setState(() {
                       _pollOptions.removeAt(i).dispose();
                     }),

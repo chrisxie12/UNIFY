@@ -200,9 +200,9 @@ class FreelancerDetailScreen extends ConsumerWidget {
                         fit: BoxFit.cover,
                         errorWidget: (_, __, ___) => Container(
                           width: 130,
-                          color: AppColors.surface,
+                          color: context.cardBg,
                           child: const Icon(Icons.broken_image_outlined,
-                              color: AppColors.grey3),
+                              color: context.textDisabled),
                         ),
                       ),
                     ),
@@ -221,7 +221,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
                 error: (_, __) => const SizedBox.shrink(),
                 data: (reviews) => reviews.isEmpty
                     ? const Text('No reviews yet.',
-                        style: TextStyle(color: AppColors.grey3))
+                        style: TextStyle(color: context.textDisabled))
                     : Column(
                         children:
                             reviews.map((r) => _ReviewTile(review: r)).toList(),
@@ -325,7 +325,7 @@ class _ReviewTile extends StatelessWidget {
           ],
           const SizedBox(height: 6),
           Text(review.createdAt.timeAgo,
-              style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+              style: const TextStyle(fontSize: 11, color: context.textDisabled)),
         ],
       ),
     );

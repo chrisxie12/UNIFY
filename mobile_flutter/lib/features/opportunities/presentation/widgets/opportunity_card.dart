@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// A LinkedIn-Jobs-style opportunity card for feeds and lists.
 class OpportunityCard extends ConsumerWidget {
@@ -22,7 +23,7 @@ class OpportunityCard extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFFF0F1F3)),
           boxShadow: AppColors.cardShadow,
@@ -67,7 +68,7 @@ class OpportunityCard extends ConsumerWidget {
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
                                   height: 1.25,
-                                  color: AppColors.dark),
+                                  color: context.textPrimary),
                             ),
                           ),
                           if (o.isVerified) ...[
@@ -83,7 +84,7 @@ class OpportunityCard extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 12.5, color: AppColors.grey2),
+                            fontSize: 12.5, color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -145,10 +146,10 @@ class OpportunityCard extends ConsumerWidget {
   Widget _metaText(IconData ic, String text) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(ic, size: 13, color: AppColors.grey3),
+          Icon(ic, size: 13, color: context.textDisabled),
           const SizedBox(width: 3),
           Text(text,
-              style: const TextStyle(fontSize: 11.5, color: AppColors.grey2)),
+              style: const TextStyle(fontSize: 11.5, color: context.textSecondary)),
         ],
       );
 }

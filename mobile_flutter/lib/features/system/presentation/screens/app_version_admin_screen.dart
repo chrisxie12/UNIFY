@@ -38,7 +38,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
           if (versions.isEmpty) {
             return const Center(
               child: Text('No versions yet',
-                  style: TextStyle(color: AppColors.grey3)),
+                  style: TextStyle(color: context.textDisabled)),
             );
           }
           // Group by platform.
@@ -59,7 +59,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.grey2,
+                      color: context.textSecondary,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -128,7 +128,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
               v.releaseNotes!,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 13, color: AppColors.grey2),
+              style: const TextStyle(fontSize: 13, color: context.textSecondary),
             ),
           ],
         ],
@@ -311,7 +311,7 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
                   width: 18,
                   height: 18,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: AppColors.white),
+                      strokeWidth: 2, color: Colors.white),
                 )
               : const Text('Create'),
         ),
@@ -327,11 +327,11 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: context.borderCol),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),

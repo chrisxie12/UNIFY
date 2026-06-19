@@ -3,6 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 
+import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
+
 class AcademicSearchScreen extends ConsumerStatefulWidget {
   const AcademicSearchScreen({super.key});
 
@@ -24,7 +29,6 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
   Widget build(BuildContext context) {
     final resourcesAsync = ref.watch(searchResourcesProvider(_query));
     final coursesAsync = ref.watch(searchCoursesProvider(_query));
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +37,7 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(USpacing.md),
             child: TextField(
               controller: _searchController,
               autofocus: true,
@@ -46,9 +50,9 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                         onPressed: () { _searchController.clear(); setState(() => _query = ''); },
                       )
                     : null,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: URadius.mdAll),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: context.borderCol.withValues(alpha: 0.3),
               ),
               onChanged: (v) => setState(() => _query = v.trim()),
               textInputAction: TextInputAction.search,
@@ -60,10 +64,11 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.search, size: 64, color: Colors.grey[300]),
-                    const SizedBox(height: 12),
+                    Icon(Icons.search, size: 64, color: context.borderCol),
+                    const SizedBox(height: USpacing.md),
                     Text('Search by course code, name,\nlecturer, or topic',
-                        textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[500])),
+                        textAlign: TextAlign.center,
+                        style: UText.bodyS.copyWith(color: context.textSecondary)),
                   ],
                 ),
               ),
@@ -71,56 +76,66 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
           else
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: USpacing.md),
                 children: [
                   const _SectionHeader(title: 'Courses'),
                   coursesAsync.when(
-                    loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+                    loading: () => const Padding(padding: EdgeInsets.all(USpacing.base), child: Center(child: CircularProgressIndicator())),
                     error: (e, _) => Text('$e'),
                     data: (courses) {
                       if (courses.isEmpty) {
                         return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('No courses found', style: TextStyle(color: Colors.grey[500])),
+                        padding: const EdgeInsets.all(USpacing.base),
+                        child: Text('No courses found',
+                            style: UText.bodyS.copyWith(color: context.textSecondary)),
                       );
                       }
                       return Column(
                         children: courses.map((c) => ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-                            child: Text(c.code.substring(0, 2), style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600, fontSize: 11)),
+                            backgroundColor: context.primary.withValues(alpha: 0.1),
+                            child: Text(c.code.substring(0, 2),
+                                style: UText.caption.copyWith(
+                                    color: context.primary,
+                                    fontWeight: FontWeight.w600)),
                           ),
-                          title: Text('${c.code} - ${c.name}', style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          subtitle: Text('${c.credits} credits', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                          title: Text('${c.code} - ${c.name}',
+                              style: UText.bodyS.copyWith(fontWeight: FontWeight.w500)),
+                          subtitle: Text('${c.credits} credits',
+                              style: UText.caption.copyWith(color: context.textSecondary)),
                           onTap: () => context.push('/academic/course/${c.id}'),
                         )).toList(),
                       );
                     },
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: USpacing.sm),
                   const _SectionHeader(title: 'Resources'),
                   resourcesAsync.when(
-                    loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+                    loading: () => const Padding(padding: EdgeInsets.all(USpacing.base), child: Center(child: CircularProgressIndicator())),
                     error: (e, _) => Text('$e'),
                     data: (resources) {
                       if (resources.isEmpty) {
                         return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('No resources found', style: TextStyle(color: Colors.grey[500])),
+                        padding: const EdgeInsets.all(USpacing.base),
+                        child: Text('No resources found',
+                            style: UText.bodyS.copyWith(color: context.textSecondary)),
                       );
                       }
                       return Column(
                         children: resources.map((r) => ListTile(
-                          leading: Icon(Icons.description, color: theme.colorScheme.primary),
-                          title: Text(r.title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          subtitle: Text('${r.type.replaceAll('_', ' ')} · ${r.downloadCount} downloads', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                          leading: Icon(Icons.description, color: context.primary),
+                          title: Text(r.title,
+                              style: UText.bodyS.copyWith(fontWeight: FontWeight.w500)),
+                          subtitle: Text(
+                              '${r.type.replaceAll('_', ' ')} · ${r.downloadCount} downloads',
+                              style: UText.caption.copyWith(color: context.textSecondary)),
                           trailing: const Icon(Icons.download_outlined, size: 20),
                           onTap: () {},
                         )).toList(),
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: USpacing.xl),
                 ],
               ),
             ),
@@ -137,8 +152,9 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.grey[700])),
+      padding: const EdgeInsets.symmetric(vertical: USpacing.sm),
+      child: Text(title,
+          style: UText.labelL.copyWith(color: context.textSecondary)),
     );
   }
 }

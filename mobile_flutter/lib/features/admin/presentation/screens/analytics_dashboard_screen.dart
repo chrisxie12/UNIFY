@@ -119,7 +119,7 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
             Icon(icon, size: 16, color: color),
             const SizedBox(height: 4),
             Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: color)),
-            Text(label, style: const TextStyle(fontSize: 9, color: AppColors.grey2)),
+            Text(label, style: const TextStyle(fontSize: 9, color: context.textSecondary)),
           ],
         ),
       ),

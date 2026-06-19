@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/academic_models.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 IconData _resourceIcon(String type) {
   switch (type) {
@@ -74,7 +75,7 @@ class ResourceCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -126,15 +127,15 @@ class ResourceCard extends StatelessWidget {
                         const SizedBox(width: 2),
                         Text(r.averageRating.toStringAsFixed(1),
                             style: const TextStyle(
-                                fontSize: 11.5, color: AppColors.grey2)),
+                                fontSize: 11.5, color: context.textSecondary)),
                         const SizedBox(width: 8),
                       ],
                       Icon(Icons.download_rounded,
-                          size: 13, color: AppColors.grey3),
+                          size: 13, color: context.textDisabled),
                       const SizedBox(width: 2),
                       Text('${r.downloadCount}',
                           style: const TextStyle(
-                              fontSize: 11.5, color: AppColors.grey3)),
+                              fontSize: 11.5, color: context.textDisabled)),
                     ],
                   ),
                   if (r.uploaderName != null) ...[
@@ -143,12 +144,12 @@ class ResourceCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 11, color: AppColors.grey3)),
+                            fontSize: 11, color: context.textDisabled)),
                   ],
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.grey3),
+            const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../notifications/data/models/notification_model.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 final _adminNotificationsProvider = FutureProvider.autoDispose<List<NotificationModel>>((ref) async {
   ref.watch(authStateProvider);
@@ -80,11 +81,11 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.notifications_none_rounded, size: 64, color: AppColors.grey4),
+                    Icon(Icons.notifications_none_rounded, size: 64, color: context.borderCol),
                     SizedBox(height: 12),
-                    Text('No admin notifications', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                    Text('No admin notifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                     SizedBox(height: 4),
-                    Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: AppColors.grey3)),
+                    Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: context.textDisabled)),
                   ],
                 ),
               );
