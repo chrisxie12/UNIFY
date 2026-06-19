@@ -29,8 +29,19 @@ BEGIN
   LIMIT 1;
 
   IF v_user_id IS NULL THEN
+    -- Diagnostic: list all registered emails to help find the right one
+    RAISE NOTICE '=== auth.users diagnostic ===';
+    FOR v_user_id IN
+      SELECT id FROM auth.users ORDER BY created_at DESC LIMIT 10
+    LOOP
+      RAISE NOTICE 'UID: % | email: %', v_user_id,
+        (SELECT email FROM auth.users WHERE id = v_user_id);
+    END LOOP;
     RAISE EXCEPTION
-      'Super Admin bootstrap failed: no auth.users row found for email %',
+      'Super Admin bootstrap failed: no auth.users row found for email ''%''. '
+      'See NOTICE lines above for registered accounts. '
+      'Update v_admin_email to the correct address, or replace the email lookup '
+      'with: v_user_id := ''<your-uid-uuid>'';',
       v_admin_email;
   END IF;
 
