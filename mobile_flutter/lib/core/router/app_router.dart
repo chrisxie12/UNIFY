@@ -14,6 +14,7 @@ import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
+import '../../screens/chat_list_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
 import '../../features/messaging/presentation/screens/student_directory_screen.dart';
 import '../../features/messaging/presentation/screens/chat_screen.dart';
@@ -331,7 +332,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
+            GoRoute(path: '/app/messaging', builder: (_, __) => const ChatListScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),
