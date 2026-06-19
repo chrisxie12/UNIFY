@@ -53,6 +53,9 @@ class NotificationModel {
     'community_announcement': 'Community Announcement',
     'community_join_request': 'Join Request',
     'community_approval': 'Community Approved',
+    'community_approved': 'Community Approved',
+    'community_rejected': 'Community Rejected',
+    'community_changes_requested': 'Changes Requested',
     'marketplace_inquiry': 'Marketplace Inquiry',
     'marketplace_sale': 'Item Sold',
     'event_registration': 'Event Registration',
@@ -62,8 +65,11 @@ class NotificationModel {
     'scholarship_alert': 'Scholarship Alert',
     'academic_resource_upload': 'New Resource',
     'verification_approved': 'Verification Approved',
+    'verification_rejected': 'Verification Rejected',
     'role_assigned': 'Role Assigned',
     'admin_broadcast': 'Announcement',
+    'admin_request': 'New Admin Request',
+    'announcement_posted': 'New Post',
   };
 
   static const Map<String, String> typeIcons = {
@@ -71,6 +77,9 @@ class NotificationModel {
     'community_announcement': 'campaign',
     'community_join_request': 'group_add',
     'community_approval': 'check_circle',
+    'community_approved': 'check_circle',
+    'community_rejected': 'cancel',
+    'community_changes_requested': 'edit_note',
     'marketplace_inquiry': 'question_answer',
     'marketplace_sale': 'sell',
     'event_registration': 'event',
@@ -80,8 +89,11 @@ class NotificationModel {
     'scholarship_alert': 'school',
     'academic_resource_upload': 'upload_file',
     'verification_approved': 'verified',
+    'verification_rejected': 'gpp_bad',
     'role_assigned': 'badge',
     'admin_broadcast': 'campaign',
+    'admin_request': 'admin_panel_settings',
+    'announcement_posted': 'article',
   };
 }
 

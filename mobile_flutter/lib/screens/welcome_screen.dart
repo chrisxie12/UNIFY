@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 
-const _primaryBlue   = Color(0xFF2563EB);
 const _accentPurple  = Color(0xFF6B5B95);
 const _purpleLight   = Color(0xFF8B7CB3);
 const _surfaceGrey   = Color(0xFFF8FAFC);

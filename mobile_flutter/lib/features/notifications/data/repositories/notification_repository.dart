@@ -11,6 +11,18 @@ abstract class NotificationRepository {
   Future<bool> markAsRead(String notificationId);
   Future<bool> markAllAsRead(String userId);
 
+  /// Create a notification via the create_notification DB function.
+  /// Returns the new notification UUID, or null if blocked by user preferences.
+  Future<String?> createNotification({
+    required String userId,
+    required String type,
+    required String title,
+    String? body,
+    String? referenceId,
+    String? referenceType,
+    Map<String, dynamic>? data,
+  });
+
   /// Preferences
   Future<NotificationPreferences?> getPreferences(String userId);
   Future<void> updatePreferences(String userId, NotificationPreferences prefs);

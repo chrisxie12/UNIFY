@@ -53,6 +53,33 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
+  Future<String?> createNotification({
+    required String userId,
+    required String type,
+    required String title,
+    String? body,
+    String? referenceId,
+    String? referenceType,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      final result = await _client.rpc('create_notification', params: {
+        'p_user_id': userId,
+        'p_type': type,
+        'p_title': title,
+        'p_body': body,
+        'p_reference_id': referenceId,
+        'p_reference_type': referenceType,
+        'p_data': data ?? <String, dynamic>{},
+      });
+      return result?.toString();
+    } catch (e) {
+      debugPrint('[NotificationRepositoryImpl] createNotification error: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<bool> markAllAsRead(String userId) async {
     try {
       await _client.from('notifications').update({'is_read': true}).eq('user_id', userId).eq('is_read', false);

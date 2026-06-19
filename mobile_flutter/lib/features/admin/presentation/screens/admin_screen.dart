@@ -10,6 +10,8 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
+import '../../../notifications/data/repositories/notification_repository.dart';
+import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../verification/data/models/verification_request_model.dart';
 import 'representative_detail_screen.dart';
 
@@ -75,22 +77,20 @@ final _announcementStatsProvider = FutureProvider.autoDispose<_AdminStats>((ref)
   );
 });
 
-final _adminUnreadNotificationsProvider = FutureProvider.autoDispose<int>((ref) async {
-  ref.watch(authStateProvider);
+// Live Realtime stream of unread admin-scoped notifications.
+final _adminUnreadNotificationsProvider = StreamProvider.autoDispose<int>((ref) {
   final client = ref.read(supabaseProvider);
   final user = client.auth.currentUser;
-  if (user == null) return 0;
+  if (user == null) return Stream.value(0);
 
-  final data = await client
+  const adminTypes = {'admin_request', 'community_changes_requested'};
+  return client
       .from('notifications')
-      .select()
-      .filter('user_id', 'eq', user.id)
-      .order('created_at', ascending: false) as List;
-
-  return data
-      .where((n) => n['is_read'] == false)
-      .where((n) => ['admin_new_request', 'community_changes_requested'].contains(n['type']))
-      .length;
+      .stream(primaryKey: ['id'])
+      .eq('user_id', user.id)
+      .map((rows) => rows
+          .where((n) => n['is_read'] == false && adminTypes.contains(n['type']))
+          .length);
 });
 
 // ── Screen ───────────────────────────────────────────────────
@@ -584,16 +584,14 @@ class _RequestCard extends ConsumerWidget {
         reviewedBy: admin.id,
       );
 
-      try {
-        await client.rpc('create_notification', params: {
-          'p_user_id': request.requesterId,
-          'p_type': 'community_changes_requested',
-          'p_title': 'More Information Needed',
-          'p_message': 'Admin requested changes for "${request.communityName}": $feedback',
-          'p_ref_id': request.id,
-          'p_ref_type': 'community_request',
-        });
-      } catch (_) {}
+      await ref.read(notificationRepositoryProvider).createNotification(
+        userId: request.requesterId,
+        type: 'community_changes_requested',
+        title: 'More Information Needed',
+        body: 'Admin requested changes for "${request.communityName}": $feedback',
+        referenceId: request.id,
+        referenceType: 'community_request',
+      );
 
       ref.invalidate(_pendingRequestsProvider);
       ref.invalidate(_allRequestsProvider);
@@ -657,28 +655,9 @@ class _RequestCard extends ConsumerWidget {
             .eq('id', request.id)
             .single();
         await repo.approveAndCreateCommunity(requestData, request.id);
-        try {
-          await client.rpc('create_notification', params: {
-            'p_user_id': request.requesterId,
-            'p_type': 'community_approved',
-            'p_title': 'Community Approved',
-            'p_message': 'Your request for "${request.communityName}" has been approved.',
-            'p_ref_id': request.id,
-            'p_ref_type': 'community_request',
-          });
-        } catch (_) {}
-      } else if (status == 'rejected') {
-        try {
-          await client.rpc('create_notification', params: {
-            'p_user_id': request.requesterId,
-            'p_type': 'community_rejected',
-            'p_title': 'Community Request Rejected',
-            'p_message': 'Your request for "${request.communityName}" was not approved.',
-            'p_ref_id': request.id,
-            'p_ref_type': 'community_request',
-          });
-        } catch (_) {}
+        // Notification sent by community_request_reviewed_notification DB trigger
       }
+      // community_rejected notification also sent by DB trigger
 
       ref.invalidate(_pendingRequestsProvider);
       ref.invalidate(_allRequestsProvider);
@@ -1307,18 +1286,7 @@ class _VerificationCard extends ConsumerWidget {
         'notes': notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim(),
       });
 
-      try {
-        await client.rpc('create_notification', params: {
-          'p_user_id': request.userId,
-          'p_type': status == 'approved' ? 'verification_approved' : 'verification_rejected',
-          'p_title': status == 'approved' ? 'Verification Approved' : 'Verification Rejected',
-          'p_message': status == 'approved'
-              ? 'You have been verified as a ${request.position}.'
-              : 'Your verification request as ${request.position} was not approved.',
-          'p_ref_id': request.id,
-          'p_ref_type': 'verification_request',
-        });
-      } catch (_) {}
+      // Notification sent by verification_reviewed_notification DB trigger
 
       ref.invalidate(_pendingVerificationProvider);
       ref.invalidate(_allVerificationProvider);

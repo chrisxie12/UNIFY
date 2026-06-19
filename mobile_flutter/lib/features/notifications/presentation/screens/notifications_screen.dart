@@ -135,19 +135,26 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final data = notification.data;
     final type = notification.type;
 
-    if (type == 'admin_broadcast' || type == 'community_announcement') {
+    if (type == 'admin_broadcast' || type == 'community_announcement' || type == 'announcement_posted') {
       context.push('/launch/announcements');
     } else if (type == 'new_message' && data != null) {
       final convId = data['conversation_id'];
       if (convId != null) context.push('/messages/chat/$convId');
-    } else if (type == 'community_approval' || type == 'community_join_request') {
+    } else if (type == 'community_approval' ||
+               type == 'community_approved' ||
+               type == 'community_join_request' ||
+               type == 'community_changes_requested') {
       final communityId = data?['community_id'];
       if (communityId != null) {
         context.push('/app/communities/$communityId');
       } else {
         context.push('/app/communities');
       }
-    } else if (type == 'event_registration' || type == 'event_reminder' || type == 'event_checkin_confirmation') {
+    } else if (type == 'community_rejected') {
+      context.push('/app/communities');
+    } else if (type == 'event_registration' ||
+               type == 'event_reminder' ||
+               type == 'event_checkin_confirmation') {
       final eventId = data?['event_id'];
       if (eventId != null) {
         context.push('/events/$eventId');
@@ -158,12 +165,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       context.push('/opportunities');
     } else if (type == 'academic_resource_upload') {
       context.push('/academic/resources');
-    } else if (type == 'verification_approved') {
+    } else if (type == 'verification_approved' || type == 'verification_rejected') {
       context.push('/profile');
     } else if (type == 'role_assigned') {
       context.push('/reputation');
     } else if (type == 'marketplace_inquiry' || type == 'marketplace_sale') {
       context.push('/marketplace');
+    } else if (type == 'admin_request') {
+      context.push('/admin');
     } else {
       context.push('/profile');
     }
@@ -193,22 +202,28 @@ class _NotificationTile extends StatelessWidget {
 
   IconData _icon() {
     switch (notification.type) {
-      case 'new_message': return Icons.chat_bubble;
-      case 'community_announcement': return Icons.campaign;
-      case 'community_join_request': return Icons.group_add_rounded;
-      case 'community_approval': return Icons.check_circle;
-      case 'marketplace_inquiry': return Icons.question_answer;
-      case 'marketplace_sale': return Icons.sell;
-      case 'event_registration': return Icons.event;
-      case 'event_reminder': return Icons.alarm;
-      case 'event_checkin_confirmation': return Icons.qr_code_scanner;
+      case 'new_message':                   return Icons.chat_bubble;
+      case 'community_announcement':        return Icons.campaign;
+      case 'announcement_posted':           return Icons.article_rounded;
+      case 'community_join_request':        return Icons.group_add_rounded;
+      case 'community_approval':
+      case 'community_approved':            return Icons.check_circle;
+      case 'community_rejected':            return Icons.cancel_rounded;
+      case 'community_changes_requested':   return Icons.edit_note_rounded;
+      case 'marketplace_inquiry':           return Icons.question_answer;
+      case 'marketplace_sale':              return Icons.sell;
+      case 'event_registration':            return Icons.event;
+      case 'event_reminder':                return Icons.alarm;
+      case 'event_checkin_confirmation':    return Icons.qr_code_scanner;
       case 'opportunity_deadline_reminder': return Icons.timer;
-      case 'scholarship_alert': return Icons.school;
-      case 'academic_resource_upload': return Icons.upload_file;
-      case 'verification_approved': return Icons.verified;
-      case 'role_assigned': return Icons.badge;
-      case 'admin_broadcast': return Icons.campaign;
-      default: return Icons.notifications;
+      case 'scholarship_alert':             return Icons.school;
+      case 'academic_resource_upload':      return Icons.upload_file;
+      case 'verification_approved':         return Icons.verified;
+      case 'verification_rejected':         return Icons.gpp_bad_rounded;
+      case 'role_assigned':                 return Icons.badge;
+      case 'admin_broadcast':               return Icons.campaign;
+      case 'admin_request':                 return Icons.admin_panel_settings_rounded;
+      default:                              return Icons.notifications;
     }
   }
 
