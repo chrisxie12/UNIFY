@@ -6,7 +6,6 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../system/data/models/system_models.dart';
 import '../../../system/presentation/providers/feature_flags_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 
 class FeatureFlagsScreen extends ConsumerWidget {
   const FeatureFlagsScreen({super.key});

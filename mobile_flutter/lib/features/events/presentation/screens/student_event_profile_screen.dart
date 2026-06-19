@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
