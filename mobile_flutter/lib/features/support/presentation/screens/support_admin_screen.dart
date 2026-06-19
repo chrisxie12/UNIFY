@@ -105,10 +105,10 @@ class _TicketCard extends ConsumerWidget {
             Text(ticket.message,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: context.textPrimary)),
+                style: TextStyle(fontSize: 13, color: context.textPrimary)),
             const SizedBox(height: 8),
             Text('From: ${ticket.userName ?? 'Unknown'}',
-                style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                style: TextStyle(fontSize: 12, color: context.textSecondary)),
             if (ticket.adminResponse != null &&
                 ticket.adminResponse!.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -272,13 +272,13 @@ class _AbuseCard extends ConsumerWidget {
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style:
-                      const TextStyle(fontSize: 13, color: context.textPrimary)),
+                      TextStyle(fontSize: 13, color: context.textPrimary)),
             ],
             const SizedBox(height: 8),
             Text(
               'Reporter: ${report.reporterName ?? 'Unknown'}'
               '${report.targetId != null ? ' · Target: ${report.targetId}' : ''}',
-              style: const TextStyle(fontSize: 12, color: context.textSecondary),
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
             ),
           ],
         ),
@@ -389,7 +389,7 @@ class _ContentTab extends ConsumerWidget {
         faqs.when(
           loading: () => const _Loading(),
           error: (e, _) => Text('Could not load\n$e',
-              style: const TextStyle(color: context.textSecondary)),
+              style: TextStyle(color: context.textSecondary)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No FAQs yet.');
             return Column(
@@ -434,7 +434,7 @@ class _ContentTab extends ConsumerWidget {
         articles.when(
           loading: () => const _Loading(),
           error: (e, _) => Text('Could not load\n$e',
-              style: const TextStyle(color: context.textSecondary)),
+              style: TextStyle(color: context.textSecondary)),
           data: (items) {
             if (items.isEmpty) return const _Empty('No articles yet.');
             return Column(
@@ -617,11 +617,11 @@ class _DialogField extends StatelessWidget {
         fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
       ),
     );
@@ -735,7 +735,7 @@ class _Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(text, style: const TextStyle(color: context.textSecondary)),
+        child: Text(text, style: TextStyle(color: context.textSecondary)),
       );
 }
 
@@ -761,7 +761,7 @@ Widget _responseBox(String text) {
       borderRadius: BorderRadius.circular(10),
     ),
     child: Text(text,
-        style: const TextStyle(fontSize: 13, color: context.textPrimary)),
+        style: TextStyle(fontSize: 13, color: context.textPrimary)),
   );
 }
 
@@ -776,11 +776,11 @@ Widget _multiline(TextEditingController controller, String hint) {
       fillColor: context.inputFill,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
     ),
   );

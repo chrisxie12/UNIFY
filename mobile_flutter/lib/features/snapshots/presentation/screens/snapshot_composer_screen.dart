@@ -183,7 +183,7 @@ class _SnapshotComposerScreenState
         title: const Text('New Snapshot',
             style: TextStyle(fontWeight: FontWeight.w700, color: context.textPrimary)),
         leading: IconButton(
-          icon: const Icon(Icons.close_rounded, color: context.textPrimary),
+          icon: Icon(Icons.close_rounded, color: context.textPrimary),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         actions: [
@@ -431,7 +431,7 @@ class _SnapshotComposerScreenState
             return ActionChip(
               label: Text(t.$1, style: const TextStyle(fontSize: 12)),
               backgroundColor: Colors.white,
-              side: const BorderSide(color: context.borderCol),
+              side: BorderSide(color: context.borderCol),
               onPressed: () {
                 _textCtrl.text = t.$2;
                 setState(() {});
@@ -484,11 +484,11 @@ class _SnapshotComposerScreenState
             fillColor: context.inputFill,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: context.borderCol),
+              borderSide: BorderSide(color: context.borderCol),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: context.borderCol),
+              borderSide: BorderSide(color: context.borderCol),
             ),
           ),
         ),
@@ -509,11 +509,11 @@ class _SnapshotComposerScreenState
             fillColor: context.inputFill,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: context.borderCol),
+              borderSide: BorderSide(color: context.borderCol),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: context.borderCol),
+              borderSide: BorderSide(color: context.borderCol),
             ),
           ),
         ),
@@ -533,11 +533,11 @@ class _SnapshotComposerScreenState
                       fillColor: context.inputFill,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: context.borderCol),
+                        borderSide: BorderSide(color: context.borderCol),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: context.borderCol),
+                        borderSide: BorderSide(color: context.borderCol),
                       ),
                     ),
                   ),

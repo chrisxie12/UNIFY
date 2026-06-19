@@ -128,7 +128,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
               v.releaseNotes!,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 13, color: context.textSecondary),
+              style: TextStyle(fontSize: 13, color: context.textSecondary),
             ),
           ],
         ],
@@ -327,11 +327,11 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),

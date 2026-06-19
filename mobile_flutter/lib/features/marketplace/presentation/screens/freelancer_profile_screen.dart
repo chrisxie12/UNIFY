@@ -199,10 +199,10 @@ class _FreelancerProfileScreenState
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: context.borderCol)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: context.borderCol)),
+            borderSide: BorderSide(color: context.borderCol)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: context.primary, width: 1.5)),

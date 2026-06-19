@@ -46,7 +46,7 @@ class OpsStatCard extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(fontSize: 11, color: context.textSecondary),
+              style: TextStyle(fontSize: 11, color: context.textSecondary),
             ),
           ],
         ),
@@ -83,7 +83,7 @@ class OpsMetricRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 13.5, color: context.textPrimary),
+              style: TextStyle(fontSize: 13.5, color: context.textPrimary),
             ),
           ),
           Text(

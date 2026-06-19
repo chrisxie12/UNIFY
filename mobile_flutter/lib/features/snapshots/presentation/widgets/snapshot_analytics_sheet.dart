@@ -111,7 +111,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             Text('$value',
                 style: const TextStyle(
                     fontSize: 20, fontWeight: FontWeight.w800, color: context.textPrimary)),
-            Text(label, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+            Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary)),
           ],
         ),
       ),
@@ -146,7 +146,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          const Icon(Icons.visibility_rounded, size: 18, color: context.textSecondary),
+          Icon(Icons.visibility_rounded, size: 18, color: context.textSecondary),
           const SizedBox(width: 8),
           Text('Viewed by $count',
               style: const TextStyle(
@@ -181,7 +181,7 @@ class _ViewerRow extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
       trailing: Text(
         timeago.format(viewer.viewedAt),
-        style: const TextStyle(fontSize: 12, color: context.textDisabled),
+        style: TextStyle(fontSize: 12, color: context.textDisabled),
       ),
     );
   }

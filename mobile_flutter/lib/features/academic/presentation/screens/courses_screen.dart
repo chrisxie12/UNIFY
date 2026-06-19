@@ -44,7 +44,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             style: TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: context.textPrimary),
+            icon: Icon(Icons.add_rounded, color: context.textPrimary),
             tooltip: 'Add course',
             onPressed: () => context.push('/academic/course-new'),
           ),

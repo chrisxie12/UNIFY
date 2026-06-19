@@ -73,9 +73,9 @@ class _CommunityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data['name'] as String? ?? '', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(data['name'] as String? ?? '', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       Text('${data['member_count'] ?? 0} members · by ${profile?['full_name'] ?? "Unknown"}',
-                          style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -83,7 +83,7 @@ class _CommunityCard extends ConsumerWidget {
             ),
           ),
           Container(
-            decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
             child: Row(
               children: [
                 _actionBtn(context, 'Feature', context.primary, () => _toggleFeature(context, ref)),

@@ -390,7 +390,7 @@ class _ReferralRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(dateLabel,
                     style:
-                        const TextStyle(fontSize: 11, color: context.textDisabled)),
+                        TextStyle(fontSize: 11, color: context.textDisabled)),
               ],
             ),
           ),
@@ -442,7 +442,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+                style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),

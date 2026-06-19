@@ -182,7 +182,7 @@ class SupportCenterScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
+            Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),
@@ -543,11 +543,11 @@ class _SheetField extends StatelessWidget {
         fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
       ),
     );
@@ -577,11 +577,11 @@ class _SheetDropdown extends StatelessWidget {
         fillColor: context.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: context.borderCol),
+          borderSide: BorderSide(color: context.borderCol),
         ),
       ),
       items: [
@@ -619,7 +619,7 @@ class _ErrorText extends StatelessWidget {
   final Object error;
   @override
   Widget build(BuildContext context) => Text('Could not load\n$error',
-      style: const TextStyle(color: context.textSecondary));
+      style: TextStyle(color: context.textSecondary));
 }
 
 class _EmptyText extends StatelessWidget {
@@ -628,6 +628,6 @@ class _EmptyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(text, style: const TextStyle(color: context.textSecondary)),
+        child: Text(text, style: TextStyle(color: context.textSecondary)),
       );
 }

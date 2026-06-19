@@ -78,6 +78,6 @@ class _ShimmerCard extends StatelessWidget {
   Widget _circle(double size) => Container(
         width: size,
         height: size,
-        decoration: const BoxDecoration(color: context.cardBg, shape: BoxShape.circle),
+        decoration: BoxDecoration(color: context.cardBg, shape: BoxShape.circle),
       );
 }

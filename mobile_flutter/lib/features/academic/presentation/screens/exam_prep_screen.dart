@@ -268,7 +268,7 @@ class _ExamRow extends StatelessWidget {
                     if (exam.venue != null) exam.venue,
                   ].join(' · '),
                   style:
-                      const TextStyle(fontSize: 12, color: context.textSecondary),
+                      TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

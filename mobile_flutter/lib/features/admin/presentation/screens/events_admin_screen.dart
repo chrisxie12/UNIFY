@@ -68,11 +68,11 @@ class EventsAdminScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.info_outline_rounded, size: 18, color: context.primary),
                     const SizedBox(width: 8),
-                    const Text('Quick Info', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                    Text('Quick Info', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text('Event moderation is handled through the existing events admin panel at /events/admin. Use the link above to approve, feature, or manage events.', style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.5)),
+                Text('Event moderation is handled through the existing events admin panel at /events/admin. Use the link above to approve, feature, or manage events.', style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.5)),
               ],
             ),
           ),

@@ -234,7 +234,7 @@ class _RetentionCard extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           'Based on a cohort of $cohort new ${cohort == 1 ? 'user' : 'users'}.',
-          style: const TextStyle(fontSize: 11.5, color: context.textSecondary),
+          style: TextStyle(fontSize: 11.5, color: context.textSecondary),
         ),
       ],
     );
@@ -265,7 +265,7 @@ class _RetentionPill extends StatelessWidget {
                 fontSize: 22, fontWeight: FontWeight.w800, color: color),
           ),
           Text(label,
-              style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+              style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ],
       ),
     );

@@ -90,7 +90,7 @@ class _StatHeader extends ConsumerWidget {
         const SizedBox(height: 2),
         Text(label,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+            style: TextStyle(fontSize: 11, color: context.textSecondary)),
       ],
     );
   }
@@ -110,7 +110,7 @@ class _QueueTab extends ConsumerWidget {
         if (items.isEmpty) {
           return Center(
             child: Text('No ${FeedbackStatus.label(status).toLowerCase()} items',
-                style: const TextStyle(color: context.textSecondary)),
+                style: TextStyle(color: context.textSecondary)),
           );
         }
         return RefreshIndicator(
@@ -168,7 +168,7 @@ class _FeedbackCard extends ConsumerWidget {
             Text(item.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: context.textPrimary)),
+                style: TextStyle(fontSize: 13, color: context.textPrimary)),
             if (item.screenshotUrl != null &&
                 item.screenshotUrl!.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -263,7 +263,7 @@ class _FeedbackCard extends ConsumerWidget {
         Icon(icon, size: 14, color: context.textDisabled),
         const SizedBox(width: 4),
         Text(text,
-            style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+            style: TextStyle(fontSize: 12, color: context.textSecondary)),
       ],
     );
   }
@@ -378,11 +378,11 @@ class _ManageSheetState extends ConsumerState<_ManageSheet> {
               fillColor: context.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: context.borderCol),
+                borderSide: BorderSide(color: context.borderCol),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: context.borderCol),
+                borderSide: BorderSide(color: context.borderCol),
               ),
             ),
           ),

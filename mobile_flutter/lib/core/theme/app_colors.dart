@@ -4,9 +4,9 @@ class AppColors {
   AppColors._();
 
   // Brand — UNIFY Blue
-  static const Color primary      = Color(0xFF0066FF);
-  static const Color primaryLight = Color(0xFF3385FF);
-  static const Color primaryDark  = Color(0xFF0047DD);
+  static const Color primary      = Color(0xFF2563EB);
+  static const Color primaryLight = Color(0xFF60A5FA);
+  static const Color primaryDark  = Color(0xFF1D4ED8);
 
   // Accent (alias for primary in this design)
   static const Color accent = primary;

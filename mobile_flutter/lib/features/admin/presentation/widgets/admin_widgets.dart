@@ -32,7 +32,7 @@ class AdminStatTile extends StatelessWidget {
             const SizedBox(height: 6),
             Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 10, color: context.textSecondary)),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary)),
           ],
         ),
       ),
@@ -74,7 +74,7 @@ class AdminSectionCard extends StatelessWidget {
               children: [
                 Icon(icon, size: 18, color: c),
                 const SizedBox(width: 8),
-                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                 const Spacer(),
                 if (onViewAll != null)
                   TextButton(
@@ -134,13 +134,13 @@ class AdminActionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                  Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                  Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
+            Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),

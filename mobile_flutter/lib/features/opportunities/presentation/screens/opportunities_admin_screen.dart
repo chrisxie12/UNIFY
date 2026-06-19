@@ -164,7 +164,7 @@ class _ManageRow extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
+            icon: Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (v) => _action(context, ref, v),
             itemBuilder: (_) => [
               const PopupMenuItem(value: 'edit', child: Text('Edit')),
@@ -301,7 +301,7 @@ class _ReportCard extends ConsumerWidget {
               const Spacer(),
               Text(report.createdAt.timeAgo,
                   style:
-                      const TextStyle(fontSize: 11, color: context.textDisabled)),
+                      TextStyle(fontSize: 11, color: context.textDisabled)),
             ],
           ),
           const SizedBox(height: 10),
@@ -316,7 +316,7 @@ class _ReportCard extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text('Reported by ${report.reporterName ?? 'a student'}',
-              style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+              style: TextStyle(fontSize: 12, color: context.textSecondary)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -461,7 +461,7 @@ class _AnalyticsTab extends ConsumerWidget {
               Text(label,
                   textAlign: TextAlign.center,
                   style:
-                      const TextStyle(fontSize: 11, color: context.textSecondary)),
+                      TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -484,7 +484,7 @@ class _AnalyticsTab extends ConsumerWidget {
                       color: context.textPrimary)),
               Text('$value',
                   style:
-                      const TextStyle(fontSize: 13, color: context.textSecondary)),
+                      TextStyle(fontSize: 13, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 6),

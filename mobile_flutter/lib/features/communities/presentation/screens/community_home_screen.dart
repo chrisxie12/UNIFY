@@ -646,7 +646,7 @@ class _EventsTab extends ConsumerWidget {
               if (currentStatus != null) ...[
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.remove_circle_outline, color: context.textSecondary),
+                  leading: Icon(Icons.remove_circle_outline, color: context.textSecondary),
                   title: const Text('Clear RSVP',
                       style: TextStyle(color: context.textSecondary)),
                   onTap: () async {

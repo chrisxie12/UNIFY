@@ -253,7 +253,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.volume_off_rounded, color: context.textPrimary),
+                leading: Icon(Icons.volume_off_rounded, color: context.textPrimary),
                 title: Text('Mute ${_snap.authorName ?? 'this user'}'),
                 onTap: () async {
                   Navigator.pop(context);
@@ -709,7 +709,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide: const BorderSide(color: context.cardBg),
+                            borderSide: BorderSide(color: context.cardBg),
                           ),
                         ),
                       ),

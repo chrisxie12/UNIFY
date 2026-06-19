@@ -58,11 +58,11 @@ class _OpportunityList extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.work_outline_rounded, size: 48, color: context.borderCol),
+                  Icon(Icons.work_outline_rounded, size: 48, color: context.borderCol),
                   const SizedBox(height: 12),
                   Text(
                     status == 'pending' ? 'No pending opportunities' : 'No opportunities found',
-                    style: const TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -119,9 +119,9 @@ class _OpportunityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(opportunity.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(opportunity.title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text(opportunity.opportunityTypeLabel, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                      Text(opportunity.opportunityTypeLabel, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -135,7 +135,7 @@ class _OpportunityCard extends ConsumerWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
-              child: Text(opportunity.description, style: const TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis),
+              child: Text(opportunity.description, style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis),
             ),
           ),
           Padding(
@@ -143,7 +143,7 @@ class _OpportunityCard extends ConsumerWidget {
             child: Row(
               children: [
                 if (opportunity.organizerName != null)
-                  Text(opportunity.organizerName!, style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+                  Text(opportunity.organizerName!, style: TextStyle(fontSize: 11, color: context.textSecondary)),
                 if (opportunity.deadline != null) ...[
                   const SizedBox(width: 12),
                   Icon(Icons.access_time_rounded, size: 12, color: opportunity.isExpired ? AppColors.error : AppColors.grey2),
@@ -158,7 +158,7 @@ class _OpportunityCard extends ConsumerWidget {
           ),
           if (opportunity.isPending)
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Reject', AppColors.error, () => _handle(context, ref, 'rejected'))),

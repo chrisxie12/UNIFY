@@ -153,7 +153,7 @@ class _ReportCard extends ConsumerWidget {
           ],
           const SizedBox(height: 6),
           Text('Reported by ${report.reporterName ?? 'a student'}',
-              style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+              style: TextStyle(fontSize: 12, color: context.textSecondary)),
           const SizedBox(height: 12),
           Row(
             children: [

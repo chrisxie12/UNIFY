@@ -190,7 +190,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                     fontSize: 15, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Text(subtitle,
-                style: const TextStyle(fontSize: 13, color: context.textSecondary)),
+                style: TextStyle(fontSize: 13, color: context.textSecondary)),
           ],
         ),
       );
@@ -297,7 +297,7 @@ class _ExamTile extends StatelessWidget {
                     exam.examDate.shortDateTime,
                     if (exam.venue != null) exam.venue,
                   ].join(' · '),
-                  style: const TextStyle(fontSize: 12, color: context.textSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

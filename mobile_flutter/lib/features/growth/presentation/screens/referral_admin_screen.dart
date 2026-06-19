@@ -139,7 +139,7 @@ class _ReferralCard extends StatelessWidget {
                   referral.referredEmail?.isNotEmpty == true
                       ? 'Invited ${referral.referredEmail}'
                       : 'Invited a friend',
-                  style: const TextStyle(fontSize: 12, color: context.textSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -149,7 +149,7 @@ class _ReferralCard extends StatelessWidget {
                       referral.channel,
                     dateLabel,
                   ].join(' • '),
-                  style: const TextStyle(fontSize: 11, color: context.textDisabled),
+                  style: TextStyle(fontSize: 11, color: context.textDisabled),
                 ),
               ],
             ),
@@ -194,7 +194,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+                style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),

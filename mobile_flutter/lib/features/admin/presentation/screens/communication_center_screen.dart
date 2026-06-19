@@ -59,7 +59,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
                   children: [
                     Icon(Icons.campaign_rounded, size: 20, color: context.primary),
                     const SizedBox(width: 8),
-                    const Text('New Announcement', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                    Text('New Announcement', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -149,7 +149,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
             data: (announcements) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Recent Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                Text('Recent Announcements', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                 const SizedBox(height: 12),
                 ...announcements.take(5).map((a) => Container(
                   margin: const EdgeInsets.only(bottom: 8),
@@ -164,20 +164,20 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
                     children: [
                       Row(
                         children: [
-                          Expanded(child: Text(a.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary))),
+                          Expanded(child: Text(a.title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary))),
                           StatusBadge(a.priority),
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(a.body, style: const TextStyle(fontSize: 12, color: context.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(a.body, style: TextStyle(fontSize: 12, color: context.textPrimary), maxLines: 2, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Text(a.scopeLabel, style: const TextStyle(fontSize: 10, color: context.textSecondary)),
+                          Text(a.scopeLabel, style: TextStyle(fontSize: 10, color: context.textSecondary)),
                           const SizedBox(width: 8),
-                          Text(a.senderName ?? '', style: const TextStyle(fontSize: 10, color: context.textSecondary)),
+                          Text(a.senderName ?? '', style: TextStyle(fontSize: 10, color: context.textSecondary)),
                           const Spacer(),
-                          Text(timeAgo(a.createdAt), style: const TextStyle(fontSize: 10, color: context.textDisabled)),
+                          Text(timeAgo(a.createdAt), style: TextStyle(fontSize: 10, color: context.textDisabled)),
                         ],
                       ),
                     ],
@@ -257,7 +257,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
           controller: scrollCtrl,
           padding: const EdgeInsets.all(16),
           children: [
-            const Text('Announcement History', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
+            Text('Announcement History', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 16),
             announcementsAsync.when(
               data: (announcements) => Column(

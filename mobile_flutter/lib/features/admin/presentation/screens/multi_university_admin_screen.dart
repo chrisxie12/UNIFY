@@ -143,9 +143,9 @@ class _OverviewTab extends ConsumerWidget {
           children: [
             Icon(icon, size: 24, color: color),
             const SizedBox(height: 8),
-            Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: context.textPrimary)),
+            Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: context.textPrimary)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 11, color: context.textSecondary), textAlign: TextAlign.center),
+            Text(label, style: TextStyle(fontSize: 11, color: context.textSecondary), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -166,7 +166,7 @@ class _OverviewTab extends ConsumerWidget {
             Icon(icon, size: 16, color: color),
             const SizedBox(height: 4),
             Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: color)),
-            Text(label, style: const TextStyle(fontSize: 9, color: context.textSecondary)),
+            Text(label, style: TextStyle(fontSize: 9, color: context.textSecondary)),
           ],
         ),
       ),
@@ -180,8 +180,8 @@ class _OverviewTab extends ConsumerWidget {
         decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
-      trailing: const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
+      title: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
+      trailing: Icon(Icons.chevron_right_rounded, color: context.textDisabled),
       onTap: onTap,
       dense: true,
     );
@@ -231,7 +231,7 @@ class _UniversityTab extends ConsumerWidget {
               onTap: () => context.push('/admin/branding'),
             ),
             const SizedBox(height: 16),
-            const Text('Registered Universities', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+            Text('Registered Universities', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             const SizedBox(height: 12),
             ...universities.map((u) => Container(
               margin: const EdgeInsets.only(bottom: 8),
@@ -256,9 +256,9 @@ class _UniversityTab extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(u.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                        Text(u.name, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: context.textPrimary)),
                         if (u.shortName != null)
-                          Text(u.shortName!, style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                          Text(u.shortName!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                       ],
                     ),
                   ),

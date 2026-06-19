@@ -344,7 +344,7 @@ class _ResourceDetailScreenState
                   style: const TextStyle(
                       fontSize: 17, fontWeight: FontWeight.w800)),
               Text(label,
-                  style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -441,7 +441,7 @@ class _VerifyMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.verified_outlined, color: context.textPrimary),
+      icon: Icon(Icons.verified_outlined, color: context.textPrimary),
       tooltip: 'Set verification',
       onSelected: (status) async {
         final updated = AcademicResourceModel(

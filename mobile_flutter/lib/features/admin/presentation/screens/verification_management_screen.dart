@@ -111,8 +111,8 @@ class _VerificationCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(profile?['full_name'] as String? ?? 'Unknown', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
-                      Text(profile?['programme'] as String? ?? '', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                      Text(profile?['full_name'] as String? ?? 'Unknown', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(profile?['programme'] as String? ?? '', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -139,11 +139,11 @@ class _VerificationCard extends ConsumerWidget {
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Text(timeAgo(DateTime.parse(request['created_at'] as String)), style: const TextStyle(fontSize: 11, color: context.textDisabled)),
+            child: Text(timeAgo(DateTime.parse(request['created_at'] as String)), style: TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (reqStatus == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Reject', AppColors.error, () => _handle(context, ref, 'rejected'))),
@@ -242,9 +242,9 @@ class _BadgeManagement extends ConsumerWidget {
             children: [
               Icon(Icons.workspace_premium_rounded, size: 48, color: context.primary.withValues(alpha: 0.3)),
               const SizedBox(height: 12),
-              const Text('Badge Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
+              Text('Badge Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
               const SizedBox(height: 4),
-              const Text('Assign and revoke leadership badges', style: TextStyle(fontSize: 13, color: context.textSecondary)),
+              Text('Assign and revoke leadership badges', style: TextStyle(fontSize: 13, color: context.textSecondary)),
               const SizedBox(height: 16),
               OutlinedButton.icon(
                 onPressed: () {

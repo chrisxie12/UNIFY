@@ -96,14 +96,14 @@ class _AuditLogCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(log.actionLabel, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
+                Text(log.actionLabel, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 2),
                 Text(
                   '${log.actorName ?? "Unknown"} · ${log.entityType.replaceAll("_", " ")}',
-                  style: const TextStyle(fontSize: 11, color: context.textSecondary),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary),
                 ),
                 const SizedBox(height: 2),
-                Text(timeAgo(log.createdAt), style: const TextStyle(fontSize: 10, color: context.textDisabled)),
+                Text(timeAgo(log.createdAt), style: TextStyle(fontSize: 10, color: context.textDisabled)),
               ],
             ),
           ),

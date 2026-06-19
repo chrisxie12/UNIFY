@@ -110,8 +110,8 @@ class _MarketplaceReportCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Listing #${report.listingId.substring(0, 8)}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
-                      Text('by ${report.reporterName ?? "Unknown"}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                      Text('Listing #${report.listingId.substring(0, 8)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text('by ${report.reporterName ?? "Unknown"}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -125,16 +125,16 @@ class _MarketplaceReportCard extends ConsumerWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
-              child: Text(report.reason, style: const TextStyle(fontSize: 13, color: context.textPrimary)),
+              child: Text(report.reason, style: TextStyle(fontSize: 13, color: context.textPrimary)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(14),
-            child: Text(timeAgo(report.createdAt), style: const TextStyle(fontSize: 11, color: context.textDisabled)),
+            child: Text(timeAgo(report.createdAt), style: TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (report.status == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Dismiss', AppColors.grey1, () => _resolve(context, ref, 'dismissed'))),

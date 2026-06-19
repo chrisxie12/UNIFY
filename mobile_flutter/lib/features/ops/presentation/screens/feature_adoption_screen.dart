@@ -205,7 +205,7 @@ class _FeatureRow extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '$users ${users == 1 ? 'user' : 'users'} · $events ${events == 1 ? 'event' : 'events'}',
-            style: const TextStyle(fontSize: 11.5, color: context.textSecondary),
+            style: TextStyle(fontSize: 11.5, color: context.textSecondary),
           ),
         ],
       ),

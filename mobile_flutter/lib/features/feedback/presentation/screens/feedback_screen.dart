@@ -187,7 +187,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     padding: EdgeInsets.all(24),
                     child: CircularProgressIndicator())),
             error: (e, _) => Text('Could not load submissions\n$e',
-                style: const TextStyle(color: context.textSecondary)),
+                style: TextStyle(color: context.textSecondary)),
             data: (items) {
               if (items.isEmpty) {
                 return const Padding(
@@ -252,7 +252,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         icon: const Icon(Icons.add_a_photo_outlined, size: 18),
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.grey1,
-          side: const BorderSide(color: context.borderCol),
+          side: BorderSide(color: context.borderCol),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -388,11 +388,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       fillColor: context.inputFill,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: context.borderCol),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

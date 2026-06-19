@@ -1215,7 +1215,7 @@ class _VerificationCard extends ConsumerWidget {
                   : 'The user will be notified of the rejection.'),
               if (status == 'approved' && roles.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
+                Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: selectedRoleId,
@@ -1232,7 +1232,7 @@ class _VerificationCard extends ConsumerWidget {
                   onChanged: (v) => setDialogState(() => selectedRoleId = v),
                 ),
                 const SizedBox(height: 8),
-                Text('Default: ${request.position}', style: const TextStyle(fontSize: 11, color: context.textDisabled, fontStyle: FontStyle.italic)),
+                Text('Default: ${request.position}', style: TextStyle(fontSize: 11, color: context.textDisabled, fontStyle: FontStyle.italic)),
               ],
               const SizedBox(height: 12),
               TextField(

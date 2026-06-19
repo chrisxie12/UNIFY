@@ -167,7 +167,7 @@ class _WaitlistCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(entry.email,
                     style:
-                        const TextStyle(fontSize: 12, color: context.textSecondary)),
+                        TextStyle(fontSize: 12, color: context.textSecondary)),
                 if (entry.programme != null || entry.universityName != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
@@ -185,7 +185,7 @@ class _WaitlistCard extends ConsumerWidget {
           const SizedBox(width: 8),
           _StatusChip(label: entry.status, color: color),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
+            icon: Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (status) async {
               await ref
                   .read(growthRepositoryProvider)
@@ -516,7 +516,7 @@ class _BetaTesterCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${tester.cohort.isEmpty ? 'No cohort' : tester.cohort} • ${tester.feedbackCount} feedback',
-                  style: const TextStyle(fontSize: 12, color: context.textSecondary),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),
@@ -524,7 +524,7 @@ class _BetaTesterCard extends ConsumerWidget {
           const SizedBox(width: 8),
           _StatusChip(label: tester.status, color: color),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: context.textSecondary),
+            icon: Icon(Icons.more_vert_rounded, color: context.textSecondary),
             onSelected: (status) async {
               await ref
                   .read(growthRepositoryProvider)
@@ -579,7 +579,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: context.textSecondary)),
+                style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),
@@ -641,7 +641,7 @@ class _EmptyState extends StatelessWidget {
           Icon(icon, size: 48, color: context.borderCol),
           const SizedBox(height: 12),
           Text(message,
-              style: const TextStyle(fontSize: 14, color: context.textDisabled)),
+              style: TextStyle(fontSize: 14, color: context.textDisabled)),
         ],
       ),
     );

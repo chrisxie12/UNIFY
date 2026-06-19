@@ -325,7 +325,7 @@ class _ReviewTile extends StatelessWidget {
           ],
           const SizedBox(height: 6),
           Text(review.createdAt.timeAgo,
-              style: const TextStyle(fontSize: 11, color: context.textDisabled)),
+              style: TextStyle(fontSize: 11, color: context.textDisabled)),
         ],
       ),
     );

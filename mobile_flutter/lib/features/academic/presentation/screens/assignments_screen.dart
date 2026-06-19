@@ -161,7 +161,7 @@ class _AssignmentCard extends ConsumerWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: context.textDisabled),
+            Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),

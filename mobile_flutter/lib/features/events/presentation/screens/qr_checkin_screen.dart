@@ -68,7 +68,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const Icon(Icons.qr_code_scanner, size: 80, color: context.textSecondary),
+            Icon(Icons.qr_code_scanner, size: 80, color: context.textSecondary),
             const SizedBox(height: 16),
             Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textSecondary])),
             const SizedBox(height: 8),

@@ -149,7 +149,7 @@ class OpportunityCard extends ConsumerWidget {
           Icon(ic, size: 13, color: context.textDisabled),
           const SizedBox(width: 3),
           Text(text,
-              style: const TextStyle(fontSize: 11.5, color: context.textSecondary)),
+              style: TextStyle(fontSize: 11.5, color: context.textSecondary)),
         ],
       );
 }

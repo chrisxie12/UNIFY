@@ -115,9 +115,9 @@ class _ModerationCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.reportTypeLabel, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(item.reportTypeLabel, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text('by ${item.reporterName ?? "Unknown"}', style: const TextStyle(fontSize: 12, color: context.textSecondary)),
+                      Text('by ${item.reporterName ?? "Unknown"}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -132,16 +132,16 @@ class _ModerationCard extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
-                child: Text(item.reason!, style: const TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4)),
+                child: Text(item.reason!, style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.4)),
               ),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Text(timeAgo(item.createdAt), style: const TextStyle(fontSize: 11, color: context.textDisabled)),
+            child: Text(timeAgo(item.createdAt), style: TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (item.status == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Dismiss', AppColors.grey1, () => _resolve(context, ref, 'dismissed'))),

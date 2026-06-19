@@ -31,7 +31,7 @@ class AppTheme {
       surfaceTint: Colors.transparent,
     );
 
-    final textTheme = GoogleFonts.interTextTheme(ThemeData(colorScheme: cs).textTheme);
+    final textTheme = GoogleFonts.spaceGroteskTextTheme(ThemeData(colorScheme: cs).textTheme);
 
     final ucLight = UColorScheme.light.copyWith(borderStrong: preset.primary);
     return ThemeData(
@@ -252,7 +252,7 @@ class AppTheme {
       surfaceTint: Colors.transparent,
     );
 
-    final textTheme = GoogleFonts.interTextTheme(ThemeData(colorScheme: cs).textTheme)
+    final textTheme = GoogleFonts.spaceGroteskTextTheme(ThemeData(colorScheme: cs).textTheme)
         .apply(bodyColor: _text, displayColor: Colors.white);
 
     final ucDark = UColorScheme.dark.copyWith(borderStrong: preset.primaryLight);
