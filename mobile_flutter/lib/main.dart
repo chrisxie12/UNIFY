@@ -8,14 +8,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'bootstrap.dart';
 import 'app.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('[Firebase] Init skipped — google-services.json not present: $e');
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 await dotenv.load(fileName: 'assets/.env');
   await bootstrap(() async {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
