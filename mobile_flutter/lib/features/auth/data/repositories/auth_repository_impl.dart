@@ -33,6 +33,11 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> signOut() => _client.auth.signOut();
 
   @override
+  Future<void> resetPassword(String email) async {
+    await _client.auth.resetPasswordForEmail(email);
+  }
+
+  @override
   Future<AppUser?> getCurrentUser() async {
     final user = _client.auth.currentUser;
     if (user == null) return null;

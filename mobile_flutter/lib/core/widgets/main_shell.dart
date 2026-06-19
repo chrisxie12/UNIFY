@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../extensions/theme_extensions.dart';
+import 'offline_banner.dart';
 
 class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -21,7 +23,7 @@ class MainShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: navigationShell,
+      body: OfflineBanner(child: navigationShell),
       bottomNavigationBar: _UnifyBottomNav(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(
@@ -74,7 +76,10 @@ class _UnifyBottomNav extends StatelessWidget {
                     tab: MainShell._tabs[i],
                     active: currentIndex == i,
                     badge: i == 2 ? 3 : 0,
-                    onTap: () => onTap(i),
+                    onTap: () {
+                HapticFeedback.selectionClick();
+                onTap(i);
+              },
                     primaryColor: primary,
                     inactiveColor: context.textSecondary,
                   ),
