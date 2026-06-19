@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
@@ -115,17 +116,17 @@ class _EventDetailContent extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _HeaderSection(event: event, theme: theme),
+          _HeaderSection(event: event),
           const SizedBox(height: 16),
-          _InfoSection(event: event, theme: theme),
+          _InfoSection(event: event),
           const SizedBox(height: 16),
-          _DescriptionSection(event: event, theme: theme),
+          _DescriptionSection(event: event),
           const SizedBox(height: 16),
-          _CapacitySection(event: event, theme: theme),
+          _CapacitySection(event: event),
           const SizedBox(height: 24),
-          _ActionButtons(event: event, theme: theme, ref: ref, eventId: eventId),
+          _ActionButtons(event: event, ref: ref, eventId: eventId),
           const SizedBox(height: 16),
-          _QuickLinks(event: event, theme: theme, ref: ref),
+          _QuickLinks(event: event, ref: ref),
           const SizedBox(height: 16),
           _AttendeesPreview(event: event),
         ],
@@ -172,8 +173,7 @@ class _EventDetailContent extends ConsumerWidget {
 
 class _HeaderSection extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
-  const _HeaderSection({required this.event, required this.theme});
+  const _HeaderSection({required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +184,7 @@ class _HeaderSection extends StatelessWidget {
         Container(
           width: 56, height: 64,
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
+            color: context.primary,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -203,22 +203,22 @@ class _HeaderSection extends StatelessWidget {
               Text(event.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
               Row(children: [
-                _Badge(text: event.categoryLabel, color: theme.colorScheme.primary),
+                _Badge(text: event.categoryLabel, color: context.primary),
                 const SizedBox(width: 6),
-                _Badge(text: event.scopeLabel, color: Colors.orange),
+                _Badge(text: event.scopeLabel, color: context.warning),
                 if (event.isFeatured) ...[
-                  const SizedBox(width: 6), const _Badge(text: 'Featured', color: Colors.amber),
+                  const SizedBox(width: 6), _Badge(text: 'Featured', color: context.warning),
                 ],
                 if (!event.isApproved && event.scope != 'community') ...[
-                  const SizedBox(width: 6), const _Badge(text: 'Pending', color: Colors.grey),
+                  const SizedBox(width: 6), _Badge(text: 'Pending', color: context.textSecondary),
                 ],
               ]),
               if (event.isCancelled) ...[
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(4)),
-                  child: Text('Cancelled', style: TextStyle(fontSize: 11, color: Colors.red[700], fontWeight: FontWeight.w600)),
+                  decoration: BoxDecoration(color: context.errorBg, borderRadius: BorderRadius.circular(4)),
+                  child: Text('Cancelled', style: TextStyle(fontSize: 11, color: context.error, fontWeight: FontWeight.w600)),
                 ),
               ],
             ],
@@ -246,8 +246,7 @@ class _Badge extends StatelessWidget {
 
 class _InfoSection extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
-  const _InfoSection({required this.event, required this.theme});
+  const _InfoSection({required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -275,10 +274,10 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(children: [
-        Icon(icon, size: 16, color: Colors.grey[600]),
+        child: Row(children: [
+        Icon(icon, size: 16, color: context.textSecondary),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: Colors.grey[800]))),
+        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: context.textPrimary))),
       ]),
     );
   }
@@ -286,15 +285,14 @@ class _InfoRow extends StatelessWidget {
 
 class _DescriptionSection extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
-  const _DescriptionSection({required this.event, required this.theme});
+  const _DescriptionSection({required this.event});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+        Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.primary)),
         const SizedBox(height: 8),
         Text(event.description ?? 'No description provided.', style: const TextStyle(fontSize: 14, height: 1.5)),
       ],
@@ -304,8 +302,7 @@ class _DescriptionSection extends StatelessWidget {
 
 class _CapacitySection extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
-  const _CapacitySection({required this.event, required this.theme});
+  const _CapacitySection({required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -315,19 +312,19 @@ class _CapacitySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-          Icon(Icons.people, size: 16, color: Colors.grey[600]),
+          Icon(Icons.people, size: 16, color: context.textSecondary),
           const SizedBox(width: 4),
-          Text('${event.attendeeCount} / ${event.capacity} registered', style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+          Text('${event.attendeeCount} / ${event.capacity} registered', style: TextStyle(fontSize: 13, color: context.textSecondary)),
           const Spacer(),
-          Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+          Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.primary)),
         ]),
         const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: percentage,
-            backgroundColor: Colors.grey[200],
-            color: percentage >= 1 ? Colors.red : theme.colorScheme.primary,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: percentage,
+              backgroundColor: context.surfaceFill,
+              color: percentage >= 1 ? context.error : context.primary,
             minHeight: 6,
           ),
         ),
@@ -338,10 +335,9 @@ class _CapacitySection extends StatelessWidget {
 
 class _ActionButtons extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
   final WidgetRef ref;
   final String eventId;
-  const _ActionButtons({required this.event, required this.theme, required this.ref, required this.eventId});
+  const _ActionButtons({required this.event, required this.ref, required this.eventId});
 
   @override
   Widget build(BuildContext context) {
@@ -358,17 +354,17 @@ class _ActionButtons extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (_) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ListTile(leading: const Icon(Icons.check, color: Colors.green), title: const Text('Going'), onTap: () async {
+                  ListTile(leading: Icon(Icons.check, color: context.success), title: const Text('Going'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'going');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
                   }),
-                  ListTile(leading: const Icon(Icons.help, color: Colors.orange), title: const Text('Maybe'), onTap: () async {
+                  ListTile(leading: Icon(Icons.help, color: context.warning), title: const Text('Maybe'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'maybe');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
                   }),
-                  ListTile(leading: const Icon(Icons.close, color: Colors.red), title: const Text('Not Going'), onTap: () async {
+                  ListTile(leading: Icon(Icons.close, color: context.error), title: const Text('Not Going'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'not_going');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
@@ -395,9 +391,8 @@ class _ActionButtons extends StatelessWidget {
 
 class _QuickLinks extends StatelessWidget {
   final EventModel event;
-  final ThemeData theme;
   final WidgetRef ref;
-  const _QuickLinks({required this.event, required this.theme, required this.ref});
+  const _QuickLinks({required this.event, required this.ref});
 
   @override
   Widget build(BuildContext context) {
@@ -437,11 +432,11 @@ class _QuickLinkCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[200]!)),
+          decoration: BoxDecoration(color: context.surfaceFill, borderRadius: BorderRadius.circular(8), border: Border.all(color: context.borderCol)),
           child: Column(children: [
-            Icon(icon, size: 20, color: Colors.grey[700]),
+            Icon(icon, size: 20, color: context.textPrimary),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 10, color: Colors.grey[700])),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textPrimary)),
           ]),
         ),
       ),
@@ -462,11 +457,11 @@ class _AttendeesPreview extends StatelessWidget {
           height: 28,
           child: Stack(children: List.generate(3, (i) => Positioned(
             left: i * 16.0,
-            child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: Colors.grey[500])),
+            child: CircleAvatar(radius: 14, backgroundColor: context.textDisabled, child: Icon(Icons.person, size: 14, color: context.textSecondary)),
           ))),
         ),
         const SizedBox(width: 8),
-        Text('${event.attendeeCount} attending', style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+        Text('${event.attendeeCount} attending', style: TextStyle(fontSize: 13, color: context.textSecondary)),
       ]),
     );
   }

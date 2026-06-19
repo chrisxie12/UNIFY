@@ -16,7 +16,6 @@ class AcademicHomeScreen extends ConsumerWidget {
     final resourcesAsync = ref.watch(searchResourcesProvider(''));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/academic/upload'),
         backgroundColor: context.primary,
@@ -33,21 +32,20 @@ class AcademicHomeScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
+              backgroundColor: context.surfaceCard,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0.6,
-              shadowColor: AppColors.border,
-              title: const Text('Academic Hub',
+              shadowColor: context.borderCol,
+              title: Text('Academic Hub',
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 19,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.cloud_download_outlined,
-                      color: AppColors.dark),
+                  icon: Icon(Icons.cloud_download_outlined,
+                      color: context.textPrimary),
                   tooltip: 'Offline library',
                   onPressed: () => context.push('/academic/offline'),
                 ),
@@ -65,18 +63,18 @@ class AcademicHomeScreen extends ConsumerWidget {
                     height: 46,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.surfaceCard,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.borderCol),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.search_rounded,
-                            color: AppColors.grey2, size: 21),
-                        SizedBox(width: 10),
+                            color: context.textSecondary, size: 21),
+                        const SizedBox(width: 10),
                         Text('Search courses, notes, past questions…',
                             style: TextStyle(
-                                color: AppColors.grey2, fontSize: 14)),
+                                color: context.textSecondary, fontSize: 14)),
                       ],
                     ),
                   ),
@@ -99,25 +97,25 @@ class AcademicHomeScreen extends ConsumerWidget {
                     _Tool(
                       icon: Icons.calculate_rounded,
                       label: 'GPA',
-                      color: const Color(0xFF0066FF),
+                      color: context.primary,
                       onTap: () => context.push('/academic/gpa'),
                     ),
                     _Tool(
                       icon: Icons.event_note_rounded,
                       label: 'Planner',
-                      color: const Color(0xFF7C3AED),
+                      color: context.primary,
                       onTap: () => context.push('/academic/planner'),
                     ),
                     _Tool(
                       icon: Icons.school_rounded,
                       label: 'Exam Prep',
-                      color: const Color(0xFFDC2626),
+                      color: context.error,
                       onTap: () => context.push('/academic/exams'),
                     ),
                     _Tool(
                       icon: Icons.assignment_rounded,
                       label: 'Assignments',
-                      color: const Color(0xFFD97706),
+                      color: context.warning,
                       onTap: () => context.push('/academic/assignments'),
                     ),
                   ],

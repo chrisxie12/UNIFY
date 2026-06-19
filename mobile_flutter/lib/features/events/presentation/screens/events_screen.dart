@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 import '../widgets/event_card.dart';
@@ -33,7 +34,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Events'),
@@ -51,15 +51,15 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
           preferredSize: const Size.fromHeight(100),
           child: Column(
             children: [
-              _buildScopeChips(theme),
+              _buildScopeChips(),
               TabBar(
                 controller: _tabController,
                 tabs: const [
                   Tab(text: 'Upcoming'), Tab(text: 'Trending'), Tab(text: 'Featured'),
                 ],
-                labelColor: theme.colorScheme.primary,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: theme.colorScheme.primary,
+                labelColor: context.primary,
+                unselectedLabelColor: context.textSecondary,
+                indicatorColor: context.primary,
               ),
             ],
           ),
@@ -89,7 +89,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
     );
   }
 
-  Widget _buildScopeChips(ThemeData theme) {
+  Widget _buildScopeChips() {
     return SizedBox(
       height: 40,
       child: ListView(
@@ -107,7 +107,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                 style: TextStyle(fontSize: 12, color: active ? Colors.white : null),
               ),
               selected: active,
-              selectedColor: theme.colorScheme.primary,
+              selectedColor: context.primary,
               onSelected: (_) => setState(() => _selectedScope = scope),
             ),
           );
@@ -145,9 +145,9 @@ class _EventList extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.event_busy, size: 64, color: Colors.grey[300]),
+                Icon(Icons.event_busy, size: 64, color: context.textDisabled),
                 const SizedBox(height: 16),
-                Text('No events found', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                Text('No events found', style: TextStyle(color: context.textSecondary, fontSize: 16)),
               ],
             ),
           );

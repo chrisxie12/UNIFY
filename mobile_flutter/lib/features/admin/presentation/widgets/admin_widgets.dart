@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AdminStatTile extends StatelessWidget {
   final String label;
@@ -32,7 +32,7 @@ class AdminStatTile extends StatelessWidget {
             const SizedBox(height: 6),
             Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 10, color: AppColors.grey2)),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary)),
           ],
         ),
       ),
@@ -61,9 +61,9 @@ class AdminSectionCard extends StatelessWidget {
     final c = color ?? context.primary;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.surfaceCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,13 +134,13 @@ class AdminActionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                  Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.grey3),
+            Icon(Icons.chevron_right_rounded, color: context.textSecondary),
           ],
         ),
       ),
@@ -155,10 +155,10 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      'approved' || 'resolved' || 'active' || 'featured' => AppColors.success,
-      'rejected' || 'suspended' || 'dismissed' || 'expired' => AppColors.error,
-      'pending' || 'reviewing' => AppColors.warning,
-      _ => AppColors.grey2,
+      'approved' || 'resolved' || 'active' || 'featured' => context.success,
+      'rejected' || 'suspended' || 'dismissed' || 'expired' => context.error,
+      'pending' || 'reviewing' => context.warning,
+      _ => context.textSecondary,
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

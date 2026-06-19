@@ -192,9 +192,9 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
               ),
               data: (items) {
                 if (items.isEmpty) {
-                  return const SliverToBoxAdapter(
+                  return SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(40),
+                      padding: const EdgeInsets.all(40),
                       child: Center(
                         child: Text('No opportunities yet. Check back soon.',
                             style: TextStyle(color: context.textSecondary)),

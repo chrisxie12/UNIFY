@@ -6,7 +6,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/messaging_provider.dart';
 import '../../data/models/message_model.dart';
-import '../../data/models/conversation_model.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/typing_indicator.dart';
 import '../widgets/chat_input_bar.dart';

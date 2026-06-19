@@ -1269,10 +1269,10 @@ class _LeadershipCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.shield_rounded, size: 16, color: Color(0xFFFF6B35)),
-              SizedBox(width: 6),
+              const Icon(Icons.shield_rounded, size: 16, color: Color(0xFFFF6B35)),
+              const SizedBox(width: 6),
               Text('Leadership', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
             ],
           ),
@@ -1525,7 +1525,7 @@ class _AccountCard extends StatelessWidget {
             _Tile(
               icon: Icons.rocket_launch_rounded,
               label: 'Launch Control',
-              iconColor: const Color(0xFF0066FF),
+              iconColor: context.primary,
               onTap: () => context.push('/launch'),
             ),
           ],

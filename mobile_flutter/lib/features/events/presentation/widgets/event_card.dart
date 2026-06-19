@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
-import '../../../../core/theme/app_colors.dart';
 
 class EventCard extends ConsumerWidget {
   final EventModel event;
@@ -35,7 +35,7 @@ class EventCard extends ConsumerWidget {
                 width: 60,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: context.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -52,8 +52,8 @@ class EventCard extends ConsumerWidget {
                     const SizedBox(height: 2),
                     Text(
                       event.eventDate.day.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+      color: context.surfaceCard,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -83,7 +83,7 @@ class EventCard extends ConsumerWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: _rsvpColor(event.myRsvpStatus!).withValues(alpha: 0.1),
+                              color: _rsvpColor(event.myRsvpStatus!, context).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -91,7 +91,7 @@ class EventCard extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: _rsvpColor(event.myRsvpStatus!),
+                                color: _rsvpColor(event.myRsvpStatus!, context),
                               ),
                             ),
                           ),
@@ -104,14 +104,14 @@ class EventCard extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(Icons.location_on_outlined,
-                                size: 16, color: Colors.grey[500]),
+                                size: 16, color: context.textSecondary),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 event.location!,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Colors.grey[600],
+                                  color: context.textSecondary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -125,13 +125,13 @@ class EventCard extends ConsumerWidget {
                       child: Row(
                         children: [
                           Icon(Icons.access_time,
-                              size: 16, color: Colors.grey[500]),
+                              size: 16, color: context.textSecondary),
                           const SizedBox(width: 4),
                           Text(
                             '${event.formattedDate} at ${event.formattedTime}',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.grey[600],
+                              color: context.textSecondary,
                             ),
                           ),
                         ],
@@ -140,13 +140,13 @@ class EventCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(Icons.people_outline,
-                            size: 16, color: Colors.grey[500]),
+                            size: 16, color: context.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           '${event.rsvpCount} attending',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey[600],
+                            color: context.textSecondary,
                           ),
                         ),
                         const Spacer(),
@@ -155,7 +155,7 @@ class EventCard extends ConsumerWidget {
                           child: ElevatedButton(
                             onPressed: onRsvp,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
+                              backgroundColor: context.primary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               shape: RoundedRectangleBorder(
@@ -184,16 +184,16 @@ class EventCard extends ConsumerWidget {
     );
   }
 
-  Color _rsvpColor(String status) {
+  Color _rsvpColor(String status, BuildContext context) {
     switch (status) {
       case 'going':
-        return AppColors.primary;
+        return context.primary;
       case 'maybe':
-        return const Color(0xFFFF6B35);
+        return context.warning;
       case 'declined':
-        return Colors.red;
+        return context.error;
       default:
-        return Colors.grey;
+        return context.textSecondary;
     }
   }
 

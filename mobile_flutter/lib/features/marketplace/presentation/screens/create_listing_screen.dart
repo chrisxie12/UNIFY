@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/providers/supabase_provider.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';

@@ -69,8 +69,8 @@ class AmbassadorDetailScreen extends ConsumerWidget {
               children: [
                 _Header(ambassador: ambassador),
                 const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text('Events',
                       style: TextStyle(
                           fontSize: 16,

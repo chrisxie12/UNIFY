@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class MyTicketsScreen extends ConsumerWidget {
@@ -8,7 +9,6 @@ class MyTicketsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final ticketsAsync = ref.watch(myTicketsProvider);
 
     return Scaffold(
@@ -22,9 +22,9 @@ class MyTicketsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.confirmation_number_outlined, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.confirmation_number_outlined, size: 64, color: context.textDisabled),
                   const SizedBox(height: 16),
-                  Text('No tickets yet', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('No tickets yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => context.pop(),
@@ -52,7 +52,7 @@ class MyTicketsScreen extends ConsumerWidget {
                           width: 4,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: ticket.attended ? Colors.green : theme.colorScheme.primary,
+                            color: ticket.attended ? context.success : context.primary,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -64,29 +64,29 @@ class MyTicketsScreen extends ConsumerWidget {
                               Text(ticket.eventTitle ?? 'Event', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                               const SizedBox(height: 4),
                               if (ticket.eventDate != null)
-                                Text(ticket.eventDate!, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                Text(ticket.eventDate!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                               const SizedBox(height: 2),
                               Row(
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: ticket.attended ? Colors.green.withValues(alpha: 0.1) : Colors.blue.withValues(alpha: 0.1),
+                                      color: ticket.attended ? Colors.green.withValues(alpha: 0.1) : context.info.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
                                       ticket.attended ? 'Attended' : 'Not Checked In',
-                                      style: TextStyle(fontSize: 10, color: ticket.attended ? Colors.green : Colors.blue, fontWeight: FontWeight.w500),
+                                      style: TextStyle(fontSize: 10, color: ticket.attended ? context.success : context.info, fontWeight: FontWeight.w500),
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  Text('#${ticket.ticketNumber.substring(ticket.ticketNumber.length - 8)}', style: TextStyle(fontSize: 10, color: Colors.grey[500])),
+                                  Text('#${ticket.ticketNumber.substring(ticket.ticketNumber.length - 8)}', style: TextStyle(fontSize: 10, color: context.textSecondary)),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                        Icon(Icons.chevron_right, color: context.textDisabled),
                       ],
                     ),
                   ),

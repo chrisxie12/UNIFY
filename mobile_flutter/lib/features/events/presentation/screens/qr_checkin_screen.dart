@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class QRCheckInScreen extends ConsumerStatefulWidget {
@@ -61,18 +62,17 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Check-In')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const Icon(Icons.qr_code_scanner, size: 80, color: Colors.black54),
+            Icon(Icons.qr_code_scanner, size: 80, color: context.textSecondary),
             const SizedBox(height: 16),
-            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[800])),
+            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
             const SizedBox(height: 8),
-            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: Colors.grey[600]), textAlign: TextAlign.center),
+            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
             const SizedBox(height: 24),
             TextField(
               controller: _ticketCodeCtrl,
@@ -102,14 +102,14 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: _checkInSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
+                  color: _checkInSuccess ? context.success.withValues(alpha: 0.1) : context.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       _checkInSuccess ? Icons.check_circle : Icons.error,
-                      color: _checkInSuccess ? Colors.green : Colors.red,
+                      color: _checkInSuccess ? context.success : context.error,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
@@ -117,7 +117,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
                       child: Text(
                         _checkInMessage!,
                         style: TextStyle(
-                          color: _checkInSuccess ? Colors.green[800] : Colors.red[800],
+                          color: _checkInSuccess ? context.success : context.error,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -127,7 +127,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
               ),
             ],
             const SizedBox(height: 32),
-            _AttendeeListSection(eventId: widget.eventId, theme: theme),
+            _AttendeeListSection(eventId: widget.eventId),
           ],
         ),
       ),
@@ -137,8 +137,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
 
 class _AttendeeListSection extends ConsumerWidget {
   final String eventId;
-  final ThemeData theme;
-  const _AttendeeListSection({required this.eventId, required this.theme});
+  const _AttendeeListSection({required this.eventId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,7 +152,7 @@ class _AttendeeListSection extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text('Attendees', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+                Text('Attendees', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.primary)),
                 const Spacer(),
                 Text('$checkedIn / ${tickets.length} checked in', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
               ],
