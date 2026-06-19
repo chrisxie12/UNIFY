@@ -78,7 +78,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text('Events',
-                      style: UText.h4.copyWith(color: context.textPrimary));
+                      style: UText.h4.copyWith(color: context.textPrimary))
                 ),
                 const SizedBox(height: USpacing.sm),
                 eventsAsync.when(

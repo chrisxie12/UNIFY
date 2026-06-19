@@ -156,7 +156,7 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
                 const SizedBox(height: 12),
                 Text('Error loading profile', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
-                Text(ErrorMapper.toUserMessage(e), style: const TextStyle(fontSize: 13, color: AppColors.grey3));
+                Text(ErrorMapper.toUserMessage(e), style: const TextStyle(fontSize: 13, color: AppColors.grey3)),
                 const SizedBox(height: 16),
                 FilledButton.tonalIcon(
                   onPressed: () => ref.invalidate(_repProfileProvider(widget.userId)),
