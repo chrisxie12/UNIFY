@@ -5,7 +5,10 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
+import 'core/providers/supabase_provider.dart';
 import 'features/system/presentation/widgets/update_gate.dart';
+import 'features/notifications/presentation/providers/push_notification_provider.dart';
+import 'features/notifications/domain/services/push_notification_service.dart';
 
 class UnifyApp extends ConsumerStatefulWidget {
   const UnifyApp({super.key});
@@ -16,6 +19,8 @@ class UnifyApp extends ConsumerStatefulWidget {
 
 class _UnifyAppState extends ConsumerState<UnifyApp>
     with WidgetsBindingObserver {
+  String? _lastUserId;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,24 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
     final router = ref.watch(appRouterProvider);
     final theme = ref.watch(themeNotifierProvider);
     final mode = ref.watch(themeModeProvider);
+
+    ref.listen(authStateProvider, (_, next) {
+      next.whenData((authState) {
+        final userId = authState.session?.user.id;
+        final pushService = ref.read(pushNotificationServiceProvider);
+        if (userId != null && userId != _lastUserId) {
+          _lastUserId = userId;
+          pushService.init(userId, onTap: (data) {
+            final route = PushNotificationService.routeFromData(data);
+            if (route != null) router.go(route);
+          });
+        } else if (userId == null && _lastUserId != null) {
+          _lastUserId = null;
+          pushService.dispose();
+        }
+      });
+    });
+
     return MaterialApp.router(
       title: 'UNIFY',
       debugShowCheckedModeBanner: false,
