@@ -143,3 +143,30 @@ final messagingProvider = StateNotifierProvider<MessagingNotifier, MessagingStat
   final userId = ref.watch(currentUserIdProvider);
   return MessagingNotifier(repo, userId);
 });
+
+// ── Pinned conversations (client-side, session-scoped) ────────────────────
+class _PinnedNotifier extends StateNotifier<Set<String>> {
+  _PinnedNotifier() : super({});
+  void toggle(String id) =>
+      state = state.contains(id) ? (state..remove(id)) : {...state, id};
+  bool isPinned(String id) => state.contains(id);
+}
+
+final pinnedConversationsProvider =
+    StateNotifierProvider<_PinnedNotifier, Set<String>>(
+        (_) => _PinnedNotifier());
+
+// ── Per-conversation typing stream ────────────────────────────────────────
+final typingProvider =
+    StreamProvider.family<int, String>((ref, conversationId) {
+  final repo = ref.watch(messagingRepositoryProvider);
+  return repo.typingStatus(conversationId);
+});
+
+// ── Message search within a conversation ─────────────────────────────────
+final chatSearchQueryProvider =
+    StateProvider.family<String, String>((ref, _) => '');
+
+// ── Reply-to state (per conversation) ────────────────────────────────────
+final replyToMessageProvider =
+    StateProvider.family<MessageModel?, String>((ref, _) => null);
