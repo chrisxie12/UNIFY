@@ -108,7 +108,7 @@ class SellerProfileScreen extends ConsumerWidget {
             error: (_, __) => const SizedBox.shrink(),
             data: (items) => items.isEmpty
                 ? const Text('No active listings.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
                 : GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -137,7 +137,7 @@ class SellerProfileScreen extends ConsumerWidget {
             error: (_, __) => const SizedBox.shrink(),
             data: (reviews) => reviews.isEmpty
                 ? const Text('No reviews yet.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
                 : Column(
                     children: reviews
                         .map((r) => Container(
@@ -276,7 +276,7 @@ class _ReviewSheetState extends ConsumerState<_ReviewSheet> {
             decoration: InputDecoration(
               hintText: 'Share details of your experience (optional)',
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.inputFill,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none),

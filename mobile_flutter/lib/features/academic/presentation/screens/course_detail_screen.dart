@@ -29,7 +29,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         floatingActionButton: FloatingActionButton(
           onPressed: () =>
               context.push('/academic/upload?course=${widget.courseId}'),
@@ -40,7 +40,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           headerSliverBuilder: (_, __) => [
             SliverAppBar(
               pinned: true,
-              backgroundColor: Colors.white,
+              backgroundColor: context.appBarBg,
               surfaceTintColor: Colors.white,
               foregroundColor: AppColors.dark,
               expandedHeight: 150,
@@ -184,14 +184,14 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.folder_open_rounded,
-                size: 44, color: AppColors.grey3),
+                size: 44, color: context.textDisabled),
             const SizedBox(height: 12),
             Text(title,
                 style: const TextStyle(
                     fontSize: 15, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Text(subtitle,
-                style: const TextStyle(fontSize: 13, color: AppColors.grey2)),
+                style: TextStyle(fontSize: 13, color: context.textSecondary)),
           ],
         ),
       );
@@ -207,7 +207,7 @@ class _AssignmentTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -265,7 +265,7 @@ class _ExamTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -297,7 +297,7 @@ class _ExamTile extends StatelessWidget {
                     exam.examDate.shortDateTime,
                     if (exam.venue != null) exam.venue,
                   ].join(' · '),
-                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

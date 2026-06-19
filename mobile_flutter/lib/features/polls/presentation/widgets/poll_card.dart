@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/poll_model.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class PollCard extends ConsumerWidget {
   final PollModel poll;
@@ -24,7 +25,7 @@ class PollCard extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 1,
       shadowColor: Colors.black.withValues(alpha: 0.08),
-      color: Colors.white,
+      color: context.cardBg,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -45,20 +46,20 @@ class PollCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: context.textSecondary],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.lock, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.lock, size: 14, color: context.textSecondary]),
                         const SizedBox(width: 4),
                         Text(
                           'Locked',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
+                            color: context.textSecondary],
                           ),
                         ),
                       ],
@@ -72,7 +73,7 @@ class PollCard extends ConsumerWidget {
                 poll.description!,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.grey[600],
+                  color: context.textSecondary],
                 ),
               ),
             ],
@@ -187,7 +188,7 @@ class PollCard extends ConsumerWidget {
                   '${poll.totalVotes} votes',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey[500],
+                    color: context.textSecondary],
                   ),
                 ),
                 if (selectedOptionId == null && !poll.isLocked && !poll.isExpired) ...[

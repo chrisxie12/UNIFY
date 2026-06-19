@@ -177,7 +177,7 @@ class _AnnouncementsAdminScreenState
                   child: Center(
                     child: Text(
                       'No announcements yet',
-                      style: TextStyle(color: AppColors.grey3),
+                      style: TextStyle(color: context.textDisabled),
                     ),
                   ),
                 )
@@ -293,7 +293,7 @@ class _AnnouncementsAdminScreenState
               child: Row(
                 children: [
                   const Icon(Icons.event_rounded,
-                      size: 18, color: AppColors.grey2),
+                      size: 18, color: context.textSecondary),
                   const SizedBox(width: 10),
                   Text(
                     _endsAt == null
@@ -309,7 +309,7 @@ class _AnnouncementsAdminScreenState
                     GestureDetector(
                       onTap: () => setState(() => _endsAt = null),
                       child: const Icon(Icons.close_rounded,
-                          size: 18, color: AppColors.grey3),
+                          size: 18, color: context.textDisabled),
                     ),
                 ],
               ),
@@ -333,7 +333,7 @@ class _AnnouncementsAdminScreenState
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: AppColors.white),
+                          strokeWidth: 2, color: Colors.white),
                     )
                   : const Icon(Icons.campaign_rounded, size: 20),
               label: const Text(
@@ -395,7 +395,7 @@ class _AnnouncementsAdminScreenState
             a.body,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 13, color: AppColors.grey2),
+            style: TextStyle(fontSize: 13, color: context.textSecondary),
           ),
           const SizedBox(height: 10),
           Wrap(
@@ -459,11 +459,11 @@ class _AnnouncementsAdminScreenState
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),

@@ -4,12 +4,17 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class MyTicketsScreen extends ConsumerWidget {
   const MyTicketsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final ticketsAsync = ref.watch(myTicketsProvider);
 
     return Scaffold(
@@ -19,75 +24,66 @@ class MyTicketsScreen extends ConsumerWidget {
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(myTicketsProvider)),
         data: (tickets) {
           if (tickets.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.confirmation_number_outlined, size: 64, color: context.textDisabled),
-                  const SizedBox(height: 16),
-                  Text('No tickets yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => context.pop(),
-                    child: const Text('Browse Events'),
-                  ),
-                ],
-              ),
+            return UEmptyState(
+              icon: Icons.confirmation_number_outlined,
+              title: 'No tickets yet',
+              actionLabel: 'Browse Events',
+              onAction: () => context.pop(),
             );
           }
           return ListView.builder(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(USpacing.md),
             itemCount: tickets.length,
             itemBuilder: (_, i) {
               final ticket = tickets[i];
               return Card(
-                margin: const EdgeInsets.only(bottom: 12),
+                margin: const EdgeInsets.only(bottom: USpacing.md),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: URadius.mdAll,
                   onTap: () => context.push('/events/ticket/${ticket.id}'),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(USpacing.base),
                     child: Row(
                       children: [
                         Container(
-                          width: 4,
+                          width: USpacing.xs,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: ticket.attended ? context.success : context.primary,
+                            color: ticket.attended ? Colors.green : theme.colorScheme.primary,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: USpacing.md),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(ticket.eventTitle ?? 'Event', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
-                              const SizedBox(height: 4),
+                              Text(ticket.eventTitle ?? 'Event', style: UText.labelL),
+                              const SizedBox(height: USpacing.xs),
                               if (ticket.eventDate != null)
-                                Text(ticket.eventDate!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                                Text(ticket.eventDate!, style: UText.caption.copyWith(color: context.textSecondary)),
                               const SizedBox(height: 2),
                               Row(
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: ticket.attended ? Colors.green.withValues(alpha: 0.1) : context.info.withValues(alpha: 0.1),
+                                      color: ticket.attended ? Colors.green.withValues(alpha: 0.1) : Colors.blue.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
                                       ticket.attended ? 'Attended' : 'Not Checked In',
-                                      style: TextStyle(fontSize: 10, color: ticket.attended ? context.success : context.info, fontWeight: FontWeight.w500),
+                                      style: UText.tiny.copyWith(color: ticket.attended ? Colors.green : Colors.blue, fontWeight: FontWeight.w500),
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  Text('#${ticket.ticketNumber.substring(ticket.ticketNumber.length - 8)}', style: TextStyle(fontSize: 10, color: context.textSecondary)),
+                                  Text('#${ticket.ticketNumber.substring(ticket.ticketNumber.length - 8)}', style: UText.tiny.copyWith(color: context.textSecondary)),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        Icon(Icons.chevron_right, color: context.textDisabled),
+                        Icon(Icons.chevron_right, color: context.textSecondary),
                       ],
                     ),
                   ),

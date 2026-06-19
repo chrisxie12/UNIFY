@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class AdminStatTile extends StatelessWidget {
   final String label;
@@ -61,7 +61,7 @@ class AdminSectionCard extends StatelessWidget {
     final c = color ?? context.primary;
     return Container(
       decoration: BoxDecoration(
-        color: context.surfaceCard,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: context.borderCol),
       ),
@@ -74,7 +74,7 @@ class AdminSectionCard extends StatelessWidget {
               children: [
                 Icon(icon, size: 18, color: c),
                 const SizedBox(width: 8),
-                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                 const Spacer(),
                 if (onViewAll != null)
                   TextButton(
@@ -114,9 +114,9 @@ class AdminActionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
         ),
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -134,13 +134,13 @@ class AdminActionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                  Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                   const SizedBox(height: 2),
                   Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: context.textSecondary),
+            Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),
@@ -155,10 +155,10 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      'approved' || 'resolved' || 'active' || 'featured' => context.success,
-      'rejected' || 'suspended' || 'dismissed' || 'expired' => context.error,
-      'pending' || 'reviewing' => context.warning,
-      _ => context.textSecondary,
+      'approved' || 'resolved' || 'active' || 'featured' => AppColors.success,
+      'rejected' || 'suspended' || 'dismissed' || 'expired' => AppColors.error,
+      'pending' || 'reviewing' => AppColors.warning,
+      _ => AppColors.grey2,
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

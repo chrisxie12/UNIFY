@@ -203,7 +203,7 @@ class _TrustBanner extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
+              color: context.cardBg.withValues(alpha: 0.18),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.verified_user_rounded,

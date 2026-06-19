@@ -7,6 +7,7 @@ import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
+import '../../screens/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
@@ -14,9 +15,11 @@ import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
+import '../../screens/chat_list_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
 import '../../features/messaging/presentation/screens/student_directory_screen.dart';
 import '../../features/messaging/presentation/screens/chat_screen.dart';
+import '../../screens/chat_conversation_screen.dart';
 import '../../features/messaging/presentation/screens/create_group_screen.dart';
 import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
@@ -145,7 +148,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
-      GoRoute(path: '/welcome', builder: (_, __) => const OnboardingCarouselScreen()),
+      GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
       GoRoute(path: '/get-started', builder: (_, __) => const GetStartedScreen()),
       GoRoute(
         path: '/auth',
@@ -244,13 +247,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/messaging/search', builder: (_, __) => const StudentDirectoryScreen()),
       GoRoute(
         path: '/messaging/chat/:id',
-        builder: (_, state) => ChatScreen(conversationId: state.pathParameters['id']!),
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ChatConversationScreen(
+            contactName: extra?['name'] as String? ?? 'Chat',
+            isOnline: extra?['isOnline'] as bool? ?? false,
+            isVerified: extra?['isVerified'] as bool? ?? false,
+          );
+        },
       ),
       GoRoute(
         path: '/messaging/chat/new',
         builder: (_, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return ChatScreen(conversationId: extra?['conversation_id'] as String? ?? 'new');
+          return ChatConversationScreen(
+            contactName: extra?['name'] as String? ?? 'New Chat',
+            isOnline: extra?['isOnline'] as bool? ?? false,
+            isVerified: extra?['isVerified'] as bool? ?? false,
+          );
         },
       ),
       GoRoute(path: '/messaging/create-group', builder: (_, __) => const CreateGroupScreen()),
@@ -333,7 +347,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
+            GoRoute(path: '/app/messaging', builder: (_, __) => const ChatListScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),

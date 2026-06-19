@@ -29,9 +29,9 @@ class ThemePreset {
     id: AppThemeId.ocean,
     name: 'Ocean',
     emoji: '🌊',
-    primary: Color(0xFF0066FF),
-    primaryLight: Color(0xFF3385FF),
-    primaryDark: Color(0xFF0047DD),
+    primary: Color(0xFF2563EB),
+    primaryLight: Color(0xFF60A5FA),
+    primaryDark: Color(0xFF1D4ED8),
   );
   static const violet = ThemePreset(
     id: AppThemeId.violet,

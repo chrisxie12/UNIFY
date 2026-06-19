@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
@@ -122,8 +122,8 @@ class AdminScreen extends ConsumerWidget {
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
-                        color: context.error,
+                      decoration: const BoxDecoration(
+                        color: AppColors.error,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -145,7 +145,7 @@ class AdminScreen extends ConsumerWidget {
               Tab(text: 'History'),
             ],
             labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor: context.textSecondary,
+            unselectedLabelColor: AppColors.grey3,
             indicatorColor: Theme.of(context).colorScheme.primary,
           ),
         ),
@@ -200,16 +200,16 @@ class _PendingRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.textDisabled),
-                        const SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
+                        SizedBox(height: 12),
+                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
+                        SizedBox(height: 4),
+                        Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
                   ),
@@ -244,13 +244,13 @@ class _AllRequestsTab extends ConsumerWidget {
       child: allAsync.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.inbox_rounded, size: 48, color: context.textDisabled),
-                  const SizedBox(height: 12),
-                  Text('No requests yet', style: TextStyle(fontSize: 15, color: AppColors.grey2)),
+                  Icon(Icons.inbox_rounded, size: 48, color: context.borderCol),
+                  SizedBox(height: 12),
+                  Text('No requests yet', style: TextStyle(fontSize: 15, color: context.textSecondary)),
                 ],
               ),
             );
@@ -280,7 +280,7 @@ class _StatsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _StatTile(label: 'Total', value: '${stats.total}', color: AppColors.dark, icon: Icons.inbox_rounded),
+        _StatTile(label: 'Total', value: '${stats.total}', color: context.textPrimary, icon: Icons.inbox_rounded),
         _StatTile(label: 'Pending', value: '${stats.pending}', color: AppColors.warning, icon: Icons.hourglass_empty_rounded),
         _StatTile(label: 'Approved', value: '${stats.approved}', color: AppColors.success, icon: Icons.check_circle_rounded),
         _StatTile(label: 'Rejected', value: '${stats.rejected}', color: AppColors.error, icon: Icons.cancel_rounded),
@@ -738,16 +738,16 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.textDisabled),
-                        const SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: AppColors.grey3)),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
+                        SizedBox(height: 12),
+                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
+                        SizedBox(height: 4),
+                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
                   ),
@@ -1008,14 +1008,14 @@ class _VerificationTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.textDisabled),
-                        const SizedBox(height: 12),
-                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
+                        SizedBox(height: 12),
+                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),
@@ -1212,7 +1212,7 @@ class _VerificationCard extends ConsumerWidget {
                   : 'The user will be notified of the rejection.'),
               if (status == 'approved' && roles.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                Text('Assign Leadership Role', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: selectedRoleId,
@@ -1229,7 +1229,7 @@ class _VerificationCard extends ConsumerWidget {
                   onChanged: (v) => setDialogState(() => selectedRoleId = v),
                 ),
                 const SizedBox(height: 8),
-                Text('Default: ${request.position}', style: const TextStyle(fontSize: 11, color: AppColors.grey3, fontStyle: FontStyle.italic)),
+                Text('Default: ${request.position}', style: TextStyle(fontSize: 11, color: context.textDisabled, fontStyle: FontStyle.italic)),
               ],
               const SizedBox(height: 12),
               TextField(

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
 
 class AcademicHubScreen extends ConsumerWidget {
   const AcademicHubScreen({super.key});
@@ -21,9 +24,9 @@ class AcademicHubScreen extends ConsumerWidget {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        padding: const EdgeInsets.all(16),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        padding: const EdgeInsets.all(USpacing.base),
+        mainAxisSpacing: USpacing.md,
+        crossAxisSpacing: USpacing.md,
         childAspectRatio: 0.9,
         children: [
           _HubCard(
@@ -107,18 +110,18 @@ class _HubCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.cardBg,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: URadius.baseAll,
       elevation: 0,
       shadowColor: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: URadius.baseAll,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: URadius.baseAll,
             border: Border.all(color: context.borderCol),
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(USpacing.base),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -126,14 +129,16 @@ class _HubCard extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: URadius.mdAll,
                 ),
                 child: Icon(icon, color: color, size: 28),
               ),
               const Spacer(),
-              Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              Text(label,
+                  style: UText.h4.copyWith(color: context.textPrimary)),
               const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(fontSize: 12, color: context.textSecondary)),
+              Text(subtitle,
+                  style: UText.caption.copyWith(color: context.textSecondary)),
             ],
           ),
         ),

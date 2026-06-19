@@ -63,6 +63,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Check-In')),
       body: Padding(
@@ -71,9 +72,9 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
           children: [
             Icon(Icons.qr_code_scanner, size: 80, color: context.textSecondary),
             const SizedBox(height: 16),
-            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
+            Text('Scan Ticket or Enter Code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textSecondary])),
             const SizedBox(height: 8),
-            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: context.textSecondary), textAlign: TextAlign.center),
+            Text('Enter the QR code or ticket number to verify attendance.', style: TextStyle(fontSize: 13, color: context.textSecondary]), textAlign: TextAlign.center),
             const SizedBox(height: 24),
             TextField(
               controller: _ticketCodeCtrl,
@@ -103,14 +104,14 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: _checkInSuccess ? context.success.withValues(alpha: 0.1) : context.error.withValues(alpha: 0.1),
+                  color: _checkInSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       _checkInSuccess ? Icons.check_circle : Icons.error,
-                      color: _checkInSuccess ? context.success : context.error,
+                      color: _checkInSuccess ? Colors.green : Colors.red,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
@@ -118,7 +119,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
                       child: Text(
                         _checkInMessage!,
                         style: TextStyle(
-                          color: _checkInSuccess ? context.success : context.error,
+                          color: _checkInSuccess ? Colors.green[800] : Colors.red[800],
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -128,7 +129,7 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
               ),
             ],
             const SizedBox(height: 32),
-            _AttendeeListSection(eventId: widget.eventId),
+            _AttendeeListSection(eventId: widget.eventId, theme: theme),
           ],
         ),
       ),
@@ -138,7 +139,8 @@ class _QRCheckInScreenState extends ConsumerState<QRCheckInScreen> {
 
 class _AttendeeListSection extends ConsumerWidget {
   final String eventId;
-  const _AttendeeListSection({required this.eventId});
+  final ThemeData theme;
+  const _AttendeeListSection({required this.eventId, required this.theme});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,16 +155,16 @@ class _AttendeeListSection extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text('Attendees', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.primary)),
+                Text('Attendees', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
                 const Spacer(),
-                Text('$checkedIn / ${tickets.length} checked in', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                Text('$checkedIn / ${tickets.length} checked in', style: TextStyle(fontSize: 12, color: context.textSecondary])),
               ],
             ),
             const SizedBox(height: 8),
             SizedBox(
               height: 300,
               child: tickets.isEmpty
-                  ? Center(child: Text('No registrations yet', style: TextStyle(color: Colors.grey[500])))
+                  ? Center(child: Text('No registrations yet', style: TextStyle(color: context.textSecondary])))
                   : ListView.builder(
                       itemCount: tickets.length,
                       itemBuilder: (_, i) {
@@ -180,7 +182,7 @@ class _AttendeeListSection extends ConsumerWidget {
                           ),
                           title: Text('Ticket #${t.ticketNumber.substring(t.ticketNumber.length - 8)}', style: const TextStyle(fontSize: 13)),
                           subtitle: t.attended && t.checkedInAt != null
-                              ? Text('Checked in at ${t.checkedInAt!.hour}:${t.checkedInAt!.minute.toString().padLeft(2, '0')}', style: TextStyle(fontSize: 11, color: Colors.grey[500]))
+                              ? Text('Checked in at ${t.checkedInAt!.hour}:${t.checkedInAt!.minute.toString().padLeft(2, '0')}', style: TextStyle(fontSize: 11, color: context.textSecondary]))
                               : null,
                         );
                       },

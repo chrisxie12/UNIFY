@@ -169,7 +169,7 @@ class _LeadershipHeader extends StatelessWidget {
               Container(
                 width: 48, height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: context.cardBg.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -235,7 +235,7 @@ class _LeadershipHeader extends StatelessWidget {
   Widget _infoChip(IconData icon, String text) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     decoration: BoxDecoration(
-      color: Colors.white.withValues(alpha: 0.15),
+      color: context.cardBg.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(8),
     ),
     child: Row(

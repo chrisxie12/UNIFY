@@ -80,7 +80,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text('Type', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
+          Text('Type', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -90,7 +90,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          Text('Add Members', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
+          Text('Add Members', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
           const SizedBox(height: 8),
           if (_selectedNames.isNotEmpty)
             Padding(

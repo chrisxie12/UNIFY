@@ -18,9 +18,9 @@ class ExamPrepScreen extends ConsumerWidget {
     final resourcesAsync = ref.watch(searchResourcesProvider(''));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -126,7 +126,7 @@ class ExamPrepScreen extends ConsumerWidget {
               error: (_, __) => const SizedBox.shrink(),
               data: (exams) => exams.isEmpty
                   ? const Text('No exams scheduled yet.',
-                      style: TextStyle(color: AppColors.grey3))
+                      style: TextStyle(color: context.textDisabled))
                   : Column(
                       children:
                           exams.map((e) => _ExamRow(exam: e)).toList()),
@@ -146,7 +146,7 @@ class ExamPrepScreen extends ConsumerWidget {
                     .toList();
                 if (revision.isEmpty) {
                   return const Text('No revision materials yet.',
-                      style: TextStyle(color: AppColors.grey3));
+                      style: TextStyle(color: context.textDisabled));
                 }
                 return Column(
                   children: revision
@@ -185,7 +185,7 @@ class _QuickAction extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -224,7 +224,7 @@ class _ExamRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -268,7 +268,7 @@ class _ExamRow extends StatelessWidget {
                     if (exam.venue != null) exam.venue,
                   ].join(' · '),
                   style:
-                      const TextStyle(fontSize: 12, color: AppColors.grey2),
+                      TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],
             ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class _AnalyticsData {
   final int totalCommunities;
@@ -103,9 +104,9 @@ class _AnalyticsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +117,7 @@ class _AnalyticsSection extends StatelessWidget {
               children: [
                 Icon(icon, size: 18, color: color),
                 const SizedBox(width: 8),
-                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
               ],
             ),
           ),
@@ -138,7 +139,7 @@ class _AnalyticsSection extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(t.value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: t.color)),
                       const SizedBox(height: 2),
-                      Text(t.label, style: const TextStyle(fontSize: 9, color: AppColors.grey2), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(t.label, style: TextStyle(fontSize: 9, color: context.textSecondary), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
                     ],
                   ),
                 ),

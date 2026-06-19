@@ -50,9 +50,9 @@ class _CommunityCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,9 +74,9 @@ class _CommunityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data['name'] as String? ?? '', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(data['name'] as String? ?? '', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       Text('${data['member_count'] ?? 0} members · by ${profile?['full_name'] ?? "Unknown"}',
-                          style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -84,11 +84,11 @@ class _CommunityCard extends ConsumerWidget {
             ),
           ),
           Container(
-            decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
             child: Row(
               children: [
                 _actionBtn(context, 'Feature', context.primary, () => _toggleFeature(context, ref)),
-                Container(width: 1, height: 36, color: AppColors.border),
+                Container(width: 1, height: 36, color: context.borderCol),
                 _actionBtn(context, 'Suspend', AppColors.error, () => _suspend(context, ref)),
               ],
             ),

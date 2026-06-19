@@ -75,9 +75,9 @@ class _OpportunityFormScreenState
   Widget build(BuildContext context) {
     final editing = widget.existing != null;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -161,14 +161,14 @@ class _OpportunityFormScreenState
                 padding: const EdgeInsets.symmetric(
                     horizontal: 14, vertical: 14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.cardBg,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: context.borderCol),
                 ),
                 child: Row(
                   children: [
                     const Icon(Icons.event_rounded,
-                        size: 18, color: AppColors.grey2),
+                        size: 18, color: context.textSecondary),
                     const SizedBox(width: 10),
                     Text(
                       _deadline == null
@@ -181,7 +181,7 @@ class _OpportunityFormScreenState
                       GestureDetector(
                         onTap: () => setState(() => _deadline = null),
                         child: const Icon(Icons.close_rounded,
-                            size: 18, color: AppColors.grey3),
+                            size: 18, color: context.textDisabled),
                       ),
                   ],
                 ),
@@ -344,16 +344,16 @@ class _OpportunityFormScreenState
   InputDecoration _dec({String? hint}) => InputDecoration(
         hintText: hint,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: context.inputFill,
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: context.primary, width: 1.5)),

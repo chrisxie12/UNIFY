@@ -169,7 +169,7 @@ class OpportunitiesHomeScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         const Icon(Icons.wifi_off_rounded,
-                            size: 40, color: AppColors.grey3),
+                            size: 40, color: context.textDisabled),
                         const SizedBox(height: 12),
                         const Text('Could not load opportunities',
                             style: TextStyle(
@@ -248,7 +248,7 @@ class _TrackerBanner extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.18),
+                color: context.cardBg.withValues(alpha: 0.18),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.track_changes_rounded,

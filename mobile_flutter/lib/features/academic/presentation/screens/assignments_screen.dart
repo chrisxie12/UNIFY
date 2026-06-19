@@ -25,9 +25,9 @@ class AssignmentsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(myAssignmentsProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -51,7 +51,7 @@ class AssignmentsScreen extends ConsumerWidget {
                           fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
                   const Text('Assignments from your courses appear here.',
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary)),
                 ],
               ),
             );
@@ -95,7 +95,7 @@ class _SectionLabel extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: AppColors.grey2)),
+                color: context.textSecondary)),
       );
 }
 
@@ -113,7 +113,7 @@ class _AssignmentCard extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -164,7 +164,7 @@ class _AssignmentCard extends ConsumerWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.grey3),
+            Icon(Icons.chevron_right_rounded, color: context.textDisabled),
           ],
         ),
       ),
@@ -227,7 +227,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),
@@ -244,7 +244,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
             const SizedBox(height: 12),
             Text(a.description!,
                 style: const TextStyle(
-                    fontSize: 14, height: 1.4, color: AppColors.grey1)),
+                    fontSize: 14, height: 1.4, color: context.textPrimary)),
           ],
           const SizedBox(height: 16),
           const Text('Submission link',
@@ -255,7 +255,7 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
             decoration: InputDecoration(
               hintText: 'Paste your submission link',
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.inputFill,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none),

@@ -37,9 +37,9 @@ class AdminManagementScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.admin_panel_settings_rounded, size: 48, color: AppColors.grey4),
+                    Icon(Icons.admin_panel_settings_rounded, size: 48, color: context.borderCol),
                     SizedBox(height: 12),
-                    Text('No administrators assigned', style: TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                    Text('No administrators assigned', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
               );
@@ -127,9 +127,9 @@ class _AdminCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         children: [
@@ -150,8 +150,8 @@ class _AdminCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(admin.userFullName ?? 'Unknown', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                      Text(admin.roleName?.replaceAll('_', ' ') ?? '', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text(admin.userFullName ?? 'Unknown', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text(admin.roleName?.replaceAll('_', ' ') ?? '', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -160,11 +160,11 @@ class _AdminCard extends ConsumerWidget {
             ),
           ),
           Container(
-            decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
             child: Row(
               children: [
                 Expanded(child: _actionBtn(context, admin.isActive ? 'Deactivate' : 'Activate', AppColors.warning, () => _toggleStatus(context, ref))),
-                Container(width: 1, height: 36, color: AppColors.border),
+                Container(width: 1, height: 36, color: context.borderCol),
                 Expanded(child: _actionBtn(context, 'Remove', AppColors.error, () => _remove(context, ref))),
               ],
             ),

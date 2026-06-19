@@ -7,6 +7,7 @@ import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/post_model.dart';
 import '../../data/models/post_comment_model.dart';
 import '../providers/post_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -71,7 +72,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   const Divider(height: 1),
                   if (_replyToId != null)
                     Container(
-                      color: Colors.grey[50],
+                      color: context.textSecondary],
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Row(
                         children: [
@@ -82,7 +83,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                               'Replying to $_replyToName',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.grey[600],
+                                color: context.textSecondary],
                                 fontStyle: FontStyle.italic,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -93,7 +94,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                               _replyToId = null;
                               _replyToName = null;
                             }),
-                            child: Icon(Icons.close, size: 18, color: Colors.grey[500]),
+                            child: Icon(Icons.close, size: 18, color: context.textSecondary]),
                           ),
                         ],
                       ),
@@ -124,9 +125,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                           child: Center(
                             child: Column(
                               children: [
-                                Icon(Icons.chat_bubble_outline, size: 40, color: Colors.grey[300]),
+                                Icon(Icons.chat_bubble_outline, size: 40, color: context.textSecondary]),
                                 const SizedBox(height: 8),
-                                Text('No comments yet', style: TextStyle(color: Colors.grey[500])),
+                                Text('No comments yet', style: TextStyle(color: context.textSecondary])),
                               ],
                             ),
                           ),
@@ -152,10 +153,10 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBg,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.textPrimary.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, -2),
                   ),
@@ -174,7 +175,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                       controller: _commentController,
                       decoration: InputDecoration(
                         hintText: _replyToId != null ? 'Write a reply...' : 'Write a comment...',
-                        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                        hintStyle: TextStyle(color: context.textSecondary], fontSize: 14),
                         filled: true,
                         fillColor: Colors.grey[100],
                         border: OutlineInputBorder(
@@ -316,7 +317,7 @@ class _PostContent extends ConsumerWidget {
                       children: [
                         Text(
                           _formatDateTime(post.createdAt),
-                          style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary]),
                         ),
                         if (post.postType == 'question') ...[
                           const SizedBox(width: 8),
@@ -360,7 +361,7 @@ class _PostContent extends ConsumerWidget {
                 ),
               ),
               if (post.isPinned)
-                Icon(Icons.push_pin, size: 18, color: Colors.grey[400]),
+                Icon(Icons.push_pin, size: 18, color: context.textSecondary]),
             ],
           ),
           if (post.title != null) ...[
@@ -378,7 +379,7 @@ class _PostContent extends ConsumerWidget {
             post.body,
             style: TextStyle(
               fontSize: 15,
-              color: Colors.grey[800],
+              color: context.textSecondary],
               height: 1.5,
             ),
           ),
@@ -392,14 +393,14 @@ class _PostContent extends ConsumerWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   height: 200,
-                  color: Colors.grey[100],
-                  child: Center(child: Icon(Icons.broken_image, color: Colors.grey[400])),
+                  color: context.textSecondary],
+                  child: Center(child: Icon(Icons.broken_image, color: context.textSecondary])),
                 ),
                 loadingBuilder: (_, child, progress) {
                   if (progress == null) return child;
                   return Container(
                     height: 200,
-                    color: Colors.grey[100],
+                    color: context.textSecondary],
                     child: const Center(child: CircularProgressIndicator()),
                   );
                 },
@@ -411,9 +412,9 @@ class _PostContent extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: context.textSecondary],
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[200]!),
+                border: Border.all(color: context.textSecondary]!),
               ),
               child: Row(
                 children: [
@@ -468,7 +469,7 @@ class _PostContent extends ConsumerWidget {
               _ActionChip(
                 icon: Icons.chat_bubble_outline,
                 label: _formatCount(post.commentsCount),
-                color: Colors.grey[600],
+                color: context.textSecondary],
                 onTap: null,
               ),
               _ActionChip(
@@ -491,7 +492,7 @@ class _PostContent extends ConsumerWidget {
               _ActionChip(
                 icon: Icons.share_outlined,
                 label: null,
-                color: Colors.grey[600],
+                color: context.textSecondary],
                 onTap: () {},
               ),
             ],
@@ -638,7 +639,7 @@ class _CommentTile extends ConsumerWidget {
           decoration: depth > 0
               ? BoxDecoration(
                   border: Border(
-                    left: BorderSide(color: Colors.grey[200]!, width: 2),
+                    left: BorderSide(color: context.textSecondary]!, width: 2),
                   ),
                 )
               : null,
@@ -688,7 +689,7 @@ class _CommentTile extends ConsumerWidget {
                               const SizedBox(width: 8),
                               Text(
                                 _timeAgo(comment.createdAt),
-                                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                                style: TextStyle(fontSize: 11, color: context.textSecondary]),
                               ),
                               if (comment.isBestAnswer) ...[
                                 const SizedBox(width: 8),
@@ -740,7 +741,7 @@ class _CommentTile extends ConsumerWidget {
                           const SizedBox(height: 4),
                           Text(
                             comment.body,
-                            style: TextStyle(fontSize: 14, color: Colors.grey[800], height: 1.4),
+                            style: TextStyle(fontSize: 14, color: context.textSecondary], height: 1.4),
                           ),
                           const SizedBox(height: 6),
                           Row(
@@ -789,7 +790,7 @@ class _CommentTile extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.grey[500],
+                                    color: context.textSecondary],
                                   ),
                                 ),
                               ),

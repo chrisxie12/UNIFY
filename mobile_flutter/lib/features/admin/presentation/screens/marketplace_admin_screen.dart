@@ -5,6 +5,7 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class MarketplaceAdminScreen extends ConsumerWidget {
   const MarketplaceAdminScreen({super.key});
@@ -57,9 +58,9 @@ class _ReportList extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.check_circle_outline_rounded, size: 48, color: AppColors.grey4),
+                  Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
                   SizedBox(height: 12),
-                  Text('No reports', style: TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                  Text('No reports', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 ],
               ),
             );
@@ -86,9 +87,9 @@ class _MarketplaceReportCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,8 +111,8 @@ class _MarketplaceReportCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Listing #${report.listingId.substring(0, 8)}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
-                      Text('by ${report.reporterName ?? "Unknown"}', style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text('Listing #${report.listingId.substring(0, 8)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
+                      Text('by ${report.reporterName ?? "Unknown"}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -124,23 +125,23 @@ class _MarketplaceReportCard extends ConsumerWidget {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(10)),
-              child: Text(report.reason, style: const TextStyle(fontSize: 13, color: AppColors.dark)),
+              decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(10)),
+              child: Text(report.reason, style: TextStyle(fontSize: 13, color: context.textPrimary)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(14),
-            child: Text(timeAgo(report.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+            child: Text(timeAgo(report.createdAt), style: TextStyle(fontSize: 11, color: context.textDisabled)),
           ),
           if (report.status == 'pending')
             Container(
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: context.borderCol))),
               child: Row(
                 children: [
                   Expanded(child: _actionBtn(context, 'Dismiss', AppColors.grey1, () => _resolve(context, ref, 'dismissed'))),
-                  Container(width: 1, height: 36, color: AppColors.border),
+                  Container(width: 1, height: 36, color: context.borderCol),
                   Expanded(child: _actionBtn(context, 'Remove', AppColors.error, () => _resolve(context, ref, 'resolved', 'listing_removed'))),
-                  Container(width: 1, height: 36, color: AppColors.border),
+                  Container(width: 1, height: 36, color: context.borderCol),
                   Expanded(child: _actionBtn(context, 'Warn', AppColors.warning, () => _resolve(context, ref, 'resolved', 'seller_warned'))),
                 ],
               ),

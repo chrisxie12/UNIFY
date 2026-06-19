@@ -22,7 +22,7 @@ class SnapshotTray extends ConsumerWidget {
         : ref.watch(communitySnapshotsProvider(communityId!));
 
     return Container(
-      color: Colors.white,
+      color: context.cardBg,
       padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
       child: SizedBox(
         height: 96,
@@ -108,15 +108,15 @@ class _AddSnapshotButton extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.surface,
-                border: Border.all(color: AppColors.border, width: 1.5),
+                color: context.cardBg,
+                border: Border.all(color: context.borderCol, width: 1.5),
               ),
               child: Icon(Icons.add_rounded, color: context.primary, size: 28),
             ),
             const SizedBox(height: 6),
             const Text(
               'Your Snap',
-              style: TextStyle(fontSize: 11, color: AppColors.dark, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 11, color: context.textPrimary, fontWeight: FontWeight.w500),
               overflow: TextOverflow.ellipsis,
             ),
           ],
@@ -174,7 +174,7 @@ class _SnapshotRing extends StatelessWidget {
                   child: Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
+                      color: context.cardBg,
                     ),
                     padding: const EdgeInsets.all(2),
                     child: ClipOval(child: _avatar()),
@@ -187,7 +187,7 @@ class _SnapshotRing extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(2),
                       decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: context.cardBg,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(Icons.verified_rounded,
@@ -201,7 +201,7 @@ class _SnapshotRing extends StatelessWidget {
               group.authorName?.split(' ').first ?? 'User',
               style: TextStyle(
                 fontSize: 11,
-                color: AppColors.dark,
+                color: context.textPrimary,
                 fontWeight: group.hasUnseen ? FontWeight.w600 : FontWeight.w400,
               ),
               overflow: TextOverflow.ellipsis,

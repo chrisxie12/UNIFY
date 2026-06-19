@@ -38,9 +38,9 @@ class NotesRepositoryScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.library_books_outlined, size: 64, color: Colors.grey[300]),
+                  Icon(Icons.library_books_outlined, size: 64, color: context.textSecondary]),
                   const SizedBox(height: 16),
-                  Text('No resources yet', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('No resources yet', style: TextStyle(color: context.textSecondary], fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {},
@@ -149,10 +149,10 @@ class _ResourceListTile extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.star, size: 12, color: Colors.amber),
-                      Text(' ${resource.averageRating.toStringAsFixed(1)}', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                      Text(' · ${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                      Text(' ${resource.averageRating.toStringAsFixed(1)}', style: TextStyle(fontSize: 11, color: context.textSecondary])),
+                      Text(' · ${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary])),
                       if (resource.lecturer != null) ...[
-                        Text(' · ${resource.lecturer}', style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                        Text(' · ${resource.lecturer}', style: TextStyle(fontSize: 11, color: context.textSecondary])),
                       ],
                     ],
                   ),

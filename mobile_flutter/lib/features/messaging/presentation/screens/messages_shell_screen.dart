@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class MessagesShellScreen extends ConsumerStatefulWidget {
   const MessagesShellScreen({super.key});
@@ -108,9 +109,9 @@ class _FilteredConversationsList extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.chat_bubble_outline, size: 48, color: Colors.grey[300]),
+                Icon(Icons.chat_bubble_outline, size: 48, color: context.textSecondary]),
                 const SizedBox(height: 12),
-                Text('Nothing here yet', style: TextStyle(color: Colors.grey[500])),
+                Text('Nothing here yet', style: TextStyle(color: context.textSecondary])),
               ],
             ),
           );
@@ -127,7 +128,7 @@ class _FilteredConversationsList extends ConsumerWidget {
             ),
             title: Text(filtered[i].title ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w500)),
             subtitle: Text(filtered[i].lastMessageContent ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 13, color: context.textSecondary])),
             trailing: filtered[i].unreadCount > 0
                 ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

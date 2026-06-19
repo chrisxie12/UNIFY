@@ -68,9 +68,9 @@ class _ResourceUploadScreenState
   Widget build(BuildContext context) {
     final coursesAsync = ref.watch(coursesProvider);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -133,7 +133,7 @@ class _ResourceUploadScreenState
             _label('File'),
             const Text(
                 'Upload an image, or paste a link (Google Drive, etc.)',
-                style: TextStyle(fontSize: 12, color: AppColors.grey2)),
+                style: TextStyle(fontSize: 12, color: context.textSecondary)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -143,9 +143,9 @@ class _ResourceUploadScreenState
                     width: 84,
                     height: 84,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.cardBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: context.borderCol),
                       image: _image != null
                           ? DecorationImage(
                               image: FileImage(_image!), fit: BoxFit.cover)
@@ -316,16 +316,16 @@ class _ResourceUploadScreenState
   InputDecoration _dec([String? hint]) => InputDecoration(
         hintText: hint,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: context.inputFill,
         isDense: true,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border)),
+            borderSide: BorderSide(color: context.borderCol)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: context.primary, width: 1.5)),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ChannelViewScreen extends ConsumerWidget {
   final String conversationId;
@@ -17,13 +18,13 @@ class ChannelViewScreen extends ConsumerWidget {
       children: [
         Container(
           width: 200,
-          color: Colors.grey[50],
+          color: context.textSecondary],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text('Channels', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
+                child: Text('Channels', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
               ),
               const Divider(height: 1),
               Expanded(
@@ -34,7 +35,7 @@ class ChannelViewScreen extends ConsumerWidget {
                     if (channels.isEmpty) {
                       return Padding(
                         padding: const EdgeInsets.all(16),
-                        child: Text('No channels yet', style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+                        child: Text('No channels yet', style: TextStyle(color: context.textSecondary], fontSize: 13)),
                       );
                     }
                     return ListView.builder(
@@ -60,9 +61,9 @@ class ChannelViewScreen extends ConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.tag, size: 48, color: Colors.grey[300]),
+                      Icon(Icons.tag, size: 48, color: context.textSecondary]),
                       const SizedBox(height: 12),
-                      Text('Select a channel', style: TextStyle(color: Colors.grey[500])),
+                      Text('Select a channel', style: TextStyle(color: context.textSecondary])),
                     ],
                   ),
                 ),
@@ -120,8 +121,8 @@ class _ChannelMessageView extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+            color: context.cardBg,
+            border: Border(bottom: BorderSide(color: context.textSecondary]!)),
           ),
           child: Row(
             children: [

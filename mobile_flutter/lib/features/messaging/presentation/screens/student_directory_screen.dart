@@ -67,17 +67,17 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.people_outline, size: 64, color: Colors.grey[300]),
+                        Icon(Icons.people_outline, size: 64, color: context.textSecondary]),
                         const SizedBox(height: 16),
                         Text('Search for students by name,\nprogramme, or department',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey[500])),
+                            style: TextStyle(color: context.textSecondary])),
                       ],
                     ),
                   );
                 }
                 if (users.isEmpty) {
-                  return Center(child: Text('No results for "$_query"', style: TextStyle(color: Colors.grey[500])));
+                  return Center(child: Text('No results for "$_query"', style: TextStyle(color: context.textSecondary])));
                 }
                 return ListView.builder(
                   itemCount: users.length,
@@ -98,7 +98,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                           user['level'],
                           user['department'],
                         ].whereType<String>().join(' · '),
-                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: context.textSecondary]),
                       ),
                       onTap: () {
                         final userId = user['id'] as String;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme_preset.dart';
+import 'u_color_scheme.dart';
 
 /// Premium Material 3 theme system for UNIFY.
 ///
@@ -30,13 +31,15 @@ class AppTheme {
       surfaceTint: Colors.transparent,
     );
 
-    final textTheme = GoogleFonts.interTextTheme(ThemeData(colorScheme: cs).textTheme);
+    final textTheme = GoogleFonts.spaceGroteskTextTheme(ThemeData(colorScheme: cs).textTheme);
 
+    final ucLight = UColorScheme.light.copyWith(borderStrong: preset.primary);
     return ThemeData(
       useMaterial3: true,
       colorScheme: cs,
       textTheme: textTheme,
       scaffoldBackgroundColor: cs.surfaceBright,
+      extensions: [ucLight],
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
 
@@ -252,9 +255,10 @@ class AppTheme {
       surfaceTint: Colors.transparent,
     );
 
-    final textTheme = GoogleFonts.interTextTheme(ThemeData(colorScheme: cs).textTheme)
+    final textTheme = GoogleFonts.spaceGroteskTextTheme(ThemeData(colorScheme: cs).textTheme)
         .apply(bodyColor: _text, displayColor: Colors.white);
 
+    final ucDark = UColorScheme.dark.copyWith(borderStrong: preset.primaryLight);
     return ThemeData(
       useMaterial3: true,
       colorScheme: cs,
@@ -262,6 +266,7 @@ class AppTheme {
       scaffoldBackgroundColor: _bg,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
+      extensions: [ucDark],
 
       appBarTheme: AppBarTheme(
         backgroundColor: _surface,

@@ -432,7 +432,7 @@ class _ActionBtn extends StatelessWidget {
       child: Container(
         width: 38, height: 38,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.90),
+          color: context.cardBg.withValues(alpha: 0.90),
           shape: BoxShape.circle,
           boxShadow: const [BoxShadow(color: Color(0x25000000), blurRadius: 8)],
         ),
@@ -473,7 +473,7 @@ class _Avatar extends StatelessWidget {
           width: diameter, height: diameter,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3.5),
+            border: Border.all(color: context.cardBg, width: 3.5),
             boxShadow: const [
               BoxShadow(color: Color(0x20000000), blurRadius: 16, offset: Offset(0, 6)),
             ],
@@ -487,7 +487,7 @@ class _Avatar extends StatelessWidget {
             decoration: BoxDecoration(
               color: context.primary,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2.5),
+              border: Border.all(color: context.cardBg, width: 2.5),
             ),
             child: const Icon(Icons.camera_alt_rounded, size: 12, color: Colors.white),
           ),
@@ -869,7 +869,7 @@ class _SocialCard extends StatelessWidget {
       _SocialP('GitHub', profile.githubUrl,
         solid: const Color(0xFF181717), child: const _BrandSvg(_BrandPaths.github)),
       _SocialP('Portfolio', profile.portfolioUrl,
-        solid: context.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
+        solid: context.primary, child: Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
 
@@ -1627,9 +1627,9 @@ class _Skeleton extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(height: topPad + 170, color: Colors.white),
+            Container(height: topPad + 170, color: context.cardBg),
             Container(
-              color: Colors.white,
+              color: context.cardBg,
               padding: const EdgeInsets.fromLTRB(16, 58, 16, 20),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1667,7 +1667,7 @@ class _SBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Container(height: h, width: w, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(r)));
+      Container(height: h, width: w, decoration: BoxDecoration(color: context.cardBg, borderRadius: BorderRadius.circular(r)));
 }
 
 

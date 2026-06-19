@@ -67,7 +67,7 @@ class _HelpArticleScreenState extends ConsumerState<HelpArticleScreen> {
           if (a == null) {
             return const Center(
                 child: Text('Article not found',
-                    style: TextStyle(color: AppColors.grey2)));
+                    style: TextStyle(color: context.textSecondary)));
           }
           return ListView(
             padding: const EdgeInsets.all(16),

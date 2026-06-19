@@ -77,16 +77,16 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
               controller: _titleController,
               decoration: InputDecoration(
                 hintText: 'Resource title',
-                hintStyle: TextStyle(color: Colors.grey[400]),
+                hintStyle: TextStyle(color: context.textSecondary]),
                 filled: true,
                 fillColor: Colors.grey[50],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey[200]!),
+                  borderSide: BorderSide(color: context.textSecondary]!),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey[200]!),
+                  borderSide: BorderSide(color: context.textSecondary]!),
                 ),
                 contentPadding: const EdgeInsets.all(16),
               ),
@@ -99,13 +99,13 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: context.textSecondary],
               ),
             ),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[200]!),
+                border: Border.all(color: context.textSecondary]!),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: DropdownButtonFormField<String>(
@@ -137,7 +137,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: context.textSecondary],
               ),
             ),
             const SizedBox(height: 8),
@@ -147,7 +147,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 40),
                 decoration: BoxDecoration(
-                  color: Colors.grey[50],
+                  color: context.textSecondary],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _selectedFile != null ? Theme.of(context).colorScheme.primary : Colors.grey[200]!,
@@ -176,7 +176,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                           const SizedBox(height: 4),
                           Text(
                             _formatFileSize(_selectedFile!.size),
-                            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                            style: TextStyle(fontSize: 12, color: context.textSecondary]),
                           ),
                         ],
                           const SizedBox(height: 8),
@@ -195,20 +195,20 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
                       )
                     : Column(
                         children: [
-                          Icon(Icons.cloud_upload_outlined, size: 40, color: Colors.grey[400]),
+                          Icon(Icons.cloud_upload_outlined, size: 40, color: context.textSecondary]),
                           const SizedBox(height: 12),
                           Text(
                             'Tap to select a file',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: context.textSecondary],
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'PDF, DOCX, PPT, Images, ZIP',
-                            style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                            style: TextStyle(fontSize: 12, color: context.textSecondary]),
                           ),
                         ],
                       ),
@@ -228,7 +228,7 @@ class _ResourceUploadScreenState extends ConsumerState<ResourceUploadScreen> {
               const SizedBox(height: 8),
               Text(
                 'Uploading... ${(_uploadProgress * 100).toStringAsFixed(0)}%',
-                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 12, color: context.textSecondary]),
               ),
             ],
           ],

@@ -40,6 +40,10 @@ class AuthNotifier extends AsyncNotifier<void> {
     state = await AsyncValue.guard(_repo.signOut);
   }
 
+  Future<void> resetPassword(String email) async {
+    await _repo.resetPassword(email);
+  }
+
   Future<void> completeOnboarding({
     required String displayName,
     required String school,

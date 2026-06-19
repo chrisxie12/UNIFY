@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
@@ -114,22 +117,22 @@ class _EventDetailContent extends ConsumerWidget {
 
   Widget _buildBody(BuildContext context, bool isOrganizer) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(USpacing.base),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _HeaderSection(event: event),
-          const SizedBox(height: 16),
-          _InfoSection(event: event),
-          const SizedBox(height: 16),
-          _DescriptionSection(event: event),
-          const SizedBox(height: 16),
-          _CapacitySection(event: event),
-          const SizedBox(height: 24),
-          _ActionButtons(event: event, ref: ref, eventId: eventId),
-          const SizedBox(height: 16),
-          _QuickLinks(event: event, ref: ref),
-          const SizedBox(height: 16),
+          _HeaderSection(event: event, theme: theme),
+          const SizedBox(height: USpacing.base),
+          _InfoSection(event: event, theme: theme),
+          const SizedBox(height: USpacing.base),
+          _DescriptionSection(event: event, theme: theme),
+          const SizedBox(height: USpacing.base),
+          _CapacitySection(event: event, theme: theme),
+          const SizedBox(height: USpacing.xl),
+          _ActionButtons(event: event, theme: theme, ref: ref, eventId: eventId),
+          const SizedBox(height: USpacing.base),
+          _QuickLinks(event: event, theme: theme, ref: ref),
+          const SizedBox(height: USpacing.base),
           _AttendeesPreview(event: event),
         ],
       ),
@@ -140,7 +143,7 @@ class _EventDetailContent extends ConsumerWidget {
     final userId = ref.read(currentUserIdProvider);
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(USpacing.base),
         child: Row(
           children: [
             Expanded(
@@ -159,7 +162,7 @@ class _EventDetailContent extends ConsumerWidget {
               ),
             ),
             if (isOrganizer) ...[
-              const SizedBox(width: 12),
+              const SizedBox(width: USpacing.md),
               OutlinedButton.icon(
                 onPressed: () => context.push('/events/$eventId/dashboard'),
                 icon: const Icon(Icons.dashboard),
@@ -175,7 +178,8 @@ class _EventDetailContent extends ConsumerWidget {
 
 class _HeaderSection extends StatelessWidget {
   final EventModel event;
-  const _HeaderSection({required this.event});
+  final ThemeData theme;
+  const _HeaderSection({required this.event, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -186,41 +190,41 @@ class _HeaderSection extends StatelessWidget {
         Container(
           width: 56, height: 64,
           decoration: BoxDecoration(
-            color: context.primary,
-            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.primary,
+            borderRadius: URadius.mdAll,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(months[event.eventDate.month - 1], style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
-              Text('${event.eventDate.day}', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(months[event.eventDate.month - 1], style: UText.caption.copyWith(color: Colors.white)),
+              Text('${event.eventDate.day}', style: UText.h2.copyWith(color: Colors.white)),
             ],
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: USpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(event.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
+              Text(event.title, style: UText.h2),
+              const SizedBox(height: USpacing.xs),
               Row(children: [
-                _Badge(text: event.categoryLabel, color: context.primary),
+                _Badge(text: event.categoryLabel, color: theme.colorScheme.primary),
                 const SizedBox(width: 6),
-                _Badge(text: event.scopeLabel, color: context.warning),
+                _Badge(text: event.scopeLabel, color: Colors.orange),
                 if (event.isFeatured) ...[
-                  const SizedBox(width: 6), _Badge(text: 'Featured', color: context.warning),
+                  const SizedBox(width: 6), const _Badge(text: 'Featured', color: Colors.amber),
                 ],
                 if (!event.isApproved && event.scope != 'community') ...[
-                  const SizedBox(width: 6), _Badge(text: 'Pending', color: context.textSecondary),
+                  SizedBox(width: 6), const _Badge(text: 'Pending', color: context.textSecondary),
                 ],
               ]),
               if (event.isCancelled) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: USpacing.xs),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: context.errorBg, borderRadius: BorderRadius.circular(4)),
-                  child: Text('Cancelled', style: TextStyle(fontSize: 11, color: context.error, fontWeight: FontWeight.w600)),
+                  padding: const EdgeInsets.symmetric(horizontal: USpacing.sm, vertical: 2),
+                  decoration: BoxDecoration(color: Colors.red[50], borderRadius: URadius.xsAll),
+                  child: Text('Cancelled', style: TextStyle(fontSize: 11, color: Colors.red[700], fontWeight: FontWeight.w600)),
                 ),
               ],
             ],
@@ -240,7 +244,7 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: URadius.xsAll),
       child: Text(text, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500)),
     );
   }
@@ -248,13 +252,14 @@ class _Badge extends StatelessWidget {
 
 class _InfoSection extends StatelessWidget {
   final EventModel event;
-  const _InfoSection({required this.event});
+  final ThemeData theme;
+  const _InfoSection({required this.event, required this.theme});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(USpacing.md),
         child: Column(children: [
           if (event.eventTime != null) _InfoRow(icon: Icons.access_time, text: '${event.formattedDate} at ${event.formattedTime}'),
           if (event.location != null) _InfoRow(icon: Icons.location_on, text: event.location!),
@@ -275,11 +280,11 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(children: [
+      padding: const EdgeInsets.symmetric(vertical: USpacing.xs),
+      child: Row(children: [
         Icon(icon, size: 16, color: context.textSecondary),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: context.textPrimary))),
+        const SizedBox(width: USpacing.sm),
+        Expanded(child: Text(text, style: UText.bodyXS.copyWith(color: context.textSecondary))),
       ]),
     );
   }
@@ -287,16 +292,17 @@ class _InfoRow extends StatelessWidget {
 
 class _DescriptionSection extends StatelessWidget {
   final EventModel event;
-  const _DescriptionSection({required this.event});
+  final ThemeData theme;
+  const _DescriptionSection({required this.event, required this.theme});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.primary)),
-        const SizedBox(height: 8),
-        Text(event.description ?? 'No description provided.', style: const TextStyle(fontSize: 14, height: 1.5)),
+        Text('About', style: UText.h4.copyWith(color: theme.colorScheme.primary)),
+        const SizedBox(height: USpacing.sm),
+        Text(event.description ?? 'No description provided.', style: UText.bodyS.copyWith(height: 1.5)),
       ],
     );
   }
@@ -304,7 +310,8 @@ class _DescriptionSection extends StatelessWidget {
 
 class _CapacitySection extends StatelessWidget {
   final EventModel event;
-  const _CapacitySection({required this.event});
+  final ThemeData theme;
+  const _CapacitySection({required this.event, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -315,18 +322,18 @@ class _CapacitySection extends StatelessWidget {
       children: [
         Row(children: [
           Icon(Icons.people, size: 16, color: context.textSecondary),
-          const SizedBox(width: 4),
-          Text('${event.attendeeCount} / ${event.capacity} registered', style: TextStyle(fontSize: 13, color: context.textSecondary)),
+          const SizedBox(width: USpacing.xs),
+          Text('${event.attendeeCount} / ${event.capacity} registered', style: UText.bodyXS.copyWith(color: context.textSecondary)),
           const Spacer(),
-          Text('${(percentage * 100).toInt()}%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.primary)),
+          Text('${(percentage * 100).toInt()}%', style: UText.bodyXS.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
         ]),
         const SizedBox(height: 6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: percentage,
-              backgroundColor: context.surfaceFill,
-              color: percentage >= 1 ? context.error : context.primary,
+        ClipRRect(
+          borderRadius: URadius.xsAll,
+          child: LinearProgressIndicator(
+            value: percentage,
+            backgroundColor: context.borderCol,
+            color: percentage >= 1 ? Colors.red : theme.colorScheme.primary,
             minHeight: 6,
           ),
         ),
@@ -337,9 +344,10 @@ class _CapacitySection extends StatelessWidget {
 
 class _ActionButtons extends StatelessWidget {
   final EventModel event;
+  final ThemeData theme;
   final WidgetRef ref;
   final String eventId;
-  const _ActionButtons({required this.event, required this.ref, required this.eventId});
+  const _ActionButtons({required this.event, required this.theme, required this.ref, required this.eventId});
 
   @override
   Widget build(BuildContext context) {
@@ -356,17 +364,17 @@ class _ActionButtons extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (_) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ListTile(leading: Icon(Icons.check, color: context.success), title: const Text('Going'), onTap: () async {
+                  ListTile(leading: const Icon(Icons.check, color: Colors.green), title: const Text('Going'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'going');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
                   }),
-                  ListTile(leading: Icon(Icons.help, color: context.warning), title: const Text('Maybe'), onTap: () async {
+                  ListTile(leading: const Icon(Icons.help, color: Colors.orange), title: const Text('Maybe'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'maybe');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
                   }),
-                  ListTile(leading: Icon(Icons.close, color: context.error), title: const Text('Not Going'), onTap: () async {
+                  ListTile(leading: const Icon(Icons.close, color: Colors.red), title: const Text('Not Going'), onTap: () async {
                     await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'not_going');
                     if (context.mounted) Navigator.pop(context);
                     ref.invalidate(eventDetailProvider(eventId));
@@ -379,7 +387,7 @@ class _ActionButtons extends StatelessWidget {
           label: Text(event.myRsvpStatus != null ? 'RSVPed (${event.myRsvpStatus})' : 'RSVP'),
         ),
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: USpacing.sm),
       OutlinedButton.icon(
         onPressed: () {
           // Calendar integration placeholder
@@ -393,18 +401,19 @@ class _ActionButtons extends StatelessWidget {
 
 class _QuickLinks extends StatelessWidget {
   final EventModel event;
+  final ThemeData theme;
   final WidgetRef ref;
-  const _QuickLinks({required this.event, required this.ref});
+  const _QuickLinks({required this.event, required this.theme, required this.ref});
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       _QuickLinkCard(icon: Icons.chat, label: 'Discuss', onTap: () => context.push('/events/${event.id}/discussions')),
-      const SizedBox(width: 8),
+      const SizedBox(width: USpacing.sm),
       _QuickLinkCard(icon: Icons.photo_library, label: 'Media', onTap: () => context.push('/events/${event.id}/media')),
-      const SizedBox(width: 8),
+      const SizedBox(width: USpacing.sm),
       _QuickLinkCard(icon: Icons.share, label: 'Share', onTap: () {}),
-      const SizedBox(width: 8),
+      const SizedBox(width: USpacing.sm),
       _QuickLinkCard(icon: Icons.notifications, label: 'Remind', onTap: () {
         final userId = ref.read(currentUserIdProvider);
         if (userId == null) return;
@@ -431,14 +440,18 @@ class _QuickLinkCard extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: URadius.smAll,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: context.surfaceFill, borderRadius: BorderRadius.circular(8), border: Border.all(color: context.borderCol)),
+          padding: const EdgeInsets.symmetric(vertical: USpacing.md),
+          decoration: BoxDecoration(
+            color: context.cardBg,
+            borderRadius: URadius.smAll,
+            border: Border.all(color: context.borderCol),
+          ),
           child: Column(children: [
-            Icon(icon, size: 20, color: context.textPrimary),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 10, color: context.textPrimary)),
+            Icon(icon, size: 20, color: context.textSecondary),
+            const SizedBox(height: USpacing.xs),
+            Text(label, style: TextStyle(fontSize: 10, color: context.textSecondary)),
           ]),
         ),
       ),
@@ -459,11 +472,11 @@ class _AttendeesPreview extends StatelessWidget {
           height: 28,
           child: Stack(children: List.generate(3, (i) => Positioned(
             left: i * 16.0,
-            child: CircleAvatar(radius: 14, backgroundColor: context.textDisabled, child: Icon(Icons.person, size: 14, color: context.textSecondary)),
+            child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: context.textSecondary)),
           ))),
         ),
-        const SizedBox(width: 8),
-        Text('${event.attendeeCount} attending', style: TextStyle(fontSize: 13, color: context.textSecondary)),
+        const SizedBox(width: USpacing.sm),
+        Text('${event.attendeeCount} attending', style: UText.bodyXS.copyWith(color: context.textSecondary)),
       ]),
     );
   }

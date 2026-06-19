@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
@@ -49,7 +52,7 @@ class AmbassadorAdminScreen extends ConsumerWidget {
               ref.invalidate(ambassadorStatsProvider);
             },
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 88),
+              padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
               children: [
                 Row(
                   children: [
@@ -73,14 +76,11 @@ class AmbassadorAdminScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 if (ambassadors.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: _EmptyState(
-                      icon: Icons.campaign_rounded,
-                      message: 'No ambassadors yet',
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 60),
+                    child: UEmptyState(icon: Icons.campaign_rounded, title: 'No ambassadors yet'),
                   )
                 else
                   ...ambassadors.map((a) => Padding(
@@ -134,22 +134,18 @@ class _AmbassadorCard extends StatelessWidget {
                         ambassador.fullName?.isNotEmpty == true
                             ? ambassador.fullName!
                             : 'Ambassador',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: context.textPrimary),
+                        style: UText.label.copyWith(color: context.textPrimary),
                       ),
                       if (subtitle.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(subtitle,
-                              style: const TextStyle(
-                                  fontSize: 12, color: AppColors.grey2)),
+                              style: UText.caption.copyWith(color: context.textSecondary)),
                         ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: USpacing.sm),
                 _StatusChip(label: ambassador.status, color: color),
               ],
             ),
@@ -161,7 +157,7 @@ class _AmbassadorCard extends StatelessWidget {
                   label: '${ambassador.referralCount} referrals',
                   color: AppColors.info,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: USpacing.sm),
                 _MiniChip(
                   icon: Icons.event_rounded,
                   label: '${ambassador.eventsOrganized} events',
@@ -185,7 +181,7 @@ Future<void> _showAddAmbassadorSheet(
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.white,
+    backgroundColor: context.cardBg,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
     ),
@@ -281,18 +277,15 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
     final selected = _selected;
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(USpacing.base),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Add ambassador',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: context.textPrimary)),
-              const SizedBox(height: 16),
+                  style: UText.h3.copyWith(color: context.textPrimary)),
+              const SizedBox(height: USpacing.base),
               if (selected == null) ...[
                 TextField(
                   controller: _searchController,
@@ -319,52 +312,45 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
                   return ListTile(
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    leading: const CircleAvatar(
-                      backgroundColor: AppColors.surface,
+                    leading: CircleAvatar(
+                      backgroundColor: context.cardBg,
                       child: Icon(Icons.person_rounded,
-                          color: AppColors.grey2, size: 20),
+                          color: context.textSecondary, size: 20),
                     ),
-                    title: Text(name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14)),
-                    subtitle: Text(email,
-                        style: const TextStyle(fontSize: 12)),
+                    title: Text(name, style: UText.label),
+                    subtitle: Text(email, style: UText.caption),
                     onTap: () => setState(() => _selected = p),
                   );
                 }),
                 if (!_searching && _results.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: USpacing.sm),
                     child: Text('Search for a user to promote.',
-                        style:
-                            TextStyle(fontSize: 12, color: AppColors.grey3)),
+                        style: UText.caption.copyWith(color: context.textSecondary)),
                   ),
               ] else ...[
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(USpacing.base),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(12),
+                    color: context.cardBg,
+                    borderRadius: URadius.mdAll,
                   ),
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        backgroundColor: Colors.white,
+                      CircleAvatar(
+                        backgroundColor: context.cardBg,
                         child: Icon(Icons.person_rounded,
-                            color: AppColors.grey2, size: 20),
+                            color: context.textSecondary, size: 20),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: USpacing.md),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(selected['full_name'] as String? ?? 'User',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: context.textPrimary)),
+                                style: UText.label.copyWith(color: context.textPrimary)),
                             Text(selected['email'] as String? ?? '',
-                                style: const TextStyle(
-                                    fontSize: 12, color: AppColors.grey2)),
+                                style: UText.caption.copyWith(color: context.textSecondary)),
                           ],
                         ),
                       ),
@@ -377,17 +363,17 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 _field(_universityController, 'University name'),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 _field(_facultyController, 'Faculty'),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 _field(_departmentController, 'Department'),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 _field(_bioController, 'Bio', maxLines: 3),
-                const SizedBox(height: 12),
+                const SizedBox(height: USpacing.md),
                 _field(_contactController, 'Contact'),
-                const SizedBox(height: 16),
+                const SizedBox(height: USpacing.base),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
@@ -466,19 +452,18 @@ class _StatTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: URadius.mdAll,
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 22),
             const SizedBox(height: 6),
             Text(value,
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w800, color: color)),
+                style: UText.h2.copyWith(color: color)),
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: UText.tiny.copyWith(color: context.textSecondary)),
           ],
         ),
       ),
@@ -497,7 +482,7 @@ class _StatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: URadius.mdAll,
       ),
       child: Text(label.toUpperCase(),
           style: TextStyle(
@@ -529,27 +514,6 @@ class _MiniChip extends StatelessWidget {
           Text(label,
               style: TextStyle(
                   fontSize: 11, fontWeight: FontWeight.w600, color: color)),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  final IconData icon;
-  final String message;
-  const _EmptyState({required this.icon, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: AppColors.grey4),
-          const SizedBox(height: 12),
-          Text(message,
-              style: const TextStyle(fontSize: 14, color: AppColors.grey3)),
         ],
       ),
     );

@@ -48,7 +48,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
                 children: const [
                   SizedBox(height: 120),
                   Icon(Icons.insights_rounded,
-                      size: 56, color: AppColors.grey4),
+                      size: 56, color: context.borderCol),
                   SizedBox(height: 12),
                   Center(
                     child: Text(
@@ -56,7 +56,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.grey1),
+                          color: context.textPrimary),
                     ),
                   ),
                   SizedBox(height: 6),
@@ -66,7 +66,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
                       'Feature usage will appear here once members start '
                       'interacting with the app over the last 30 days.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: AppColors.grey2),
+                      style: TextStyle(fontSize: 13, color: context.textSecondary),
                     ),
                   ),
                 ],
@@ -90,7 +90,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
                   child: Text(
                     'Active users per feature (last 30 days)',
-                    style: TextStyle(fontSize: 12.5, color: AppColors.grey2),
+                    style: TextStyle(fontSize: 12.5, color: context.textSecondary),
                   ),
                 ),
                 ...features.map((f) {
@@ -199,7 +199,7 @@ class _FeatureRow extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '$users ${users == 1 ? 'user' : 'users'} · $events ${events == 1 ? 'event' : 'events'}',
-            style: const TextStyle(fontSize: 11.5, color: AppColors.grey2),
+            style: TextStyle(fontSize: 11.5, color: context.textSecondary),
           ),
         ],
       ),

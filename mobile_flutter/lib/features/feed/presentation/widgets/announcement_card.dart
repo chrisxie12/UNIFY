@@ -2,14 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/announcement.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
 class AnnouncementCard extends StatelessWidget {
+  const AnnouncementCard({super.key, required this.item, this.onTap});
+
   final Announcement item;
   final VoidCallback? onTap;
-
-  const AnnouncementCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +17,27 @@ class AnnouncementCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          border: Border.all(color: const Color(0xFFF3F4F6)),
-          boxShadow: const [
-            BoxShadow(color: Color(0x09000000), blurRadius: 12, offset: Offset(0, 3)),
-            BoxShadow(color: Color(0x05000000), blurRadius: 4),
-          ],
+          color: context.cardBg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: context.borderCol, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (item.isPinned) _PinnedBanner(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _Header(item: item),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   _Content(item: item),
                 ],
               ),
             ),
             if (item.imageUrl != null) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               _PostImage(url: item.imageUrl!),
             ],
             _Footer(item: item),
@@ -58,15 +53,15 @@ class AnnouncementCard extends StatelessWidget {
 class _PinnedBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
       child: Row(
         children: [
-          Icon(Icons.push_pin_rounded, size: 12, color: AppColors.grey2),
-          SizedBox(width: 5),
+          Icon(Icons.push_pin_rounded, size: 11, color: context.textSecondary),
+          const SizedBox(width: 4),
           Text(
-            'Pinned announcement',
-            style: TextStyle(fontSize: 11, color: AppColors.grey2, fontWeight: FontWeight.w500),
+            'Pinned',
+            style: TextStyle(fontSize: 11, color: context.textSecondary, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -77,16 +72,17 @@ class _PinnedBanner extends StatelessWidget {
 // ── Header ────────────────────────────────────────────────────────────────────
 
 class _Header extends StatelessWidget {
-  final Announcement item;
   const _Header({required this.item});
 
-  static Color _catColor(String cat) {
+  final Announcement item;
+
+  static Color _catColor(String cat, BuildContext context) {
     switch (cat) {
       case 'urgent':   return const Color(0xFFEF4444);
-      case 'academic': return AppColors.primary;
-      case 'events':   return const Color(0xFF8B5CF6);
+      case 'academic': return context.primary;
+      case 'events':   return const Color(0xFF7C3AED);
       case 'admin':    return const Color(0xFFF59E0B);
-      default:         return const Color(0xFF6B7280);
+      default:         return context.textSecondary;
     }
   }
 
@@ -101,18 +97,17 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final catColor = _catColor(item.category);
+    final catColor = _catColor(item.category, context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Author avatar
         Container(
-          width: 42,
-          height: 42,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFFF5F7FA),
-            border: Border.all(color: AppColors.border),
+            color: context.inputFill,
+            border: Border.all(color: context.borderCol),
           ),
           child: item.authorAvatar != null
               ? ClipOval(
@@ -125,7 +120,6 @@ class _Header extends StatelessWidget {
               : _AuthorInitial(item.authorName),
         ),
         const SizedBox(width: 10),
-        // Name + timestamp
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,27 +129,30 @@ class _Header extends StatelessWidget {
                   Flexible(
                     child: Text(
                       item.authorName ?? 'Campus Admin',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: context.textPrimary,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (item.authorIsVerifiedLeader == true) ...[
-                    const SizedBox(width: 4),
-                    Icon(Icons.verified_rounded, size: 14, color: context.primary),
+                    const SizedBox(width: 3),
+                    Icon(Icons.verified_rounded, size: 13, color: context.primary),
                   ],
                 ],
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 _timeLabel(item.createdAt),
-                style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                style: TextStyle(fontSize: 11, color: context.textSecondary),
               ),
             ],
           ),
         ),
         const SizedBox(width: 8),
-        // Category + urgent badge
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -164,22 +161,17 @@ class _Header extends StatelessWidget {
               color: catColor,
             ),
             if (item.isUrgent) ...[
-              const SizedBox(height: 4),
-              const _Chip(
-                label: 'Urgent',
-                color: Color(0xFFEF4444),
-                icon: Icons.priority_high_rounded,
-              ),
+              const SizedBox(height: 3),
+              const _Chip(label: 'Urgent', color: Color(0xFFEF4444), icon: Icons.priority_high_rounded),
             ],
           ],
         ),
-        // Unread indicator
         if (!item.isRead) ...[
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           Container(
-            width: 8,
-            height: 8,
-            margin: const EdgeInsets.only(top: 4),
+            width: 7,
+            height: 7,
+            margin: const EdgeInsets.only(top: 5),
             decoration: BoxDecoration(color: context.primary, shape: BoxShape.circle),
           ),
         ],
@@ -196,16 +188,17 @@ class _AuthorInitial extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       name?.isNotEmpty == true ? name![0].toUpperCase() : 'U',
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.dark),
+      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary),
     ),
   );
 }
 
 class _Chip extends StatelessWidget {
+  const _Chip({required this.label, required this.color, this.icon});
+
   final String label;
   final Color color;
   final IconData? icon;
-  const _Chip({required this.label, required this.color, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -213,16 +206,16 @@ class _Chip extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: icon != null ? 5 : 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 10, color: color),
+            Icon(icon, size: 9, color: color),
             const SizedBox(width: 3),
           ],
-          Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+          Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: color)),
         ],
       ),
     );
@@ -232,8 +225,9 @@ class _Chip extends StatelessWidget {
 // ── Content ───────────────────────────────────────────────────────────────────
 
 class _Content extends StatelessWidget {
-  final Announcement item;
   const _Content({required this.item});
+
+  final Announcement item;
 
   @override
   Widget build(BuildContext context) {
@@ -242,16 +236,19 @@ class _Content extends StatelessWidget {
       children: [
         Text(
           item.title,
-          style: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark, height: 1.35,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: context.textPrimary,
+            height: 1.35,
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 5),
         Text(
           item.body,
-          style: const TextStyle(fontSize: 13.5, color: AppColors.grey2, height: 1.5),
+          style: TextStyle(fontSize: 13, color: context.textSecondary, height: 1.5),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
@@ -263,20 +260,18 @@ class _Content extends StatelessWidget {
 // ── Post image ────────────────────────────────────────────────────────────────
 
 class _PostImage extends StatelessWidget {
-  final String url;
   const _PostImage({required this.url});
+
+  final String url;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(0)),
-      child: CachedNetworkImage(
-        imageUrl: url,
-        width: double.infinity,
-        height: 200,
-        fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => const SizedBox.shrink(),
-      ),
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: double.infinity,
+      height: 200,
+      fit: BoxFit.cover,
+      errorWidget: (_, __, ___) => const SizedBox.shrink(),
     );
   }
 }
@@ -284,20 +279,21 @@ class _PostImage extends StatelessWidget {
 // ── Footer ────────────────────────────────────────────────────────────────────
 
 class _Footer extends StatelessWidget {
-  final Announcement item;
   const _Footer({required this.item});
+
+  final Announcement item;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
       child: Row(
         children: [
-          const Icon(Icons.remove_red_eye_outlined, size: 14, color: AppColors.grey3),
+          Icon(Icons.remove_red_eye_outlined, size: 13, color: context.textDisabled),
           const SizedBox(width: 4),
           Text(
             '${item.viewCount}',
-            style: const TextStyle(fontSize: 12, color: AppColors.grey3),
+            style: TextStyle(fontSize: 11, color: context.textDisabled),
           ),
           const Spacer(),
           const _FooterBtn(icon: Icons.mode_comment_outlined, label: 'Comment'),
@@ -309,22 +305,23 @@ class _Footer extends StatelessWidget {
 }
 
 class _FooterBtn extends StatelessWidget {
+  const _FooterBtn({required this.icon, required this.label});
+
   final IconData icon;
   final String label;
-  const _FooterBtn({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: () {},
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.grey2,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        foregroundColor: context.textSecondary,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: Size.zero,
       ),
-      icon: Icon(icon, size: 16),
-      label: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+      icon: Icon(icon, size: 14),
+      label: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
     );
   }
 }

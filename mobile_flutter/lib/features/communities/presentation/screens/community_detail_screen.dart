@@ -8,6 +8,9 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/verified_badge.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
 import '../../data/models/community_content_models.dart';
 import '../providers/communities_provider.dart';
 import '../../../snapshots/presentation/widgets/snapshot_tray.dart';
@@ -102,15 +105,9 @@ class _CommunityDetailView extends ConsumerWidget {
                 bottom: TabBar(
                   tabs: _tabs.map((t) => Tab(text: t)).toList(),
                   labelColor: primary,
-                  unselectedLabelColor: AppColors.grey3,
-                  labelStyle: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  unselectedLabelColor: context.textSecondary,
+                  labelStyle: UText.labelS,
+                  unselectedLabelStyle: UText.labelS.copyWith(fontWeight: FontWeight.w500),
                   indicatorColor: primary,
                   indicatorWeight: 2.5,
                   dividerColor: context.borderCol,
@@ -210,11 +207,11 @@ class _CommunityHeader extends ConsumerWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
+                  borderRadius: URadius.baseAll,
+                  color: context.cardBg,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: context.textPrimary.withValues(alpha: 0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -253,12 +250,7 @@ class _CommunityHeader extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       community.name as String,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        height: 1.2,
-                      ),
+                      style: UText.h1.copyWith(color: Colors.white, height: 1.2),
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -269,7 +261,7 @@ class _CommunityHeader extends ConsumerWidget {
               // Programme · Level
               if ((community.programme as String?) != null ||
                   (community.level as String?) != null) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: USpacing.xs),
                 Text(
                   [
                     if ((community.programme as String?) != null)
@@ -277,10 +269,7 @@ class _CommunityHeader extends ConsumerWidget {
                     if ((community.level as String?) != null)
                       community.level as String,
                   ].join(' · '),
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 13,
-                  ),
+                  style: UText.bodyXS.copyWith(color: Colors.white.withValues(alpha: 0.8)),
                 ),
               ],
 
@@ -292,13 +281,10 @@ class _CommunityHeader extends ConsumerWidget {
                   Icon(Icons.people_outline_rounded,
                       size: 14,
                       color: Colors.white.withValues(alpha: 0.8)),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: USpacing.xs),
                   Text(
                     '${community.memberCount} members',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 13,
-                    ),
+                    style: UText.bodyXS.copyWith(color: Colors.white.withValues(alpha: 0.8)),
                   ),
                   const Spacer(),
                   _HeaderJoinButton(
@@ -357,16 +343,12 @@ class _HeaderJoinButton extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+          borderRadius: URadius.lgAll,
+          border: Border.all(color: context.cardBg.withValues(alpha: 0.5)),
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: fg,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+          style: UText.labelS.copyWith(color: fg),
         ),
       ),
     );
@@ -415,7 +397,7 @@ class _AnnouncementsTab extends ConsumerWidget {
             );
           }
           return SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+            padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.md, USpacing.base, 120),
             sliver: SliverList.builder(
               itemCount: announcements.length,
               itemBuilder: (context, i) =>
@@ -448,11 +430,11 @@ class _AnnouncementRow extends StatelessWidget {
     final createdAt = DateTime.tryParse(data['created_at'] as String? ?? '');
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: USpacing.md),
       decoration: BoxDecoration(
         color: context.cardBg,
         borderRadius: const BorderRadius.all(Radius.circular(14)),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: UShadow.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,11 +452,10 @@ class _AnnouncementRow extends StatelessWidget {
                 children: [
                   Icon(Icons.push_pin_rounded,
                       size: 12, color: context.primary),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: USpacing.xs),
                   Text(
                     'Pinned',
-                    style: TextStyle(
-                      fontSize: 11,
+                    style: UText.tiny.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primary,
                     ),
@@ -492,19 +473,18 @@ class _AnnouncementRow extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 17,
-                      backgroundColor: AppColors.surface,
+                      backgroundColor: context.cardBg,
                       backgroundImage: (p?['avatar_url'] as String?) != null
                           ? NetworkImage(p!['avatar_url'] as String)
                           : null,
                       child: (p?['avatar_url'] as String?) == null
                           ? Text(
                               name.isNotEmpty ? name[0].toUpperCase() : '?',
-                              style: const TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w600),
+                              style: UText.labelS,
                             )
                           : null,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: USpacing.sm),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -513,11 +493,7 @@ class _AnnouncementRow extends StatelessWidget {
                             children: [
                               Text(
                                 name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: context.textPrimary,
-                                ),
+                                style: UText.labelS.copyWith(color: context.textPrimary),
                               ),
                               if (isVerified) ...[
                                 const SizedBox(width: 3),
@@ -528,8 +504,7 @@ class _AnnouncementRow extends StatelessWidget {
                           if (createdAt != null)
                             Text(
                               DateFormat('MMM d · h:mm a').format(createdAt),
-                              style: TextStyle(
-                                  fontSize: 11, color: context.textSecondary),
+                              style: UText.tiny.copyWith(color: context.textSecondary),
                             ),
                         ],
                       ),
@@ -556,20 +531,12 @@ class _AnnouncementRow extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   data['title'] as String? ?? '',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: context.textPrimary,
-                  ),
+                  style: UText.body.copyWith(fontWeight: FontWeight.w700, color: context.textPrimary),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: USpacing.xs),
                 Text(
                   data['body'] as String? ?? '',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: context.textSecondary,
-                    height: 1.5,
-                  ),
+                  style: UText.bodyS.copyWith(color: context.textSecondary, height: 1.5),
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -662,7 +629,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                 );
               }
               return SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+                padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.md, USpacing.base, 120),
                 sliver: SliverList.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, i) => _PostCard(post: posts[i]),
@@ -695,12 +662,12 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                 : GestureDetector(
                     onTap: () => setState(() => _composing = true),
                     child: Container(
-                      margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                      margin: const EdgeInsets.fromLTRB(USpacing.base, 0, USpacing.base, USpacing.lg),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                          horizontal: USpacing.base, vertical: 14),
                       decoration: BoxDecoration(
                         color: context.cardBg,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: URadius.baseAll,
                         boxShadow: const [
                           BoxShadow(
                               color: Color(0x14000000),
@@ -715,10 +682,7 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                           const SizedBox(width: 10),
                           Text(
                             'Start a discussion…',
-                            style: TextStyle(
-                              color: context.textSecondary,
-                              fontSize: 14,
-                            ),
+                            style: UText.bodyS.copyWith(color: context.textSecondary),
                           ),
                         ],
                       ),
@@ -749,10 +713,10 @@ class _ComposePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 12,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        left: USpacing.base,
+        right: USpacing.base,
+        top: USpacing.md,
+        bottom: MediaQuery.of(context).viewInsets.bottom + USpacing.base,
       ),
       decoration: BoxDecoration(
         color: context.cardBg,
@@ -768,8 +732,7 @@ class _ComposePanel extends StatelessWidget {
           TextField(
             controller: titleCtrl,
             autofocus: true,
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w600, color: context.textPrimary),
+            style: UText.labelL.copyWith(color: context.textPrimary),
             decoration: InputDecoration(
               hintText: 'Title (optional)',
               hintStyle: TextStyle(color: context.textSecondary),
@@ -777,20 +740,19 @@ class _ComposePanel extends StatelessWidget {
             ),
           ),
           Divider(height: 1, color: context.borderCol),
-          const SizedBox(height: 8),
+          const SizedBox(height: USpacing.sm),
           TextField(
             controller: bodyCtrl,
             maxLines: 4,
             minLines: 2,
-            style:
-                TextStyle(fontSize: 14, color: context.textPrimary, height: 1.5),
+            style: UText.bodyS.copyWith(color: context.textPrimary, height: 1.5),
             decoration: InputDecoration(
               hintText: 'What\'s on your mind?',
               hintStyle: TextStyle(color: context.textSecondary),
               border: InputBorder.none,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: USpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -799,7 +761,7 @@ class _ComposePanel extends StatelessWidget {
                 child: Text('Cancel',
                     style: TextStyle(color: context.textSecondary)),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: USpacing.sm),
               FilledButton(
                 onPressed: submitting ? null : onSubmit,
                 style: FilledButton.styleFrom(
@@ -838,22 +800,21 @@ class _PostCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.cardBg,
         borderRadius: const BorderRadius.all(Radius.circular(14)),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: UShadow.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (post.isPinned)
             Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: USpacing.sm),
               child: Row(
                 children: [
                   Icon(Icons.push_pin_rounded,
                       size: 12, color: context.primary),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: USpacing.xs),
                   Text('Pinned',
-                      style: TextStyle(
-                          fontSize: 11,
+                      style: UText.tiny.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.primary)),
                 ],
@@ -863,17 +824,16 @@ class _PostCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: AppColors.surface,
+                backgroundColor: context.cardBg,
                 backgroundImage: post.authorAvatar != null
                     ? NetworkImage(post.authorAvatar!)
                     : null,
                 child: post.authorAvatar == null
                     ? Text(name[0].toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600))
+                        style: UText.caption.copyWith(fontWeight: FontWeight.w600))
                     : null,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: USpacing.sm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -882,11 +842,7 @@ class _PostCard extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: context.textPrimary,
-                          ),
+                          style: UText.labelS.copyWith(color: context.textPrimary),
                         ),
                         if (post.authorIsVerified) ...[
                           const SizedBox(width: 3),
@@ -896,8 +852,7 @@ class _PostCard extends StatelessWidget {
                     ),
                     Text(
                       DateFormat('MMM d · h:mm a').format(post.createdAt),
-                      style: TextStyle(
-                          fontSize: 11, color: context.textSecondary),
+                      style: UText.tiny.copyWith(color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -908,17 +863,13 @@ class _PostCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               post.title!,
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: context.textPrimary),
+              style: UText.body.copyWith(fontWeight: FontWeight.w700, color: context.textPrimary),
             ),
           ],
           const SizedBox(height: 6),
           Text(
             post.body,
-            style: TextStyle(
-                fontSize: 14, color: context.textSecondary, height: 1.5),
+            style: UText.bodyS.copyWith(color: context.textSecondary, height: 1.5),
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),
@@ -927,17 +878,15 @@ class _PostCard extends StatelessWidget {
             children: [
               Icon(Icons.favorite_border_rounded,
                   size: 16, color: context.textSecondary),
-              const SizedBox(width: 4),
+              const SizedBox(width: USpacing.xs),
               Text('${post.reactionCount}',
-                  style: TextStyle(
-                      fontSize: 12, color: context.textSecondary)),
+                  style: UText.caption.copyWith(color: context.textSecondary)),
               const SizedBox(width: 14),
               Icon(Icons.chat_bubble_outline_rounded,
                   size: 16, color: context.textSecondary),
-              const SizedBox(width: 4),
+              const SizedBox(width: USpacing.xs),
               Text('${post.commentCount}',
-                  style: TextStyle(
-                      fontSize: 12, color: context.textSecondary)),
+                  style: UText.caption.copyWith(color: context.textSecondary)),
             ],
           ),
         ],
@@ -984,7 +933,7 @@ class _ResourcesTab extends ConsumerWidget {
             );
           }
           return SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+            padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.md, USpacing.base, 120),
             sliver: SliverList.builder(
               itemCount: resources.length,
               itemBuilder: (context, i) =>
@@ -1021,7 +970,7 @@ class _ResourceCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.cardBg,
         borderRadius: const BorderRadius.all(Radius.circular(14)),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: UShadow.card,
       ),
       child: Row(
         children: [
@@ -1029,26 +978,22 @@ class _ResourceCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(12),
+              color: context.cardBg,
+              borderRadius: URadius.mdAll,
             ),
             child: Center(
               child: Text(resource.fileTypeIcon,
                   style: const TextStyle(fontSize: 22)),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: USpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   resource.title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: context.textPrimary,
-                  ),
+                  style: UText.label.copyWith(color: context.textPrimary),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1059,27 +1004,22 @@ class _ResourceCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: context.cardBg,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         _categoryLabels[resource.category] ?? resource.category,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: context.textSecondary,
-                        ),
+                        style: UText.tiny.copyWith(color: context.textSecondary),
                       ),
                     ),
                     if (resource.fileSizeLabel.isNotEmpty) ...[
                       const SizedBox(width: 6),
                       Text(resource.fileSizeLabel,
-                          style: TextStyle(
-                              fontSize: 11, color: context.textSecondary)),
+                          style: UText.tiny.copyWith(color: context.textSecondary)),
                     ],
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: USpacing.xs),
                 Row(
                   children: [
                     Icon(Icons.download_outlined,
@@ -1087,17 +1027,14 @@ class _ResourceCard extends StatelessWidget {
                     const SizedBox(width: 3),
                     Text(
                       '${resource.downloadCount} downloads',
-                      style: TextStyle(
-                          fontSize: 11, color: context.textSecondary),
+                      style: UText.tiny.copyWith(color: context.textSecondary),
                     ),
                     if (resource.uploaderName != null) ...[
                       Text(' · ',
-                          style: TextStyle(
-                              fontSize: 11, color: context.textSecondary)),
+                          style: UText.tiny.copyWith(color: context.textSecondary)),
                       Text(
                         resource.uploaderName!,
-                        style: TextStyle(
-                            fontSize: 11, color: context.textSecondary),
+                        style: UText.tiny.copyWith(color: context.textSecondary),
                       ),
                     ],
                   ],
@@ -1105,7 +1042,7 @@ class _ResourceCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: USpacing.sm),
           IconButton(
             icon: Icon(Icons.download_rounded,
                 size: 20, color: context.primary),
@@ -1164,7 +1101,7 @@ class _MembersTab extends ConsumerWidget {
             );
           }
           return SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+            padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.md, USpacing.base, 120),
             sliver: SliverList.builder(
               itemCount: members.length,
               itemBuilder: (context, i) => _MemberRow(member: members[i]),
@@ -1187,7 +1124,6 @@ class _MemberRow extends StatelessWidget {
   static const _roleColors = <String, Color>{
     'owner': Color(0xFFFFA500),
     'moderator': Color(0xFF7C3AED),
-    'member': AppColors.grey3,
   };
 
   static const _roleLabels = <String, String>{
@@ -1199,33 +1135,32 @@ class _MemberRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final name = member.fullName ?? 'Member';
-    final roleColor = _roleColors[member.role] ?? AppColors.grey3;
+    final roleColor = _roleColors[member.role] ?? context.textSecondary;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: USpacing.sm),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: context.cardBg,
         borderRadius: const BorderRadius.all(Radius.circular(12)),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: UShadow.card,
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: AppColors.surface,
+            backgroundColor: context.cardBg,
             backgroundImage: member.avatarUrl != null
                 ? NetworkImage(member.avatarUrl!)
                 : null,
             child: member.avatarUrl == null
                 ? Text(
                     member.initials,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
+                    style: UText.label,
                   )
                 : null,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: USpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1234,14 +1169,10 @@ class _MemberRow extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: context.textPrimary,
-                      ),
+                      style: UText.label.copyWith(color: context.textPrimary),
                     ),
                     if (member.isVerifiedLeader) ...[
-                      const SizedBox(width: 4),
+                      const SizedBox(width: USpacing.xs),
                       const VerifiedBadge(size: 14),
                     ],
                   ],
@@ -1252,8 +1183,7 @@ class _MemberRow extends StatelessWidget {
                       if (member.programme != null) member.programme!,
                       if (member.level != null) member.level!,
                     ].join(' · '),
-                    style: TextStyle(
-                        fontSize: 12, color: context.textSecondary),
+                    style: UText.caption.copyWith(color: context.textSecondary),
                   ),
               ],
             ),
@@ -1263,12 +1193,11 @@ class _MemberRow extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
               color: roleColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: URadius.smAll,
             ),
             child: Text(
               _roleLabels[member.role] ?? member.role,
-              style: TextStyle(
-                fontSize: 11,
+              style: UText.tiny.copyWith(
                 fontWeight: FontWeight.w600,
                 color: roleColor,
               ),
@@ -1297,7 +1226,7 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(USpacing.x2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1305,20 +1234,12 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: context.textPrimary,
-              ),
+              style: UText.h4.copyWith(color: context.textPrimary),
             ),
             const SizedBox(height: 6),
             Text(
               subtitle,
-              style: TextStyle(
-                fontSize: 14,
-                color: context.textSecondary,
-                height: 1.5,
-              ),
+              style: UText.bodyS.copyWith(color: context.textSecondary, height: 1.5),
               textAlign: TextAlign.center,
             ),
           ],

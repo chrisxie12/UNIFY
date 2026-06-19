@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../notifications/data/models/notification_model.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 final _adminNotificationsProvider = FutureProvider.autoDispose<List<NotificationModel>>((ref) async {
   ref.watch(authStateProvider);
@@ -77,15 +78,15 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
           error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_adminNotificationsProvider)),
           data: (notifications) {
             if (notifications.isEmpty) {
-              return Center(
+              return const Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.notifications_none_rounded, size: 64, color: context.textDisabled),
-                    const SizedBox(height: 12),
+                    Icon(Icons.notifications_none_rounded, size: 64, color: context.borderCol),
+                    SizedBox(height: 12),
                     Text('No admin notifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 4),
-                    Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                    SizedBox(height: 4),
+                    Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: context.textDisabled)),
                   ],
                 ),
               );
@@ -168,9 +169,9 @@ class _AdminNotificationTile extends StatelessWidget {
 
   Color _iconColor(String type) => switch (type) {
     'admin_new_request' => const Color(0xFF8B5CF6),
-    'community_approved' || 'verification_approved' => const Color(0xFF10B981),
-    'community_rejected' || 'verification_rejected' => const Color(0xFFEF4444),
-    'community_changes_requested' => const Color(0xFFF59E0B),
-    _ => const Color(0xFF6B7280),
+    'community_approved' || 'verification_approved' => AppColors.success,
+    'community_rejected' || 'verification_rejected' => AppColors.error,
+    'community_changes_requested' => AppColors.warning,
+    _ => AppColors.grey2,
   };
 }

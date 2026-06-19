@@ -35,9 +35,9 @@ class UniversityManagementScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.account_balance_rounded, size: 64, color: AppColors.grey4),
+                    Icon(Icons.account_balance_rounded, size: 64, color: context.borderCol),
                     const SizedBox(height: 16),
-                    const Text('No universities registered', style: TextStyle(fontSize: 16, color: AppColors.grey2)),
+                    Text('No universities registered', style: TextStyle(fontSize: 16, color: context.textSecondary)),
                     const SizedBox(height: 8),
                     FilledButton.icon(
                       onPressed: () => _showUniversityDialog(context, ref),
@@ -144,9 +144,9 @@ class _UniversityCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Column(
         children: [
@@ -167,12 +167,12 @@ class _UniversityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(university.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(university.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
                       if (university.country != null || university.shortName != null)
                         Text(
                           [university.shortName, university.country].where((e) => e != null).join(' · '),
-                          style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                          style: TextStyle(fontSize: 12, color: context.textSecondary),
                         ),
                     ],
                   ),
@@ -210,14 +210,14 @@ class _UniversityCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: context.bg,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 14, color: AppColors.grey2),
+          Icon(icon, size: 14, color: context.textSecondary),
           const SizedBox(width: 6),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 11, color: AppColors.grey1), overflow: TextOverflow.ellipsis)),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 11, color: context.textPrimary), overflow: TextOverflow.ellipsis)),
         ],
       ),
     );
@@ -226,12 +226,12 @@ class _UniversityCard extends ConsumerWidget {
   Widget _actionRow(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.border)),
+        border: Border(top: BorderSide(color: context.borderCol)),
       ),
       child: Row(
         children: [
           Expanded(child: _actionButton(context, Icons.edit_rounded, 'Edit', () => _edit(context, ref))),
-          Container(width: 1, height: 36, color: AppColors.border),
+          Container(width: 1, height: 36, color: context.borderCol),
           Expanded(child: _actionButton(context, Icons.delete_rounded, 'Delete', () => _delete(context, ref), color: AppColors.error)),
         ],
       ),

@@ -166,7 +166,7 @@ class SystemHealthScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(24),
                     child: Center(
                       child: Text('No recent errors logged',
-                          style: TextStyle(color: AppColors.grey2)),
+                          style: TextStyle(color: context.textSecondary)),
                     ),
                   );
                 }

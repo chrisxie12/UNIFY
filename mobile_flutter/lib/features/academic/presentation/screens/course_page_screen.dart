@@ -76,9 +76,9 @@ class _ResourceTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.folder_open, size: 48, color: Colors.grey[300]),
+                Icon(Icons.folder_open, size: 48, color: context.textSecondary]),
                 const SizedBox(height: 12),
-                Text('No ${type}s yet', style: TextStyle(color: Colors.grey[500])),
+                Text('No ${type}s yet', style: TextStyle(color: context.textSecondary])),
               ],
             ),
           );
@@ -112,7 +112,7 @@ class _ResourceItem extends StatelessWidget {
                 padding: EdgeInsets.only(right: 4),
                 child: Icon(Icons.verified, size: 12, color: Colors.blue),
               ),
-            Text('${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+            Text('${resource.downloadCount} downloads', style: TextStyle(fontSize: 11, color: context.textSecondary])),
           ],
         ),
         trailing: const Icon(Icons.download_outlined, size: 20),
@@ -147,9 +147,9 @@ class _AssignmentTab extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.assignment_outlined, size: 48, color: Colors.grey[300]),
+                Icon(Icons.assignment_outlined, size: 48, color: context.textSecondary]),
                 const SizedBox(height: 12),
-                Text('No assignments yet', style: TextStyle(color: Colors.grey[500])),
+                Text('No assignments yet', style: TextStyle(color: context.textSecondary])),
               ],
             ),
           );
@@ -225,9 +225,9 @@ class _CourseInfoTab extends StatelessWidget {
           if (course.semester != null) _InfoRow(label: 'Semester', value: course.semester!),
           if (course.description != null) ...[
             const SizedBox(height: 16),
-            Text('Description', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700])),
+            Text('Description', style: TextStyle(fontWeight: FontWeight.w600, color: context.textSecondary])),
             const SizedBox(height: 4),
-            Text(course.description!, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            Text(course.description!, style: TextStyle(color: context.textSecondary], fontSize: 14)),
           ],
         ],
       ),
@@ -247,7 +247,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 14))),
+          SizedBox(width: 120, child: Text(label, style: TextStyle(color: context.textSecondary], fontSize: 14))),
           Expanded(child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
         ],
       ),

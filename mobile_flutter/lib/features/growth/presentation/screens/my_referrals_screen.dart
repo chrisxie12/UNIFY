@@ -130,7 +130,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                           'No invites yet. Share your code to get started!',
                           textAlign: TextAlign.center,
                           style:
-                              TextStyle(fontSize: 13, color: AppColors.grey3),
+                              TextStyle(fontSize: 13, color: context.textDisabled),
                         ),
                       );
                     }
@@ -233,7 +233,7 @@ class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white.withValues(alpha: 0.18),
+      color: context.cardBg.withValues(alpha: 0.18),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -391,7 +391,7 @@ class _ReferralRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(dateLabel,
                     style:
-                        const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                        TextStyle(fontSize: 11, color: context.textDisabled)),
               ],
             ),
           ),
@@ -443,7 +443,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),

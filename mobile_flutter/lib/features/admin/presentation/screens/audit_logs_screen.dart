@@ -32,9 +32,9 @@ class AuditLogsScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.history_rounded, size: 48, color: AppColors.grey4),
+                    Icon(Icons.history_rounded, size: 48, color: context.borderCol),
                     SizedBox(height: 12),
-                    Text('No audit logs yet', style: TextStyle(fontSize: 16, color: AppColors.grey2, fontWeight: FontWeight.w600)),
+                    Text('No audit logs yet', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
               );
@@ -77,9 +77,9 @@ class _AuditLogCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,14 +97,14 @@ class _AuditLogCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(log.actionLabel, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.dark)),
+                Text(log.actionLabel, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary)),
                 const SizedBox(height: 2),
                 Text(
                   '${log.actorName ?? "Unknown"} · ${log.entityType.replaceAll("_", " ")}',
-                  style: const TextStyle(fontSize: 11, color: AppColors.grey2),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary),
                 ),
                 const SizedBox(height: 2),
-                Text(timeAgo(log.createdAt), style: const TextStyle(fontSize: 10, color: AppColors.grey3)),
+                Text(timeAgo(log.createdAt), style: TextStyle(fontSize: 10, color: context.textDisabled)),
               ],
             ),
           ),

@@ -7,6 +7,8 @@ import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/leadership_provider.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
 
 class AnnouncementRequestScreen extends ConsumerStatefulWidget {
   const AnnouncementRequestScreen({super.key});
@@ -108,13 +110,13 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(USpacing.base),
           children: [
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F3FF),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: URadius.mdAll,
                 border: Border.all(color: const Color(0xFFDDD6FE)),
               ),
               child: const Row(

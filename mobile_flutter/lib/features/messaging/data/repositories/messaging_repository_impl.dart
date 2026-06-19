@@ -198,22 +198,40 @@ class MessagingRepositoryImpl implements MessagingRepository {
 
   @override
   Future<List<MessageRequest>> messageRequests(String userId) async {
+    // Fetch requests without PostgREST join (FK may not be in schema cache)
     final data = await _client
         .from('message_requests')
-        .select('''
-          *,
-          from_user:from_user_id(full_name, avatar_url)
-        ''')
+        .select('*')
         .eq('to_user_id', userId)
         .eq('status', 'pending')
         .order('created_at', ascending: false)
         .limit(50);
 
-    return (data as List).map((m) {
-      (m as Map<String, dynamic>)['from_user_name'] = m['from_user']?['full_name'];
-      m['from_user_avatar'] = m['from_user']?['avatar_url'];
-      return MessageRequest.fromMap(m);
-    }).toList();
+    final rows = (data as List).cast<Map<String, dynamic>>();
+
+    // Batch-fetch sender profiles separately to enrich the rows
+    try {
+      final senderIds = rows.map((r) => r['from_user_id'] as String).toSet().toList();
+      if (senderIds.isNotEmpty) {
+        final profiles = await _client
+            .from('profiles')
+            .select('id, full_name, avatar_url')
+            .inFilter('id', senderIds);
+        final profileMap = <String, Map<String, dynamic>>{
+          for (final p in (profiles as List).cast<Map<String, dynamic>>())
+            p['id'] as String: p,
+        };
+        for (final row in rows) {
+          final profile = profileMap[row['from_user_id']];
+          row['from_user_name'] = profile?['full_name'];
+          row['from_user_avatar'] = profile?['avatar_url'];
+        }
+      }
+    } catch (_) {
+      // Profile enrichment is non-critical; proceed with IDs only
+    }
+
+    return rows.map(MessageRequest.fromMap).toList();
   }
 
   @override

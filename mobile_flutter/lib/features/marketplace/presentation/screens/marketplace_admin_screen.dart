@@ -18,9 +18,9 @@ class MarketplaceAdminScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.bg,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: context.bg,
           surfaceTintColor: Colors.white,
           elevation: 0.6,
           shadowColor: AppColors.border,
@@ -78,7 +78,7 @@ class _ReportsTab extends ConsumerWidget {
                         fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 const Text('No pending listing reports.',
-                    style: TextStyle(fontSize: 13, color: AppColors.grey2)),
+                    style: TextStyle(fontSize: 13, color: context.textSecondary)),
               ],
             ),
           );
@@ -108,7 +108,7 @@ class _ReportCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFF0F1F3)),
       ),
@@ -133,7 +133,7 @@ class _ReportCard extends ConsumerWidget {
               const Spacer(),
               Text(report.createdAt.timeAgo,
                   style: const TextStyle(
-                      fontSize: 11, color: AppColors.grey3)),
+                      fontSize: 11, color: context.textDisabled)),
             ],
           ),
           const SizedBox(height: 10),
@@ -150,11 +150,11 @@ class _ReportCard extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(report.details!,
                 style: const TextStyle(
-                    fontSize: 13, color: AppColors.grey1)),
+                    fontSize: 13, color: context.textPrimary)),
           ],
           const SizedBox(height: 6),
           Text('Reported by ${report.reporterName ?? 'a student'}',
-              style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              style: TextStyle(fontSize: 12, color: context.textSecondary)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -238,7 +238,7 @@ class _AnalyticsTab extends ConsumerWidget {
               const SizedBox(height: 12),
               if (cats.isEmpty)
                 const Text('No data yet.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
               else
                 ...cats.map((e) => _barRow(
                     e.key.replaceAll('_', ' '),
@@ -252,7 +252,7 @@ class _AnalyticsTab extends ConsumerWidget {
               const SizedBox(height: 12),
               if (searches.isEmpty)
                 const Text('No searches recorded yet.',
-                    style: TextStyle(color: AppColors.grey3))
+                    style: TextStyle(color: context.textDisabled))
               else
                 Wrap(
                   spacing: 8,
@@ -262,7 +262,7 @@ class _AnalyticsTab extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 7),
                             decoration: BoxDecoration(
-                              color: AppColors.surface,
+                              color: context.cardBg,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text('${e.key}  ·  ${e.value}',
@@ -286,7 +286,7 @@ class _AnalyticsTab extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: const Color(0xFFF0F1F3)),
           ),
@@ -299,7 +299,7 @@ class _AnalyticsTab extends ConsumerWidget {
                       fontSize: 20, fontWeight: FontWeight.w800)),
               Text(label,
                   style: const TextStyle(
-                      fontSize: 11, color: AppColors.grey2)),
+                      fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -319,10 +319,10 @@ class _AnalyticsTab extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
               Text('$value',
                   style: const TextStyle(
-                      fontSize: 13, color: AppColors.grey2)),
+                      fontSize: 13, color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 6),

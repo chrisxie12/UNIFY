@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/design_system/tokens.dart';
+import '../../../../core/design_system/typography.dart';
+import '../../../../core/design_system/components.dart';
 
 class AssignmentHubScreen extends ConsumerWidget {
   const AssignmentHubScreen({super.key});
@@ -19,23 +22,12 @@ class AssignmentHubScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.assignment_outlined, size: 64, color: context.borderCol),
-            const SizedBox(height: 16),
-            Text('Assignment tracking coming soon', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-            const SizedBox(height: 8),
-            Text('Select a course to view its assignments', style: TextStyle(color: context.textSecondary, fontSize: 13)),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => context.push('/academic/courses'),
-              icon: const Icon(Icons.school),
-              label: const Text('Browse Courses'),
-            ),
-          ],
-        ),
+      body: UEmptyState(
+        icon: Icons.assignment_outlined,
+        title: 'Assignment tracking coming soon',
+        subtitle: 'Select a course to view its assignments',
+        actionLabel: 'Browse Courses',
+        onAction: () => context.push('/academic/courses'),
       ),
     );
   }

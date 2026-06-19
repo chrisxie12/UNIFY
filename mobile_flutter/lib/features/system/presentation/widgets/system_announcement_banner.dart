@@ -6,6 +6,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// Returns the accent colour for an announcement severity.
 Color severityColor(String severity) {
@@ -92,9 +93,9 @@ class _BannerCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
         boxShadow: AppColors.cardShadow,
       ),
       clipBehavior: Clip.antiAlias,
@@ -134,7 +135,7 @@ class _BannerCard extends ConsumerWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
-                              color: AppColors.dark,
+                              color: context.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -145,7 +146,7 @@ class _BannerCard extends ConsumerWidget {
                             style: const TextStyle(
                               fontSize: 12.5,
                               height: 1.3,
-                              color: AppColors.grey2,
+                              color: context.textSecondary,
                             ),
                           ),
                           if (hasAction) ...[
@@ -178,7 +179,7 @@ class _BannerCard extends ConsumerWidget {
                     IconButton(
                       onPressed: () => _dismiss(context, ref),
                       icon: const Icon(Icons.close_rounded, size: 18),
-                      color: AppColors.grey3,
+                      color: context.textDisabled,
                       visualDensity: VisualDensity.compact,
                       tooltip: 'Dismiss',
                     ),

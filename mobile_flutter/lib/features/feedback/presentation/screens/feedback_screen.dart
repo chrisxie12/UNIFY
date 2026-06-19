@@ -148,7 +148,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 Text(
                   'Device: ${AnalyticsService.platform} · v${AppConstants.appVersion}',
                   style: const TextStyle(
-                      fontSize: 12, color: AppColors.grey2),
+                      fontSize: 12, color: context.textSecondary),
                 ),
                 const SizedBox(height: 14),
                 SizedBox(
@@ -193,7 +193,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 return const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Text('You have not submitted any feedback yet.',
-                      style: TextStyle(color: AppColors.grey2)),
+                      style: TextStyle(color: context.textSecondary)),
                 );
               }
               return Column(
@@ -252,7 +252,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         icon: const Icon(Icons.add_a_photo_outlined, size: 18),
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.grey1,
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: context.borderCol),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -300,11 +300,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 Row(
                   children: [
                     const Icon(Icons.arrow_upward_rounded,
-                        size: 14, color: AppColors.grey2),
+                        size: 14, color: context.textSecondary),
                     const SizedBox(width: 2),
                     Text('${f.voteCount}',
                         style: const TextStyle(
-                            fontSize: 12, color: AppColors.grey2)),
+                            fontSize: 12, color: context.textSecondary)),
                   ],
                 ),
             ],
@@ -315,7 +315,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           const SizedBox(height: 4),
           Text(f.description,
               style: const TextStyle(
-                  fontSize: 13, color: AppColors.grey1)),
+                  fontSize: 13, color: context.textPrimary)),
           if (f.adminResponse != null && f.adminResponse!.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
@@ -336,7 +336,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                   const SizedBox(height: 4),
                   Text(f.adminResponse!,
                       style: const TextStyle(
-                          fontSize: 13, color: AppColors.grey1)),
+                          fontSize: 13, color: context.textPrimary)),
                 ],
               ),
             ),
@@ -385,14 +385,14 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       labelText: label,
       hintText: hint,
       filled: true,
-      fillColor: AppColors.surface,
+      fillColor: context.inputFill,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: context.borderCol),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

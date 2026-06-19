@@ -108,9 +108,9 @@ class _ResourceDetailScreenState
   Widget build(BuildContext context) {
     final async = ref.watch(resourceDetailProvider(widget.resourceId));
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         surfaceTintColor: Colors.white,
         elevation: 0.6,
         shadowColor: AppColors.border,
@@ -191,12 +191,12 @@ class _ResourceDetailScreenState
               imageUrl: r.fileUrl,
               fit: BoxFit.cover,
               placeholder: (_, __) => Container(
-                  height: 200, color: AppColors.surface),
+                  height: 200, color: context.cardBg),
               errorWidget: (_, __, ___) => Container(
                 height: 200,
-                color: AppColors.surface,
+                color: context.cardBg,
                 child: const Icon(Icons.broken_image_outlined,
-                    color: AppColors.grey3),
+                    color: context.textDisabled),
               ),
             ),
           ),
@@ -206,7 +206,7 @@ class _ResourceDetailScreenState
           const SizedBox(height: 16),
           _card('Description', child: Text(r.description!,
               style: const TextStyle(
-                  fontSize: 14, height: 1.5, color: AppColors.grey1))),
+                  fontSize: 14, height: 1.5, color: context.textPrimary))),
         ],
 
         const SizedBox(height: 12),
@@ -241,7 +241,7 @@ class _ResourceDetailScreenState
           error: (_, __) => const SizedBox.shrink(),
           data: (ratings) => ratings.isEmpty
               ? const Text('No reviews yet.',
-                  style: TextStyle(color: AppColors.grey3))
+                  style: TextStyle(color: context.textDisabled))
               : Column(
                   children: ratings
                       .map((rt) => _ratingTile(rt))
@@ -256,8 +256,8 @@ class _ResourceDetailScreenState
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
         decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.border)),
+          color: context.cardBg,
+          border: Border(top: BorderSide(color: context.borderCol)),
         ),
         child: Row(
           children: [
@@ -335,7 +335,7 @@ class _ResourceDetailScreenState
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.cardBg,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: const Color(0xFFF0F1F3)),
           ),
@@ -347,7 +347,7 @@ class _ResourceDetailScreenState
                   style: const TextStyle(
                       fontSize: 17, fontWeight: FontWeight.w800)),
               Text(label,
-                  style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary)),
             ],
           ),
         ),
@@ -356,7 +356,7 @@ class _ResourceDetailScreenState
   Widget _card(String title, {required Widget child}) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -381,14 +381,14 @@ class _ResourceDetailScreenState
               width: 110,
               child: Text(k,
                   style: const TextStyle(
-                      fontSize: 13, color: AppColors.grey2)),
+                      fontSize: 13, color: context.textSecondary)),
             ),
             Expanded(
               child: Text(v,
                   style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
             ),
           ],
         ),
@@ -398,7 +398,7 @@ class _ResourceDetailScreenState
         margin: const EdgeInsets.only(top: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: const Color(0xFFF0F1F3)),
         ),
@@ -430,7 +430,7 @@ class _ResourceDetailScreenState
               const SizedBox(height: 6),
               Text(rt.review!,
                   style: const TextStyle(
-                      fontSize: 13, color: AppColors.grey1)),
+                      fontSize: 13, color: context.textPrimary)),
             ],
           ],
         ),
@@ -444,7 +444,7 @@ class _VerifyMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.verified_outlined, color: AppColors.dark),
+      icon: Icon(Icons.verified_outlined, color: context.textPrimary),
       tooltip: 'Set verification',
       onSelected: (status) async {
         final updated = AcademicResourceModel(
@@ -530,7 +530,7 @@ class _RateSheetState extends ConsumerState<_RateSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.borderCol,
                   borderRadius: BorderRadius.circular(2)),
             ),
           ),
@@ -563,7 +563,7 @@ class _RateSheetState extends ConsumerState<_RateSheet> {
             decoration: InputDecoration(
               hintText: 'How useful was this? (optional)',
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.inputFill,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none),

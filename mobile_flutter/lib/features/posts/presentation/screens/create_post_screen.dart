@@ -7,6 +7,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/post_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   final String communityId;
@@ -80,7 +81,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               controller: _titleController,
               decoration: InputDecoration(
                 hintText: 'Title (optional)',
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
+                hintStyle: TextStyle(color: context.textSecondary], fontSize: 18),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -92,7 +93,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               controller: _bodyController,
               decoration: InputDecoration(
                 hintText: "What's on your mind?",
-                hintStyle: TextStyle(color: Colors.grey[400]),
+                hintStyle: TextStyle(color: context.textSecondary]),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -107,7 +108,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: context.textSecondary],
               ),
             ),
             const SizedBox(height: 8),
@@ -165,7 +166,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey[200]!),
+                  border: Border.all(color: context.textSecondary]!),
                 ),
                 child: Stack(
                   children: [
@@ -185,7 +186,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
+                            color: context.textPrimary.withValues(alpha: 0.6),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.close, color: Colors.white, size: 18),
@@ -201,17 +202,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 controller: _linkController,
                 decoration: InputDecoration(
                   hintText: 'https://',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  hintStyle: TextStyle(color: context.textSecondary]),
                   prefixIcon: Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
                   filled: true,
                   fillColor: Colors.grey[50],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[200]!),
+                    borderSide: BorderSide(color: context.textSecondary]!),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[200]!),
+                    borderSide: BorderSide(color: context.textSecondary]!),
                   ),
                 ),
                 keyboardType: TextInputType.url,

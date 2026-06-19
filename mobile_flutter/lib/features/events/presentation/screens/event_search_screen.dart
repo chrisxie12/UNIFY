@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/design_system/components.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class EventSearchScreen extends ConsumerStatefulWidget {
   const EventSearchScreen({super.key});
@@ -48,51 +52,40 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
         ],
       ),
       body: _query.length < 2
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.search, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text('Search by title, description, or location', style: TextStyle(color: Colors.grey[500], fontSize: 14)),
-                ],
-              ),
+          ? UEmptyState(
+              icon: Icons.search,
+              title: 'Search events',
+              subtitle: 'Search by title, description, or location',
             )
           : resultsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(searchEventsProvider(_query))),
               data: (events) {
                 if (events.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
-                        const SizedBox(height: 16),
-                        Text('No results for "$_query"', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
-                      ],
-                    ),
+                  return UEmptyState(
+                    icon: Icons.search_off,
+                    title: 'No results for "$_query"',
                   );
                 }
                 return ListView.builder(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(USpacing.md),
                   itemCount: events.length,
                   itemBuilder: (_, i) {
                     final event = events[i];
                     return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
+                      margin: const EdgeInsets.only(bottom: USpacing.sm),
                       child: ListTile(
                         leading: Container(
-                          width: 48, height: 48,
+                          width: UIcon.x4, height: UIcon.x4,
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: URadius.smAll,
                           ),
-                          child: Icon(Icons.event, color: theme.colorScheme.primary, size: 24),
+                          child: Icon(Icons.event, color: theme.colorScheme.primary, size: UIcon.lg),
                         ),
-                        title: Text(event.title, style: const TextStyle(fontSize: 14)),
-                        subtitle: Text('${event.formattedDate} · ${event.scopeLabel}', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                        trailing: const Icon(Icons.chevron_right, size: 18),
+                        title: Text(event.title, style: UText.bodyS),
+                        subtitle: Text('${event.formattedDate} · ${event.scopeLabel}', style: UText.tiny.copyWith(color: context.textSecondary)),
+                        trailing: const Icon(Icons.chevron_right, size: UIcon.md),
                         onTap: () => context.push('/event/${event.id}'),
                       ),
                     );

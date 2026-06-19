@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../extensions/theme_extensions.dart';
+import 'offline_banner.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart' as notif;
 import '../../features/messaging/presentation/providers/messaging_provider.dart' as msg;
 
@@ -27,7 +29,7 @@ class MainShell extends ConsumerWidget {
 
     return Scaffold(
       extendBody: true,
-      body: navigationShell,
+      body: OfflineBanner(child: navigationShell),
       bottomNavigationBar: _UnifyBottomNav(
         currentIndex: navigationShell.currentIndex,
         badges: [notifBadge, 0, msgBadge, 0, 0, 0],
@@ -86,7 +88,10 @@ class _UnifyBottomNav extends StatelessWidget {
                     tab: MainShell._tabs[i],
                     active: currentIndex == i,
                     badge: badges[i],
-                    onTap: () => onTap(i),
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      onTap(i);
+                    },
                     primaryColor: primary,
                     inactiveColor: context.textSecondary,
                   ),

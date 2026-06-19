@@ -83,7 +83,7 @@ class _OpportunityDetailScreenState
                   ? CachedNetworkImage(
                       imageUrl: o.coverUrl!,
                       fit: BoxFit.cover,
-                      color: Colors.black.withValues(alpha: 0.25),
+                      color: context.textPrimary.withValues(alpha: 0.25),
                       colorBlendMode: BlendMode.darken,
                       errorWidget: (_, __, ___) => const SizedBox.shrink(),
                     )
@@ -126,11 +126,11 @@ class _OpportunityDetailScreenState
                     const Spacer(),
                     Row(children: [
                       const Icon(Icons.remove_red_eye_outlined,
-                          size: 14, color: AppColors.grey3),
+                          size: 14, color: context.textDisabled),
                       const SizedBox(width: 4),
                       Text('${o.viewCount}',
                           style: const TextStyle(
-                              fontSize: 12, color: AppColors.grey3)),
+                              fontSize: 12, color: context.textDisabled)),
                     ]),
                   ],
                 ),
@@ -228,7 +228,7 @@ class _OpportunityDetailScreenState
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
-                                color: AppColors.surface,
+                                color: context.cardBg,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(t,
@@ -391,7 +391,7 @@ class _OpportunityDetailScreenState
   Widget _circleBtn(IconData icon, VoidCallback onTap) => Padding(
         padding: const EdgeInsets.all(6),
         child: Material(
-          color: Colors.white.withValues(alpha: 0.92),
+          color: context.cardBg.withValues(alpha: 0.92),
           shape: const CircleBorder(),
           child: IconButton(
             icon: Icon(icon, color: context.textPrimary, size: 20),
@@ -433,7 +433,7 @@ class _IconAction extends StatelessWidget {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Icon(icon, color: color),
@@ -627,7 +627,7 @@ class _ApplySheetState extends ConsumerState<_ApplySheet> {
             decoration: InputDecoration(
               hintText: 'Notes (optional) — e.g. referee, documents needed',
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.inputFill,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none),

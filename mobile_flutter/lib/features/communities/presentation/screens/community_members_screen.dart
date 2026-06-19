@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CommunityMembersScreen extends ConsumerStatefulWidget {
   final String communityId;
@@ -53,27 +56,27 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
           return Column(
             children: [
               Container(
-                color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                color: context.cardBg,
+                padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.sm, USpacing.base, USpacing.sm),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
                     hintText: 'Search by name...',
-                    prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                    prefixIcon: Icon(Icons.search, color: context.textSecondary),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             onPressed: () {
                               _searchController.clear();
                               setState(() {});
                             },
-                            icon: Icon(Icons.close, size: 18, color: Colors.grey[400]),
+                            icon: Icon(Icons.close, size: 18, color: context.textSecondary),
                           )
                         : null,
                     filled: true,
-                    fillColor: Colors.grey[100],
+                    fillColor: context.cardBg,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: URadius.mdAll,
                       borderSide: BorderSide.none,
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -81,16 +84,12 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+                padding: const EdgeInsets.fromLTRB(USpacing.lg, USpacing.md, USpacing.lg, USpacing.xs),
                 child: Row(
                   children: [
                     Text(
                       '${filtered.length} members',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[600],
-                      ),
+                      style: UText.labelS.copyWith(color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -101,31 +100,27 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.people_outline, size: 48, color: Colors.grey[300]),
-                            const SizedBox(height: 12),
+                            Icon(Icons.people_outline, size: 48, color: context.textSecondary),
+                            const SizedBox(height: USpacing.md),
                             Text(
                               searchQuery.isEmpty ? 'No members found' : 'No members matching "$searchQuery"',
-                              style: TextStyle(color: Colors.grey[500]),
+                              style: UText.bodyS.copyWith(color: context.textSecondary),
                             ),
                           ],
                         ),
                       )
                     : ListView(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(bottom: USpacing.base),
                         children: [
                           if (managers.isNotEmpty) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: USpacing.lg, vertical: USpacing.xs),
                               child: Text(
                                 'Community Leaders',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[500],
-                                ),
+                                style: UText.caption.copyWith(color: context.textSecondary),
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: USpacing.xs),
                             ...managers.map((m) => _MemberListTile(
                               member: m,
                               isManager: true,
@@ -134,21 +129,17 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
                           if (regulars.isNotEmpty) ...[
                             if (managers.isNotEmpty)
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                                child: Divider(color: Colors.grey[200]),
+                                padding: const EdgeInsets.symmetric(horizontal: USpacing.lg, vertical: USpacing.xs),
+                                child: Divider(color: context.borderCol),
                               ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: USpacing.lg, vertical: USpacing.xs),
                               child: Text(
                                 'Members',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[500],
-                                ),
+                                style: UText.caption.copyWith(color: context.textSecondary),
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: USpacing.xs),
                             ...regulars.map((m) => _MemberListTile(
                               member: m,
                               isManager: false,
@@ -187,7 +178,7 @@ class _MemberListTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: context.cardBg,
         backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
         child: avatarUrl == null
             ? Text(
@@ -205,26 +196,23 @@ class _MemberListTile extends StatelessWidget {
           Flexible(
             child: Text(
               name,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),
+              style: UText.labelL,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           if (isVerified) ...[
-            const SizedBox(width: 4),
+            const SizedBox(width: USpacing.xs),
             Icon(Icons.verified, color: Theme.of(context).colorScheme.primary, size: 18),
           ],
           if (isManager) ...[
             const SizedBox(width: 6),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: USpacing.sm, vertical: 2),
               decoration: BoxDecoration(
                 color: role == 'owner'
                     ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-                    : Colors.grey[100],
+                    : context.cardBg,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -232,7 +220,7 @@ class _MemberListTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: role == 'owner' ? Theme.of(context).colorScheme.primary : Colors.grey[600],
+                  color: role == 'owner' ? Theme.of(context).colorScheme.primary : context.textSecondary,
                 ),
               ),
             ),
@@ -242,7 +230,7 @@ class _MemberListTile extends StatelessWidget {
       subtitle: programme != null || level != null
           ? Text(
               [programme, level].nonNulls.join(' · '),
-              style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+              style: UText.bodyXS.copyWith(color: context.textSecondary),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             )

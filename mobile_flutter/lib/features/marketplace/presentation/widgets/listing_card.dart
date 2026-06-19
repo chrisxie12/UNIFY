@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 /// Grid card for a listing in browse / search results.
 class ListingCard extends ConsumerWidget {
@@ -19,7 +20,7 @@ class ListingCard extends ConsumerWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFFF0F1F3)),
           boxShadow: AppColors.cardShadow,
@@ -39,7 +40,7 @@ class ListingCard extends ConsumerWidget {
                       imageUrl: listing.coverImage!,
                       fit: BoxFit.cover,
                       placeholder: (_, __) =>
-                          Container(color: AppColors.surface),
+                          Container(color: context.cardBg),
                       errorWidget: (_, __, ___) => _placeholder(cat),
                     )
                   else
@@ -95,7 +96,7 @@ class ListingCard extends ConsumerWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       height: 1.25,
-                      color: AppColors.dark,
+                      color: context.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -113,12 +114,12 @@ class ListingCard extends ConsumerWidget {
                       padding: EdgeInsets.only(top: 1),
                       child: Text('Negotiable',
                           style:
-                              TextStyle(fontSize: 10, color: AppColors.grey3)),
+                              TextStyle(fontSize: 10, color: context.textDisabled)),
                     ),
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      Icon(cat.icon, size: 12, color: AppColors.grey3),
+                      Icon(cat.icon, size: 12, color: context.textDisabled),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -126,7 +127,7 @@ class ListingCard extends ConsumerWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 10.5, color: AppColors.grey2),
+                              fontSize: 10.5, color: context.textSecondary),
                         ),
                       ),
                     ],
@@ -171,7 +172,7 @@ class _SaveButtonState extends ConsumerState<_SaveButton> {
         width: 30,
         height: 30,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.92),
+          color: context.cardBg.withValues(alpha: 0.92),
           shape: BoxShape.circle,
           boxShadow: AppColors.cardShadow,
         ),

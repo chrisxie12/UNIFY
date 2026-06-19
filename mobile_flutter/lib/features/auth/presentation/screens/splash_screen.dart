@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 
 /// Static branded splash screen using theme colors.
@@ -101,3 +102,4 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
+

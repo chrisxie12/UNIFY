@@ -215,7 +215,7 @@ class _CategoryListingsScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.error_outline_rounded,
-                  size: 40, color: AppColors.grey3),
+                  size: 40, color: context.textDisabled),
               const SizedBox(height: 12),
               Text(ErrorMapper.toUserMessage(e),
                   textAlign: TextAlign.center,

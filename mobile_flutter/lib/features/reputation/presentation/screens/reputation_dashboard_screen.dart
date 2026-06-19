@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/reputation_models.dart';
 import '../providers/reputation_provider.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 
 class ReputationDashboardScreen extends ConsumerWidget {
   final String? targetUserId;
@@ -102,14 +103,14 @@ class _TrustScoreCard extends StatelessWidget {
           Text(
             score.levelLabel,
             style: theme.textTheme.titleLarge?.copyWith(
-              color: Colors.white, fontWeight: FontWeight.bold,
+              color: context.cardBg, fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             '${score.score} pts',
             style: theme.textTheme.displaySmall?.copyWith(
-              color: Colors.white, fontWeight: FontWeight.bold,
+              color: context.cardBg, fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),

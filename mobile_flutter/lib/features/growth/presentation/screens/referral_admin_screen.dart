@@ -68,11 +68,11 @@ class ReferralAdminScreen extends ConsumerWidget {
                       child: Column(
                         children: [
                           Icon(Icons.group_off_rounded,
-                              size: 48, color: AppColors.grey4),
+                              size: 48, color: context.borderCol),
                           SizedBox(height: 12),
                           Text('No referrals yet',
                               style: TextStyle(
-                                  fontSize: 14, color: AppColors.grey3)),
+                                  fontSize: 14, color: context.textDisabled)),
                         ],
                       ),
                     ),
@@ -140,7 +140,7 @@ class _ReferralCard extends StatelessWidget {
                   referral.referredEmail?.isNotEmpty == true
                       ? 'Invited ${referral.referredEmail}'
                       : 'Invited a friend',
-                  style: const TextStyle(fontSize: 12, color: AppColors.grey2),
+                  style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -150,7 +150,7 @@ class _ReferralCard extends StatelessWidget {
                       referral.channel,
                     dateLabel,
                   ].join(' • '),
-                  style: const TextStyle(fontSize: 11, color: AppColors.grey3),
+                  style: TextStyle(fontSize: 11, color: context.textDisabled),
                 ),
               ],
             ),
@@ -195,7 +195,7 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, color: AppColors.grey2)),
+                style: TextStyle(fontSize: 11, color: context.textSecondary)),
           ],
         ),
       ),

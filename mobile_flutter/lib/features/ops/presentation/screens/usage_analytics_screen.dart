@@ -143,7 +143,7 @@ class _DauChartCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(
               child: Text('No activity data yet',
-                  style: TextStyle(color: AppColors.grey2)),
+                  style: TextStyle(color: context.textSecondary)),
             ),
           )
         else
@@ -164,7 +164,7 @@ class _DauChartCard extends StatelessWidget {
                     children: [
                       Text('${p.active}',
                           style: const TextStyle(
-                              fontSize: 8.5, color: AppColors.grey3)),
+                              fontSize: 8.5, color: context.textDisabled)),
                       const SizedBox(height: 2),
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 1.5),
@@ -182,7 +182,7 @@ class _DauChartCard extends StatelessWidget {
                         child: showLabel
                             ? Text(label,
                                 style: const TextStyle(
-                                    fontSize: 7.5, color: AppColors.grey3),
+                                    fontSize: 7.5, color: context.textDisabled),
                                 textAlign: TextAlign.center)
                             : null,
                       ),
@@ -235,7 +235,7 @@ class _RetentionCard extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           'Based on a cohort of $cohort new ${cohort == 1 ? 'user' : 'users'}.',
-          style: const TextStyle(fontSize: 11.5, color: AppColors.grey2),
+          style: TextStyle(fontSize: 11.5, color: context.textSecondary),
         ),
       ],
     );
@@ -266,7 +266,7 @@ class _RetentionPill extends StatelessWidget {
                 fontSize: 22, fontWeight: FontWeight.w800, color: color),
           ),
           Text(label,
-              style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+              style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ],
       ),
     );
