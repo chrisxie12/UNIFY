@@ -7,15 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// ---------------------------------------------------------------------------
-// Splash Screen — 4-scene animated intro
-//
-// Scene 1 (0s–1.3s): Glowing particle dots appear scattered across screen
-// Scene 2 (0.7s–2.4s): Particles converge, connecting lines form a network
-// Scene 3 (2.3s–2.9s): Network fades out, logo materialises from the centre
-// Scene 4 (3.0s–3.4s): "UNIFY / Your Campus…" text fades in → navigate
-// ---------------------------------------------------------------------------
+import '../../../../core/extensions/theme_extensions.dart';
 
+/// Premium animated splash — 4-scene intro with UNIFY logo, particle network,
+/// and tagline. Adapts to the current theme preset.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -25,21 +20,18 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
-  // ── Main controller (3 400 ms) ─────────────────────────────────────────────
   late final AnimationController _ctrl;
 
-  // ── Sub-animations (all driven from _ctrl via Interval) ───────────────────
-  late final Animation<double> _particleAppear;   // dots fade in
-  late final Animation<double> _particleMove;     // dots drift to ring
-  late final Animation<double> _lineOpacity;      // network lines appear
-  late final Animation<double> _particleFadeOut;  // dots + lines dissolve
-  late final Animation<double> _logoOpacity;      // logo fades in
-  late final Animation<double> _logoScale;        // logo scales with micro-bounce
-  late final Animation<double> _textOpacity;      // tagline fades in
+  late final Animation<double> _particleAppear;
+  late final Animation<double> _particleMove;
+  late final Animation<double> _lineOpacity;
+  late final Animation<double> _particleFadeOut;
+  late final Animation<double> _logoOpacity;
+  late final Animation<double> _logoScale;
+  late final Animation<double> _textOpacity;
 
-  // ── Particle data ──────────────────────────────────────────────────────────
   late final List<_Particle> _particles;
-  static final _rng = math.Random(42); // fixed seed → consistent layout
+  static final _rng = math.Random(42);
 
   @override
   void initState() {
@@ -85,10 +77,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
   }
 
-  // ── Scatter→ring particle layout ──────────────────────────────────────────
-
   List<_Particle> _buildParticles() {
-    // Starting positions: hand-placed to look naturally scattered
     const starts = [
       Offset(0.08, 0.12), Offset(0.88, 0.10),
       Offset(0.04, 0.44), Offset(0.93, 0.40),
@@ -99,7 +88,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       Offset(0.18, 0.55), Offset(0.82, 0.53),
     ];
 
-    // Convergence ring centred on logo position (0.50, 0.42)
     const cx = 0.50, cy = 0.42;
     const baseR = 0.17;
 
@@ -114,8 +102,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       );
     });
   }
-
-  // ── Navigation ─────────────────────────────────────────────────────────────
 
   Future<void> _scheduleNavigate() async {
     await Future.delayed(const Duration(milliseconds: 3700));
@@ -137,10 +123,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.dispose();
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
+    final primary = context.primary;
+    final isDark = context.isDark;
+
     return Scaffold(
       body: AnimatedBuilder(
         animation: _ctrl,
@@ -151,10 +138,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
           return Stack(
             children: [
-              // ── Background ─────────────────────────────────────────────
-              const _Background(),
-
-              // ── Particle network ───────────────────────────────────────
+              _Background(primary: primary, isDark: isDark),
               if (networkAlpha > 0.005)
                 Positioned.fill(
                   child: Opacity(
@@ -164,36 +148,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         particles: _particles,
                         progress: _particleMove.value,
                         lineOpacity: _lineOpacity.value,
+                        primaryColor: primary,
                       ),
                     ),
                   ),
                 ),
-
-              // ── Logo + tagline ─────────────────────────────────────────
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Logo — fades + scales in with micro-bounce
                     Opacity(
                       opacity: _logoOpacity.value.clamp(0.0, 1.0),
                       child: Transform.scale(
                         scale: 0.80 + 0.20 * _logoScale.value.clamp(0.0, 1.15),
-                        child: const _LogoWidget(),
+                        child: _LogoWidget(primary: primary),
                       ),
                     ),
                     const SizedBox(height: 36),
-                    // Text
                     Opacity(
                       opacity: _textOpacity.value.clamp(0.0, 1.0),
                       child: Column(
                         children: [
-                          const Text(
+                          Text(
                             'UNIFY',
                             style: TextStyle(
                               fontSize: 38,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              color: isDark ? const Color(0xFFE4E7ED) : Colors.white,
                               letterSpacing: 7,
                             ),
                           ),
@@ -203,7 +184,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
-                              color: Colors.white.withValues(alpha: 0.62),
+                              color: (isDark ? const Color(0xFF949BA8) : Colors.white).withValues(alpha: 0.62),
                               letterSpacing: 0.2,
                             ),
                             textAlign: TextAlign.center,
@@ -222,57 +203,39 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 }
 
-// ---------------------------------------------------------------------------
-// Background — static gradient + depth vignette
-// ---------------------------------------------------------------------------
-
 class _Background extends StatelessWidget {
-  const _Background();
+  final Color primary;
+  final bool isDark;
+
+  const _Background({required this.primary, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Primary blue gradient
-        const Positioned.fill(
+        Positioned.fill(
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF001B5E), Color(0xFF002D8A), Color(0xFF0047FF)],
-                stops: [0.0, 0.45, 1.0],
+                colors: isDark
+                    ? [const Color(0xFF0D0F13), const Color(0xFF15171D), const Color(0xFF1C1E26)]
+                    : [Color.alphaBlend(Colors.black.withValues(alpha: 0.35), primary),
+                       primary,
+                       Color.alphaBlend(Colors.white.withValues(alpha: 0.15), primary)],
+                stops: const [0.0, 0.45, 1.0],
               ),
             ),
           ),
         ),
-        // Subtle radial vignette for depth
         Positioned.fill(
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: RadialGradient(
                 center: Alignment.center,
                 radius: 1.5,
-                colors: [Colors.transparent, Colors.black.withValues(alpha: 0.35)],
-              ),
-            ),
-          ),
-        ),
-        // Faint warm accent glow at bottom-centre (orange tint)
-        Positioned(
-          bottom: -60,
-          left: 0,
-          right: 0,
-          height: 220,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: Alignment.topCenter,
-                radius: 1.0,
-                colors: [
-                  const Color(0xFFFF6B35).withValues(alpha: 0.08),
-                  Colors.transparent,
-                ],
+                colors: [Colors.transparent, Colors.black.withValues(alpha: isDark ? 0.50 : 0.35)],
               ),
             ),
           ),
@@ -282,66 +245,45 @@ class _Background extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Logo widget — white rounded card + glow halos
-// ---------------------------------------------------------------------------
-
 class _LogoWidget extends StatelessWidget {
-  const _LogoWidget();
+  final Color primary;
+
+  const _LogoWidget({required this.primary});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Outer glow halo
         Container(
           width: 120,
           height: 120,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.55),
-                blurRadius: 52,
-                spreadRadius: 10,
-              ),
-              BoxShadow(
-                color: Colors.white.withValues(alpha: 0.10),
-                blurRadius: 28,
-                spreadRadius: 5,
-              ),
+              BoxShadow(color: primary.withValues(alpha: 0.55), blurRadius: 52, spreadRadius: 10),
+              BoxShadow(color: Colors.white.withValues(alpha: 0.10), blurRadius: 28, spreadRadius: 5),
             ],
           ),
         ),
-        // Inner glow ring
         Container(
           width: 100,
           height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF60A5FA).withValues(alpha: 0.30),
-                blurRadius: 20,
-                spreadRadius: 2,
-              ),
+              BoxShadow(color: primary.withValues(alpha: 0.30), blurRadius: 20, spreadRadius: 2),
             ],
           ),
         ),
-        // Logo card
         Container(
           width: 90,
           height: 90,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.18),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
+            boxShadow: const [
+              BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 8)),
             ],
           ),
           padding: const EdgeInsets.all(15),
@@ -351,10 +293,6 @@ class _LogoWidget extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Particle data
-// ---------------------------------------------------------------------------
 
 class _Particle {
   final Offset start;
@@ -370,19 +308,17 @@ class _Particle {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Network painter — dots + connecting lines
-// ---------------------------------------------------------------------------
-
 class _NetworkPainter extends CustomPainter {
   final List<_Particle> particles;
-  final double progress;     // 0-1: start → end positions
-  final double lineOpacity;  // 0-1: line visibility
+  final double progress;
+  final double lineOpacity;
+  final Color primaryColor;
 
   const _NetworkPainter({
     required this.particles,
     required this.progress,
     required this.lineOpacity,
+    required this.primaryColor,
   });
 
   @override
@@ -408,7 +344,7 @@ class _NetworkPainter extends CustomPainter {
         final dist = (pos[i] - pos[j]).distance;
         if (dist < threshold) {
           final a = (1.0 - dist / threshold) * lineOpacity * 0.65;
-          linePaint.color = const Color(0xFF60A5FA).withValues(alpha: a.clamp(0, 1));
+          linePaint.color = primaryColor.withValues(alpha: (a * 0.6).clamp(0, 1));
           canvas.drawLine(pos[i], pos[j], linePaint);
         }
       }
@@ -422,17 +358,13 @@ class _NetworkPainter extends CustomPainter {
       final pos = positions[i];
       final p = particles[i];
 
-      // Glow — three concentric translucent rings (no MaskFilter for perf)
-      fillPaint.color = const Color(0xFF93C5FD).withValues(alpha: 0.10);
+      fillPaint.color = primaryColor.withValues(alpha: 0.10);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius, fillPaint);
-
-      fillPaint.color = const Color(0xFF93C5FD).withValues(alpha: 0.18);
+      fillPaint.color = primaryColor.withValues(alpha: 0.18);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius * 0.55, fillPaint);
-
-      fillPaint.color = const Color(0xFFBAE6FD).withValues(alpha: 0.28);
+      fillPaint.color = primaryColor.withValues(alpha: 0.28);
       canvas.drawCircle(pos, p.dotRadius + p.glowRadius * 0.25, fillPaint);
 
-      // Core dot — bright white
       fillPaint.color = Colors.white.withValues(alpha: 0.94);
       canvas.drawCircle(pos, p.dotRadius, fillPaint);
     }

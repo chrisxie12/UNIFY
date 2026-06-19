@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ---------------------------------------------------------------------------
-// Onboarding Carousel — 4 premium scenes
-//
-// Scene 1: Find Your People Before School Starts
-// Scene 2: Discover Campus Life
-// Scene 3: Join Communities That Get You
-// Scene 4: Build Your Future
-// ---------------------------------------------------------------------------
+import '../../../../core/extensions/theme_extensions.dart';
 
+/// Premium onboarding carousel — 4 brand scenes with UNIFY logo, gradient
+/// illustrations, and parallax. Fully theme-aware.
 class OnboardingCarouselScreen extends StatefulWidget {
   const OnboardingCarouselScreen({super.key});
 
@@ -22,9 +18,8 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
     with SingleTickerProviderStateMixin {
   final _pageCtrl = PageController();
   int _page = 0;
-  double _scrollPage = 0; // fractional page for parallax
+  double _scrollPage = 0;
 
-  // Float animation for the illustration icon
   late final AnimationController _floatCtrl;
   late final Animation<double> _floatAnim;
 
@@ -80,7 +75,6 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // ── Page content ───────────────────────────────────────
           PageView.builder(
             controller: _pageCtrl,
             itemCount: _count,
@@ -95,7 +89,6 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
             },
           ),
 
-          // ── Skip button ────────────────────────────────────────
           if (!isLast)
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
@@ -113,7 +106,6 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
               ),
             ),
 
-          // ── Bottom controls ────────────────────────────────────
           Positioned(
             left: 0,
             right: 0,
@@ -131,10 +123,6 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen>
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Single onboarding page layout
-// ---------------------------------------------------------------------------
 
 class _OnboardingPage extends StatelessWidget {
   final _PageData page;
@@ -154,21 +142,17 @@ class _OnboardingPage extends StatelessWidget {
 
     return Column(
       children: [
-        // ── Gradient illustration area ─────────────────────────
         SizedBox(
           height: illustrationH,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              // Gradient background
               Positioned.fill(
                 child: DecoratedBox(
-                  decoration: BoxDecoration(gradient: page.gradient),
+                  decoration: BoxDecoration(gradient: page.gradient(context)),
                 ),
               ),
-              // Decorative rings
-              _DecorativeRings(color: page.accentColor),
-              // Floating illustration
+              _DecorativeRings(color: page.accentColor(context)),
               Center(
                 child: AnimatedBuilder(
                   animation: floatAnim,
@@ -178,17 +162,28 @@ class _OnboardingPage extends StatelessWidget {
                   ),
                 ),
               ),
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 60,
+                left: 24,
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
 
-        // ── Text card ─────────────────────────────────────────
         Expanded(
           child: Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            decoration: BoxDecoration(
+              color: context.surfaceCard,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             ),
             padding: const EdgeInsets.fromLTRB(32, 36, 32, 120),
             child: Transform.translate(
@@ -198,32 +193,31 @@ class _OnboardingPage extends StatelessWidget {
                 children: [
                   Text(
                     page.headline,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0A0A1A),
+                      color: context.textPrimary,
                       height: 1.22,
                     ),
                   ),
                   const SizedBox(height: 14),
                   Text(
                     page.body,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
-                      color: Color(0xFF6B7280),
+                      color: context.textSecondary,
                       height: 1.65,
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Feature pills
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: page.pills.map((pill) => _FeaturePill(
                       emoji: pill.$1,
                       label: pill.$2,
-                      color: page.accentColor,
+                      color: page.accentColor(context),
                     )).toList(),
                   ),
                 ],
@@ -235,10 +229,6 @@ class _OnboardingPage extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Decorative rings
-// ---------------------------------------------------------------------------
 
 class _DecorativeRings extends StatelessWidget {
   final Color color;
@@ -254,113 +244,26 @@ class _DecorativeRings extends StatelessWidget {
 
 class _RingsPainter extends CustomPainter {
   final Color color;
-  const _RingsPainter({required this.color});
+  _RingsPainter({required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height * 0.40);
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
+      ..strokeCap = StrokeCap.round
+      ..color = Colors.white.withValues(alpha: 0.12);
 
-    final rings = [
-      (Offset(size.width * 0.85, size.height * 0.15), size.width * 0.22, 0.12),
-      (Offset(size.width * 0.12, size.height * 0.75), size.width * 0.18, 0.10),
-      (Offset(size.width * 0.70, size.height * 0.88), size.width * 0.14, 0.08),
-      (Offset(size.width * 0.08, size.height * 0.22), size.width * 0.10, 0.07),
-    ];
-
-    for (final (center, radius, alpha) in rings) {
-      paint.color = Colors.white.withValues(alpha: alpha);
-      canvas.drawCircle(center, radius, paint);
-      paint.color = Colors.white.withValues(alpha: alpha * 0.5);
-      canvas.drawCircle(center, radius * 1.45, paint);
+    for (int i = 0; i < 5; i++) {
+      final r = size.width * (0.30 + i * 0.12);
+      paint.strokeWidth = 0.6 + i * 0.2;
+      canvas.drawCircle(center, r, paint);
     }
   }
 
   @override
   bool shouldRepaint(covariant _RingsPainter old) => old.color != color;
 }
-
-// ---------------------------------------------------------------------------
-// Illustration widget — large emoji + glow card
-// ---------------------------------------------------------------------------
-
-class _IllustrationWidget extends StatelessWidget {
-  final _PageData page;
-  const _IllustrationWidget({required this.page});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      clipBehavior: Clip.none,
-      children: [
-        // Outer glow
-        Container(
-          width: 180,
-          height: 180,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withValues(alpha: 0.15),
-                blurRadius: 60,
-                spreadRadius: 20,
-              ),
-            ],
-          ),
-        ),
-        // Main card
-        Container(
-          width: 140,
-          height: 140,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.18),
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1.5),
-          ),
-          child: Center(
-            child: Text(page.emoji, style: const TextStyle(fontSize: 64)),
-          ),
-        ),
-        // Floating accent bubbles — translate from Stack centre so negative
-        // offsets go left/up without being clipped by Positioned bounds.
-        ...page.floatingItems.map((item) => Align(
-          alignment: Alignment.center,
-          child: Transform.translate(
-            offset: Offset(item.dx, item.dy),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                item.label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: page.accentColor,
-                ),
-              ),
-            ),
-          ),
-        )),
-      ],
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Feature pill chip
-// ---------------------------------------------------------------------------
 
 class _FeaturePill extends StatelessWidget {
   final String emoji;
@@ -376,19 +279,18 @@ class _FeaturePill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.20), width: 0.8),
+        border: Border.all(color: color.withValues(alpha: 0.20), width: 0.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(emoji, style: const TextStyle(fontSize: 13)),
           const SizedBox(width: 5),
-          Text(
-            label,
+          Text(label,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -401,9 +303,36 @@ class _FeaturePill extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Bottom controls — dots + button
-// ---------------------------------------------------------------------------
+class _IllustrationWidget extends StatelessWidget {
+  final _PageData page;
+  const _IllustrationWidget({required this.page});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final width = size.width * 0.60;
+    final height = width * 0.55;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(page.emoji, style: TextStyle(fontSize: width * 0.35)),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: width * 0.6,
+          height: height * 0.6,
+          child: SvgPicture.asset(
+            'assets/images/logo.svg',
+            colorFilter: ColorFilter.mode(
+              Colors.white.withValues(alpha: 0.15),
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class _BottomControls extends StatelessWidget {
   final int page;
@@ -423,23 +352,23 @@ class _BottomControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomPad = MediaQuery.of(context).padding.bottom;
+    final primary = context.primary;
 
     return Container(
-      color: Colors.white,
+      color: context.surfaceCard,
       padding: EdgeInsets.fromLTRB(24, 16, 24, bottomPad + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Dot indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(count, (i) => _Dot(
               index: i,
               scrollPage: scrollPage,
+              primary: primary,
             )),
           ),
           const SizedBox(height: 20),
-          // Action button
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -448,14 +377,13 @@ class _BottomControls extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isLast
-                    ? [const Color(0xFFFF6B35), const Color(0xFFFF8C42)]
-                    : [const Color(0xFF0047FF), Theme.of(context).colorScheme.primary],
+                    ? [primary, context.primaryDark]
+                    : [primary, context.primaryLight],
               ),
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: (isLast ? const Color(0xFFFF6B35) : const Color(0xFF0047FF))
-                      .withValues(alpha: 0.35),
+                  color: primary.withValues(alpha: 0.35),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -497,25 +425,18 @@ class _BottomControls extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Animated dot indicator
-// ---------------------------------------------------------------------------
-
 class _Dot extends StatelessWidget {
   final int index;
   final double scrollPage;
+  final Color primary;
 
-  const _Dot({required this.index, required this.scrollPage});
+  const _Dot({required this.index, required this.scrollPage, required this.primary});
 
   @override
   Widget build(BuildContext context) {
     final t = (1.0 - (scrollPage - index).abs()).clamp(0.0, 1.0);
     final width = 8.0 + 20.0 * t;
-    final color = Color.lerp(
-      const Color(0xFFD1D5DB),
-      const Color(0xFF0047FF),
-      t,
-    )!;
+    final color = Color.lerp(context.surfaceDivider, primary, t)!;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -529,10 +450,6 @@ class _Dot extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Page data model
-// ---------------------------------------------------------------------------
 
 class _FloatingItem {
   final double dx;
@@ -548,150 +465,118 @@ abstract class _PageData {
   String get body;
   List<(String, String)> get pills;
   List<_FloatingItem> get floatingItems;
-  LinearGradient get gradient;
-  Color get accentColor;
+  LinearGradient gradient(BuildContext context);
+  Color accentColor(BuildContext context);
 }
-
-// ---------------------------------------------------------------------------
-// Page 1 — Find Your People Before School Starts
-// ---------------------------------------------------------------------------
 
 class _Page1 extends _PageData {
   const _Page1();
 
   @override String get emoji => '🎓';
-
   @override String get headline => 'Find Your People\nBefore School Starts';
-
   @override String get body =>
       'Connect with future classmates, seniors, and alumni from your university '
       'before you step on campus. Build your network before day one.';
-
   @override List<(String, String)> get pills => [
     ('🏫', 'Campus Network'),
     ('🤝', 'Peer Connections'),
     ('💡', 'Mentorship'),
   ];
-
   @override List<_FloatingItem> get floatingItems => [
     const _FloatingItem(-120, -60, '💬 Meet Seniors'),
     const _FloatingItem(50, -75, '🏅 Verified'),
     const _FloatingItem(-130, 40, '🌍 1,200+ Students'),
   ];
 
-  @override LinearGradient get gradient => const LinearGradient(
+  @override LinearGradient gradient(BuildContext context) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF001B5E), Color(0xFF002D8A), Color(0xFF0047FF)],
+    colors: [context.primaryDark, context.primary, context.primaryLight],
   );
 
-  @override Color get accentColor => const Color(0xFF0047FF);
+  @override Color accentColor(BuildContext context) => context.primary;
 }
-
-// ---------------------------------------------------------------------------
-// Page 2 — Discover Campus Life
-// ---------------------------------------------------------------------------
 
 class _Page2 extends _PageData {
   const _Page2();
 
   @override String get emoji => '🏠';
-
   @override String get headline => 'Discover\nCampus Life';
-
   @override String get body =>
       'From housing tips to hidden study spots — get the insider guide to your '
       'campus from students who\'ve been there. No more orientation surprises.';
-
   @override List<(String, String)> get pills => [
     ('🗺️', 'Campus Map'),
     ('🍔', 'Food Spots'),
     ('📚', 'Study Rooms'),
   ];
-
   @override List<_FloatingItem> get floatingItems => [
     const _FloatingItem(-130, -50, '🏠 Housing Tips'),
     const _FloatingItem(45, -70, '☕ Best Cafes'),
     const _FloatingItem(-120, 45, '📍 Hidden Spots'),
   ];
 
-  @override LinearGradient get gradient => const LinearGradient(
+  @override LinearGradient gradient(BuildContext context) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF065F46), Color(0xFF059669), Color(0xFF10B981)],
+    colors: [context.primaryDark, context.primary, const Color(0xFF10B981)],
   );
 
-  @override Color get accentColor => const Color(0xFF059669);
+  @override Color accentColor(BuildContext context) => const Color(0xFF059669);
 }
-
-// ---------------------------------------------------------------------------
-// Page 3 — Join Communities That Get You
-// ---------------------------------------------------------------------------
 
 class _Page3 extends _PageData {
   const _Page3();
 
   @override String get emoji => '💬';
-
   @override String get headline => 'Join Communities\nThat Get You';
-
   @override String get body =>
       'Interest-based hubs, study groups, clubs, and department channels. '
       'Find your tribe and stay in the loop — all in one place.';
-
   @override List<(String, String)> get pills => [
     ('🎭', 'Clubs & Societies'),
     ('📖', 'Study Groups'),
     ('🎮', 'Interest Hubs'),
   ];
-
   @override List<_FloatingItem> get floatingItems => [
     const _FloatingItem(-125, -55, '💻 Tech Hub'),
     const _FloatingItem(48, -68, '🎭 Drama Club'),
     const _FloatingItem(-118, 48, '🎵 Music Society'),
   ];
 
-  @override LinearGradient get gradient => const LinearGradient(
+  @override LinearGradient gradient(BuildContext context) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF4C1D95), Color(0xFF6D28D9), Color(0xFF8B5CF6)],
+    colors: [context.primaryDark, context.primary, const Color(0xFF8B5CF6)],
   );
 
-  @override Color get accentColor => const Color(0xFF7C3AED);
+  @override Color accentColor(BuildContext context) => const Color(0xFF7C3AED);
 }
-
-// ---------------------------------------------------------------------------
-// Page 4 — Build Your Future
-// ---------------------------------------------------------------------------
 
 class _Page4 extends _PageData {
   const _Page4();
 
   @override String get emoji => '🚀';
-
   @override String get headline => 'Build Your Future\nWith UNIFY';
-
   @override String get body =>
       'Showcase your achievements, discover internships, and connect with '
       'industry professionals. Your campus career journey starts here.';
-
   @override List<(String, String)> get pills => [
     ('💼', 'Internships'),
     ('🏆', 'UNIFY Score'),
     ('🌟', 'Achievements'),
   ];
-
   @override List<_FloatingItem> get floatingItems => [
     const _FloatingItem(-130, -55, '⚡ UNIFY Score'),
     const _FloatingItem(45, -70, '💼 Opportunities'),
     const _FloatingItem(-120, 45, '🏆 Leaderboard'),
   ];
 
-  @override LinearGradient get gradient => const LinearGradient(
+  @override LinearGradient gradient(BuildContext context) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF92400E), Color(0xFFD97706), Color(0xFFFBBF24)],
+    colors: [context.primaryDark, context.primary, const Color(0xFFFBBF24)],
   );
 
-  @override Color get accentColor => const Color(0xFFD97706);
+  @override Color accentColor(BuildContext context) => context.primary;
 }
