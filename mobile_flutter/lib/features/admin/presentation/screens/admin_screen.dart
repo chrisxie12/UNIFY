@@ -383,12 +383,12 @@ class _RequestCard extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Column(
               children: [
-                if (request.faculty != null) _infoRow('Faculty', request.faculty!),
-                if (request.department != null) _infoRow('Department', request.department!),
-                if (request.programme != null) _infoRow('Programme', request.programme!),
-                if (request.level != null) _infoRow('Level', 'Level ${request.level}'),
-                if (request.academicYear != null) _infoRow('Year', request.academicYear!),
-                if (request.estimatedStudentCount != null) _infoRow('Est. Students', '${request.estimatedStudentCount}'),
+                if (request.faculty != null) _infoRow('Faculty', request.faculty!, context),
+                if (request.department != null) _infoRow('Department', request.department!, context),
+                if (request.programme != null) _infoRow('Programme', request.programme!, context),
+                if (request.level != null) _infoRow('Level', 'Level ${request.level}', context),
+                if (request.academicYear != null) _infoRow('Year', request.academicYear!, context),
+                if (request.estimatedStudentCount != null) _infoRow('Est. Students', '${request.estimatedStudentCount}', context),
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
@@ -541,7 +541,7 @@ class _RequestCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Provide feedback on what information is needed:', style: TextStyle(fontSize: 13, color: AppColors.grey1)),
+            const Text('Provide feedback on what information is needed:', style: TextStyle(fontSize: 13)),
             const SizedBox(height: 12),
             TextField(
               controller: feedbackCtrl,
@@ -814,9 +814,9 @@ class _AnnouncementRequestCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(request.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(request.title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
-                      Text(request.category[0].toUpperCase() + request.category.substring(1), style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                      Text(request.category[0].toUpperCase() + request.category.substring(1), style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -847,23 +847,23 @@ class _AnnouncementRequestCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (request.targetAudience != null)
-                  _infoRow('Audience', request.targetAudience!),
+                  _infoRow('Audience', request.targetAudience!, context),
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color: context.bg,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(request.body, style: const TextStyle(fontSize: 13, color: AppColors.dark, height: 1.5)),
+                  child: Text(request.body, style: TextStyle(fontSize: 13, color: context.textPrimary, height: 1.5)),
                 ),
                 const SizedBox(height: 12),
-                Text(_timeAgo(request.createdAt), style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                Text(_timeAgo(request.createdAt), style: TextStyle(fontSize: 11, color: context.textSecondary)),
               ],
             ),
           ),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(height: 1, color: context.borderCol),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
@@ -900,12 +900,12 @@ class _AnnouncementRequestCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoRow(String label, String value) => Padding(
+  Widget _infoRow(String label, String value, BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Row(
       children: [
-        SizedBox(width: 80, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2))),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark))),
+        SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary))),
+        Expanded(child: Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.textPrimary))),
       ],
     ),
   );
@@ -1072,10 +1072,10 @@ class _VerificationCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(request.position, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.dark)),
+                      Text(request.position, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
                       const SizedBox(height: 2),
                       if (request.classRepresented != null)
-                        Text(request.classRepresented!, style: const TextStyle(fontSize: 12, color: AppColors.grey2)),
+                        Text(request.classRepresented!, style: TextStyle(fontSize: 12, color: context.textSecondary)),
                     ],
                   ),
                 ),
@@ -1095,8 +1095,8 @@ class _VerificationCard extends ConsumerWidget {
             child: Column(
               children: [
                 if (request.department != null)
-                  _infoRow('Department', request.department!),
-                _infoRow('Academic Year', request.academicYear ?? '—'),
+                  _infoRow('Department', request.department!, context),
+                _infoRow('Academic Year', request.academicYear ?? '—', context),
                 if (request.evidenceUrl != null) ...[
                   const SizedBox(height: 8),
                   GestureDetector(
@@ -1118,11 +1118,11 @@ class _VerificationCard extends ConsumerWidget {
                   ),
                 ],
                 const SizedBox(height: 12),
-                Text('Submitted ${_timeAgo(request.createdAt)}', style: const TextStyle(fontSize: 11, color: AppColors.grey3)),
+                Text('Submitted ${_timeAgo(request.createdAt)}', style: TextStyle(fontSize: 11, color: context.textSecondary)),
               ],
             ),
           ),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(height: 1, color: context.borderCol),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
@@ -1159,12 +1159,12 @@ class _VerificationCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoRow(String label, String value) => Padding(
+  Widget _infoRow(String label, String value, BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Row(
       children: [
-        SizedBox(width: 100, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.grey2))),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.dark))),
+        SizedBox(width: 100, child: Text(label, style: TextStyle(fontSize: 12, color: context.textSecondary))),
+        Expanded(child: Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.textPrimary))),
       ],
     ),
   );

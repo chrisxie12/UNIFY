@@ -20,12 +20,12 @@ class AmbassadorAdminScreen extends ConsumerWidget {
     final totalEvents = statsAsync.valueOrNull?['totalEvents'] ?? 0;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Campus Ambassadors',
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -111,9 +111,9 @@ class _AmbassadorCard extends StatelessWidget {
       onTap: () => context.push('/launch/ambassador/${ambassador.id}'),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderCol),
         ),
         padding: const EdgeInsets.all(14),
         child: Column(
@@ -131,10 +131,10 @@ class _AmbassadorCard extends StatelessWidget {
                         ambassador.fullName?.isNotEmpty == true
                             ? ambassador.fullName!
                             : 'Ambassador',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.dark),
+                            color: context.textPrimary),
                       ),
                       if (subtitle.isNotEmpty)
                         Padding(
@@ -286,11 +286,11 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Add ambassador',
+              Text('Add ambassador',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.dark)),
+                      color: context.textPrimary)),
               const SizedBox(height: 16),
               if (selected == null) ...[
                 TextField(
@@ -358,9 +358,9 @@ class _AddAmbassadorFormState extends ConsumerState<_AddAmbassadorForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(selected['full_name'] as String? ?? 'User',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.dark)),
+                                    color: context.textPrimary)),
                             Text(selected['email'] as String? ?? '',
                                 style: const TextStyle(
                                     fontSize: 12, color: AppColors.grey2)),

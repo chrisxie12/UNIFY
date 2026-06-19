@@ -267,8 +267,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/academic/assignments', builder: (_, __) => const AssignmentHubScreen()),
       GoRoute(path: '/academic/exam-prep', builder: (_, __) => const ExamPrepCenterScreen()),
+      GoRoute(path: '/academic/exams', builder: (_, __) => const ExamPrepCenterScreen()),
       GoRoute(path: '/academic/gpa', builder: (_, __) => const GPACalculatorScreen()),
       GoRoute(path: '/academic/study-planner', builder: (_, __) => const StudyPlannerScreen()),
+      GoRoute(path: '/academic/planner', builder: (_, __) => const StudyPlannerScreen()),
       GoRoute(
         path: '/academic/resources',
         builder: (_, state) {

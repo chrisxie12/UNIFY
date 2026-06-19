@@ -64,7 +64,6 @@ class AcademicRepositoryImpl implements AcademicRepository {
   }) async {
     dynamic query = _client.from('academic_resources').select('''
       *,
-      average_rating:resource_ratings(rating.avg),
       rating_count:resource_ratings(count)
     ''');
 
@@ -76,7 +75,9 @@ class AcademicRepositoryImpl implements AcademicRepository {
     query = query.order('created_at', ascending: false).limit(limit);
 
     final data = await query;
-    return (data as List).map((m) => AcademicResourceModel.fromMap(m as Map<String, dynamic>)).toList();
+    final resources = (data as List).map((m) => AcademicResourceModel.fromMap(m as Map<String, dynamic>)).toList();
+    await _attachAverageRatings(resources);
+    return resources;
   }
 
   @override
@@ -230,6 +231,32 @@ class AcademicRepositoryImpl implements AcademicRepository {
     await _client.from('study_plans').delete().eq('id', planId);
   }
 
+  // Fetches average ratings for a list of resources in one batched query.
+  // PostgREST doesn't support rating.avg() in select, so we compute it here.
+  Future<void> _attachAverageRatings(List<AcademicResourceModel> resources) async {
+    if (resources.isEmpty) return;
+    try {
+      final ids = resources.map((r) => r.id).toList();
+      final data = await _client
+          .from('resource_ratings')
+          .select('resource_id, rating')
+          .inFilter('resource_id', ids);
+      final rows = data as List;
+      final sums = <String, int>{};
+      final counts = <String, int>{};
+      for (final row in rows) {
+        final rid = row['resource_id'] as String;
+        final rating = (row['rating'] as num).toInt();
+        sums[rid] = (sums[rid] ?? 0) + rating;
+        counts[rid] = (counts[rid] ?? 0) + 1;
+      }
+      for (final r in resources) {
+        final c = counts[r.id] ?? 0;
+        r.averageRating = c > 0 ? (sums[r.id]! / c) : 0.0;
+      }
+    } catch (_) {}
+  }
+
   @override
   Future<List<ResourceRating>> getRatings(String resourceId) async {
     final data = await _client.from('resource_ratings').select('*')
@@ -291,10 +318,11 @@ class AcademicRepositoryImpl implements AcademicRepository {
   Future<List<AcademicResourceModel>> searchResources(String query) async {
     final data = await _client.from('academic_resources').select('''
       *,
-      average_rating:resource_ratings(rating.avg),
       rating_count:resource_ratings(count)
     ''').ilike('title', '%$query%').order('download_count', ascending: false).limit(20);
-    return (data as List).map((m) => AcademicResourceModel.fromMap(m as Map<String, dynamic>)).toList();
+    final resources = (data as List).map((m) => AcademicResourceModel.fromMap(m as Map<String, dynamic>)).toList();
+    await _attachAverageRatings(resources);
+    return resources;
   }
 
   @override

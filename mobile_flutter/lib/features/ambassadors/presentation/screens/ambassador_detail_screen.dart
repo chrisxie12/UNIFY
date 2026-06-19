@@ -17,12 +17,12 @@ class AmbassadorDetailScreen extends ConsumerWidget {
     final eventsAsync = ref.watch(ambassadorEventsProvider(ambassadorId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: context.appBarBg,
+        surfaceTintColor: context.appBarBg,
         elevation: 0.6,
-        shadowColor: AppColors.border,
+        shadowColor: context.borderCol,
         title: const Text('Ambassador',
             style: TextStyle(fontWeight: FontWeight.w800)),
         actions: [
@@ -75,7 +75,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.dark)),
+                          color: context.textPrimary)),
                 ),
                 const SizedBox(height: 8),
                 eventsAsync.when(
@@ -135,9 +135,9 @@ class _Header extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -170,10 +170,10 @@ class _Header extends StatelessWidget {
                       ambassador.fullName?.isNotEmpty == true
                           ? ambassador.fullName!
                           : 'Ambassador',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.dark),
+                          color: context.textPrimary),
                     ),
                     if (subtitle.isNotEmpty)
                       Padding(
@@ -257,9 +257,9 @@ class _EventCard extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderCol),
       ),
       padding: const EdgeInsets.all(14),
       child: Row(

@@ -92,10 +92,10 @@ class AppVersionAdminScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   'v${v.version}  (build ${v.buildNumber})',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
-                    color: AppColors.dark,
+                    color: context.textPrimary,
                   ),
                 ),
               ),
@@ -230,7 +230,7 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.cardBg,
       title: const Text(
         'New version',
         style: TextStyle(fontWeight: FontWeight.w800),
@@ -275,8 +275,8 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               activeColor: AppColors.primary,
-              title: const Text('Mandatory',
-                  style: TextStyle(fontSize: 14, color: AppColors.dark)),
+              title: Text('Mandatory',
+                  style: TextStyle(fontSize: 14, color: context.textPrimary)),
               value: _mandatory,
               onChanged: (v) => setState(() => _mandatory = v),
             ),

@@ -693,7 +693,7 @@ class _CompletionCard extends StatelessWidget {
                     builder: (_, val, __) => LinearProgressIndicator(
                       value: val,
                       minHeight: 6,
-                      backgroundColor: AppColors.border,
+                      backgroundColor: context.borderCol,
                       valueColor: AlwaysStoppedAnimation<Color>(context.primary),
                     ),
                   ),
