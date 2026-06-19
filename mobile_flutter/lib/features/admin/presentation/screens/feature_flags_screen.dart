@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../system/data/models/system_models.dart';
 import '../../../system/presentation/providers/feature_flags_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -65,8 +66,8 @@ class _FlagTile extends ConsumerWidget {
           ),
           Switch(
             value: flag.enabled,
-            activeTrackColor: const Color(0xFF0066FF).withValues(alpha: 0.5),
-            activeThumbColor: const Color(0xFF0066FF),
+            activeTrackColor: context.primary.withValues(alpha: 0.5),
+            activeThumbColor: context.primary,
             onChanged: (v) {
               ref
                   .read(featureFlagsRepositoryProvider)
