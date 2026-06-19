@@ -248,8 +248,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/messaging/chat/:id',
         builder: (_, state) {
+          final conversationId = state.pathParameters['id']!;
           final extra = state.extra as Map<String, dynamic>?;
           return ChatConversationScreen(
+            conversationId: conversationId,
             contactName: extra?['name'] as String? ?? 'Chat',
             isOnline: extra?['isOnline'] as bool? ?? false,
             isVerified: extra?['isVerified'] as bool? ?? false,
@@ -261,6 +263,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, state) {
           final extra = state.extra as Map<String, dynamic>?;
           return ChatConversationScreen(
+            conversationId: extra?['conversationId'] as String? ?? '',
             contactName: extra?['name'] as String? ?? 'New Chat',
             isOnline: extra?['isOnline'] as bool? ?? false,
             isVerified: extra?['isVerified'] as bool? ?? false,

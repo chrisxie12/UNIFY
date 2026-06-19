@@ -137,7 +137,7 @@ class AcademicRepositoryImpl implements AcademicRepository {
   Future<List<AssignmentModel>> getAssignments(String courseId) async {
     final data = await _client.from('assignments').select('''
       *,
-      is_submitted:assignment_submissions!inner(id)
+      is_submitted:assignment_submissions(id)
     ''').eq('course_id', courseId).order('due_date', ascending: true).limit(50);
     return (data as List).map((m) => AssignmentModel.fromMap(m as Map<String, dynamic>)).toList();
   }

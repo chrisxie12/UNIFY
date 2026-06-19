@@ -148,7 +148,9 @@ final messagingProvider = StateNotifierProvider<MessagingNotifier, MessagingStat
 class _PinnedNotifier extends StateNotifier<Set<String>> {
   _PinnedNotifier() : super({});
   void toggle(String id) =>
-      state = state.contains(id) ? (state..remove(id)) : {...state, id};
+      state = state.contains(id)
+          ? state.where((x) => x != id).toSet()
+          : {...state, id};
   bool isPinned(String id) => state.contains(id);
 }
 

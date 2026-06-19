@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
@@ -40,12 +41,12 @@ class MessageRequestsScreen extends ConsumerWidget {
   }
 }
 
-class _RequestTile extends StatelessWidget {
+class _RequestTile extends ConsumerWidget {
   final MessageRequest request;
   const _RequestTile({required this.request});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Card(
@@ -65,13 +66,28 @@ class _RequestTile extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.close, color: Colors.red),
-              onPressed: () {},
               tooltip: 'Decline',
+              onPressed: () async {
+                final repo = ref.read(messagingRepositoryProvider);
+                await repo.declineRequest(request.id);
+                ref.invalidate(messageRequestsProvider);
+              },
             ),
             IconButton(
               icon: Icon(Icons.check_circle, color: theme.colorScheme.primary),
-              onPressed: () {},
               tooltip: 'Accept',
+              onPressed: () async {
+                final repo = ref.read(messagingRepositoryProvider);
+                final convId = request.conversationId ?? request.id;
+                await repo.acceptRequest(request.id, convId);
+                ref.invalidate(messageRequestsProvider);
+                if (context.mounted) {
+                  context.push('/messaging/chat/$convId', extra: {
+                    'name': request.fromUserName ?? 'Chat',
+                    'conversationId': convId,
+                  });
+                }
+              },
             ),
           ],
         ),

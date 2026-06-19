@@ -27,6 +27,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     return _client
         .from('notifications')
         .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
         .map((rows) => rows.where((r) => r['is_read'] == false).length);
   }
 

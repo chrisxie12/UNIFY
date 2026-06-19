@@ -29,11 +29,13 @@ TextStyle _sg(double size, FontWeight w, Color c, {double? ls, double? h}) =>
 class ChatConversationScreen extends StatefulWidget {
   const ChatConversationScreen({
     super.key,
+    required this.conversationId,
     this.contactName = 'Yaa Debby',
     this.isOnline = true,
     this.isVerified = true,
   });
 
+  final String conversationId;
   final String contactName;
   final bool isOnline;
   final bool isVerified;

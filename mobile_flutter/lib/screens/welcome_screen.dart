@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
@@ -140,7 +141,7 @@ class WelcomeScreen extends StatelessWidget {
                             label: 'Get Started',
                             bg: _accentPurple,
                             fg: Colors.white,
-                            onTap: () => debugPrint('Get Started tapped'),
+                            onTap: () => context.push('/auth?mode=signup'),
                           ),
                           const SizedBox(height: 12),
 
@@ -149,14 +150,14 @@ class WelcomeScreen extends StatelessWidget {
                             label: 'I already have an account',
                             bg: _surfaceGrey,
                             fg: _textDark,
-                            onTap: () => debugPrint('Sign In tapped'),
+                            onTap: () => context.push('/auth?mode=login'),
                           ),
                           const SizedBox(height: 20),
 
                           // Terms
                           Center(
                             child: GestureDetector(
-                              onTap: () => debugPrint('Terms tapped'),
+                              onTap: () {},
                               child: Text(
                                 'By continuing you agree to our Terms & Privacy Policy',
                                 style: _sg(12, FontWeight.w400, _textMuted),

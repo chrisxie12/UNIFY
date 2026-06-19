@@ -15,6 +15,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('conversations')
         .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
         .order('last_message_at', ascending: false)
         .map((maps) =>
             maps.map((m) => ConversationModel.fromMap(m)).toList());
@@ -25,6 +26,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('messages')
         .stream(primaryKey: ['id'])
+        .eq('conversation_id', conversationId)
         .order('created_at', ascending: true)
         .map((maps) =>
             maps.map((m) => MessageModel.fromMap(m)).toList());
@@ -35,6 +37,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('channels')
         .stream(primaryKey: ['id'])
+        .eq('conversation_id', conversationId)
         .order('position', ascending: true)
         .map((maps) =>
             maps.map((m) => ChannelModel.fromMap(m)).toList());
@@ -307,12 +310,14 @@ class MessagingRepositoryImpl implements MessagingRepository {
   Future<Map<String, int>> unreadCounts(String userId) async {
     final data = await _client
         .from('message_read_receipts')
-        .select('conversation_id, count')
+        .select('conversation_id')
         .eq('user_id', userId)
+        .eq('is_read', false)
         .limit(100);
     final map = <String, int>{};
     for (final row in (data as List)) {
-      map[row['conversation_id'] as String] = row['count'] as int;
+      final cid = row['conversation_id'] as String;
+      map[cid] = (map[cid] ?? 0) + 1;
     }
     return map;
   }
@@ -322,7 +327,14 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('messages')
         .stream(primaryKey: ['id'])
-        .map((maps) => MessageModel.fromMap(maps.last));
+        .eq('conversation_id', conversationId)
+        .order('created_at', ascending: false)
+        .map((maps) {
+          if (maps.isEmpty) return null;
+          return MessageModel.fromMap(maps.first);
+        })
+        .where((m) => m != null)
+        .cast<MessageModel>();
   }
 
   @override
