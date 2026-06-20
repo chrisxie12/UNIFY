@@ -281,20 +281,11 @@ class _StoriesRow extends StatelessWidget {
   final String? avatarUrl;
   final String firstName;
 
-  static const _placeholders = [
-    _StoryData('Campus', null, null, Color(0xFF2563EB)),
-    _StoryData('Kwame A.', 'KA', null, Color(0xFF7C3AED)),
-    _StoryData('Ama B.', 'AB', null, Color(0xFF10B981)),
-    _StoryData('Kofi M.', 'KM', null, Color(0xFFEF4444)),
-    _StoryData('Efua T.', 'ET', null, Color(0xFFF59E0B)),
-    _StoryData('Yaw O.', 'YO', null, Color(0xFF2563EB)),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       child: SizedBox(
         height: 88,
         child: ListView(
@@ -308,31 +299,11 @@ class _StoriesRow extends StatelessWidget {
               size: 56,
               onTap: () {},
             ),
-            const SizedBox(width: 12),
-            ..._placeholders.map((s) => Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: StoryCircle(
-                    name: s.name,
-                    initials: s.initials,
-                    color: s.color,
-                    hasRing: true,
-                    size: 56,
-                    onTap: () {},
-                  ),
-                )),
           ],
         ),
       ),
     );
   }
-}
-
-class _StoryData {
-  final String name;
-  final String? initials;
-  final String? imageUrl;
-  final Color color;
-  const _StoryData(this.name, this.initials, this.imageUrl, this.color);
 }
 
 // ── Category tabs delegate (pinned SliverPersistentHeader) ────────────────────
