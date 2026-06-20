@@ -16,11 +16,9 @@ import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
-import '../../screens/chat_list_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
 import '../../features/messaging/presentation/screens/student_directory_screen.dart';
 import '../../features/messaging/presentation/screens/chat_screen.dart';
-import '../../screens/chat_conversation_screen.dart';
 import '../../features/messaging/presentation/screens/create_group_screen.dart';
 import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
@@ -288,28 +286,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/messaging/search', builder: (_, __) => const StudentDirectoryScreen()),
       GoRoute(
         path: '/messaging/chat/:id',
-        builder: (_, state) {
-          final conversationId = state.pathParameters['id']!;
-          final extra = state.extra as Map<String, dynamic>?;
-          return ChatConversationScreen(
-            conversationId: conversationId,
-            contactName: extra?['name'] as String? ?? 'Chat',
-            isOnline: extra?['isOnline'] as bool? ?? false,
-            isVerified: extra?['isVerified'] as bool? ?? false,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/messaging/chat/new',
-        builder: (_, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          return ChatConversationScreen(
-            conversationId: extra?['conversationId'] as String? ?? '',
-            contactName: extra?['name'] as String? ?? 'New Chat',
-            isOnline: extra?['isOnline'] as bool? ?? false,
-            isVerified: extra?['isVerified'] as bool? ?? false,
-          );
-        },
+        builder: (_, state) => ChatScreen(
+          conversationId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(path: '/messaging/create-group', builder: (_, __) => const CreateGroupScreen()),
       GoRoute(
@@ -391,7 +370,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/messaging', builder: (_, __) => const ChatListScreen()),
+            GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),

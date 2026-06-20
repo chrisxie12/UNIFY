@@ -100,7 +100,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 _NotifBadgeIcon(),
                 IconButton(
                   icon: Icon(Icons.send_outlined, color: context.textPrimary, size: 22),
-                  onPressed: () => context.push('/messages'),
+                  onPressed: () => context.go('/app/messaging'),
                   tooltip: 'Messages',
                 ),
                 const SizedBox(width: 4),

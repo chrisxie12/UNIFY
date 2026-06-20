@@ -18,6 +18,7 @@ abstract class MessagingRepository {
   Future<void> createPoll(String messageId, String question, List<String> options, bool multipleChoice, DateTime? expiresAt);
   Future<void> votePoll(String pollId, String userId, int optionIndex);
   Future<void> createConversation(ConversationModel conversation, List<String> participantIds);
+  Future<String> getOrCreateDirectConversation(String targetUserId);
   Future<void> addParticipants(String conversationId, List<String> userIds);
   Future<void> removeParticipant(String conversationId, String userId);
   Future<void> updateParticipantRole(String conversationId, String userId, String role);

@@ -173,6 +173,53 @@ class MessagingRepositoryImpl implements MessagingRepository {
   }
 
   @override
+  Future<String> getOrCreateDirectConversation(String targetUserId) async {
+    final currentUserId = _client.auth.currentUser?.id;
+    if (currentUserId == null) throw Exception('Not authenticated');
+
+    // Gather all conversation IDs where the current user participates
+    final myRows = await _client
+        .from('conversation_participants')
+        .select('conversation_id')
+        .eq('user_id', currentUserId);
+    final myIds = (myRows as List).map((e) => e['conversation_id'] as String).toList();
+
+    if (myIds.isNotEmpty) {
+      // Among those, find any that are direct-type conversations
+      final directRows = await _client
+          .from('conversations')
+          .select('id')
+          .eq('type', 'direct')
+          .inFilter('id', myIds);
+      final directIds = (directRows as List).map((e) => e['id'] as String).toList();
+
+      if (directIds.isNotEmpty) {
+        // Check if the target user is also in one of those DMs
+        final sharedRows = await _client
+            .from('conversation_participants')
+            .select('conversation_id')
+            .eq('user_id', targetUserId)
+            .inFilter('conversation_id', directIds);
+        if ((sharedRows as List).isNotEmpty) {
+          return sharedRows.first['conversation_id'] as String;
+        }
+      }
+    }
+
+    // No existing DM — create one
+    final convResult = await _client.from('conversations').insert({
+      'type': 'direct',
+      'created_by': currentUserId,
+    }).select('id').single();
+    final convId = convResult['id'] as String;
+    await _client.from('conversation_participants').insert([
+      {'conversation_id': convId, 'user_id': currentUserId, 'role': 'admin'},
+      {'conversation_id': convId, 'user_id': targetUserId, 'role': 'member'},
+    ]);
+    return convId;
+  }
+
+  @override
   Future<void> addParticipants(String conversationId, List<String> userIds) async {
     final participants = userIds.map((uid) => ({
       'conversation_id': conversationId,

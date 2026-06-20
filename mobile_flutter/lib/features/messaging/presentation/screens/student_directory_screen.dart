@@ -101,9 +101,22 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                         ].whereType<String>().join(' · '),
                         style: TextStyle(fontSize: 13, color: context.textSecondary),
                       ),
-                      onTap: () {
+                      onTap: () async {
                         final userId = user['id'] as String;
-                        context.push('/messaging/chat/new', extra: {'user_id': userId, 'user_name': user['full_name']});
+                        try {
+                          final convId = await ref
+                              .read(messagingRepositoryProvider)
+                              .getOrCreateDirectConversation(userId);
+                          if (context.mounted) {
+                            context.push('/messaging/chat/$convId');
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Could not open chat: $e')),
+                            );
+                          }
+                        }
                       },
                     );
                   },
