@@ -99,14 +99,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 ),
               ),
 
-              // Archived chats row
-              SliverToBoxAdapter(
-                child: DecoratedBox(
-                  decoration: const BoxDecoration(color: Colors.white),
-                  child: const ArchivedChatsRow(),
-                ),
-              ),
-
               // Chat list
               SliverList(
                 delegate: SliverChildBuilderDelegate(

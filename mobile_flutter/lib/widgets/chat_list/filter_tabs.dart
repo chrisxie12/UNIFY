@@ -13,10 +13,10 @@ class _TabData {
 }
 
 const _tabItems = [
-  _TabData('All Chats', 176),
-  _TabData('Personal',  96),
-  _TabData('Campus',    24),
-  _TabData('Study Groups', 8),
+  _TabData('All Chats'),
+  _TabData('Personal'),
+  _TabData('Campus'),
+  _TabData('Study Groups'),
 ];
 
 // ── ChatFilterTabs ────────────────────────────────────────────────────────────

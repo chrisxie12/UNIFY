@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../providers/community_provider.dart';
 import '../../../../core/widgets/app_error_widget.dart';
@@ -201,22 +202,23 @@ class _CommunityHomeScreenState extends ConsumerState<CommunityHomeScreen>
           ),
           floatingActionButton: isManagerAsync.when(
             data: (isManager) {
-              if (!isManager) return null;
               if (_tabController.index == 1) {
                 return FloatingActionButton(
                   onPressed: () {
-                    _showCreateMenu(context, widget.communityId);
+                    if (isManager) {
+                      _showCreateMenu(context, widget.communityId);
+                    } else {
+                      context.push('/community/${widget.communityId}/create-post');
+                    }
                   },
                   backgroundColor: const Color(0xFFFF6B35),
                   foregroundColor: Colors.white,
                   child: const Icon(Icons.edit),
                 );
               }
-              if (_tabController.index == 2) {
+              if (isManager && _tabController.index == 2) {
                 return FloatingActionButton(
-                  onPressed: () {
-                    // Navigate to create event
-                  },
+                  onPressed: () {},
                   backgroundColor: const Color(0xFFFF6B35),
                   foregroundColor: Colors.white,
                   child: const Icon(Icons.add),
@@ -430,7 +432,7 @@ class _AnnouncementsTab extends ConsumerWidget {
                       ref.invalidate(communityPostsProvider(communityId));
                     }
                   },
-                  onShare: () {},
+                  onShare: () => Share.share(post.body, subject: post.title),
                 ),
               );
             },
@@ -504,7 +506,7 @@ class _DiscussionsTab extends ConsumerWidget {
                   ref.invalidate(communityPostsProvider(communityId));
                 }
               },
-              onShare: () {},
+              onShare: () => Share.share(post.body, subject: post.title),
             ));
           }
 
