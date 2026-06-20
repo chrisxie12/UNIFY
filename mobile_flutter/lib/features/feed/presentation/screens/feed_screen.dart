@@ -217,15 +217,32 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     ),
                   );
                 }
+
+                // Build flat list with section labels interspersed
+                final rows = <Widget>[];
+                bool addedLatestLabel = false;
+                for (int i = 0; i < items.length; i++) {
+                  final post = items[i];
+                  if (_tabIndex == 0 && i == 0 && post.isPinned) {
+                    rows.add(const PinnedSectionLabel('PINNED'));
+                  }
+                  if (_tabIndex == 0 && !post.isPinned && !addedLatestLabel) {
+                    rows.add(const PinnedSectionLabel('LATEST'));
+                    addedLatestLabel = true;
+                  }
+                  rows.add(AnnouncementCard(
+                    item: post,
+                    onTap: () => ref.read(feedProvider.notifier).markRead(post.id),
+                  ));
+                }
+
                 return SliverMainAxisGroup(
                   slivers: [
+                    const SliverToBoxAdapter(child: SizedBox(height: 12)),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (_, i) => AnnouncementCard(
-                          item: items[i],
-                          onTap: () => ref.read(feedProvider.notifier).markRead(items[i].id),
-                        ),
-                        childCount: items.length,
+                        (_, i) => rows[i],
+                        childCount: rows.length,
                       ),
                     ),
                     if (feedState.isLoadingMore)
@@ -251,15 +268,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                                 width: 56,
                                 height: 56,
                                 decoration: BoxDecoration(
-                                  color: context.inputFill,
+                                  color: context.primary.withValues(alpha: 0.08),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.check_circle_outline_rounded, size: 28, color: context.textSecondary),
+                                child: Icon(Icons.check_circle_outline_rounded, size: 28, color: context.primary),
                               ),
                               const SizedBox(height: 12),
                               Text(
                                 "You're all caught up",
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary),
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                               ),
                               const SizedBox(height: 4),
                               Text(
