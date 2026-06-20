@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,13 +44,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     }
   }
 
-  String get _greeting {
-    final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
-  }
-
   List<Announcement> _filtered(List<Announcement> all) {
     if (_tabIndex == 0) return all;
     final cat = _tabs[_tabIndex].toLowerCase();
@@ -61,8 +53,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final feedAsync = ref.watch(feedProvider);
-    final user     = Supabase.instance.client.auth.currentUser;
-    final fullName  = user?.userMetadata?['full_name'] as String? ?? '';
+    final user = Supabase.instance.client.auth.currentUser;
+    final fullName = user?.userMetadata?['full_name'] as String? ?? '';
     final firstName = fullName.split(' ').first;
     final avatarUrl = user?.userMetadata?['avatar_url'] as String?;
 
@@ -81,40 +73,30 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0,
-              toolbarHeight: 56,
-              title: Row(
-                children: [
-                  Text(
-                    'UNIFY',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: context.primary,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: context.primary.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      firstName.isNotEmpty ? '$_greeting, $firstName' : _greeting,
-                      style: TextStyle(fontSize: 11, color: context.primary, fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+              toolbarHeight: 52,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.add_box_outlined, color: context.textPrimary, size: 24),
+                onPressed: () {},
+                tooltip: 'New Post',
+              ),
+              title: Text(
+                'UNIFY',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  color: context.textPrimary,
+                  letterSpacing: -0.5,
+                ),
               ),
               actions: [
-                IconButton(
-                  icon: Icon(Icons.search_rounded, color: context.textPrimary, size: 22),
-                  onPressed: () => context.push('/search'),
-                  tooltip: 'Search',
-                ),
                 _NotifBadgeIcon(),
+                IconButton(
+                  icon: Icon(Icons.send_outlined, color: context.textPrimary, size: 22),
+                  onPressed: () => context.push('/messages'),
+                  tooltip: 'Messages',
+                ),
                 const SizedBox(width: 4),
               ],
               bottom: PreferredSize(
@@ -129,11 +111,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             // ── Stories row ───────────────────────────────────────────────────
             SliverToBoxAdapter(
               child: _StoriesRow(avatarUrl: avatarUrl, firstName: firstName),
-            ),
-
-            // ── Post composer ─────────────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: _ComposerBar(avatarUrl: avatarUrl, firstName: firstName),
             ),
 
             // ── Category tabs (pinned) ─────────────────────────────────────────
@@ -232,16 +209,13 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 }
                 return SliverMainAxisGroup(
                   slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.only(top: 8),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (_, i) => AnnouncementCard(
-                            item: items[i],
-                            onTap: () => ref.read(feedProvider.notifier).markRead(items[i].id),
-                          ),
-                          childCount: items.length,
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, i) => AnnouncementCard(
+                          item: items[i],
+                          onTap: () => ref.read(feedProvider.notifier).markRead(items[i].id),
                         ),
+                        childCount: items.length,
                       ),
                     ),
                     if (feedState.isLoadingMore)
@@ -308,21 +282,21 @@ class _StoriesRow extends StatelessWidget {
   final String firstName;
 
   static const _placeholders = [
-    _StoryData('Campus News', null,         null, Color(0xFF2563EB), true),
-    _StoryData('Kwame A.',    'KA',         null, Color(0xFF7C3AED), false),
-    _StoryData('Ama B.',      'AB',         null, Color(0xFF10B981), false),
-    _StoryData('Kofi M.',     'KM',         null, Color(0xFFEF4444), false),
-    _StoryData('Efua T.',     'ET',         null, Color(0xFFF59E0B), false),
-    _StoryData('Yaw O.',      'YO',         null, Color(0xFF2563EB), false),
+    _StoryData('Campus', null, null, Color(0xFF2563EB)),
+    _StoryData('Kwame A.', 'KA', null, Color(0xFF7C3AED)),
+    _StoryData('Ama B.', 'AB', null, Color(0xFF10B981)),
+    _StoryData('Kofi M.', 'KM', null, Color(0xFFEF4444)),
+    _StoryData('Efua T.', 'ET', null, Color(0xFFF59E0B)),
+    _StoryData('Yaw O.', 'YO', null, Color(0xFF2563EB)),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
+      padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
       child: SizedBox(
-        height: 82,
+        height: 88,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
@@ -331,19 +305,21 @@ class _StoriesRow extends StatelessWidget {
               imageUrl: avatarUrl,
               initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
               isSelf: true,
+              size: 56,
               onTap: () {},
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             ..._placeholders.map((s) => Padding(
-              padding: const EdgeInsets.only(right: 14),
-              child: StoryCircle(
-                name: s.name,
-                initials: s.initials,
-                color: s.color,
-                hasRing: !s.isUniversity,
-                onTap: () {},
-              ),
-            )),
+                  padding: const EdgeInsets.only(right: 12),
+                  child: StoryCircle(
+                    name: s.name,
+                    initials: s.initials,
+                    color: s.color,
+                    hasRing: true,
+                    size: 56,
+                    onTap: () {},
+                  ),
+                )),
           ],
         ),
       ),
@@ -356,76 +332,7 @@ class _StoryData {
   final String? initials;
   final String? imageUrl;
   final Color color;
-  final bool isUniversity;
-  const _StoryData(this.name, this.initials, this.imageUrl, this.color, this.isUniversity);
-}
-
-// ── Post composer bar ─────────────────────────────────────────────────────────
-
-class _ComposerBar extends StatelessWidget {
-  const _ComposerBar({this.avatarUrl, required this.firstName});
-
-  final String? avatarUrl;
-  final String firstName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: context.inputFill,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: context.borderCol, width: 1),
-          ),
-          child: Row(
-            children: [
-              _AvatarMini(avatarUrl: avatarUrl, letter: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Share an update, idea or question…',
-                  style: TextStyle(fontSize: 13, color: context.textSecondary),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(Icons.photo_camera_outlined, color: context.textSecondary, size: 18),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AvatarMini extends StatelessWidget {
-  const _AvatarMini({this.avatarUrl, required this.letter});
-
-  final String? avatarUrl;
-  final String letter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: context.inputFill,
-        border: Border.all(color: context.borderCol),
-      ),
-      child: avatarUrl != null
-          ? ClipOval(child: CachedNetworkImage(imageUrl: avatarUrl!, fit: BoxFit.cover))
-          : Center(
-              child: Text(letter, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.textPrimary)),
-            ),
-    );
-  }
+  const _StoryData(this.name, this.initials, this.imageUrl, this.color);
 }
 
 // ── Category tabs delegate (pinned SliverPersistentHeader) ────────────────────
@@ -442,9 +349,9 @@ class _CategoryTabsDelegate extends SliverPersistentHeaderDelegate {
   final ValueChanged<int> onSelect;
 
   @override
-  double get minExtent => 54;
+  double get minExtent => 48;
   @override
-  double get maxExtent => 54;
+  double get maxExtent => 48;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -470,6 +377,8 @@ class _CategoryTabsDelegate extends SliverPersistentHeaderDelegate {
       old.selectedIndex != selectedIndex;
 }
 
+// ── Notification badge icon ───────────────────────────────────────────────────
+
 class _NotifBadgeIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -480,7 +389,7 @@ class _NotifBadgeIcon extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         IconButton(
-          icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 22),
+          icon: Icon(Icons.favorite_border, color: context.textPrimary, size: 24),
           onPressed: () => context.push('/notifications'),
           tooltip: 'Notifications',
         ),

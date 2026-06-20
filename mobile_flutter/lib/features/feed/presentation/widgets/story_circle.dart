@@ -29,7 +29,12 @@ class StoryCircle extends StatelessWidget {
   final VoidCallback? onTap;
 
   static const _ringGradient = LinearGradient(
-    colors: [Color(0xFF2563EB), Color(0xFF7C3AED)],
+    colors: [
+      Color(0xFFE1306C),
+      Color(0xFFFD1D1D),
+      Color(0xFFF56040),
+      Color(0xFFFCAF45),
+    ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
