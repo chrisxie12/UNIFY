@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
@@ -18,7 +19,7 @@ class CoursePageScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return courseAsync.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: AppLoadingWidget.list()),
       error: (e, _) => Scaffold(body: AppErrorWidget(e, onRetry: () => ref.invalidate(courseProvider(courseId)))),
       data: (course) {
         if (course == null) return const Scaffold(body: Center(child: Text('Course not found')));
@@ -68,7 +69,7 @@ class _ResourceTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return resources.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         final filtered = items.where((r) => r.type == type).toList();
@@ -140,7 +141,7 @@ class _AssignmentTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return assignments.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {

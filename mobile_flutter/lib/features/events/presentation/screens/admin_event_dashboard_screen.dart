@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
@@ -18,7 +19,7 @@ class AdminEventDashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Event Admin')),
       body: eventsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(upcomingEventsProvider)),
         data: (events) {
           final pending = events.where((e) => !e.isApproved && e.scope != 'community').toList();

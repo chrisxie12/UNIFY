@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
@@ -31,7 +32,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           Text('Registered Events', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
           const SizedBox(height: 8),
           ticketsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
             error: (e, _) => AppErrorWidget(e),
             data: (tickets) {
               if (tickets.isEmpty) {
@@ -59,7 +60,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           Text('Certificates', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
           const SizedBox(height: 8),
           certsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
             error: (e, _) => AppErrorWidget(e),
             data: (certs) {
               if (certs.isEmpty) {
@@ -86,7 +87,7 @@ class StudentEventProfileScreen extends ConsumerWidget {
           Text('Saved Events', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
           const SizedBox(height: 8),
           savedAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
             error: (e, _) => AppErrorWidget(e),
             data: (events) {
               if (events.isEmpty) {
@@ -125,7 +126,7 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ticketsAsync.when(
-      loading: () => const SizedBox(height: 80, child: Center(child: CircularProgressIndicator())),
+      loading: () => const SizedBox(height: 120, child: AppLoadingWidget.profile()),
       error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         final registered = tickets.length;

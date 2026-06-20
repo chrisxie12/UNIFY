@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/verified_badge.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
@@ -48,7 +49,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
     return Scaffold(
       backgroundColor: context.bg,
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (e, _) => AppErrorWidget(e),
         data: (listing) {
           if (listing == null) {

@@ -5,6 +5,7 @@ import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class VerificationManagementScreen extends ConsumerWidget {
   const VerificationManagementScreen({super.key});
@@ -69,7 +70,7 @@ class _VerificationList extends ConsumerWidget {
             itemBuilder: (_, i) => _VerificationCard(request: requests[i]),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(provider)),
       ),
     );

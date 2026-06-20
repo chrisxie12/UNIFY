@@ -7,6 +7,7 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
 import '../../../../core/design_system/components.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
@@ -189,8 +190,8 @@ class AcademicHomeScreen extends ConsumerWidget {
             resourcesAsync.when(
               loading: () => const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(USpacing.xl),
-                  child: Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.all(32),
+                  child: AppLoadingWidget.list(itemCount: 2),
                 ),
               ),
               error: (e, _) => SliverToBoxAdapter(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/design_system/components.dart';
@@ -52,7 +53,7 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
         children: [
           Expanded(
             child: discussionsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(),
               error: (e, _) => AppErrorWidget(e),
               data: (discussions) {
                 if (discussions.isEmpty) {

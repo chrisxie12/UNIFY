@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/marketplace_constants.dart';
@@ -54,7 +55,7 @@ class _FreelancerProfileScreenState
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.profile(),
         error: (e, _) => AppErrorWidget(e),
         data: (profile) {
           if (!_loaded && profile != null) {

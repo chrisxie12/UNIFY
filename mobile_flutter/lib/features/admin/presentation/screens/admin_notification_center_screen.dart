@@ -5,6 +5,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../notifications/data/models/notification_model.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
 final _adminNotificationsProvider = FutureProvider.autoDispose<List<NotificationModel>>((ref) async {
@@ -74,7 +75,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
           ref.invalidate(_adminUnreadNotificationsProvider);
         },
         child: notificationsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const AppLoadingWidget.list(),
           error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_adminNotificationsProvider)),
           data: (notifications) {
             if (notifications.isEmpty) {

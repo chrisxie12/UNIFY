@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
@@ -20,7 +21,7 @@ class CreateListingScreen extends ConsumerWidget {
     final canPost = ref.watch(canPostListingProvider);
     return canPost.when(
       loading: () => const Scaffold(
-          body: Center(child: CircularProgressIndicator())),
+          body: AppLoadingWidget.card()),
       error: (_, __) => const _Gate(),
       data: (allowed) => allowed ? const _CreateForm() : const _Gate(),
     );

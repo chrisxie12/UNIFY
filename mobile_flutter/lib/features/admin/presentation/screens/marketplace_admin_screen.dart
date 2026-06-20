@@ -5,6 +5,7 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
 class MarketplaceAdminScreen extends ConsumerWidget {
@@ -71,7 +72,7 @@ class _ReportList extends ConsumerWidget {
             itemBuilder: (_, i) => _MarketplaceReportCard(report: items[i]),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(marketplaceReportsProvider)),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class StudyPlannerScreen extends ConsumerStatefulWidget {
   const StudyPlannerScreen({super.key});
@@ -48,7 +49,7 @@ class _StudyPlannerScreenState extends ConsumerState<StudyPlannerScreen> {
         ],
       ),
       body: plansAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(studyPlansProvider)),
         data: (plans) {
           if (plans.isEmpty) {

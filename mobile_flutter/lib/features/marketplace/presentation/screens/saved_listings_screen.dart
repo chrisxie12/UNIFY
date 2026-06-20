@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
 
@@ -25,7 +26,7 @@ class SavedListingsScreen extends ConsumerWidget {
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e),
         data: (items) {
           if (items.isEmpty) {

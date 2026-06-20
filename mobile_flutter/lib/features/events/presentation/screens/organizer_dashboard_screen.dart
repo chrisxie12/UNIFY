@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/models/event_model.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
 
@@ -19,7 +20,7 @@ class OrganizerDashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Organizer Dashboard')),
       body: eventAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(eventDetailProvider(eventId))),
         data: (event) {
           final userId = ref.read(currentUserIdProvider);
@@ -33,7 +34,7 @@ class OrganizerDashboardScreen extends ConsumerWidget {
               _EventSummaryCard(event: event, theme: theme),
               const SizedBox(height: 16),
               analyticsAsync.when(
-                loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
+                loading: () => const SizedBox(height: 120, child: AppLoadingWidget.card()),
                 error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: AppErrorWidget(e)),
                 data: (analytics) => _AnalyticsCards(analytics: analytics, theme: theme),
               ),
@@ -192,7 +193,7 @@ class _AttendeeListSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ticketsAsync = ref.watch(eventTicketsProvider(eventId));
     return ticketsAsync.when(
-      loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
+      loading: () => const SizedBox(height: 120, child: AppLoadingWidget.card()),
       error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         final checkedIn = tickets.where((t) => t.attended).length;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
 
@@ -147,7 +148,7 @@ class _AttendeeListSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ticketsAsync = ref.watch(eventTicketsProvider(eventId));
     return ticketsAsync.when(
-      loading: () => const CircularProgressIndicator(),
+      loading: () => const AppLoadingWidget.card(),
       error: (e, _) => Center(child: AppErrorWidget(e)),
       data: (tickets) {
         final checkedIn = tickets.where((t) => t.attended).length;
