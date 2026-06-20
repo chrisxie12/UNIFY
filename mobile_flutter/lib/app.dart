@@ -59,7 +59,11 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
           _lastUserId = userId;
           pushService.init(userId, onTap: (data) {
             final route = PushNotificationService.routeFromData(data);
-            if (route != null) router.go(route);
+            if (route != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                router.go(route);
+              });
+            }
           });
         } else if (userId == null && _lastUserId != null) {
           _lastUserId = null;
