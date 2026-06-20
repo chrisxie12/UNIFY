@@ -66,8 +66,13 @@ class AdminEventDashboardScreen extends ConsumerWidget {
                           ),
                           IconButton(
                             icon: const Icon(Icons.cancel, color: Colors.red, size: 20),
-                            onPressed: () {
-                              ref.read(eventRepositoryProvider).deleteEvent(event.id);
+                            onPressed: () async {
+                              final reason = await _showRejectDialog(context);
+                              if (reason == null) return;
+                              await ref.read(eventRepositoryProvider).rejectEvent(
+                                event.id,
+                                reason: reason.trim().isEmpty ? null : reason.trim(),
+                              );
                               ref.invalidate(upcomingEventsProvider);
                             },
                           ),
@@ -109,5 +114,39 @@ class AdminEventDashboardScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+Future<String?> _showRejectDialog(BuildContext context) async {
+  final ctrl = TextEditingController();
+  try {
+    return await showDialog<String>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Reject Event'),
+        content: TextField(
+          controller: ctrl,
+          decoration: const InputDecoration(
+            labelText: 'Reason (optional)',
+            hintText: 'Explain why this event is being rejected',
+          ),
+          maxLines: 3,
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, ctrl.text),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Reject'),
+          ),
+        ],
+      ),
+    );
+  } finally {
+    ctrl.dispose();
   }
 }

@@ -131,8 +131,18 @@ class PushNotificationService {
       case 'event_registration':
       case 'event_reminder':
       case 'event_checkin_confirmation':
+      case 'event_approved':
+      case 'event_rejected':
         final eventId = data['event_id'];
         return eventId != null ? '/events/$eventId' : '/app/events';
+      case 'marketplace_report_resolved':
+        return '/marketplace';
+      case 'announcement_approved':
+        return '/app/feed';
+      case 'announcement_rejected':
+        return '/profile';
+      case 'admin_removed':
+        return '/profile';
       case 'community_approval':
       case 'community_approved':
       case 'community_join_request':

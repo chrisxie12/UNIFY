@@ -9,6 +9,30 @@ class LeadershipRepositoryImpl {
 
   LeadershipRepositoryImpl(this._client);
 
+  Future<void> _sendNotification({
+    required String userId,
+    required String type,
+    required String title,
+    String? body,
+    String? referenceId,
+    String? referenceType,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _client.rpc('create_notification', params: {
+        'p_user_id': userId,
+        'p_type': type,
+        'p_title': title,
+        'p_body': body,
+        'p_reference_id': referenceId,
+        'p_reference_type': referenceType,
+        'p_data': data ?? {},
+      });
+    } catch (e) {
+      // Notification failure must not break the primary action
+    }
+  }
+
   Future<void> _logAction(String actorId, String action, String entityType, String? entityId, {Map<String, dynamic>? details}) async {
     try {
       await _client.rpc('log_admin_action', params: {
@@ -138,6 +162,21 @@ class LeadershipRepositoryImpl {
     await _client.from('community_requests').update(updates).eq('id', requestId);
     await _logAction(reviewedBy, '${status}_community_request', 'community', requestId,
         details: {if (adminFeedback != null) 'feedback': adminFeedback});
+    if (status == 'rejected' || status == 'changes_requested') {
+      final req = await _client.from('community_requests')
+          .select('requester_id, community_name').eq('id', requestId).single();
+      await _sendNotification(
+        userId: req['requester_id'] as String,
+        type: status == 'rejected' ? 'community_rejected' : 'community_changes_requested',
+        title: status == 'rejected' ? 'Community Request Declined' : 'Changes Requested',
+        body: adminFeedback ?? (status == 'rejected'
+            ? 'Your community request for "${req['community_name']}" was not approved.'
+            : 'Changes were requested for your community "${req['community_name']}".'),
+        referenceId: requestId,
+        referenceType: 'community_request',
+        data: {'request_id': requestId},
+      );
+    }
   }
 
   /// Auto-creates a community from an approved request + assigns ownership.
@@ -170,6 +209,15 @@ class LeadershipRepositoryImpl {
     await _client.from('communities').update({'member_count': 1}).eq('id', community['id']);
     await _logAction(_client.auth.currentUser?.id ?? '', 'create_community', 'community', community['id'] as String,
         details: {'name': requestData['community_name'] as String? ?? '', 'request_id': requestId});
+    await _sendNotification(
+      userId: requestData['requester_id'] as String,
+      type: 'community_approved',
+      title: 'Community Created! 🎉',
+      body: 'Your community "${requestData['community_name']}" has been approved and is now live.',
+      referenceId: community['id'] as String,
+      referenceType: 'community',
+      data: {'community_id': community['id']},
+    );
   }
 
   // ── Community Managers ─────────────────────────────────────
@@ -249,7 +297,6 @@ class LeadershipRepositoryImpl {
     }).eq('id', requestId);
 
     if (status == 'approved') {
-      // Fetch the request to create the actual announcement
       final req = await _client.from('announcement_requests').select().eq('id', requestId).single();
       await _client.from('announcements').insert({
         'author_id': req['requester_id'],
@@ -262,6 +309,27 @@ class LeadershipRepositoryImpl {
         'published_at': DateTime.now().toUtc().toIso8601String(),
         'community_id': req['community_id'],
       });
+      await _sendNotification(
+        userId: req['requester_id'] as String,
+        type: 'announcement_approved',
+        title: 'Announcement Approved ✓',
+        body: 'Your announcement "${req['title']}" has been approved and published.',
+        referenceId: requestId,
+        referenceType: 'announcement_request',
+        data: {'request_id': requestId},
+      );
+    } else if (status == 'rejected') {
+      final req = await _client.from('announcement_requests')
+          .select('requester_id, title').eq('id', requestId).single();
+      await _sendNotification(
+        userId: req['requester_id'] as String,
+        type: 'announcement_rejected',
+        title: 'Announcement Request Declined',
+        body: adminNotes ?? 'Your announcement request "${req['title']}" was not approved.',
+        referenceId: requestId,
+        referenceType: 'announcement_request',
+        data: {'request_id': requestId},
+      );
     }
     await _logAction(reviewedBy, '${status}_announcement_request', 'announcement', requestId,
         details: {if (adminNotes != null) 'notes': adminNotes});

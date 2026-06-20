@@ -16,6 +16,7 @@ abstract class EventRepository {
   Future<bool> updateEvent(String eventId, Map<String, dynamic> updates);
   Future<bool> deleteEvent(String eventId);
   Future<bool> approveEvent(String eventId);
+  Future<bool> rejectEvent(String eventId, {String? reason});
   Future<bool> featureEvent(String eventId);
 
   // ── RSVP / Registration ───────────────────────────────────

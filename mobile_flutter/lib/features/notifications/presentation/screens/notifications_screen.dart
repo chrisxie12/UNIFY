@@ -110,13 +110,23 @@ class NotificationsScreen extends ConsumerWidget {
       context.push('/app/communities');
     } else if (type == 'event_registration' ||
                type == 'event_reminder' ||
-               type == 'event_checkin_confirmation') {
+               type == 'event_checkin_confirmation' ||
+               type == 'event_approved' ||
+               type == 'event_rejected') {
       final eventId = data?['event_id'];
       if (eventId != null) {
         context.push('/events/$eventId');
       } else {
         context.push('/app/events');
       }
+    } else if (type == 'marketplace_report_resolved') {
+      context.push('/marketplace');
+    } else if (type == 'announcement_approved') {
+      context.push('/app/feed');
+    } else if (type == 'announcement_rejected') {
+      context.push('/profile');
+    } else if (type == 'admin_removed') {
+      context.push('/profile');
     } else if (type == 'opportunity_deadline_reminder' || type == 'scholarship_alert') {
       context.push('/opportunities');
     } else if (type == 'academic_resource_upload') {
