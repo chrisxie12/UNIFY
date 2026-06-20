@@ -120,7 +120,7 @@ class PushNotificationService {
       case 'admin_broadcast':
       case 'community_announcement':
       case 'announcement_posted':
-        return '/launch/announcements';
+        return '/app/feed';
       case 'event_registration':
       case 'event_reminder':
       case 'event_checkin_confirmation':

@@ -136,7 +136,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final type = notification.type;
 
     if (type == 'admin_broadcast' || type == 'community_announcement' || type == 'announcement_posted') {
-      context.push('/launch/announcements');
+      context.push('/app/feed');
     } else if (type == 'new_message' && data != null) {
       final convId = data['conversation_id'];
       if (convId != null) context.push('/messages/chat/$convId');
