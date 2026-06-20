@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../extensions/theme_extensions.dart';
+import '../guards/admin_guard.dart';
 import 'offline_banner.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart' as notif;
 import '../../features/messaging/presentation/providers/messaging_provider.dart' as msg;
@@ -26,6 +27,49 @@ class MainShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notifBadge = ref.watch(notif.unreadCountProvider).valueOrNull ?? 0;
     final msgBadge = ref.watch(msg.unreadCountProvider).valueOrNull ?? 0;
+
+    // Show branded snackbar when an unauthorized admin-route access was blocked.
+    ref.listen<bool>(adminAccessDeniedProvider, (_, denied) {
+      if (!denied) return;
+      ref.read(adminAccessDeniedProvider.notifier).state = false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.lock_outline_rounded,
+                  color: Colors.white, size: 18),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      'Access Denied',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      'Admin privileges required for that area.',
+                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: context.error,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          margin: const EdgeInsets.all(12),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    });
 
     return Scaffold(
       extendBody: true,

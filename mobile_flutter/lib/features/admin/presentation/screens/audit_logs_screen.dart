@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class AuditLogsScreen extends ConsumerWidget {
   const AuditLogsScreen({super.key});
@@ -14,40 +15,42 @@ class AuditLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(auditLogsProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Audit Logs'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: () => ref.invalidate(auditLogsProvider),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(auditLogsProvider),
-        child: logsAsync.when(
-          data: (logs) {
-            if (logs.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.history_rounded, size: 48, color: context.borderCol),
-                    SizedBox(height: 12),
-                    Text('No audit logs yet', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                  ],
-                ),
+    return AdminGuard(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Audit Logs'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded),
+              onPressed: () => ref.invalidate(auditLogsProvider),
+            ),
+          ],
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async => ref.invalidate(auditLogsProvider),
+          child: logsAsync.when(
+            data: (logs) {
+              if (logs.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.history_rounded, size: 48, color: context.borderCol),
+                      SizedBox(height: 12),
+                      Text('No audit logs yet', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                );
+              }
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: logs.length,
+                itemBuilder: (_, i) => _AuditLogCard(log: logs[i]),
               );
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: logs.length,
-              itemBuilder: (_, i) => _AuditLogCard(log: logs[i]),
-            );
-          },
-          loading: () => const AppLoadingWidget.list(),
-          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(auditLogsProvider)),
+            },
+            loading: () => const AppLoadingWidget.list(),
+            error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(auditLogsProvider)),
+          ),
         ),
       ),
     );

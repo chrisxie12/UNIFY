@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
+import '../guards/admin_guard.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../screens/welcome_screen.dart';
@@ -100,6 +101,19 @@ import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
 import '../../features/snapshots/presentation/screens/story_create_screen.dart';
 import '../../features/snapshots/data/models/snapshot_models.dart';
 
+// ── Admin path detection ──────────────────────────────────────────────────────
+//
+// Returns true for every route that must be restricted to admin users.
+
+bool _isAdminPath(String loc) =>
+    loc == '/admin' ||
+    loc.startsWith('/admin/') ||
+    loc == '/launch' ||
+    loc.startsWith('/launch/') ||
+    loc == '/events/admin';
+
+// ── GoRouter refresh stream ───────────────────────────────────────────────────
+
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Ref ref) {
@@ -132,7 +146,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggedIn = session != null;
       final loc = state.matchedLocation;
 
-      // Explicit checks — startsWith('/') would match every path
+      // ── Auth guard ──────────────────────────────────────────────────────
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
           loc == '/welcome' ||
@@ -147,6 +161,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         if (user != null && !user.onboardingComplete) return '/onboarding';
         return '/app/feed';
       }
+
+      // ── Admin route guard ───────────────────────────────────────────────
+      // Protect every /admin/* and /launch/* path. Non-admin users are
+      // sent to /app/feed and a snackbar is queued via the provider.
+      if (loggedIn && _isAdminPath(loc)) {
+        final userAsync = ref.read(currentAppUserProvider);
+        if (userAsync.isLoading) return null; // defer until profile loads
+        final user = userAsync.valueOrNull;
+        if (user == null || !user.isAdmin) {
+          ref.read(adminAccessDeniedProvider.notifier).state = true;
+          return '/app/feed';
+        }
+      }
+
       return null;
     },
     routes: [
