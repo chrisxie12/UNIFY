@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
@@ -40,4 +41,6 @@ abstract class MessagingRepository {
 
   Future<void> reportMessage(String messageId, String reportedBy, String reason);
   Future<void> muteNotifications(String conversationId, String userId, Duration duration);
+
+  Future<String?> uploadChatImage(File imageFile);
 }

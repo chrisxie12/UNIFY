@@ -26,6 +26,13 @@ class CommentSheet extends ConsumerStatefulWidget {
   ConsumerState<CommentSheet> createState() => _CommentSheetState();
 }
 
+const _kFrequentEmojis = [
+  '❤️', '😂', '😍', '🔥', '👍', '😭', '😊', '🙏',
+  '💯', '😁', '🎉', '👏', '😢', '😎', '🤣', '💪',
+  '🤔', '😅', '🥰', '✨', '👀', '😩', '💀', '🤩',
+  '😤', '🥹', '💔', '🫶', '🤝', '😬',
+];
+
 class _CommentSheetState extends ConsumerState<CommentSheet> {
   final _ctrl = TextEditingController();
   final _focus = FocusNode();
@@ -133,6 +140,33 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
                               .remove(comments[i].id),
                         ),
                       ),
+              ),
+            ),
+
+            // ── Emoji strip ──────────────────────────────────────────────
+            Divider(height: 1, color: context.borderCol),
+            SizedBox(
+              height: 44,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                itemCount: _kFrequentEmojis.length,
+                itemBuilder: (_, i) => GestureDetector(
+                  onTap: () {
+                    final emoji = _kFrequentEmojis[i];
+                    final text = _ctrl.text;
+                    final sel = _ctrl.selection;
+                    final pos = sel.isValid ? sel.baseOffset : text.length;
+                    _ctrl.value = TextEditingValue(
+                      text: text.substring(0, pos) + emoji + text.substring(pos),
+                      selection: TextSelection.collapsed(offset: pos + emoji.length),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(_kFrequentEmojis[i], style: const TextStyle(fontSize: 22)),
+                  ),
+                ),
               ),
             ),
 

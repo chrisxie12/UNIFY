@@ -90,6 +90,17 @@ class MessageModel {
       'reply_to': replyToId,
       'forwarded_from': forwardedFromId,
       'is_system_message': isSystemMessage,
+      if (attachments.isNotEmpty)
+        'attachments': attachments.map((a) => {
+          'id': a.id,
+          'type': a.type,
+          'url': a.url,
+          if (a.name != null) 'name': a.name,
+          if (a.size != null) 'size': a.size,
+          if (a.mimeType != null) 'mime_type': a.mimeType,
+          if (a.width != null) 'width': a.width,
+          if (a.height != null) 'height': a.height,
+        }).toList(),
     };
   }
 }

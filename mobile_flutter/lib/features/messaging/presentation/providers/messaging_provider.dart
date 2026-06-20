@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unify/core/providers/supabase_provider.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
@@ -88,6 +89,36 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
       isSending: false,
     );
     await _repo.sendMessage(msg);
+  }
+
+  Future<bool> sendImageMessage({
+    required String conversationId,
+    String? channelId,
+    required File imageFile,
+    String? caption,
+    String? replyToId,
+  }) async {
+    if (_userId == null) return false;
+    final url = await _repo.uploadChatImage(imageFile);
+    if (url == null) return false;
+
+    final attachment = MessageAttachment(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      type: 'image',
+      url: url,
+    );
+    final msg = MessageModel(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      conversationId: conversationId,
+      channelId: channelId,
+      senderId: _userId,
+      content: caption,
+      replyToId: replyToId,
+      createdAt: DateTime.now(),
+      attachments: [attachment],
+    );
+    await _repo.sendMessage(msg);
+    return true;
   }
 
   Future<void> toggleReaction(String messageId, String reaction) async {

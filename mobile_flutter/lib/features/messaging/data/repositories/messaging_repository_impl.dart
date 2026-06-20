@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
@@ -23,13 +25,20 @@ class MessagingRepositoryImpl implements MessagingRepository {
 
   @override
   Stream<List<MessageModel>> messages(String conversationId, {String? channelId}) {
+    final now = DateTime.now();
     return _client
         .from('messages')
         .stream(primaryKey: ['id'])
         .eq('conversation_id', conversationId)
         .order('created_at', ascending: true)
-        .map((maps) =>
-            maps.map((m) => MessageModel.fromMap(m)).toList());
+        .map((maps) => maps
+            .where((m) {
+              final exp = m['expires_at'];
+              if (exp == null) return true;
+              return DateTime.parse(exp as String).isAfter(now);
+            })
+            .map((m) => MessageModel.fromMap(m))
+            .toList());
   }
 
   @override
@@ -371,5 +380,20 @@ class MessagingRepositoryImpl implements MessagingRepository {
         .update({'muted_until': mutedUntil})
         .eq('conversation_id', conversationId)
         .eq('user_id', userId);
+  }
+
+  @override
+  Future<String?> uploadChatImage(File imageFile) async {
+    try {
+      final uid = _client.auth.currentUser?.id;
+      if (uid == null) return null;
+      final ext = imageFile.path.split('.').last.toLowerCase();
+      final path = 'chat/$uid/${DateTime.now().millisecondsSinceEpoch}.$ext';
+      await _client.storage.from('chat-images').upload(path, imageFile);
+      return _client.storage.from('chat-images').getPublicUrl(path);
+    } catch (e) {
+      debugPrint('[MessagingRepo] uploadChatImage error: $e');
+      return null;
+    }
   }
 }
