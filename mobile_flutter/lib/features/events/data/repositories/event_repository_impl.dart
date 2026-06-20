@@ -8,6 +8,29 @@ class EventRepositoryImpl implements EventRepository {
 
   EventRepositoryImpl(this._client);
 
+  Future<void> _logAction(String actorId, String action, String entityType, String? entityId) async {
+    try {
+      await _client.rpc('log_admin_action', params: {
+        'actor_id': actorId,
+        'action': action,
+        'entity_type': entityType,
+        'entity_id': entityId,
+        'university_id': null,
+        'details': {},
+      });
+    } catch (_) {
+      try {
+        await _client.from('audit_logs').insert({
+          'actor_id': actorId,
+          'action': action,
+          'entity_type': entityType,
+          'entity_id': entityId,
+          'details': {},
+        });
+      } catch (_) {}
+    }
+  }
+
   // ── Helpers ───────────────────────────────────────────────
 
   List<EventModel> _parseEvents(dynamic response) {
@@ -331,6 +354,7 @@ class EventRepositoryImpl implements EventRepository {
   Future<bool> deleteEvent(String eventId) async {
     try {
       await _client.from('community_events').delete().filter('id', 'eq', eventId);
+      await _logAction(_client.auth.currentUser?.id ?? '', 'delete_event', 'event', eventId);
       return true;
     } catch (e) {
       debugPrint('[EventRepositoryImpl] Error: $e');
@@ -342,6 +366,7 @@ class EventRepositoryImpl implements EventRepository {
   Future<bool> approveEvent(String eventId) async {
     try {
       await _client.from('community_events').update({'is_approved': true}).filter('id', 'eq', eventId);
+      await _logAction(_client.auth.currentUser?.id ?? '', 'approve_event', 'event', eventId);
       return true;
     } catch (e) {
       debugPrint('[EventRepositoryImpl] Error: $e');

@@ -9,6 +9,29 @@ class LeadershipRepositoryImpl {
 
   LeadershipRepositoryImpl(this._client);
 
+  Future<void> _logAction(String actorId, String action, String entityType, String? entityId, {Map<String, dynamic>? details}) async {
+    try {
+      await _client.rpc('log_admin_action', params: {
+        'actor_id': actorId,
+        'action': action,
+        'entity_type': entityType,
+        'entity_id': entityId,
+        'university_id': null,
+        'details': details ?? {},
+      });
+    } catch (_) {
+      try {
+        await _client.from('audit_logs').insert({
+          'actor_id': actorId,
+          'action': action,
+          'entity_type': entityType,
+          'entity_id': entityId,
+          'details': details ?? {},
+        });
+      } catch (_) {}
+    }
+  }
+
   // ── Badges ─────────────────────────────────────────────────
 
   Future<List<UserBadgeModel>> getUserBadges(String userId) async {
@@ -113,6 +136,8 @@ class LeadershipRepositoryImpl {
     };
     if (adminFeedback != null) updates['admin_feedback'] = adminFeedback;
     await _client.from('community_requests').update(updates).eq('id', requestId);
+    await _logAction(reviewedBy, '${status}_community_request', 'community', requestId,
+        details: {if (adminFeedback != null) 'feedback': adminFeedback});
   }
 
   /// Auto-creates a community from an approved request + assigns ownership.
@@ -143,6 +168,8 @@ class LeadershipRepositoryImpl {
     });
 
     await _client.from('communities').update({'member_count': 1}).eq('id', community['id']);
+    await _logAction(_client.auth.currentUser?.id ?? '', 'create_community', 'community', community['id'] as String,
+        details: {'name': requestData['community_name'] as String? ?? '', 'request_id': requestId});
   }
 
   // ── Community Managers ─────────────────────────────────────
@@ -236,6 +263,8 @@ class LeadershipRepositoryImpl {
         'community_id': req['community_id'],
       });
     }
+    await _logAction(reviewedBy, '${status}_announcement_request', 'announcement', requestId,
+        details: {if (adminNotes != null) 'notes': adminNotes});
   }
 
   // ── My Communities (as manager/owner) ──────────────────────

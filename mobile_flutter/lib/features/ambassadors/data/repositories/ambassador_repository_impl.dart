@@ -7,6 +7,29 @@ class AmbassadorRepository {
 
   AmbassadorRepository(this._client);
 
+  Future<void> _logAction(String actorId, String action, String entityType, String? entityId, {Map<String, dynamic>? details}) async {
+    try {
+      await _client.rpc('log_admin_action', params: {
+        'actor_id': actorId,
+        'action': action,
+        'entity_type': entityType,
+        'entity_id': entityId,
+        'university_id': null,
+        'details': details ?? {},
+      });
+    } catch (_) {
+      try {
+        await _client.from('audit_logs').insert({
+          'actor_id': actorId,
+          'action': action,
+          'entity_type': entityType,
+          'entity_id': entityId,
+          'details': details ?? {},
+        });
+      } catch (_) {}
+    }
+  }
+
   static const String _join =
       '*, profiles!ambassadors_user_id_fkey(full_name, avatar_url)';
 
@@ -77,11 +100,16 @@ class AmbassadorRepository {
         })
         .select(_join)
         .single();
-    return Ambassador.fromJson(result);
+    final ambassador = Ambassador.fromJson(result);
+    await _logAction(_client.auth.currentUser?.id ?? '', 'assign_ambassador', 'ambassador', ambassador.id,
+        details: {'user_id': userId});
+    return ambassador;
   }
 
   Future<void> setAmbassadorStatus(String id, String status) async {
     await _client.from('ambassadors').update({'status': status}).eq('id', id);
+    await _logAction(_client.auth.currentUser?.id ?? '', 'update_ambassador_status', 'ambassador', id,
+        details: {'status': status});
   }
 
   // ── Events ─────────────────────────────────────────────────
