@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
+import 'core/providers/supabase_provider.dart';
 import 'features/system/presentation/widgets/update_gate.dart';
 import 'features/notifications/presentation/providers/push_notification_provider.dart';
 import 'features/notifications/domain/services/push_notification_service.dart';
