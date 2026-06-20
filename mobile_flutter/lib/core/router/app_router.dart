@@ -96,6 +96,9 @@ import '../../features/ops/presentation/screens/launch_readiness_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_admin_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_detail_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_profile_screen.dart';
+import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
+import '../../features/snapshots/presentation/screens/story_create_screen.dart';
+import '../../features/snapshots/data/models/snapshot_models.dart';
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -184,6 +187,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/announcement-request', builder: (_, __) => const AnnouncementRequestScreen()),
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+      GoRoute(path: '/stories/create', builder: (_, __) => const StoryCreateScreen()),
+      GoRoute(
+        path: '/stories/view',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final groups = extra['groups'] as List<SnapshotGroup>? ?? [];
+          final index = extra['index'] as int? ?? 0;
+          return StoryViewerScreen(groups: groups, initialGroupIndex: index);
+        },
+      ),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
       GoRoute(path: '/notifications/preferences', builder: (_, __) => const NotificationPreferencesScreen()),
       GoRoute(

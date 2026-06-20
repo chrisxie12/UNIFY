@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../domain/entities/announcement.dart';
+import '../providers/announcement_social_provider.dart';
+import 'comment_sheet.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
-class AnnouncementCard extends StatelessWidget {
+class AnnouncementCard extends ConsumerWidget {
   const AnnouncementCard({super.key, required this.item, this.onTap});
 
   final Announcement item;
@@ -20,7 +24,10 @@ class AnnouncementCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final likeState = ref.watch(
+      announcementLikeProvider((id: item.id, initialCount: item.likesCount)),
+    );
     final hasImage = item.imageUrl != null;
 
     return Column(
@@ -100,10 +107,12 @@ class AnnouncementCard extends StatelessWidget {
           ),
         ),
 
-        // ── Image ────────────────────────────────────────────────────────────
+        // ── Image or text content ────────────────────────────────────────────
         if (hasImage)
           GestureDetector(
-            onDoubleTap: onTap,
+            onDoubleTap: () => ref
+                .read(announcementLikeProvider((id: item.id, initialCount: item.likesCount)).notifier)
+                .toggle(),
             child: AspectRatio(
               aspectRatio: 1,
               child: CachedNetworkImage(
@@ -115,7 +124,6 @@ class AnnouncementCard extends StatelessWidget {
             ),
           )
         else
-          // Text-only post body shown between header and actions
           Container(
             width: double.infinity,
             color: context.inputFill,
@@ -162,30 +170,75 @@ class AnnouncementCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(4, 2, 4, 0),
           child: Row(
             children: [
-              _ActionBtn(icon: Icons.favorite_border, onPressed: onTap),
+              // Like — animated heart
+              GestureDetector(
+                onTap: () {
+                  onTap?.call(); // mark as read
+                  ref
+                      .read(announcementLikeProvider((id: item.id, initialCount: item.likesCount)).notifier)
+                      .toggle();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      likeState.isLiked ? Icons.favorite : Icons.favorite_border,
+                      key: ValueKey(likeState.isLiked),
+                      color: likeState.isLiked ? const Color(0xFFE1306C) : context.textPrimary,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(width: 2),
-              _ActionBtn(icon: Icons.chat_bubble_outline_rounded, onPressed: () {}),
+              // Comment
+              GestureDetector(
+                onTap: () => CommentSheet.show(context, item.id),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(Icons.chat_bubble_outline_rounded, color: context.textPrimary, size: 24),
+                ),
+              ),
               const SizedBox(width: 2),
-              _ActionBtn(icon: Icons.send_outlined, onPressed: () {}),
+              // Share
+              GestureDetector(
+                onTap: () async {
+                  await Share.share(
+                    '${item.title}\n\n${item.body}',
+                    subject: item.title,
+                  );
+                  // Record share after native sheet is dismissed
+                  ref.read(announcementSocialRepoProvider).recordShare(item.id);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(Icons.send_outlined, color: context.textPrimary, size: 24),
+                ),
+              ),
               const Spacer(),
-              _ActionBtn(icon: Icons.bookmark_border_rounded, onPressed: () {}),
+              // Bookmark (local only for now)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(Icons.bookmark_border_rounded, color: context.textPrimary, size: 26),
+              ),
             ],
           ),
         ),
 
-        // ── View count ───────────────────────────────────────────────────────
-        if (item.viewCount > 0)
+        // ── Like count ───────────────────────────────────────────────────────
+        if (likeState.count > 0)
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
             child: Text(
-              '${item.viewCount} ${item.viewCount == 1 ? 'view' : 'views'}',
+              '${likeState.count} ${likeState.count == 1 ? 'like' : 'likes'}',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.textPrimary),
             ),
           ),
 
         const SizedBox(height: 4),
 
-        // ── Caption (image posts only — text posts already show body above) ──
+        // ── Caption (image posts only) ───────────────────────────────────────
         if (hasImage)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -207,6 +260,21 @@ class AnnouncementCard extends StatelessWidget {
                     style: TextStyle(fontSize: 13, color: context.textPrimary),
                   ),
                 ],
+              ),
+            ),
+          ),
+
+        const SizedBox(height: 4),
+
+        // ── Comment count link ────────────────────────────────────────────────
+        if (item.commentsCount > 0)
+          GestureDetector(
+            onTap: () => CommentSheet.show(context, item.id),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                'View all ${item.commentsCount} comments',
+                style: TextStyle(fontSize: 13, color: context.textSecondary),
               ),
             ),
           ),
@@ -269,22 +337,4 @@ class _Initial extends StatelessWidget {
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.textPrimary),
         ),
       );
-}
-
-class _ActionBtn extends StatelessWidget {
-  const _ActionBtn({required this.icon, this.onPressed});
-
-  final IconData icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(icon, color: context.textPrimary, size: 26),
-      onPressed: onPressed,
-      padding: const EdgeInsets.all(8),
-      constraints: const BoxConstraints(),
-      visualDensity: VisualDensity.compact,
-    );
-  }
 }

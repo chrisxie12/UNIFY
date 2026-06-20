@@ -11,6 +11,8 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
+import '../../../snapshots/data/models/snapshot_models.dart';
+import '../../../snapshots/presentation/providers/snapshot_provider.dart';
 import 'package:unify/core/design_system/components.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
@@ -57,11 +59,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final fullName = user?.userMetadata?['full_name'] as String? ?? '';
     final firstName = fullName.split(' ').first;
     final avatarUrl = user?.userMetadata?['avatar_url'] as String?;
+    final storyGroupsAsync = ref.watch(storyGroupsProvider);
 
     return Scaffold(
       backgroundColor: context.bg,
       body: RefreshIndicator(
-        onRefresh: () => ref.read(feedProvider.notifier).refresh(),
+        onRefresh: () async {
+          await ref.read(feedProvider.notifier).refresh();
+          await ref.read(storyGroupsProvider.notifier).refresh();
+        },
         color: context.primary,
         child: CustomScrollView(
           controller: _scrollCtrl,
@@ -77,8 +83,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               centerTitle: true,
               leading: IconButton(
                 icon: Icon(Icons.add_box_outlined, color: context.textPrimary, size: 24),
-                onPressed: () {},
-                tooltip: 'New Post',
+                onPressed: () => context.push('/stories/create'),
+                tooltip: 'New Story',
               ),
               title: Text(
                 'UNIFY',
@@ -110,7 +116,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
             // ── Stories row ───────────────────────────────────────────────────
             SliverToBoxAdapter(
-              child: _StoriesRow(avatarUrl: avatarUrl, firstName: firstName),
+              child: _StoriesRow(
+                avatarUrl: avatarUrl,
+                firstName: firstName,
+                groups: storyGroupsAsync.valueOrNull ?? [],
+              ),
             ),
 
             // ── Category tabs (pinned) ─────────────────────────────────────────
@@ -275,30 +285,82 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
 // ── Stories row ───────────────────────────────────────────────────────────────
 
-class _StoriesRow extends StatelessWidget {
-  const _StoriesRow({this.avatarUrl, required this.firstName});
+class _StoriesRow extends ConsumerWidget {
+  const _StoriesRow({
+    this.avatarUrl,
+    required this.firstName,
+    required this.groups,
+  });
 
   final String? avatarUrl;
   final String firstName;
+  final List<SnapshotGroup> groups;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Separate own group from others
+    final uid = Supabase.instance.client.auth.currentUser?.id;
+    final myGroup = groups.where((g) => g.authorId == uid).firstOrNull;
+    final otherGroups = groups.where((g) => g.authorId != uid).toList();
+
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
       child: SizedBox(
         height: 88,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            StoryCircle(
-              name: firstName.isNotEmpty ? firstName : 'You',
-              imageUrl: avatarUrl,
-              initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
-              isSelf: true,
-              size: 56,
-              onTap: () {},
+            // Your story
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: StoryCircle(
+                name: firstName.isNotEmpty ? firstName : 'You',
+                imageUrl: myGroup?.authorAvatar ?? avatarUrl,
+                initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
+                isSelf: true,
+                hasRing: myGroup != null, // ring if user has active story
+                size: 56,
+                onTap: () {
+                  if (myGroup != null) {
+                    // View own story
+                    final allGroups = [myGroup, ...otherGroups];
+                    context.push('/stories/view', extra: {
+                      'groups': allGroups,
+                      'index': 0,
+                    });
+                  } else {
+                    // Create new story
+                    context.push('/stories/create');
+                  }
+                },
+              ),
             ),
+            // Other users' stories
+            ...otherGroups.asMap().entries.map((entry) {
+              final i = entry.key;
+              final g = entry.value;
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: StoryCircle(
+                  name: g.authorName ?? 'User',
+                  imageUrl: g.authorAvatar,
+                  initials: g.initials,
+                  hasRing: g.hasUnseen,
+                  size: 56,
+                  onTap: () {
+                    final allGroups = myGroup != null
+                        ? [myGroup, ...otherGroups]
+                        : otherGroups;
+                    final viewIndex = myGroup != null ? i + 1 : i;
+                    context.push('/stories/view', extra: {
+                      'groups': allGroups,
+                      'index': viewIndex,
+                    });
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
