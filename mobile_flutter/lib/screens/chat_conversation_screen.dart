@@ -30,7 +30,7 @@ class ChatConversationScreen extends StatefulWidget {
   const ChatConversationScreen({
     super.key,
     required this.conversationId,
-    this.contactName = 'Yaa Debby',
+    this.contactName = '',
     this.isOnline = true,
     this.isVerified = true,
   });
