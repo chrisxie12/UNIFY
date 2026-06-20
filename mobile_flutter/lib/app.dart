@@ -26,8 +26,6 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // Set up push notification init AFTER the first frame so the router
-    // Navigator is fully mounted before any navigation can be triggered.
     WidgetsBinding.instance.addPostFrameCallback((_) => _startAuthListener());
   }
 
@@ -35,16 +33,15 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
     _authSub = ref.listenManual(authStateProvider, (_, next) {
       next.whenData((authState) {
         final userId = authState.session?.user.id;
-        final router = ref.read(appRouterProvider);
         final pushService = ref.read(pushNotificationServiceProvider);
         if (userId != null && userId != _lastUserId) {
           _lastUserId = userId;
           pushService.init(userId, onTap: (data) {
             final route = PushNotificationService.routeFromData(data);
             if (route != null) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                router.go(route);
-              });
+              // Set the pending route — build() listener navigates safely
+              // from within the widget tree, avoiding Navigator key conflicts.
+              ref.read(pendingPushRouteProvider.notifier).state = route;
             }
           });
         } else if (userId == null && _lastUserId != null) {
@@ -77,6 +74,17 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
     final router = ref.watch(appRouterProvider);
     final theme = ref.watch(themeNotifierProvider);
     final mode = ref.watch(themeModeProvider);
+
+    // Navigate when a push notification tap sets a pending route.
+    // Running from build() ensures we're always inside the widget tree.
+    ref.listen(pendingPushRouteProvider, (_, route) {
+      if (route != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          router.go(route);
+          ref.read(pendingPushRouteProvider.notifier).state = null;
+        });
+      }
+    });
 
     return MaterialApp.router(
       title: 'UNIFY',
