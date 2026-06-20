@@ -13,7 +13,7 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
 class PushNotificationService {
   final SupabaseClient _supabase;
   bool _initialized = false;
-  String? _currentUserId;
+  String? _currentToken;
 
   PushNotificationService(this._supabase);
 
@@ -23,7 +23,6 @@ class PushNotificationService {
     String userId, {
     void Function(Map<String, dynamic> data)? onTap,
   }) async {
-    _currentUserId = userId;
     try {
       await _configure(userId, onTap: onTap);
       _initialized = true;
@@ -59,21 +58,32 @@ class PushNotificationService {
     );
 
     final token = await messaging.getToken();
-    if (token != null) await _saveToken(userId, token);
+    if (token != null) {
+      _currentToken = token;
+      await _saveToken(userId, token);
+    }
 
-    messaging.onTokenRefresh.listen((newToken) => _saveToken(userId, newToken));
+    messaging.onTokenRefresh.listen((newToken) {
+      _currentToken = newToken;
+      _saveToken(userId, newToken);
+    });
 
     FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[PushNotificationService] Foreground: ${message.notification?.title}');
     });
 
-    // App was in background and user tapped the notification.
-    // onMessageOpenedApp only fires when the router is already mounted,
-    // so navigation is safe here. getInitialMessage (terminated state) is
-    // intentionally omitted — the router redirect handles cold-start landing.
+    // App in background — user tapped the notification.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       onTap?.call(message.data);
     });
+
+    // Cold-start: app was terminated and user tapped a notification.
+    // getInitialMessage() returns the RemoteMessage that launched the app.
+    final initial = await messaging.getInitialMessage();
+    if (initial != null && onTap != null) {
+      // Defer until after the first frame so the router is mounted.
+      Future.microtask(() => onTap(initial.data));
+    }
   }
 
   Future<void> _saveToken(String userId, String token) async {
@@ -91,18 +101,20 @@ class PushNotificationService {
   }
 
   Future<void> dispose() async {
-    if (_currentUserId != null) {
+    // Deactivate only the current device's token, not all tokens for the user.
+    // This way logging out of one device doesn't silence other devices.
+    if (_currentToken != null) {
       try {
         await _supabase
             .from('device_tokens')
             .update({'is_active': false})
-            .eq('user_id', _currentUserId!);
+            .eq('token', _currentToken!);
       } catch (e) {
         debugPrint('[PushNotificationService] dispose error: $e');
       }
     }
     _initialized = false;
-    _currentUserId = null;
+    _currentToken = null;
   }
 
   /// Converts FCM `data` payload into the matching in-app route.
@@ -141,9 +153,13 @@ class PushNotificationService {
       case 'verification_rejected':
         return '/profile';
       case 'role_assigned':
+      case 'leadership_approved':
         return '/reputation';
       case 'admin_request':
         return '/admin';
+      case 'leadership_request_submitted':
+      case 'leadership_rejected':
+        return '/profile';
       default:
         return null;
     }
