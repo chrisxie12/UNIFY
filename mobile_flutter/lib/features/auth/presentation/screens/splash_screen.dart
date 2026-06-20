@@ -4,9 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/unify_wordmark.dart';
 
-
-/// Static branded splash screen using theme colors.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,15 +13,36 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _fade;
+  late final Animation<double> _scale;
+
   @override
   void initState() {
     super.initState();
-    _navigate();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _scale = Tween<double>(begin: 0.88, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack),
+    );
+    Future.wait([
+      _ctrl.forward(),
+      Future.delayed(const Duration(milliseconds: 800)),
+    ]).then((_) => _navigate());
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     final session = Supabase.instance.client.auth.currentSession;
     if (session != null) {
@@ -38,55 +58,31 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final isDark = cs.brightness == Brightness.dark;
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+            begin: Alignment.topLeft,
             end: Alignment.bottomCenter,
-            colors: isDark
-                ? [cs.surface, cs.surfaceContainerLow, cs.surfaceContainer]
-                : [cs.primary, cs.primary, cs.primary.withValues(alpha: 0.85)],
-            stops: const [0.0, 0.5, 1.0],
+            colors: context.isDark
+                ? [cs.surface, cs.surfaceContainerLow]
+                : [context.primary, context.primaryDark],
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                width: 90,
-                height: 90,
+          child: FadeTransition(
+            opacity: _fade,
+            child: ScaleTransition(
+              scale: _scale,
+              child: const UnifyWordmark(
+                size: WordmarkSize.large,
+                style: WordmarkStyle.light,
+                vertical: true,
               ),
-              const SizedBox(height: 28),
-              Text(
-                'UNIFY',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.w900,
-                  color: isDark ? cs.onSurface : Colors.white,
-                  letterSpacing: 7,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Your Campus. Your People. Your Future.',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  color: (isDark ? cs.onSurfaceVariant : Colors.white).withValues(alpha: 0.62),
-                  letterSpacing: 0.2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-

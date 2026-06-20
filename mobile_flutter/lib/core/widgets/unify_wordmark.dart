@@ -20,6 +20,7 @@ enum WordmarkStyle { auto, light, primary }
 ///
 /// ```dart
 /// UnifyWordmark(size: WordmarkSize.large, style: WordmarkStyle.light)
+/// UnifyWordmark(size: WordmarkSize.large, style: WordmarkStyle.light, vertical: true)
 /// UnifyWordmark(size: WordmarkSize.small, style: WordmarkStyle.auto)
 /// UnifyWordmark(size: WordmarkSize.medium, showIcon: false)
 /// ```
@@ -30,12 +31,17 @@ class UnifyWordmark extends StatelessWidget {
     this.style = WordmarkStyle.auto,
     this.showIcon = true,
     this.showText = true,
+    this.vertical = false,
   });
 
   final WordmarkSize size;
   final WordmarkStyle style;
   final bool showIcon;
   final bool showText;
+
+  /// When true, stacks icon above text (Column) instead of side-by-side (Row).
+  /// Ideal for splash/hero screens.
+  final bool vertical;
 
   @override
   Widget build(BuildContext context) {
@@ -48,28 +54,44 @@ class UnifyWordmark extends StatelessWidget {
     final (double iconSz, double fontSize, double gap) = switch (size) {
       WordmarkSize.small  => (22.0, 15.0, 6.0),
       WordmarkSize.medium => (34.0, 22.0, 8.0),
-      WordmarkSize.large  => (52.0, 36.0, 12.0),
+      WordmarkSize.large  => (52.0, 36.0, 16.0),
     };
+
+    final mark = _LogoMark(size: iconSz, foreground: foreground, primary: context.primary);
+    final label = Text(
+      'UNIFY',
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.w800,
+        color: foreground,
+        letterSpacing: fontSize * 0.18,
+        height: 1.0,
+      ),
+    );
+
+    if (vertical) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (showIcon) ...[
+            mark,
+            if (showText) SizedBox(height: gap),
+          ],
+          if (showText) label,
+        ],
+      );
+    }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (showIcon) ...[
-          _LogoMark(size: iconSz, foreground: foreground, primary: context.primary),
+          mark,
           if (showText) SizedBox(width: gap),
         ],
-        if (showText)
-          Text(
-            'UNIFY',
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w800,
-              color: foreground,
-              letterSpacing: fontSize * 0.18,
-              height: 1.0,
-            ),
-          ),
+        if (showText) label,
       ],
     );
   }

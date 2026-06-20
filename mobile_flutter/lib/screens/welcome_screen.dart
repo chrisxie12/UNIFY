@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../core/extensions/theme_extensions.dart';
+import '../core/widgets/unify_wordmark.dart';
 
 // ── Welcome Screen ────────────────────────────────────────────────────────────
 
@@ -58,25 +59,12 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          width: 120,
-                          height: 120,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.hub_rounded,
-                            size: 80,
-                            color: context.onPrimary.withValues(alpha: 0.90),
-                          ),
+                        const UnifyWordmark(
+                          size: WordmarkSize.large,
+                          style: WordmarkStyle.light,
+                          vertical: true,
                         ),
-                        const SizedBox(height: 24),
-                        _sg(
-                          'UNIFY',
-                          size: 40,
-                          weight: FontWeight.w700,
-                          color: context.onPrimary,
-                          letterSpacing: 8,
-                        ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 20),
                         _sg(
                           'Your campus, connected.',
                           size: 16,
