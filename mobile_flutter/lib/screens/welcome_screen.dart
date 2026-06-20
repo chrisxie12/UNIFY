@@ -2,23 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-
-const _accentPurple  = Color(0xFF6B5B95);
-const _purpleLight   = Color(0xFF8B7CB3);
-const _surfaceGrey   = Color(0xFFF8FAFC);
-const _textDark      = Color(0xFF0F172A);
-const _textBody      = Color(0xFF475569);
-const _textMuted     = Color(0xFF94A3B8);
-
-TextStyle _sg(double size, FontWeight w, Color c, {double? ls, double? h}) =>
-    GoogleFonts.spaceGrotesk(
-      fontSize: size,
-      fontWeight: w,
-      color: c,
-      letterSpacing: ls,
-      height: h,
-    );
+import '../core/extensions/theme_extensions.dart';
 
 // ── Welcome Screen ────────────────────────────────────────────────────────────
 
@@ -33,15 +17,15 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // ── Purple gradient background (full screen) ──────────────────
+          // ── Branded gradient background (full screen) ─────────────────
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomCenter,
-                colors: [_accentPurple, _purpleLight],
+                colors: [context.primary, context.primaryDark],
               ),
             ),
           ),
@@ -78,30 +62,39 @@ class WelcomeScreen extends StatelessWidget {
                           'assets/images/logo.png',
                           width: 120,
                           height: 120,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.hub_rounded,
+                            size: 80,
+                            color: context.onPrimary.withValues(alpha: 0.90),
+                          ),
                         ),
                         const SizedBox(height: 24),
-                        Text(
+                        _sg(
                           'UNIFY',
-                          style: _sg(40, FontWeight.w700, Colors.white, ls: 8),
+                          size: 40,
+                          weight: FontWeight.w700,
+                          color: context.onPrimary,
+                          letterSpacing: 8,
                         ),
                         const SizedBox(height: 12),
-                        Text(
+                        _sg(
                           'Your campus, connected.',
-                          style: _sg(16, FontWeight.w400,
-                              Colors.white.withValues(alpha: 0.80)),
+                          size: 16,
+                          weight: FontWeight.w400,
+                          color: context.onPrimary.withValues(alpha: 0.80),
                         ),
                       ],
                     ),
                   ),
                 ),
 
-                // Bottom half: white card
+                // Bottom half: surface card
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: context.surfaceCard,
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(32),
                         topRight: Radius.circular(32),
                       ),
@@ -111,23 +104,26 @@ class WelcomeScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Welcome to',
-                              style: _sg(32, FontWeight.w700, _textDark)),
-                          Text('UNIFY',
-                              style: _sg(32, FontWeight.w700, _textDark)),
+                          _sg('Welcome to',
+                              size: 32, weight: FontWeight.w700, color: context.textPrimary),
+                          _sg('UNIFY',
+                              size: 32, weight: FontWeight.w700, color: context.textPrimary),
                           const SizedBox(height: 16),
-                          Text(
+                          _sg(
                             'Stay updated with announcements, connect with peers, '
                             'and never miss what matters on campus.',
-                            style: _sg(15, FontWeight.w400, _textBody, h: 1.55),
+                            size: 15,
+                            weight: FontWeight.w400,
+                            color: context.textSecondary,
+                            height: 1.55,
                           ),
                           const SizedBox(height: 32),
 
                           // Get Started button
                           _CTA(
                             label: 'Get Started',
-                            bg: _accentPurple,
-                            fg: Colors.white,
+                            bg: context.primary,
+                            fg: context.onPrimary,
                             onTap: () => context.push('/auth?mode=signup'),
                           ),
                           const SizedBox(height: 12),
@@ -135,8 +131,8 @@ class WelcomeScreen extends StatelessWidget {
                           // Sign-in button
                           _CTA(
                             label: 'I already have an account',
-                            bg: _surfaceGrey,
-                            fg: _textDark,
+                            bg: context.surfaceFill,
+                            fg: context.textPrimary,
                             onTap: () => context.push('/auth?mode=login'),
                           ),
                           const SizedBox(height: 20),
@@ -145,9 +141,11 @@ class WelcomeScreen extends StatelessWidget {
                           Center(
                             child: GestureDetector(
                               onTap: () {},
-                              child: Text(
+                              child: _sg(
                                 'By continuing you agree to our Terms & Privacy Policy',
-                                style: _sg(12, FontWeight.w400, _textMuted),
+                                size: 12,
+                                weight: FontWeight.w400,
+                                color: context.textDisabled,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -167,7 +165,28 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-// ── Two-person UNIFY logo ─────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+Widget _sg(
+  String text, {
+  required double size,
+  required FontWeight weight,
+  required Color color,
+  double? letterSpacing,
+  double? height,
+  TextAlign? textAlign,
+}) =>
+    Text(
+      text,
+      textAlign: textAlign,
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        letterSpacing: letterSpacing,
+        height: height,
+      ),
+    );
 
 // ── Decorative faint circle ───────────────────────────────────────────────────
 
@@ -182,7 +201,7 @@ class _DecorativeCircle extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.onPrimary.withValues(alpha: 0.08),
       ),
     );
   }
@@ -215,7 +234,14 @@ class _CTA extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
-          child: Text(label, style: _sg(16, FontWeight.w600, fg)),
+          child: Text(
+            label,
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: fg,
+            ),
+          ),
         ),
       ),
     );
