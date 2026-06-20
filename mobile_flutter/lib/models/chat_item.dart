@@ -75,8 +75,3 @@ const List<int> kAvatarColors = [
   0xFF8B5CF6,
 ];
 
-final List<ChatItem> mockChats = [];
-
-const List<StoryItem> mockStories = [
-  StoryItem(id: 's0', name: 'Your Story', initials: 'ME', colorIndex: 0, isSelf: true),
-];

@@ -36,5 +36,3 @@ class ChatDateDivider extends ChatEntry {
   final String label;
   const ChatDateDivider(this.label);
 }
-
-final List<ChatEntry> mockChatEntries = [];
