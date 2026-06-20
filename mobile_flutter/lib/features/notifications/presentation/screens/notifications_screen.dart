@@ -6,65 +6,13 @@ import '../../data/models/notification_model.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
-class NotificationsScreen extends ConsumerStatefulWidget {
+class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
-}
-
-class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
-  final _scrollCtrl = ScrollController();
-  final List<NotificationModel> _items = [];
-  String? _cursor;
-  bool _loadingMore = false;
-  bool _hasMore = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollCtrl.addListener(_onScroll);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadMore());
-  }
-
-  @override
-  void dispose() {
-    _scrollCtrl.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent - 200 && _hasMore && !_loadingMore) {
-      _loadMore();
-    }
-  }
-
-  Future<void> _loadMore() async {
-    setState(() => _loadingMore = true);
-    final repo = ref.read(notificationRepositoryProvider);
-    final userId = ref.read(currentAppUserProvider).valueOrNull?.id ?? '';
-    final next = await repo.getNotifications(userId, cursor: _cursor);
-    if (!mounted) return;
-    setState(() {
-      if (next.length < 20) _hasMore = false;
-      if (next.isNotEmpty) _cursor = next.last.createdAt.toIso8601String();
-      _items.addAll(next);
-      _loadingMore = false;
-    });
-  }
-
-  Future<void> _refresh() async {
-    setState(() {
-      _items.clear();
-      _cursor = null;
-      _hasMore = true;
-    });
-    await _loadMore();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(currentAppUserProvider).valueOrNull?.id ?? '';
+    final notificationsAsync = ref.watch(notificationsProvider);
     final unreadAsync = ref.watch(unreadCountOnceProvider);
 
     return Scaffold(
@@ -79,55 +27,63 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 await repo.markAllAsRead(userId);
                 ref.invalidate(unreadCountProvider);
                 ref.invalidate(unreadCountOnceProvider);
-                setState(() {
-                  _items.clear();
-                  _cursor = null;
-                  _hasMore = true;
-                });
-                await _loadMore();
+                ref.invalidate(notificationsProvider);
               },
               child: Text('Mark all read ($count)'),
             );
           }) ?? const SizedBox.shrink(),
         ],
       ),
-      body: _items.isEmpty && !_loadingMore
-          ? _emptyState()
-          : RefreshIndicator(
-              onRefresh: _refresh,
-              child: ListView.separated(
-                controller: _scrollCtrl,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: _items.length + (_loadingMore ? 1 : 0),
-                separatorBuilder: (_, __) => Divider(height: 1, indent: 72, color: context.surfaceDivider),
-                itemBuilder: (context, index) {
-                  if (index >= _items.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
-                    );
-
-                  }
-                  final notification = _items[index];
-                  return _NotificationTile(
-                    notification: notification,
-                    onTap: () async {
-                      if (!notification.isRead) {
-                        final repo = ref.read(notificationRepositoryProvider);
-                        await repo.markAsRead(notification.id);
-                        ref.invalidate(unreadCountProvider);
-                        ref.invalidate(unreadCountOnceProvider);
-                        setState(() {
-                          final idx = _items.indexWhere((n) => n.id == notification.id);
-                          if (idx >= 0) _items[idx] = notification.copyWith(isRead: true);
-                        });
-                      }
-                      _handleNavigation(context, notification);
-                    },
-                  );
-                },
+      body: notificationsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline, size: 48, color: context.textDisabled),
+              const SizedBox(height: 12),
+              Text('Failed to load notifications', style: TextStyle(color: context.textSecondary)),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => ref.invalidate(notificationsProvider),
+                child: const Text('Retry'),
               ),
+            ],
+          ),
+        ),
+        data: (notifications) {
+          if (notifications.isEmpty) {
+            return _emptyState(context);
+          }
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(notificationsProvider);
+            },
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: notifications.length,
+              separatorBuilder: (_, __) => Divider(height: 1, indent: 72, color: context.surfaceDivider),
+              itemBuilder: (context, index) {
+                final notification = notifications[index];
+                return _NotificationTile(
+                  notification: notification,
+                  onTap: () async {
+                    if (!notification.isRead) {
+                      final repo = ref.read(notificationRepositoryProvider);
+                      await repo.markAsRead(notification.id);
+                      ref.invalidate(unreadCountProvider);
+                      ref.invalidate(unreadCountOnceProvider);
+                    }
+                    if (context.mounted) {
+                      _handleNavigation(context, notification);
+                    }
+                  },
+                );
+              },
             ),
+          );
+        },
+      ),
     );
   }
 
@@ -173,12 +129,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       context.push('/marketplace');
     } else if (type == 'admin_request') {
       context.push('/admin');
+    } else if (type == 'leadership_request_submitted' ||
+               type == 'leadership_rejected') {
+      context.push('/profile');
+    } else if (type == 'leadership_approved') {
+      context.push('/reputation');
     } else {
       context.push('/profile');
     }
   }
 
-  Widget _emptyState() {
+  Widget _emptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -220,21 +181,38 @@ class _NotificationTile extends StatelessWidget {
       case 'academic_resource_upload':      return Icons.upload_file;
       case 'verification_approved':         return Icons.verified;
       case 'verification_rejected':         return Icons.gpp_bad_rounded;
-      case 'role_assigned':                 return Icons.badge;
+      case 'role_assigned':                 return Icons.military_tech_rounded;
       case 'admin_broadcast':               return Icons.campaign;
       case 'admin_request':                 return Icons.admin_panel_settings_rounded;
+      case 'leadership_request_submitted':  return Icons.star_outline_rounded;
+      case 'leadership_approved':           return Icons.star_rounded;
+      case 'leadership_rejected':           return Icons.star_border_rounded;
       default:                              return Icons.notifications;
+    }
+  }
+
+  Color? _iconColor(BuildContext context) {
+    switch (notification.type) {
+      case 'leadership_request_submitted':
+      case 'leadership_approved':
+      case 'role_assigned':
+        return Colors.amber;
+      case 'leadership_rejected':
+        return Colors.grey;
+      default:
+        return null; // falls back to primary
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final primary = context.primary;
+    final iconColor = _iconColor(context) ?? primary;
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: primary.withValues(alpha: 0.10),
-        child: Icon(_icon(), color: primary, size: 22),
+        backgroundColor: iconColor.withValues(alpha: 0.10),
+        child: Icon(_icon(), color: iconColor, size: 22),
       ),
       title: Text(
         notification.title,

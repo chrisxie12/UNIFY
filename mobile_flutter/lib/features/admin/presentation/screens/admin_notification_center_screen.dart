@@ -22,7 +22,7 @@ final _adminNotificationsProvider = FutureProvider.autoDispose<List<Notification
 
   return data
       .map((json) => NotificationModel.fromJson(json))
-      .where((n) => n.type == 'admin_new_request' || n.type == 'community_approved' || n.type == 'community_rejected' || n.type == 'community_changes_requested' || n.type == 'verification_approved' || n.type == 'verification_rejected')
+      .where((n) => n.type == 'admin_request' || n.type == 'community_approved' || n.type == 'community_rejected' || n.type == 'community_changes_requested' || n.type == 'verification_approved' || n.type == 'verification_rejected')
       .toList();
 });
 
@@ -40,7 +40,7 @@ final _adminUnreadNotificationsProvider = FutureProvider.autoDispose<int>((ref) 
 
   return data
       .where((n) => n['is_read'] == false)
-      .where((n) => ['admin_new_request', 'community_approved', 'community_rejected', 'community_changes_requested', 'verification_approved', 'verification_rejected'].contains(n['type']))
+      .where((n) => ['admin_request', 'community_approved', 'community_rejected', 'community_changes_requested', 'verification_approved', 'verification_rejected'].contains(n['type']))
       .length;
 });
 
@@ -107,7 +107,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                       ref.invalidate(_adminNotificationsProvider);
                       ref.invalidate(_adminUnreadNotificationsProvider);
                     }
-                    if (n.type == 'admin_new_request') {
+                    if (n.type == 'admin_request') {
                       context.push('/admin');
                     }
                   },
@@ -158,7 +158,7 @@ class _AdminNotificationTile extends StatelessWidget {
   }
 
   IconData _icon(String type) => switch (type) {
-    'admin_new_request' => Icons.group_add_rounded,
+    'admin_request' => Icons.group_add_rounded,
     'community_approved' => Icons.check_circle_rounded,
     'community_rejected' => Icons.cancel_rounded,
     'community_changes_requested' => Icons.feedback_rounded,
@@ -168,7 +168,7 @@ class _AdminNotificationTile extends StatelessWidget {
   };
 
   Color _iconColor(String type) => switch (type) {
-    'admin_new_request' => const Color(0xFF8B5CF6),
+    'admin_request' => const Color(0xFF8B5CF6),
     'community_approved' || 'verification_approved' => AppColors.success,
     'community_rejected' || 'verification_rejected' => AppColors.error,
     'community_changes_requested' => AppColors.warning,

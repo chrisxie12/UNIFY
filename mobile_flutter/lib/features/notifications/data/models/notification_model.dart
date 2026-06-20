@@ -70,6 +70,9 @@ class NotificationModel {
     'admin_broadcast': 'Announcement',
     'admin_request': 'New Admin Request',
     'announcement_posted': 'New Post',
+    'leadership_request_submitted': 'Leadership Request Submitted',
+    'leadership_approved': 'Leadership Role Approved',
+    'leadership_rejected': 'Leadership Request Not Approved',
   };
 
   static const Map<String, String> typeIcons = {
@@ -90,10 +93,13 @@ class NotificationModel {
     'academic_resource_upload': 'upload_file',
     'verification_approved': 'verified',
     'verification_rejected': 'gpp_bad',
-    'role_assigned': 'badge',
+    'role_assigned': 'military_tech',
     'admin_broadcast': 'campaign',
     'admin_request': 'admin_panel_settings',
     'announcement_posted': 'article',
+    'leadership_request_submitted': 'star_outline',
+    'leadership_approved': 'star',
+    'leadership_rejected': 'star_border',
   };
 }
 

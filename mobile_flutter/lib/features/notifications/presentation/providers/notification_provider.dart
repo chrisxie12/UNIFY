@@ -14,14 +14,13 @@ final _userIdProvider = Provider<String?>((ref) {
   return ref.watch(currentAppUserProvider).valueOrNull?.id;
 });
 
-/// Paginated notifications list. Pass [cursor] from the last item's
-/// `created_at` to load older pages.
-final notificationsProvider =
-    FutureProvider.autoDispose.family<List<NotificationModel>, String?>((ref, cursor) async {
+/// Realtime notifications list (latest 50). Automatically updates when new
+/// notifications arrive via Supabase Realtime without manual refresh.
+final notificationsProvider = StreamProvider.autoDispose<List<NotificationModel>>((ref) {
   final repo = ref.watch(notificationRepositoryProvider);
   final userId = ref.watch(_userIdProvider);
-  if (userId == null) return [];
-  return repo.getNotifications(userId, cursor: cursor);
+  if (userId == null) return Stream.value([]);
+  return repo.notificationsStream(userId);
 });
 
 /// Live unread count via Realtime subscription.
