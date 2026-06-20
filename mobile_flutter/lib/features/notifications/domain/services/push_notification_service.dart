@@ -67,18 +67,13 @@ class PushNotificationService {
       debugPrint('[PushNotificationService] Foreground: ${message.notification?.title}');
     });
 
-    // App was in background and user tapped the notification
+    // App was in background and user tapped the notification.
+    // onMessageOpenedApp only fires when the router is already mounted,
+    // so navigation is safe here. getInitialMessage (terminated state) is
+    // intentionally omitted — the router redirect handles cold-start landing.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       onTap?.call(message.data);
     });
-
-    // App was fully terminated; user tapped the notification to launch it
-    final initial = await messaging.getInitialMessage();
-    if (initial != null) {
-      Future.delayed(const Duration(milliseconds: 600), () {
-        onTap?.call(initial.data);
-      });
-    }
   }
 
   Future<void> _saveToken(String userId, String token) async {
