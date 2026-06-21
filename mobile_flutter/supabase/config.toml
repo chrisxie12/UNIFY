@@ -1,0 +1,72 @@
+# Supabase project configuration
+# Reference: https://supabase.com/docs/guides/local-development/cli/config
+
+[project]
+project_id = "unify-b92fd"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[auth.sms]
+enable_signup = false
+enable_confirmations = false
+
+# ── Edge Functions ───────────────────────────────────────────────────────────
+
+[functions.send_push_notification]
+verify_jwt = false
+
+# ── Scheduled Functions (Supabase Cron — requires Dashboard or CLI >= 1.170) ──
+# To enable the scheduled invocation of the push queue processor, run:
+#
+#   supabase functions schedule send_push_notification \
+#     --cron "* * * * *" \
+#     --project-ref unify-b92fd
+#
+# Or configure via Dashboard: Database → Cron Jobs → New cron job
+#   - Name: process-push-queue
+#   - Schedule: * * * * *  (every minute)
+#   - Command: SELECT net.http_post(
+#       url := 'https://unify-b92fd.supabase.co/functions/v1/send_push_notification',
+#       headers := '{"Authorization":"Bearer <SERVICE_ROLE_KEY>","Content-Type":"application/json"}'::jsonb,
+#       body := '{}'::bytea
+#     );
+
+[functions.daily_analytics]
+verify_jwt = false

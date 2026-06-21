@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
 class _AnalyticsData {
@@ -164,7 +165,7 @@ class FounderAnalyticsScreen extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(_analyticsProvider),
         child: analyticsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const AppLoadingWidget.card(),
           error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_analyticsProvider)),
           data: (data) => ListView(
             padding: const EdgeInsets.all(16),

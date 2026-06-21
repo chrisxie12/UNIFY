@@ -4,6 +4,9 @@ abstract class NotificationRepository {
   /// Fetch notifications with cursor-based pagination.
   Future<List<NotificationModel>> getNotifications(String userId, {int limit, String? cursor});
 
+  /// Realtime stream of notifications (latest 50).
+  Stream<List<NotificationModel>> notificationsStream(String userId);
+
   /// Live unread count via Realtime stream.
   Stream<int> unreadCountStream(String userId);
 

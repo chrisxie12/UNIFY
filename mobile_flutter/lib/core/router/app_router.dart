@@ -5,18 +5,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
+import '../guards/admin_guard.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../screens/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
+import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
-import '../../screens/chat_list_screen.dart';
+import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
 import '../../features/messaging/presentation/screens/student_directory_screen.dart';
-import '../../screens/chat_conversation_screen.dart';
+import '../../features/messaging/presentation/screens/chat_screen.dart';
 import '../../features/messaging/presentation/screens/create_group_screen.dart';
 import '../../features/messaging/presentation/screens/channel_view_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
@@ -93,6 +95,22 @@ import '../../features/ops/presentation/screens/launch_readiness_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_admin_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_detail_screen.dart';
 import '../../features/ambassadors/presentation/screens/ambassador_profile_screen.dart';
+import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
+import '../../features/snapshots/presentation/screens/story_create_screen.dart';
+import '../../features/snapshots/data/models/snapshot_models.dart';
+
+// ── Admin path detection ──────────────────────────────────────────────────────
+//
+// Returns true for every route that must be restricted to admin users.
+
+bool _isAdminPath(String loc) =>
+    loc == '/admin' ||
+    loc.startsWith('/admin/') ||
+    loc == '/launch' ||
+    loc.startsWith('/launch/') ||
+    loc == '/events/admin';
+
+// ── GoRouter refresh stream ───────────────────────────────────────────────────
 
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -126,7 +144,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggedIn = session != null;
       final loc = state.matchedLocation;
 
-      // Explicit checks — startsWith('/') would match every path
+      // ── Auth guard ──────────────────────────────────────────────────────
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
           loc == '/welcome' ||
@@ -141,6 +159,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         if (user != null && !user.onboardingComplete) return '/onboarding';
         return '/app/feed';
       }
+
+      // ── Admin route guard ───────────────────────────────────────────────
+      // Protect every /admin/* and /launch/* path. Non-admin users are
+      // sent to /app/feed and a snackbar is queued via the provider.
+      if (loggedIn && _isAdminPath(loc)) {
+        final userAsync = ref.read(currentAppUserProvider);
+        if (userAsync.isLoading) return null; // defer until profile loads
+        final user = userAsync.valueOrNull;
+        if (user == null || !user.isAdmin) {
+          ref.read(adminAccessDeniedProvider.notifier).state = true;
+          return '/app/feed';
+        }
+      }
+
       return null;
     },
     routes: [
@@ -181,6 +213,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/announcement-request', builder: (_, __) => const AnnouncementRequestScreen()),
       GoRoute(path: '/dashboard', builder: (_, __) => const ClassRepDashboardScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+      GoRoute(path: '/stories/create', builder: (_, __) => const StoryCreateScreen()),
+      GoRoute(
+        path: '/stories/view',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final groups = extra['groups'] as List<SnapshotGroup>? ?? [];
+          final index = extra['index'] as int? ?? 0;
+          return StoryViewerScreen(groups: groups, initialGroupIndex: index);
+        },
+      ),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
       GoRoute(path: '/notifications/preferences', builder: (_, __) => const NotificationPreferencesScreen()),
       GoRoute(
@@ -244,28 +286,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/messaging/search', builder: (_, __) => const StudentDirectoryScreen()),
       GoRoute(
         path: '/messaging/chat/:id',
-        builder: (_, state) {
-          final conversationId = state.pathParameters['id']!;
-          final extra = state.extra as Map<String, dynamic>?;
-          return ChatConversationScreen(
-            conversationId: conversationId,
-            contactName: extra?['name'] as String? ?? 'Chat',
-            isOnline: extra?['isOnline'] as bool? ?? false,
-            isVerified: extra?['isVerified'] as bool? ?? false,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/messaging/chat/new',
-        builder: (_, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          return ChatConversationScreen(
-            conversationId: extra?['conversationId'] as String? ?? '',
-            contactName: extra?['name'] as String? ?? 'New Chat',
-            isOnline: extra?['isOnline'] as bool? ?? false,
-            isVerified: extra?['isVerified'] as bool? ?? false,
-          );
-        },
+        builder: (_, state) => ChatScreen(
+          conversationId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(path: '/messaging/create-group', builder: (_, __) => const CreateGroupScreen()),
       GoRoute(
@@ -347,7 +370,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/messaging', builder: (_, __) => const ChatListScreen()),
+            GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),

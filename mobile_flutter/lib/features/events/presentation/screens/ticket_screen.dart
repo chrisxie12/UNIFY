@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
 class TicketScreen extends ConsumerWidget {
   final String ticketId;
@@ -17,7 +18,7 @@ class TicketScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Ticket')),
       body: ticketsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (e, _) => AppErrorWidget(e),
         data: (tickets) {
           final ticket = tickets.where((t) => t.id == ticketId).firstOrNull;

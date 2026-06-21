@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,8 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
+import '../../../snapshots/data/models/snapshot_models.dart';
+import '../../../snapshots/presentation/providers/snapshot_provider.dart';
 import 'package:unify/core/design_system/components.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
@@ -45,13 +46,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     }
   }
 
-  String get _greeting {
-    final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
-  }
-
   List<Announcement> _filtered(List<Announcement> all) {
     if (_tabIndex == 0) return all;
     final cat = _tabs[_tabIndex].toLowerCase();
@@ -61,15 +55,19 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final feedAsync = ref.watch(feedProvider);
-    final user     = Supabase.instance.client.auth.currentUser;
-    final fullName  = user?.userMetadata?['full_name'] as String? ?? '';
+    final user = Supabase.instance.client.auth.currentUser;
+    final fullName = user?.userMetadata?['full_name'] as String? ?? '';
     final firstName = fullName.split(' ').first;
     final avatarUrl = user?.userMetadata?['avatar_url'] as String?;
+    final storyGroupsAsync = ref.watch(storyGroupsProvider);
 
     return Scaffold(
       backgroundColor: context.bg,
       body: RefreshIndicator(
-        onRefresh: () => ref.read(feedProvider.notifier).refresh(),
+        onRefresh: () async {
+          await ref.read(feedProvider.notifier).refresh();
+          await ref.read(storyGroupsProvider.notifier).refresh();
+        },
         color: context.primary,
         child: CustomScrollView(
           controller: _scrollCtrl,
@@ -81,40 +79,30 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0,
-              toolbarHeight: 56,
-              title: Row(
-                children: [
-                  Text(
-                    'UNIFY',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: context.primary,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: context.primary.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      firstName.isNotEmpty ? '$_greeting, $firstName' : _greeting,
-                      style: TextStyle(fontSize: 11, color: context.primary, fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+              toolbarHeight: 52,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.add_box_outlined, color: context.textPrimary, size: 24),
+                onPressed: () => context.push('/stories/create'),
+                tooltip: 'New Story',
+              ),
+              title: Text(
+                'UNIFY',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  color: context.textPrimary,
+                  letterSpacing: -0.5,
+                ),
               ),
               actions: [
-                IconButton(
-                  icon: Icon(Icons.search_rounded, color: context.textPrimary, size: 22),
-                  onPressed: () => context.push('/search'),
-                  tooltip: 'Search',
-                ),
                 _NotifBadgeIcon(),
+                IconButton(
+                  icon: Icon(Icons.send_outlined, color: context.textPrimary, size: 22),
+                  onPressed: () => context.go('/app/messaging'),
+                  tooltip: 'Messages',
+                ),
                 const SizedBox(width: 4),
               ],
               bottom: PreferredSize(
@@ -128,12 +116,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
             // ── Stories row ───────────────────────────────────────────────────
             SliverToBoxAdapter(
-              child: _StoriesRow(avatarUrl: avatarUrl, firstName: firstName),
-            ),
-
-            // ── Post composer ─────────────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: _ComposerBar(avatarUrl: avatarUrl, firstName: firstName),
+              child: _StoriesRow(
+                avatarUrl: avatarUrl,
+                firstName: firstName,
+                groups: storyGroupsAsync.valueOrNull ?? [],
+              ),
             ),
 
             // ── Category tabs (pinned) ─────────────────────────────────────────
@@ -230,18 +217,32 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     ),
                   );
                 }
+
+                // Build flat list with section labels interspersed
+                final rows = <Widget>[];
+                bool addedLatestLabel = false;
+                for (int i = 0; i < items.length; i++) {
+                  final post = items[i];
+                  if (_tabIndex == 0 && i == 0 && post.isPinned) {
+                    rows.add(const PinnedSectionLabel('PINNED'));
+                  }
+                  if (_tabIndex == 0 && !post.isPinned && !addedLatestLabel) {
+                    rows.add(const PinnedSectionLabel('LATEST'));
+                    addedLatestLabel = true;
+                  }
+                  rows.add(AnnouncementCard(
+                    item: post,
+                    onTap: () => ref.read(feedProvider.notifier).markRead(post.id),
+                  ));
+                }
+
                 return SliverMainAxisGroup(
                   slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.only(top: 8),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (_, i) => AnnouncementCard(
-                            item: items[i],
-                            onTap: () => ref.read(feedProvider.notifier).markRead(items[i].id),
-                          ),
-                          childCount: items.length,
-                        ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, i) => rows[i],
+                        childCount: rows.length,
                       ),
                     ),
                     if (feedState.isLoadingMore)
@@ -267,15 +268,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                                 width: 56,
                                 height: 56,
                                 decoration: BoxDecoration(
-                                  color: context.inputFill,
+                                  color: context.primary.withValues(alpha: 0.08),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.check_circle_outline_rounded, size: 28, color: context.textSecondary),
+                                child: Icon(Icons.check_circle_outline_rounded, size: 28, color: context.primary),
                               ),
                               const SizedBox(height: 12),
                               Text(
                                 "You're all caught up",
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textSecondary),
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.textPrimary),
                               ),
                               const SizedBox(height: 4),
                               Text(
@@ -301,129 +302,85 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
 // ── Stories row ───────────────────────────────────────────────────────────────
 
-class _StoriesRow extends StatelessWidget {
-  const _StoriesRow({this.avatarUrl, required this.firstName});
+class _StoriesRow extends ConsumerWidget {
+  const _StoriesRow({
+    this.avatarUrl,
+    required this.firstName,
+    required this.groups,
+  });
 
   final String? avatarUrl;
   final String firstName;
-
-  static const _placeholders = [
-    _StoryData('Campus News', null,         null, Color(0xFF2563EB), true),
-    _StoryData('Kwame A.',    'KA',         null, Color(0xFF7C3AED), false),
-    _StoryData('Ama B.',      'AB',         null, Color(0xFF10B981), false),
-    _StoryData('Kofi M.',     'KM',         null, Color(0xFFEF4444), false),
-    _StoryData('Efua T.',     'ET',         null, Color(0xFFF59E0B), false),
-    _StoryData('Yaw O.',      'YO',         null, Color(0xFF2563EB), false),
-  ];
+  final List<SnapshotGroup> groups;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Separate own group from others
+    final uid = Supabase.instance.client.auth.currentUser?.id;
+    final myGroup = groups.where((g) => g.authorId == uid).firstOrNull;
+    final otherGroups = groups.where((g) => g.authorId != uid).toList();
+
     return Container(
       color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
+      padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
       child: SizedBox(
-        height: 82,
+        height: 88,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            StoryCircle(
-              name: firstName.isNotEmpty ? firstName : 'You',
-              imageUrl: avatarUrl,
-              initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
-              isSelf: true,
-              onTap: () {},
-            ),
-            const SizedBox(width: 14),
-            ..._placeholders.map((s) => Padding(
-              padding: const EdgeInsets.only(right: 14),
+            // Your story
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
               child: StoryCircle(
-                name: s.name,
-                initials: s.initials,
-                color: s.color,
-                hasRing: !s.isUniversity,
-                onTap: () {},
+                name: firstName.isNotEmpty ? firstName : 'You',
+                imageUrl: myGroup?.authorAvatar ?? avatarUrl,
+                initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
+                isSelf: true,
+                hasRing: myGroup != null, // ring if user has active story
+                size: 56,
+                onTap: () {
+                  if (myGroup != null) {
+                    // View own story
+                    final allGroups = [myGroup, ...otherGroups];
+                    context.push('/stories/view', extra: {
+                      'groups': allGroups,
+                      'index': 0,
+                    });
+                  } else {
+                    // Create new story
+                    context.push('/stories/create');
+                  }
+                },
               ),
-            )),
+            ),
+            // Other users' stories
+            ...otherGroups.asMap().entries.map((entry) {
+              final i = entry.key;
+              final g = entry.value;
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: StoryCircle(
+                  name: g.authorName ?? 'User',
+                  imageUrl: g.authorAvatar,
+                  initials: g.initials,
+                  hasRing: g.hasUnseen,
+                  size: 56,
+                  onTap: () {
+                    final allGroups = myGroup != null
+                        ? [myGroup, ...otherGroups]
+                        : otherGroups;
+                    final viewIndex = myGroup != null ? i + 1 : i;
+                    context.push('/stories/view', extra: {
+                      'groups': allGroups,
+                      'index': viewIndex,
+                    });
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _StoryData {
-  final String name;
-  final String? initials;
-  final String? imageUrl;
-  final Color color;
-  final bool isUniversity;
-  const _StoryData(this.name, this.initials, this.imageUrl, this.color, this.isUniversity);
-}
-
-// ── Post composer bar ─────────────────────────────────────────────────────────
-
-class _ComposerBar extends StatelessWidget {
-  const _ComposerBar({this.avatarUrl, required this.firstName});
-
-  final String? avatarUrl;
-  final String firstName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: context.appBarBg,
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: context.inputFill,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: context.borderCol, width: 1),
-          ),
-          child: Row(
-            children: [
-              _AvatarMini(avatarUrl: avatarUrl, letter: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U'),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Share an update, idea or question…',
-                  style: TextStyle(fontSize: 13, color: context.textSecondary),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(Icons.photo_camera_outlined, color: context.textSecondary, size: 18),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AvatarMini extends StatelessWidget {
-  const _AvatarMini({this.avatarUrl, required this.letter});
-
-  final String? avatarUrl;
-  final String letter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: context.inputFill,
-        border: Border.all(color: context.borderCol),
-      ),
-      child: avatarUrl != null
-          ? ClipOval(child: CachedNetworkImage(imageUrl: avatarUrl!, fit: BoxFit.cover))
-          : Center(
-              child: Text(letter, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.textPrimary)),
-            ),
     );
   }
 }
@@ -442,9 +399,9 @@ class _CategoryTabsDelegate extends SliverPersistentHeaderDelegate {
   final ValueChanged<int> onSelect;
 
   @override
-  double get minExtent => 54;
+  double get minExtent => 48;
   @override
-  double get maxExtent => 54;
+  double get maxExtent => 48;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -470,6 +427,8 @@ class _CategoryTabsDelegate extends SliverPersistentHeaderDelegate {
       old.selectedIndex != selectedIndex;
 }
 
+// ── Notification badge icon ───────────────────────────────────────────────────
+
 class _NotifBadgeIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -480,7 +439,7 @@ class _NotifBadgeIcon extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         IconButton(
-          icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 22),
+          icon: Icon(Icons.favorite_border, color: context.textPrimary, size: 24),
           onPressed: () => context.push('/notifications'),
           tooltip: 'Notifications',
         ),

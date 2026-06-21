@@ -6,31 +6,35 @@ import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class ModerationCenterScreen extends ConsumerWidget {
   const ModerationCenterScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Moderation Center'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'All Reports'),
-              Tab(text: 'Resolved'),
+    return AdminGuard(
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Moderation Center'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Pending'),
+                Tab(text: 'All Reports'),
+                Tab(text: 'Resolved'),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              _ModerationList(status: 'pending'),
+              _ModerationList(),
+              _ModerationList(status: 'resolved'),
             ],
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            _ModerationList(status: 'pending'),
-            _ModerationList(),
-            _ModerationList(status: 'resolved'),
-          ],
         ),
       ),
     );
@@ -70,7 +74,7 @@ class _ModerationList extends ConsumerWidget {
             itemBuilder: (_, i) => _ModerationCard(item: items[i]),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(provider)),
       ),
     );

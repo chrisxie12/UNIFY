@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class ExamPrepCenterScreen extends ConsumerWidget {
   const ExamPrepCenterScreen({super.key});
@@ -17,7 +18,7 @@ class ExamPrepCenterScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Exam Preparation')),
       body: timetablesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(examTimetablesProvider)),
         data: (exams) {
           return ListView(

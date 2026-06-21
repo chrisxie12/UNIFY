@@ -64,7 +64,15 @@ abstract class AdminRepository {
   Future<List<AnalyticsSnapshotModel>> getAnalyticsHistory(String? universityId, {int days = 30});
 
   // ── Audit Logs ──
-  Future<List<AuditLogModel>> getAuditLogs({String? universityId, int limit = 50});
+  Future<List<AuditLogModel>> getAuditLogs({
+    String? universityId,
+    String? actionFilter,
+    String? entityType,
+    DateTime? startDate,
+    DateTime? endDate,
+    int limit = 50,
+    int offset = 0,
+  });
   Future<void> logAction(String actorId, String action, String entityType, String? entityId, {String? universityId, Map<String, dynamic>? details});
 
   // ── Announcements ──

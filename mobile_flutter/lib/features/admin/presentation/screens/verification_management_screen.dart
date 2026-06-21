@@ -5,31 +5,35 @@ import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class VerificationManagementScreen extends ConsumerWidget {
   const VerificationManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Verification Management'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'All'),
-              Tab(text: 'Badges'),
+    return AdminGuard(
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Verification Management'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Pending'),
+                Tab(text: 'All'),
+                Tab(text: 'Badges'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              const _VerificationList(status: 'pending'),
+              const _VerificationList(),
+              _BadgeManagement(),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            const _VerificationList(status: 'pending'),
-            const _VerificationList(),
-            _BadgeManagement(),
-          ],
         ),
       ),
     );
@@ -69,7 +73,7 @@ class _VerificationList extends ConsumerWidget {
             itemBuilder: (_, i) => _VerificationCard(request: requests[i]),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(provider)),
       ),
     );

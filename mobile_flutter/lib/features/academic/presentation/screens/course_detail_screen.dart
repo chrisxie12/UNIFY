@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/academic_models.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
@@ -120,7 +121,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   Widget _resourceList(
       AsyncValue<List<AcademicResourceModel>> async, String type) {
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (all) {
         final items = all.where((r) => r.type == type).toList();
@@ -143,7 +144,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
 
   Widget _assignmentList(AsyncValue<List<AssignmentModel>> async) {
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
@@ -162,7 +163,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   Widget _examList() {
     final async = ref.watch(examTimetablesForCourseProvider(widget.courseId));
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {

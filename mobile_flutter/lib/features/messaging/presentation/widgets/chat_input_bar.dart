@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../../core/extensions/theme_extensions.dart';
 import '../providers/messaging_provider.dart';
 
@@ -22,6 +24,7 @@ class ChatInputBar extends ConsumerStatefulWidget {
 class _ChatInputBarState extends ConsumerState<ChatInputBar> {
   final _controller = TextEditingController();
   bool _hasText = false;
+  bool _uploadingImage = false;
 
   @override
   void initState() {
@@ -56,6 +59,34 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
     ref.read(replyToMessageProvider(widget.conversationId).notifier).state = null;
   }
 
+  Future<void> _pickAndSendImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final file = await picker.pickImage(source: source, imageQuality: 80);
+    if (file == null) return;
+
+    if (!mounted) return;
+    setState(() => _uploadingImage = true);
+
+    final replyTo = ref.read(replyToMessageProvider(widget.conversationId));
+    final ok = await ref.read(messagingProvider.notifier).sendImageMessage(
+          conversationId: widget.conversationId,
+          channelId: widget.channelId,
+          imageFile: File(file.path),
+          replyToId: replyTo?.id,
+        );
+
+    if (mounted) {
+      setState(() => _uploadingImage = false);
+      if (ok) {
+        ref.read(replyToMessageProvider(widget.conversationId).notifier).state = null;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to send image. Please try again.')),
+        );
+      }
+    }
+  }
+
   void _showAttachmentSheet() {
     showModalBottomSheet(
       context: context,
@@ -64,11 +95,17 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => _AttachmentSheet(
-        onTap: (_) {
+        onTap: (type) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Coming soon'), duration: Duration(seconds: 2)),
-          );
+          if (type == 'image') {
+            _pickAndSendImage(ImageSource.gallery);
+          } else if (type == 'camera') {
+            _pickAndSendImage(ImageSource.camera);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Coming soon'), duration: Duration(seconds: 2)),
+            );
+          }
         },
       ),
     );
@@ -86,12 +123,30 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_uploadingImage)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 14, height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: context.primary),
+                    ),
+                    const SizedBox(width: 8),
+                    Text('Uploading image…', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                  ],
+                ),
+              ),
+            Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             // Attachment button
             IconButton(
-              onPressed: _showAttachmentSheet,
+              onPressed: _uploadingImage ? null : _showAttachmentSheet,
               icon: Icon(
                 Icons.attach_file_rounded,
                 color: context.textSecondary,
@@ -156,6 +211,8 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
             ),
           ],
         ),
+          ],
+        ),
       ),
     );
   }
@@ -168,11 +225,11 @@ class _AttachmentSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      (_AttachmentOption(icon: Icons.camera_alt_rounded, label: 'Camera', type: 'camera')),
-      (_AttachmentOption(icon: Icons.photo_library_rounded, label: 'Gallery', type: 'image')),
-      (_AttachmentOption(icon: Icons.description_rounded, label: 'Document', type: 'document')),
-      (_AttachmentOption(icon: Icons.mic_rounded, label: 'Voice Note', type: 'voice_note')),
+    const items = [
+      _AttachmentOption(icon: Icons.camera_alt_rounded, label: 'Camera', type: 'camera'),
+      _AttachmentOption(icon: Icons.photo_library_rounded, label: 'Gallery', type: 'image'),
+      _AttachmentOption(icon: Icons.description_rounded, label: 'Document', type: 'document'),
+      _AttachmentOption(icon: Icons.mic_rounded, label: 'Voice Note', type: 'voice_note'),
     ];
 
     return Padding(

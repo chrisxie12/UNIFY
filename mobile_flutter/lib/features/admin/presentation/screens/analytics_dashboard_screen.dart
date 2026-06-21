@@ -4,6 +4,7 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class AnalyticsDashboardScreen extends ConsumerWidget {
   const AnalyticsDashboardScreen({super.key});
@@ -13,93 +14,95 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
     final analyticsAsync = ref.watch(latestAnalyticsProvider);
     final countsAsync = ref.watch(dashboardCountsProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Analytics Dashboard')),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(latestAnalyticsProvider);
-          ref.invalidate(dashboardCountsProvider);
-        },
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            analyticsAsync.when(
-              data: (a) => AdminSectionCard(
-                title: 'User Activity',
-                icon: Icons.people_rounded,
-                color: context.primary,
-                children: [
-                  Row(
-                    children: [
-                      _statTile(context, 'Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
-                      _statTile(context, 'Daily Active', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _statTile(context, 'Monthly Active', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
-                    ],
-                  ),
-                ],
-              ),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: 16),
-            analyticsAsync.when(
-              data: (a) => AdminSectionCard(
-                title: 'Platform Metrics',
-                icon: Icons.analytics_rounded,
-                color: AppColors.warning,
-                children: [
-                  Row(
-                    children: [
-                      _statTile(context, 'Communities', '${a.communities}', context.primary, Icons.groups_rounded),
-                      _statTile(context, 'Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _statTile(context, 'Posts', '${a.postsCount}', const Color(0xFF8B5CF6), Icons.article_rounded),
-                      _statTile(context, 'Marketplace', '${a.marketplaceCount}', const Color(0xFFFF6B35), Icons.shopping_bag_rounded),
-                    ],
-                  ),
-                  if (a.opportunitiesCount > 0)
+    return AdminGuard(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Analytics Dashboard')),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(latestAnalyticsProvider);
+            ref.invalidate(dashboardCountsProvider);
+          },
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              analyticsAsync.when(
+                data: (a) => AdminSectionCard(
+                  title: 'User Activity',
+                  icon: Icons.people_rounded,
+                  color: context.primary,
+                  children: [
                     Row(
                       children: [
-                        _statTile(context, 'Opportunities', '${a.opportunitiesCount}', const Color(0xFF10B981), Icons.work_rounded),
+                        _statTile(context, 'Active Students', '${a.activeStudents}', context.primary, Icons.school_rounded),
+                        _statTile(context, 'Daily Active', '${a.dailyActive}', const Color(0xFF10B981), Icons.trending_up_rounded),
                       ],
                     ),
-                ],
+                    Row(
+                      children: [
+                        _statTile(context, 'Monthly Active', '${a.monthlyActive}', const Color(0xFF8B5CF6), Icons.people_rounded),
+                      ],
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: 16),
-            countsAsync.when(
-              data: (counts) => AdminSectionCard(
-                title: 'Pending Items',
-                icon: Icons.pending_actions_rounded,
-                color: AppColors.warning,
-                children: [
-                  Row(
-                    children: [
-                      _statTile(context, 'Verifications', '${counts['pending_verifications'] ?? 0}', AppColors.warning, Icons.verified_user_rounded),
-                      _statTile(context, 'Reports', '${counts['pending_moderation'] ?? 0}', AppColors.error, Icons.flag_rounded),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _statTile(context, 'Opportunities', '${counts['pending_opportunities'] ?? 0}', const Color(0xFF10B981), Icons.work_rounded),
-                    ],
-                  ),
-                ],
+              const SizedBox(height: 16),
+              analyticsAsync.when(
+                data: (a) => AdminSectionCard(
+                  title: 'Platform Metrics',
+                  icon: Icons.analytics_rounded,
+                  color: AppColors.warning,
+                  children: [
+                    Row(
+                      children: [
+                        _statTile(context, 'Communities', '${a.communities}', context.primary, Icons.groups_rounded),
+                        _statTile(context, 'Events', '${a.eventsCount}', AppColors.warning, Icons.event_rounded),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _statTile(context, 'Posts', '${a.postsCount}', const Color(0xFF8B5CF6), Icons.article_rounded),
+                        _statTile(context, 'Marketplace', '${a.marketplaceCount}', const Color(0xFFFF6B35), Icons.shopping_bag_rounded),
+                      ],
+                    ),
+                    if (a.opportunitiesCount > 0)
+                      Row(
+                        children: [
+                          _statTile(context, 'Opportunities', '${a.opportunitiesCount}', const Color(0xFF10B981), Icons.work_rounded),
+                        ],
+                      ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: 32),
-          ],
+              const SizedBox(height: 16),
+              countsAsync.when(
+                data: (counts) => AdminSectionCard(
+                  title: 'Pending Items',
+                  icon: Icons.pending_actions_rounded,
+                  color: AppColors.warning,
+                  children: [
+                    Row(
+                      children: [
+                        _statTile(context, 'Verifications', '${counts['pending_verifications'] ?? 0}', AppColors.warning, Icons.verified_user_rounded),
+                        _statTile(context, 'Reports', '${counts['pending_moderation'] ?? 0}', AppColors.error, Icons.flag_rounded),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _statTile(context, 'Opportunities', '${counts['pending_opportunities'] ?? 0}', const Color(0xFF10B981), Icons.work_rounded),
+                      ],
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );

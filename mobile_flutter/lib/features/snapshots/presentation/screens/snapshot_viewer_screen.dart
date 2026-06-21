@@ -12,6 +12,21 @@ import '../../../../core/extensions/theme_extensions.dart';
 
 const _reactionEmojis = ['👍', '🔥', '😂', '👏', '❤️', '🎉'];
 
+// ── Dark-canvas overlay palette ───────────────────────────────────────────────
+// The viewer always renders over a black/dark background (photo, video, or a
+// coloured gradient). These constants encode that design intent. They are NOT
+// theme-sensitive — dark-canvas overlays must always be white-toned regardless
+// of the system theme.
+const Color _cvFg       = Color(0xFFFFFFFF); // primary overlay text / icons
+const Color _cvFgMuted  = Color(0xB3FFFFFF); // ≈ white70  secondary labels
+const Color _cvFgSubtle = Color(0x99FFFFFF); // ≈ white60  hint / placeholder
+const Color _cvFgFaint  = Color(0x87FFFFFF); // ≈ white54  separator / tertiary
+const Color _cvTint38   = Color(0x61FFFFFF); // ≈ white38  poll borders / track
+const Color _cvTint30   = Color(0x4DFFFFFF); // ≈ white30  input border
+const Color _cvTint24   = Color(0x3DFFFFFF); // ≈ white24  surface tint / avatar bg
+const Color _cvDim54    = Color(0x8A000000); // ≈ black54  bottom vignette gradient
+const Color _cvDim26    = Color(0x42000000); // ≈ black26  snap background blend
+
 String leadershipLabel(String? role) {
   switch (role) {
     case 'class_representative':
@@ -149,7 +164,6 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
       });
       _loadCurrent();
     } else {
-      // Restart current
       _loadCurrent();
     }
   }
@@ -215,7 +229,6 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
     final isOwn = uid != null && uid == _snap.authorId;
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -283,7 +296,6 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
     ];
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -412,7 +424,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
           height: 38,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white24,
+            color: _cvTint24,
           ),
           child: ClipOval(
             child: _group.authorAvatar != null && _group.authorAvatar!.isNotEmpty
@@ -421,7 +433,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                     child: Text(
                       _group.initials,
                       style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700),
+                          color: _cvFg, fontWeight: FontWeight.w700),
                     ),
                   ),
           ),
@@ -437,7 +449,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                     child: Text(
                       _group.authorName ?? 'Campus',
                       style: const TextStyle(
-                          color: Colors.white,
+                          color: _cvFg,
                           fontWeight: FontWeight.w700,
                           fontSize: 14),
                       overflow: TextOverflow.ellipsis,
@@ -445,7 +457,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                   ),
                   if (_group.isOfficial) ...[
                     const SizedBox(width: 4),
-                    const Icon(Icons.verified_rounded, color: Colors.white, size: 15),
+                    const Icon(Icons.verified_rounded, color: _cvFg, size: 15),
                   ],
                 ],
               ),
@@ -454,13 +466,13 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                   if (_group.isOfficial) ...[
                     Text(
                       leadershipLabel(_group.authorLeadershipRole),
-                      style: const TextStyle(color: Colors.white70, fontSize: 11),
+                      style: const TextStyle(color: _cvFgMuted, fontSize: 11),
                     ),
-                    const Text(' · ', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                    const Text(' · ', style: TextStyle(color: _cvFgFaint, fontSize: 11)),
                   ],
                   Text(
                     timeago.format(_snap.createdAt),
-                    style: const TextStyle(color: Colors.white70, fontSize: 11),
+                    style: const TextStyle(color: _cvFgMuted, fontSize: 11),
                   ),
                 ],
               ),
@@ -468,11 +480,11 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.more_horiz_rounded, color: Colors.white),
+          icon: const Icon(Icons.more_horiz_rounded, color: _cvFg),
           onPressed: _openMenu,
         ),
         IconButton(
-          icon: const Icon(Icons.close_rounded, color: Colors.white),
+          icon: const Icon(Icons.close_rounded, color: _cvFg),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
       ],
@@ -499,7 +511,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
             if (snap.type == 'video')
               const Center(
                 child: Icon(Icons.play_circle_outline_rounded,
-                    color: Colors.white70, size: 64),
+                    color: _cvFgMuted, size: 64),
               ),
             if (snap.caption != null && snap.caption!.isNotEmpty)
               Padding(
@@ -512,7 +524,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                   ),
                   child: Text(
                     snap.caption!,
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                    style: const TextStyle(color: _cvFg, fontSize: 15),
                   ),
                 ),
               ),
@@ -521,13 +533,13 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
       );
     }
 
-    // text / poll / question — colored canvas
+    // text / poll / question — coloured canvas
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [snap.bgColor, Color.alphaBlend(Colors.black26, snap.bgColor)],
+          colors: [snap.bgColor, Color.alphaBlend(_cvDim26, snap.bgColor)],
         ),
       ),
       padding: const EdgeInsets.fromLTRB(28, 120, 28, 150),
@@ -541,17 +553,17 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                   margin: const EdgeInsets.only(bottom: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white24,
+                    color: _cvTint24,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text('❓ Ask me anything',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: _cvFg, fontWeight: FontWeight.w600)),
                 ),
               Text(
                 snap.textContent ?? '',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: _cvFg,
                   fontSize: snap.isText ? 26 : 22,
                   fontWeight: FontWeight.w700,
                   height: 1.3,
@@ -571,7 +583,6 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
   Widget _pollOption(SnapshotPollOption option) {
     final voted = _myPollVote != null;
     final isMine = _myPollVote == option.id;
-    // Optimistically add the local vote to both numerator and denominator.
     final count = option.voteCount + (isMine ? 1 : 0);
     final total = _snap.totalPollVotes + (voted ? 1 : 0);
     final pct = total <= 0 ? 0.0 : count / total;
@@ -585,10 +596,10 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
             Container(
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.white24,
+                color: _cvTint24,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: isMine ? Colors.white : Colors.white38,
+                  color: isMine ? _cvFg : _cvTint38,
                   width: isMine ? 2 : 1,
                 ),
               ),
@@ -614,7 +625,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                       child: Text(
                         option.label,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: _cvFg,
                           fontWeight: isMine ? FontWeight.w700 : FontWeight.w500,
                           fontSize: 15,
                         ),
@@ -623,7 +634,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                     if (voted)
                       Text('${(pct * 100).round()}%',
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w700)),
+                              color: _cvFg, fontWeight: FontWeight.w700)),
                   ],
                 ),
               ),
@@ -642,7 +653,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.transparent, Colors.black54],
+          colors: [Colors.transparent, _cvDim54],
         ),
       ),
       child: isOwn
@@ -687,25 +698,25 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                       child: TextField(
                         controller: _replyCtrl,
                         focusNode: _replyFocus,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: _cvFg),
                         textInputAction: TextInputAction.send,
                         onSubmitted: (_) => _sendReply(),
                         decoration: InputDecoration(
                           hintText: _snap.isQuestion
                               ? 'Type your answer…'
                               : 'Reply to ${_snap.authorName?.split(' ').first ?? 'story'}…',
-                          hintStyle: const TextStyle(color: Colors.white60),
+                          hintStyle: const TextStyle(color: _cvFgSubtle),
                           filled: true,
                           fillColor: context.inputFill.withValues(alpha: 0.15),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide: const BorderSide(color: Colors.white30),
+                            borderSide: const BorderSide(color: _cvTint30),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide: const BorderSide(color: Colors.white30),
+                            borderSide: const BorderSide(color: _cvTint30),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
@@ -715,7 +726,7 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.send_rounded, color: Colors.white),
+                      icon: const Icon(Icons.send_rounded, color: _cvFg),
                       onPressed: _sendReply,
                     ),
                   ],
@@ -735,16 +746,16 @@ class _SnapshotViewerScreenState extends ConsumerState<SnapshotViewerScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.white, size: 16),
+          Icon(icon, color: _cvFg, size: 16),
           const SizedBox(width: 6),
-          Text(label, style: const TextStyle(color: Colors.white, fontSize: 13)),
+          Text(label, style: const TextStyle(color: _cvFg, fontSize: 13)),
         ],
       ),
     );
   }
 }
 
-// ── Progress segment ─────────────────────────────────────────
+// ── Progress segment ──────────────────────────────────────────────────────────
 
 class _ProgressSegment extends StatelessWidget {
   final AnimationController controller;
@@ -759,7 +770,7 @@ class _ProgressSegment extends StatelessWidget {
         height: 3,
         child: Stack(
           children: [
-            Container(color: Colors.white38),
+            Container(color: _cvTint38),
             if (state == 1)
               Container(color: context.cardBg)
             else if (state == 2)

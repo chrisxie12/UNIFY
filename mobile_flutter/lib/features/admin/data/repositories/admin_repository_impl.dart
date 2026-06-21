@@ -18,6 +18,32 @@ class AdminRepositoryImpl implements AdminRepository {
 
   AdminRepositoryImpl(this._client);
 
+  String get _actorId => _client.auth.currentUser?.id ?? '';
+
+  Future<void> _sendNotification({
+    required String userId,
+    required String type,
+    required String title,
+    String? body,
+    String? referenceId,
+    String? referenceType,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _client.rpc('create_notification', params: {
+        'p_user_id': userId,
+        'p_type': type,
+        'p_title': title,
+        'p_body': body,
+        'p_reference_id': referenceId,
+        'p_reference_type': referenceType,
+        'p_data': data ?? {},
+      });
+    } catch (e) {
+      debugPrint('[AdminRepositoryImpl] sendNotification error: $e');
+    }
+  }
+
   // ── Universities ──
 
   @override
@@ -47,13 +73,17 @@ class AdminRepositoryImpl implements AdminRepository {
         .insert(data)
         .select()
         .single();
-    return UniversityModel.fromJson(response);
+    final model = UniversityModel.fromJson(response);
+    await logAction(_actorId, 'create_university', 'university', model.id,
+        details: {'name': data['name'] as String? ?? ''});
+    return model;
   }
 
   @override
   Future<bool> updateUniversity(String id, Map<String, dynamic> updates) async {
     try {
       await _client.from('universities').update(updates).filter('id', 'eq', id);
+      await logAction(_actorId, 'update_university', 'university', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -65,6 +95,7 @@ class AdminRepositoryImpl implements AdminRepository {
   Future<bool> deleteUniversity(String id) async {
     try {
       await _client.from('universities').delete().filter('id', 'eq', id);
+      await logAction(_actorId, 'delete_university', 'university', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -102,13 +133,17 @@ class AdminRepositoryImpl implements AdminRepository {
         .insert(data)
         .select()
         .single();
-    return FacultyModel.fromJson(response);
+    final model = FacultyModel.fromJson(response);
+    await logAction(_actorId, 'create_faculty', 'faculty', model.id,
+        details: {'name': data['name'] as String? ?? ''});
+    return model;
   }
 
   @override
   Future<bool> updateFaculty(String id, Map<String, dynamic> updates) async {
     try {
       await _client.from('faculties').update(updates).filter('id', 'eq', id);
+      await logAction(_actorId, 'update_faculty', 'faculty', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -120,6 +155,7 @@ class AdminRepositoryImpl implements AdminRepository {
   Future<bool> deleteFaculty(String id) async {
     try {
       await _client.from('faculties').delete().filter('id', 'eq', id);
+      await logAction(_actorId, 'delete_faculty', 'faculty', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -157,13 +193,17 @@ class AdminRepositoryImpl implements AdminRepository {
         .insert(data)
         .select()
         .single();
-    return DepartmentModel.fromJson(response);
+    final model = DepartmentModel.fromJson(response);
+    await logAction(_actorId, 'create_department', 'department', model.id,
+        details: {'name': data['name'] as String? ?? ''});
+    return model;
   }
 
   @override
   Future<bool> updateDepartment(String id, Map<String, dynamic> updates) async {
     try {
       await _client.from('departments').update(updates).filter('id', 'eq', id);
+      await logAction(_actorId, 'update_department', 'department', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -175,6 +215,7 @@ class AdminRepositoryImpl implements AdminRepository {
   Future<bool> deleteDepartment(String id) async {
     try {
       await _client.from('departments').delete().filter('id', 'eq', id);
+      await logAction(_actorId, 'delete_department', 'department', id);
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -213,13 +254,42 @@ class AdminRepositoryImpl implements AdminRepository {
         .insert(data)
         .select('*, admin_roles(role, description), profiles(full_name, avatar_url)')
         .single();
-    return AdministratorModel.fromJson(response);
+    final model = AdministratorModel.fromJson(response);
+    await logAction(_actorId, 'assign_admin_role', 'admin', model.id,
+        details: {'user_id': model.userId, 'role': model.roleName ?? ''});
+    await _sendNotification(
+      userId: model.userId,
+      type: 'role_assigned',
+      title: 'Admin Role Assigned',
+      body: model.roleName != null
+          ? 'You have been assigned the admin role: ${model.roleName}.'
+          : 'You have been assigned an admin role.',
+      referenceId: model.id,
+      referenceType: 'admin_role',
+      data: {'admin_id': model.id, 'role': model.roleName ?? ''},
+    );
+    return model;
   }
 
   @override
   Future<bool> updateAdminStatus(String id, bool isActive) async {
     try {
+      final adminRecord = await _client.from('university_administrators')
+          .select('user_id').filter('id', 'eq', id).single();
+      final userId = adminRecord['user_id'] as String;
       await _client.from('university_administrators').update({'is_active': isActive}).filter('id', 'eq', id);
+      await logAction(_actorId, 'update_admin_status', 'admin', id, details: {'is_active': isActive});
+      await _sendNotification(
+        userId: userId,
+        type: isActive ? 'role_assigned' : 'admin_removed',
+        title: isActive ? 'Admin Access Restored' : 'Admin Access Suspended',
+        body: isActive
+            ? 'Your admin privileges have been reinstated.'
+            : 'Your admin privileges have been temporarily suspended.',
+        referenceId: id,
+        referenceType: 'admin_role',
+        data: {'admin_id': id, 'is_active': isActive},
+      );
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -230,7 +300,20 @@ class AdminRepositoryImpl implements AdminRepository {
   @override
   Future<bool> removeAdmin(String id) async {
     try {
+      final adminRecord = await _client.from('university_administrators')
+          .select('user_id').filter('id', 'eq', id).single();
+      final userId = adminRecord['user_id'] as String;
       await _client.from('university_administrators').delete().filter('id', 'eq', id);
+      await logAction(_actorId, 'remove_admin', 'admin', id);
+      await _sendNotification(
+        userId: userId,
+        type: 'admin_removed',
+        title: 'Admin Role Removed',
+        body: 'Your admin role has been removed from the system.',
+        referenceId: id,
+        referenceType: 'admin_role',
+        data: {'admin_id': id},
+      );
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -274,8 +357,22 @@ class AdminRepositoryImpl implements AdminRepository {
         'reviewed_at': DateTime.now().toIso8601String(),
         if (notes != null) 'admin_notes': notes,
       }).filter('id', 'eq', requestId);
-      final request = await _client.from('verification_requests').select('user_id').filter('id', 'eq', requestId).single();
+      final request = await _client.from('verification_requests')
+          .select('user_id').filter('id', 'eq', requestId).single();
       await _client.from('profiles').update({'is_verified': true}).filter('id', 'eq', request['user_id']);
+      await logAction(reviewedBy, 'approve_verification', 'verification', requestId,
+          details: {if (notes != null) 'notes': notes});
+      await _sendNotification(
+        userId: request['user_id'] as String,
+        type: 'verification_approved',
+        title: 'Verification Approved ✓',
+        body: notes != null
+            ? 'Your verification was approved. $notes'
+            : 'Your identity has been verified. Welcome to the verified community!',
+        referenceId: requestId,
+        referenceType: 'verification',
+        data: {'request_id': requestId},
+      );
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -292,6 +389,19 @@ class AdminRepositoryImpl implements AdminRepository {
         'reviewed_at': DateTime.now().toIso8601String(),
         if (notes != null) 'admin_notes': notes,
       }).filter('id', 'eq', requestId);
+      final req = await _client.from('verification_requests')
+          .select('user_id').filter('id', 'eq', requestId).single();
+      await logAction(reviewedBy, 'reject_verification', 'verification', requestId,
+          details: {if (notes != null) 'notes': notes});
+      await _sendNotification(
+        userId: req['user_id'] as String,
+        type: 'verification_rejected',
+        title: 'Verification Not Approved',
+        body: notes ?? 'Your verification request was not approved at this time. You may resubmit with additional documentation.',
+        referenceId: requestId,
+        referenceType: 'verification',
+        data: {'request_id': requestId},
+      );
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -349,6 +459,8 @@ class AdminRepositoryImpl implements AdminRepository {
         'updated_at': DateTime.now().toIso8601String(),
         if (resolution != null) 'resolution': resolution,
       }).filter('id', 'eq', id);
+      await logAction(reviewedBy, '${status}_moderation', 'moderation', id,
+          details: {if (resolution != null) 'resolution': resolution});
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -373,11 +485,24 @@ class AdminRepositoryImpl implements AdminRepository {
   @override
   Future<bool> resolveMarketplaceReport(String id, String action, String reviewedBy) async {
     try {
+      final report = await _client.from('marketplace_reports')
+          .select('reporter_id').filter('id', 'eq', id).single();
       await _client.from('marketplace_reports').update({
         'status': 'resolved',
         'action_taken': action,
         'reviewed_by': reviewedBy,
       }).filter('id', 'eq', id);
+      await logAction(reviewedBy, 'resolve_marketplace_report', 'marketplace_report', id,
+          details: {'action': action});
+      await _sendNotification(
+        userId: report['reporter_id'] as String,
+        type: 'marketplace_report_resolved',
+        title: 'Your Report Has Been Reviewed',
+        body: 'We reviewed your marketplace report and took action: $action.',
+        referenceId: id,
+        referenceType: 'marketplace_report',
+        data: {'report_id': id, 'action': action},
+      );
       return true;
     } catch (e) {
       debugPrint('[AdminRepositoryImpl] Error: $e');
@@ -452,13 +577,25 @@ class AdminRepositoryImpl implements AdminRepository {
   // ── Audit Logs ──
 
   @override
-  Future<List<AuditLogModel>> getAuditLogs({String? universityId, int limit = 50}) async {
+  Future<List<AuditLogModel>> getAuditLogs({
+    String? universityId,
+    String? actionFilter,
+    String? entityType,
+    DateTime? startDate,
+    DateTime? endDate,
+    int limit = 50,
+    int offset = 0,
+  }) async {
     dynamic query = _client
         .from('audit_logs')
         .select('*, profiles(full_name)')
         .order('created_at', ascending: false)
-        .limit(limit);
+        .range(offset, offset + limit - 1);
     if (universityId != null) query = query.filter('university_id', 'eq', universityId);
+    if (actionFilter != null) query = query.filter('action', 'ilike', '%$actionFilter%');
+    if (entityType != null) query = query.filter('entity_type', 'eq', entityType);
+    if (startDate != null) query = query.filter('created_at', 'gte', startDate.toIso8601String());
+    if (endDate != null) query = query.filter('created_at', 'lte', endDate.toIso8601String());
     final response = await query as List;
     return response.map((json) => AuditLogModel.fromJson(json as Map<String, dynamic>)).toList();
   }

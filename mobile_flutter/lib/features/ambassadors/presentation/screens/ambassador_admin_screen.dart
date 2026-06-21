@@ -12,6 +12,7 @@ import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/ambassador_models.dart';
 import '../providers/ambassador_provider.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class AmbassadorAdminScreen extends ConsumerWidget {
   const AmbassadorAdminScreen({super.key});
@@ -25,72 +26,74 @@ class AmbassadorAdminScreen extends ConsumerWidget {
     final totalReferrals = statsAsync.valueOrNull?['totalReferrals'] ?? 0;
     final totalEvents = statsAsync.valueOrNull?['totalEvents'] ?? 0;
 
-    return Scaffold(
-      backgroundColor: context.bg,
-      appBar: AppBar(
-        backgroundColor: context.appBarBg,
-        surfaceTintColor: context.appBarBg,
-        elevation: 0.6,
-        shadowColor: context.borderCol,
-        title: const Text('Campus Ambassadors',
-            style: TextStyle(fontWeight: FontWeight.w800)),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: context.primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.person_add_alt_1_rounded),
-        label: const Text('Add ambassador'),
-        onPressed: () => _showAddAmbassadorSheet(context, ref),
-      ),
-      body: ambassadorsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => AppErrorWidget(e),
-        data: (ambassadors) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(ambassadorsProvider);
-              ref.invalidate(ambassadorStatsProvider);
-            },
-            child: ListView(
-              padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
-              children: [
-                Row(
-                  children: [
-                    _StatTile(
-                      icon: Icons.verified_user_rounded,
-                      value: '$active',
-                      label: 'Active',
-                      color: AppColors.success,
-                    ),
-                    _StatTile(
-                      icon: Icons.people_alt_rounded,
-                      value: '$totalReferrals',
-                      label: 'Referrals',
-                      color: AppColors.info,
-                    ),
-                    _StatTile(
-                      icon: Icons.event_rounded,
-                      value: '$totalEvents',
-                      label: 'Events',
-                      color: AppColors.warning,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: USpacing.md),
-                if (ambassadors.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 60),
-                    child: UEmptyState(icon: Icons.campaign_rounded, title: 'No ambassadors yet'),
-                  )
-                else
-                  ...ambassadors.map((a) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _AmbassadorCard(ambassador: a),
-                      )),
-              ],
-            ),
-          );
-        },
+    return AdminGuard(
+      child: Scaffold(
+        backgroundColor: context.bg,
+        appBar: AppBar(
+          backgroundColor: context.appBarBg,
+          surfaceTintColor: context.appBarBg,
+          elevation: 0.6,
+          shadowColor: context.borderCol,
+          title: const Text('Campus Ambassadors',
+              style: TextStyle(fontWeight: FontWeight.w800)),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: context.primary,
+          foregroundColor: Colors.white,
+          icon: const Icon(Icons.person_add_alt_1_rounded),
+          label: const Text('Add ambassador'),
+          onPressed: () => _showAddAmbassadorSheet(context, ref),
+        ),
+        body: ambassadorsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => AppErrorWidget(e),
+          data: (ambassadors) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(ambassadorsProvider);
+                ref.invalidate(ambassadorStatsProvider);
+              },
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
+                children: [
+                  Row(
+                    children: [
+                      _StatTile(
+                        icon: Icons.verified_user_rounded,
+                        value: '$active',
+                        label: 'Active',
+                        color: AppColors.success,
+                      ),
+                      _StatTile(
+                        icon: Icons.people_alt_rounded,
+                        value: '$totalReferrals',
+                        label: 'Referrals',
+                        color: AppColors.info,
+                      ),
+                      _StatTile(
+                        icon: Icons.event_rounded,
+                        value: '$totalEvents',
+                        label: 'Events',
+                        color: AppColors.warning,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: USpacing.md),
+                  if (ambassadors.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: UEmptyState(icon: Icons.campaign_rounded, title: 'No ambassadors yet'),
+                    )
+                  else
+                    ...ambassadors.map((a) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _AmbassadorCard(ambassador: a),
+                        )),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

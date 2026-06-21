@@ -6,8 +6,10 @@ import '../../presentation/widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class UniversityManagementScreen extends ConsumerWidget {
   const UniversityManagementScreen({super.key});
@@ -16,46 +18,48 @@ class UniversityManagementScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final universitiesAsync = ref.watch(universitiesProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('University Management'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded),
-            onPressed: () => _showUniversityDialog(context, ref),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(universitiesProvider),
-        child: universitiesAsync.when(
-          data: (universities) {
-            if (universities.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.account_balance_rounded, size: 64, color: context.borderCol),
-                    const SizedBox(height: 16),
-                    Text('No universities registered', style: TextStyle(fontSize: 16, color: context.textSecondary)),
-                    const SizedBox(height: 8),
-                    FilledButton.icon(
-                      onPressed: () => _showUniversityDialog(context, ref),
-                      icon: const Icon(Icons.add_rounded),
-                      label: const Text('Add University'),
-                    ),
-                  ],
-                ),
+    return AdminGuard(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('University Management'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_rounded),
+              onPressed: () => _showUniversityDialog(context, ref),
+            ),
+          ],
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async => ref.invalidate(universitiesProvider),
+          child: universitiesAsync.when(
+            data: (universities) {
+              if (universities.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.account_balance_rounded, size: 64, color: context.borderCol),
+                      const SizedBox(height: 16),
+                      Text('No universities registered', style: TextStyle(fontSize: 16, color: context.textSecondary)),
+                      const SizedBox(height: 8),
+                      FilledButton.icon(
+                        onPressed: () => _showUniversityDialog(context, ref),
+                        icon: const Icon(Icons.add_rounded),
+                        label: const Text('Add University'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: universities.length,
+                itemBuilder: (_, i) => _UniversityCard(university: universities[i]),
               );
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: universities.length,
-              itemBuilder: (_, i) => _UniversityCard(university: universities[i]),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(universitiesProvider)),
+            },
+            loading: () => const AppLoadingWidget.list(),
+            error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(universitiesProvider)),
+          ),
         ),
       ),
     );

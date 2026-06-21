@@ -5,32 +5,36 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/guards/admin_guard.dart';
 
 class MarketplaceAdminScreen extends ConsumerWidget {
   const MarketplaceAdminScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Marketplace Admin'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'Resolved'),
-              Tab(text: 'All'),
+    return AdminGuard(
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Marketplace Admin'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Pending'),
+                Tab(text: 'Resolved'),
+                Tab(text: 'All'),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              _ReportList(status: 'pending'),
+              _ReportList(status: 'resolved'),
+              _ReportList(),
             ],
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            _ReportList(status: 'pending'),
-            _ReportList(status: 'resolved'),
-            _ReportList(),
-          ],
         ),
       ),
     );
@@ -71,7 +75,7 @@ class _ReportList extends ConsumerWidget {
             itemBuilder: (_, i) => _MarketplaceReportCard(report: items[i]),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(marketplaceReportsProvider)),
       ),
     );

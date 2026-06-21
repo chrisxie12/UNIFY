@@ -6,6 +6,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
@@ -104,7 +105,7 @@ class SellerProfileScreen extends ConsumerWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
           listingsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.card(),
             error: (_, __) => const SizedBox.shrink(),
             data: (items) => items.isEmpty
                 ? Text('No active listings.',

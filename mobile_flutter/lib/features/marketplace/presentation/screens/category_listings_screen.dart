@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 import '../widgets/listing_card.dart';
@@ -112,8 +113,7 @@ class _CategoryListingsScreenState
 
           Expanded(
             child: listingsAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(),
               error: (e, _) => _errorState(e),
               data: (items) {
                 if (items.isEmpty) return _emptyState();

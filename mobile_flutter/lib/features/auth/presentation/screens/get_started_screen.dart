@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/unify_wordmark.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
@@ -45,32 +45,17 @@ class GetStartedScreen extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(
-                    color: context.cardBg,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: const EdgeInsets.all(18),
-                  child: SvgPicture.asset('assets/images/logo.svg'),
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'UNIFY',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 6,
-                  ),
+                const UnifyWordmark(
+                  size: WordmarkSize.large,
+                  style: WordmarkStyle.light,
+                  vertical: true,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Your campus, connected.',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: Color(0xFFFFFFFF).withValues(alpha: 0.80),
                     fontWeight: FontWeight.w400,
                   ),
                 ),

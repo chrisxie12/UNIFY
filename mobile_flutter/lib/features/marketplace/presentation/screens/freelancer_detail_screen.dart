@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/verified_badge.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
@@ -63,7 +64,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
         orElse: () => null,
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.profile(),
         error: (e, _) => AppErrorWidget(e),
         data: (p) {
           if (p == null) {
@@ -217,7 +218,7 @@ class FreelancerDetailScreen extends ConsumerWidget {
               reviewsAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: AppLoadingWidget.card(),
                 ),
                 error: (_, __) => const SizedBox.shrink(),
                 data: (reviews) => reviews.isEmpty

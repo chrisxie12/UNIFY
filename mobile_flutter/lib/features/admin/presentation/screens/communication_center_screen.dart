@@ -5,6 +5,7 @@ import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/errors/error_mapper.dart';
 
@@ -268,7 +269,7 @@ class _CommunicationCenterScreenState extends ConsumerState<CommunicationCenterS
                   dense: true,
                 )).toList(),
               ),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(),
               error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(adminAnnouncementsProvider)),
             ),
           ],

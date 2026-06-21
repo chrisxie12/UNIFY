@@ -8,6 +8,51 @@ class EventRepositoryImpl implements EventRepository {
 
   EventRepositoryImpl(this._client);
 
+  Future<void> _sendNotification({
+    required String userId,
+    required String type,
+    required String title,
+    String? body,
+    String? referenceId,
+    String? referenceType,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _client.rpc('create_notification', params: {
+        'p_user_id': userId,
+        'p_type': type,
+        'p_title': title,
+        'p_body': body,
+        'p_reference_id': referenceId,
+        'p_reference_type': referenceType,
+        'p_data': data ?? {},
+      });
+    } catch (_) {}
+  }
+
+  Future<void> _logAction(String actorId, String action, String entityType, String? entityId, {Map<String, dynamic>? details}) async {
+    try {
+      await _client.rpc('log_admin_action', params: {
+        'actor_id': actorId,
+        'action': action,
+        'entity_type': entityType,
+        'entity_id': entityId,
+        'university_id': null,
+        'details': details ?? {},
+      });
+    } catch (_) {
+      try {
+        await _client.from('audit_logs').insert({
+          'actor_id': actorId,
+          'action': action,
+          'entity_type': entityType,
+          'entity_id': entityId,
+          'details': details ?? {},
+        });
+      } catch (_) {}
+    }
+  }
+
   // ── Helpers ───────────────────────────────────────────────
 
   List<EventModel> _parseEvents(dynamic response) {
@@ -331,6 +376,7 @@ class EventRepositoryImpl implements EventRepository {
   Future<bool> deleteEvent(String eventId) async {
     try {
       await _client.from('community_events').delete().filter('id', 'eq', eventId);
+      await _logAction(_client.auth.currentUser?.id ?? '', 'delete_event', 'event', eventId);
       return true;
     } catch (e) {
       debugPrint('[EventRepositoryImpl] Error: $e');
@@ -341,10 +387,50 @@ class EventRepositoryImpl implements EventRepository {
   @override
   Future<bool> approveEvent(String eventId) async {
     try {
+      final event = await _client.from('community_events')
+          .select('creator_id, title').filter('id', 'eq', eventId).single();
       await _client.from('community_events').update({'is_approved': true}).filter('id', 'eq', eventId);
+      await _logAction(_client.auth.currentUser?.id ?? '', 'approve_event', 'event', eventId);
+      await _sendNotification(
+        userId: event['creator_id'] as String,
+        type: 'event_approved',
+        title: 'Event Approved! 🎉',
+        body: 'Your event "${event['title']}" has been approved and is now live.',
+        referenceId: eventId,
+        referenceType: 'event',
+        data: {'event_id': eventId},
+      );
       return true;
     } catch (e) {
       debugPrint('[EventRepositoryImpl] Error: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> rejectEvent(String eventId, {String? reason}) async {
+    try {
+      final event = await _client.from('community_events')
+          .select('creator_id, title').filter('id', 'eq', eventId).single();
+      await _client.from('community_events').update({
+        'is_approved': false,
+        'is_cancelled': true,
+        if (reason != null) 'rejection_reason': reason,
+      }).filter('id', 'eq', eventId);
+      await _logAction(_client.auth.currentUser?.id ?? '', 'reject_event', 'event', eventId,
+          details: {if (reason != null) 'reason': reason});
+      await _sendNotification(
+        userId: event['creator_id'] as String,
+        type: 'event_rejected',
+        title: 'Event Not Approved',
+        body: reason ?? 'Your event "${event['title']}" was not approved by admins.',
+        referenceId: eventId,
+        referenceType: 'event',
+        data: {'event_id': eventId},
+      );
+      return true;
+    } catch (e) {
+      debugPrint('[EventRepositoryImpl] rejectEvent error: $e');
       return false;
     }
   }

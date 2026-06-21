@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
@@ -17,6 +18,7 @@ abstract class MessagingRepository {
   Future<void> createPoll(String messageId, String question, List<String> options, bool multipleChoice, DateTime? expiresAt);
   Future<void> votePoll(String pollId, String userId, int optionIndex);
   Future<void> createConversation(ConversationModel conversation, List<String> participantIds);
+  Future<String> getOrCreateDirectConversation(String targetUserId);
   Future<void> addParticipants(String conversationId, List<String> userIds);
   Future<void> removeParticipant(String conversationId, String userId);
   Future<void> updateParticipantRole(String conversationId, String userId, String role);
@@ -40,4 +42,6 @@ abstract class MessagingRepository {
 
   Future<void> reportMessage(String messageId, String reportedBy, String reason);
   Future<void> muteNotifications(String conversationId, String userId, Duration duration);
+
+  Future<String?> uploadChatImage(File imageFile);
 }

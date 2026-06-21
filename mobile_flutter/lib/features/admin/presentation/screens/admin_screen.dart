@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -128,7 +129,7 @@ class AdminScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           unreadCount > 9 ? '9+' : '$unreadCount',
-                          style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 9, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -219,7 +220,7 @@ class _PendingRequestsTab extends ConsumerWidget {
               );
             },
             error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_pendingRequestsProvider)),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
           ),
         ],
       ),
@@ -263,7 +264,7 @@ class _AllRequestsTab extends ConsumerWidget {
           );
         },
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_allRequestsProvider)),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
       ),
     );
   }
@@ -739,7 +740,7 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
               );
             },
             error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(pendingAnnouncementRequestsProvider)),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
           ),
         ],
       ),
@@ -781,10 +782,10 @@ class _AnnouncementRequestCard extends ConsumerWidget {
                 Container(
                   width: 42, height: 42,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                    color: context.catEvents.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(catIcon, color: const Color(0xFF8B5CF6), size: 20),
+                  child: Icon(catIcon, color: context.catEvents, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1007,7 +1008,7 @@ class _VerificationTab extends ConsumerWidget {
               );
             },
             error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_pendingVerificationProvider)),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingWidget.list(),
           ),
         ],
       ),
@@ -1079,7 +1080,7 @@ class _VerificationCard extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEFF4FF),
+                        color: context.infoSurface,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(

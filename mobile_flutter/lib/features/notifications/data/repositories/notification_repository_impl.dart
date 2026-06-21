@@ -23,6 +23,19 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
+  Stream<List<NotificationModel>> notificationsStream(String userId) {
+    return _client
+        .from('notifications')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .limit(50)
+        .map((maps) => maps
+            .map((m) => NotificationModel.fromJson(m as Map<String, dynamic>))
+            .toList());
+  }
+
+  @override
   Stream<int> unreadCountStream(String userId) {
     return _client
         .from('notifications')

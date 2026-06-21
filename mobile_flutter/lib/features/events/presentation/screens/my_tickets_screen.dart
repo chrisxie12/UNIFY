@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
@@ -19,7 +20,7 @@ class MyTicketsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('My Tickets')),
       body: ticketsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(myTicketsProvider)),
         data: (tickets) {
           if (tickets.isEmpty) {

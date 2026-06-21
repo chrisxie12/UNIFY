@@ -13,6 +13,9 @@ class Announcement extends Equatable {
   final bool isUrgent;
   final String? imageUrl;
   final int viewCount;
+  final int likesCount;
+  final int commentsCount;
+  final int sharesCount;
   final DateTime createdAt;
   final bool isRead;
   final bool authorIsVerifiedLeader;
@@ -33,10 +36,13 @@ class Announcement extends Equatable {
     this.isUrgent = false,
     this.imageUrl,
     this.viewCount = 0,
+    this.likesCount = 0,
+    this.commentsCount = 0,
+    this.sharesCount = 0,
     required this.createdAt,
     this.isRead = false,
   });
 
   @override
-  List<Object?> get props => [id, title, isRead, viewCount, authorIsVerifiedLeader];
+  List<Object?> get props => [id, title, isRead, viewCount, likesCount, commentsCount, authorIsVerifiedLeader];
 }

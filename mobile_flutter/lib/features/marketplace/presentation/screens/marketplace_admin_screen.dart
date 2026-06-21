@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/marketplace_models.dart';
 import '../providers/marketplace_provider.dart';
 
@@ -54,7 +55,7 @@ class _ReportsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(marketplaceReportQueueProvider);
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
@@ -208,7 +209,7 @@ class _AnalyticsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(marketplaceStatsProvider);
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(),
       error: (e, _) => AppErrorWidget(e),
       data: (stats) {
         final cats = stats.categoryCounts.entries.toList()

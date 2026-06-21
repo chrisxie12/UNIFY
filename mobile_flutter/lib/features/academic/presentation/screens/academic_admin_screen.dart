@@ -7,6 +7,7 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/academic_provider.dart';
 import '../widgets/resource_card.dart';
 
@@ -29,7 +30,7 @@ class AcademicAdminScreen extends ConsumerWidget {
             style: UText.h3.copyWith(color: context.textPrimary)),
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(academicStatsProvider)),
         data: (stats) {
           final searches = stats.topSearches.entries.toList()

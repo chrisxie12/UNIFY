@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -26,7 +27,7 @@ class CourseListScreen extends ConsumerWidget {
         ],
       ),
       body: coursesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(coursesProvider)),
         data: (courses) {
           if (courses.isEmpty) {

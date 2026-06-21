@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
@@ -58,7 +59,7 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
               subtitle: 'Search by title, description, or location',
             )
           : resultsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(),
               error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(searchEventsProvider(_query))),
               data: (events) {
                 if (events.isEmpty) {
