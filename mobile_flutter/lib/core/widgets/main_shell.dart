@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -88,7 +89,7 @@ class MainShell extends ConsumerWidget {
 
 // ── Floating pill nav bar ────────────────────────────────────────────────
 
-class _UnifyBottomNav extends StatelessWidget {
+class _UnifyBottomNav extends StatefulWidget {
   final int currentIndex;
   final List<int> badges;
   final ValueChanged<int> onTap;
@@ -99,49 +100,118 @@ class _UnifyBottomNav extends StatelessWidget {
     required this.onTap,
   }) : assert(badges.length == MainShell._tabs.length);
 
+  @override
+  State<_UnifyBottomNav> createState() => _UnifyBottomNavState();
+}
+
+class _UnifyBottomNavState extends State<_UnifyBottomNav> {
+  bool _expanded = true;
+  Timer? _autoCollapse;
+
   static const double _pillHeight = 50;
   static const double _pillHPad  = 24;
   static const double _topGap    = 16;
   static const double _bottomGap = 8;
+  static const _timeout = Duration(seconds: 30);
+
+  @override
+  void dispose() {
+    _autoCollapse?.cancel();
+    super.dispose();
+  }
+
+  void _onTab(int index) {
+    HapticFeedback.selectionClick();
+    widget.onTap(index);
+    _resetTimer();
+  }
+
+  void _toggle() {
+    setState(() => _expanded = !_expanded);
+    if (_expanded) _resetTimer();
+    else _autoCollapse?.cancel();
+  }
+
+  void _resetTimer() {
+    _autoCollapse?.cancel();
+    _autoCollapse = Timer(_timeout, () {
+      if (mounted) setState(() => _expanded = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final safeBottom = MediaQuery.of(context).padding.bottom;
     final primary = context.primary;
 
-    return SizedBox(
-      height: _topGap + _pillHeight + _bottomGap + safeBottom,
-      child: Padding(
-        padding: const EdgeInsets.only(top: _topGap),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: _pillHPad),
-            child: Container(
-              height: _pillHeight,
-              decoration: BoxDecoration(
-                color: context.surfaceCard.withValues(alpha: context.isDark ? 0.95 : 0.97),
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: context.borderCol, width: 0.5),
-                boxShadow: context.shadowMd,
-              ),
-              child: Row(
-                children: List.generate(
-                  MainShell._tabs.length,
-                  (i) => _NavItem(
-                    tab: MainShell._tabs[i],
-                    active: currentIndex == i,
-                    badge: badges[i],
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      onTap(i);
-                    },
-                    primaryColor: primary,
-                    inactiveColor: context.textSecondary,
-                  ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+      height: _expanded
+          ? _topGap + _pillHeight + _bottomGap + safeBottom
+          : 60 + safeBottom,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: ScaleTransition(scale: anim, child: child)),
+        child: _expanded ? _buildExpanded(safeBottom, primary) : _buildCollapsed(safeBottom, primary),
+      ),
+    );
+  }
+
+  Widget _buildExpanded(double safeBottom, Color primary) {
+    return Padding(
+      key: const ValueKey('expanded'),
+      padding: const EdgeInsets.only(top: _topGap),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: _pillHPad),
+          child: Container(
+            height: _pillHeight,
+            decoration: BoxDecoration(
+              color: context.surfaceCard.withValues(alpha: context.isDark ? 0.95 : 0.97),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: context.borderCol, width: 0.5),
+              boxShadow: context.shadowMd,
+            ),
+            child: Row(
+              children: List.generate(
+                MainShell._tabs.length,
+                (i) => _NavItem(
+                  tab: MainShell._tabs[i],
+                  active: widget.currentIndex == i,
+                  badge: widget.badges[i],
+                  onTap: () => _onTab(i),
+                  primaryColor: primary,
+                  inactiveColor: context.textSecondary,
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCollapsed(double safeBottom, Color primary) {
+    final tab = MainShell._tabs[widget.currentIndex];
+    return Padding(
+      key: const ValueKey('collapsed'),
+      padding: EdgeInsets.only(top: 8, bottom: safeBottom),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: GestureDetector(
+          onTap: _toggle,
+          child: Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: context.surfaceCard.withValues(alpha: context.isDark ? 0.95 : 0.97),
+              borderRadius: BorderRadius.circular(26),
+              border: Border.all(color: context.borderCol, width: 0.5),
+              boxShadow: context.shadowMd,
+            ),
+            child: Icon(tab.icon, color: primary, size: 22),
           ),
         ),
       ),
