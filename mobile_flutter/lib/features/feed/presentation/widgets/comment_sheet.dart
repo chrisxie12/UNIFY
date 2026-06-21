@@ -49,10 +49,36 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
     final text = _ctrl.text.trim();
     if (text.isEmpty || _sending) return;
     setState(() => _sending = true);
-    final ok = await ref
-        .read(announcementCommentsProvider(widget.announcementId).notifier)
-        .add(text);
-    if (ok) _ctrl.clear();
+    try {
+      final ok = await ref
+          .read(announcementCommentsProvider(widget.announcementId).notifier)
+          .add(text);
+      if (ok) {
+        _ctrl.clear();
+        _focus.requestFocus();
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Failed to send comment'),
+              backgroundColor: context.error,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('[CommentSheet] send error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Something went wrong'),
+            backgroundColor: context.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
     if (mounted) setState(() => _sending = false);
   }
 
