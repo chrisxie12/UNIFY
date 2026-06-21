@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/chat_item.dart';
 import '../widgets/chat_list/chat_list_item.dart';
 import '../widgets/chat_list/story_row.dart';
 import '../widgets/chat_list/search_bar.dart';
@@ -32,9 +31,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   bool _showIcons = true;
   double _lastOffset = 0;
 
-  // Counts for the bottom nav badge (sum of all unread in mock data)
-  int get _totalUnread =>
-      mockChats.fold(0, (sum, c) => sum + c.unreadCount);
+  int get _totalUnread => 0;
 
   @override
   void initState() {
@@ -108,15 +105,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
 
               // Chat list
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => ColoredBox(
-                    color: Colors.white,
-                    child: ChatListItem(chat: mockChats[index]),
-                  ),
-                  childCount: mockChats.length,
-                ),
-              ),
+              const SliverToBoxAdapter(child: SizedBox.shrink()),
 
               // Bottom padding so content isn't hidden behind nav
               const SliverToBoxAdapter(child: SizedBox(height: 96)),

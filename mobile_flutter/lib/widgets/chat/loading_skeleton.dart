@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 const _accentBlue    = Color(0xFF00D4FF);
 const _accentPurple  = Color(0xFF7C3AED);
-const _surfaceDark   = Color(0xFF1A1A2E);
 const _textMuted     = Color(0xFF5A5A6E);
 const _shimmerBase   = Color(0xFF1A1A2E);
 const _shimmerHigh   = Color(0xFF2A2A3E);

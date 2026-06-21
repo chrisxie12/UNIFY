@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import 'package:unify/core/design_system/tokens.dart';
-import 'package:unify/core/design_system/typography.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 import '../providers/event_provider.dart';
 
 class CreateEventScreen extends ConsumerStatefulWidget {

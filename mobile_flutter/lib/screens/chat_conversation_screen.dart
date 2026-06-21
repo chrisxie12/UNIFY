@@ -11,13 +11,10 @@ import '../widgets/chat/coming_soon_sheet.dart';
 // ── Design tokens ─────────────────────────────────────────────────────────────
 
 const _bg            = Color(0xFF0A0A0F);
-const _surfaceDark   = Color(0xFF1A1A2E);
 const _accentBlue    = Color(0xFF00D4FF);
 const _accentPurple  = Color(0xFF7C3AED);
 const _textPrimary   = Colors.white;
-const _textSecondary = Color(0xFF8B8B9E);
 const _textMuted     = Color(0xFF5A5A6E);
-const _divider       = Color(0xFF2A2A3E);
 const _online        = Color(0xFF00E676);
 const _verifiedGold  = Color(0xFFFFD700);
 
@@ -103,7 +100,7 @@ class _ChatConversationScreenState extends State<ChatConversationScreen> {
             child: _isLoading
                 ? const ChatLoadingSkeleton()
                 : _MessageList(
-                    entries: mockChatEntries,
+                    entries: const [],
                     scrollController: _scroll,
                   ),
           ),

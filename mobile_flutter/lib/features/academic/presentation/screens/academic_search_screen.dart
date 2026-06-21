@@ -7,8 +7,6 @@ import 'package:unify/features/academic/presentation/providers/academic_provider
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
-import '../../../../core/design_system/components.dart';
-
 class AcademicSearchScreen extends ConsumerStatefulWidget {
   const AcademicSearchScreen({super.key});
 

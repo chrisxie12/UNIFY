@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../core/extensions/theme_extensions.dart';
-
-
 /// Static branded splash screen using theme colors.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});

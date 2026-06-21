@@ -188,9 +188,9 @@ class CommunitiesRepositoryImpl {
 
   Future<List<CommunityCommentModel>> getComments(String postId) async {
     final data = await _client
-        .from('community_comments')
+        .from('post_comments')
         .select(
-          '*, profiles!community_comments_author_id_fkey('
+          '*, profiles!post_comments_author_id_fkey('
           'full_name, avatar_url, is_verified_leader'
           ')',
         )
@@ -209,7 +209,7 @@ class CommunitiesRepositoryImpl {
     required String body,
     String? parentId,
   }) async {
-    await _client.from('community_comments').insert({
+    await _client.from('post_comments').insert({
       'post_id': postId,
       'author_id': authorId,
       'body': body,
@@ -221,7 +221,7 @@ class CommunitiesRepositoryImpl {
 
   Future<bool> togglePostReaction(String postId, String userId) async {
     final existing = await _client
-        .from('community_reactions')
+        .from('post_likes')
         .select('id')
         .eq('post_id', postId)
         .eq('user_id', userId)
@@ -229,16 +229,15 @@ class CommunitiesRepositoryImpl {
 
     if (existing != null) {
       await _client
-          .from('community_reactions')
+          .from('post_likes')
           .delete()
           .eq('post_id', postId)
           .eq('user_id', userId);
       return false; // unliked
     } else {
-      await _client.from('community_reactions').insert({
+      await _client.from('post_likes').insert({
         'post_id': postId,
         'user_id': userId,
-        'type': 'like',
       });
       return true; // liked
     }

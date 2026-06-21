@@ -7,8 +7,6 @@ import 'package:unify/core/extensions/theme_extensions.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
-
 class ConversationsListScreen extends ConsumerWidget {
   const ConversationsListScreen({super.key});
 

@@ -64,7 +64,6 @@ class AmbassadorDetailScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorWidget(e),
         data: (ambassador) {
-          final primary = context.textPrimary;
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(ambassadorDetailProvider(ambassadorId));

@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
-
 class QRCheckInScreen extends ConsumerStatefulWidget {
   final String eventId;
   const QRCheckInScreen({super.key, required this.eventId});

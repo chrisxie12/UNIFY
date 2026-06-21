@@ -7,7 +7,7 @@ const _accentPurple = Color(0xFF7C3AED);
 const _textPrimary  = Colors.white;
 const _textSecondary = Color(0xFF8B8B9E);
 
-TextStyle _sg(double size, FontWeight w, Color c, {TextAlign? align}) =>
+TextStyle _sg(double size, FontWeight w, Color c) =>
     GoogleFonts.spaceGrotesk(fontSize: size, fontWeight: w, color: c);
 
 void showGamingComingSoonSheet(BuildContext context) {

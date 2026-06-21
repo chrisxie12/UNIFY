@@ -6,7 +6,6 @@ import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 

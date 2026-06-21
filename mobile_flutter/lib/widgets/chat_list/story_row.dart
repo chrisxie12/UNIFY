@@ -17,7 +17,7 @@ const _storyGradient = LinearGradient(
 // ── Story row ─────────────────────────────────────────────────────────────────
 
 class ChatStoryRow extends StatelessWidget {
-  const ChatStoryRow({super.key, this.stories = mockStories, this.myInitials = 'ME'});
+  const ChatStoryRow({super.key, this.stories = const [], this.myInitials = 'ME'});
 
   final List<StoryItem> stories;
   final String myInitials;

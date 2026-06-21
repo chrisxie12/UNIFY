@@ -9,7 +9,6 @@ import '../widgets/event_card.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/design_system/components.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
   const EventsScreen({super.key});

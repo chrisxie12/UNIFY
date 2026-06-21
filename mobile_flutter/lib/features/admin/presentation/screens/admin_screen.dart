@@ -10,7 +10,6 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
-import '../../../notifications/data/repositories/notification_repository.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../verification/data/models/verification_request_model.dart';
 import 'representative_detail_screen.dart';

@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../providers/event_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
-
 class TicketScreen extends ConsumerWidget {
   final String ticketId;
   const TicketScreen({super.key, required this.ticketId});

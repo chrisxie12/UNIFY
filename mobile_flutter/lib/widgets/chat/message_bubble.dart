@@ -4,9 +4,7 @@ import '../../models/message.dart';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 
-const _bg          = Color(0xFF0A0A0F);
 const _surfaceDark = Color(0xFF1A1A2E);
-const _surfaceDarker = Color(0xFF12121F);
 const _accentBlue  = Color(0xFF00D4FF);
 const _textPrimary = Colors.white;
 const _textMuted   = Color(0xFF5A5A6E);
