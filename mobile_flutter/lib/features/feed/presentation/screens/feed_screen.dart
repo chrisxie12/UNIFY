@@ -883,7 +883,7 @@ class _NotifBadgeIcon extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         IconButton(
-          icon: Icon(Icons.favorite_border, color: context.textPrimary, size: 24),
+          icon: Icon(Icons.notifications_outlined, color: context.textPrimary, size: 24),
           onPressed: () => context.push('/notifications'),
           tooltip: 'Notifications',
         ),
