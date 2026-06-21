@@ -115,10 +115,13 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               toolbarHeight: 52,
               centerTitle: false,
               title: Text(
-                'Junify',
-                style: GoogleFonts.pacifico(
-                  fontSize: 26,
+                'UNIFY',
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
                   color: context.textPrimary,
+                  letterSpacing: -0.5,
                 ),
               ),
               actions: [
