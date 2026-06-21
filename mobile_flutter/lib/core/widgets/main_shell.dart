@@ -12,8 +12,9 @@ import '../../features/messaging/presentation/providers/messaging_provider.dart'
 
 class MainShell extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
+  final _navKey = GlobalKey<_UnifyBottomNavState>();
 
-  const MainShell({super.key, required this.navigationShell});
+  MainShell({super.key, required this.navigationShell});
 
   static const _tabs = [
     _TabItem(icon: CupertinoIcons.house,           label: 'Feed'),
@@ -74,8 +75,12 @@ class MainShell extends ConsumerWidget {
 
     return Scaffold(
       extendBody: true,
-      body: OfflineBanner(child: navigationShell),
+      body: GestureDetector(
+        onDoubleTap: () => _navKey.currentState?.collapse(),
+        child: OfflineBanner(child: navigationShell),
+      ),
       bottomNavigationBar: _UnifyBottomNav(
+        key: _navKey,
         currentIndex: navigationShell.currentIndex,
         badges: [notifBadge, 0, msgBadge, 0, 0, 0],
         onTap: (index) => navigationShell.goBranch(
@@ -95,6 +100,7 @@ class _UnifyBottomNav extends StatefulWidget {
   final ValueChanged<int> onTap;
 
   const _UnifyBottomNav({
+    super.key,
     required this.currentIndex,
     required this.badges,
     required this.onTap,
@@ -130,6 +136,13 @@ class _UnifyBottomNavState extends State<_UnifyBottomNav> {
     setState(() => _expanded = !_expanded);
     if (_expanded) _resetTimer();
     else _autoCollapse?.cancel();
+  }
+
+  void collapse() {
+    if (_expanded) {
+      setState(() => _expanded = false);
+      _autoCollapse?.cancel();
+    }
   }
 
   void _resetTimer() {
