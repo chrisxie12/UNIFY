@@ -125,13 +125,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 ),
               ),
               actions: [
-                _NotifBadgeIcon(),
                 IconButton(
                   icon: Icon(Icons.send_outlined, color: context.textPrimary, size: 22),
                   onPressed: () => context.go('/app/messaging'),
                   tooltip: 'Messages',
                 ),
-                const SizedBox(width: 4),
+                _NotifBadgeIcon(),
               ],
             ),
 
