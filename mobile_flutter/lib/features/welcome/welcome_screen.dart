@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/design/design_tokens.dart';
-import '../../core/widgets/unify_primary_button.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -105,7 +105,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: const Icon(
                             Icons.group,
                             color: UnifyColors.textInverse,
-                            size: 36,
+                            size: 48,
                           ),
                         ),
                       ),
@@ -206,9 +206,25 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         StaggeredItem(
                           animCtrl: _staggerCtrl,
                           delay: 0.3,
-                          child: UnifyPrimaryButton(
-                            label: 'Get Started',
-                            onPressed: _onGetStarted,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: _onGetStarted,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: UnifyColors.primaryBlue,
+                                foregroundColor: UnifyColors.textInverse,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                textStyle: GoogleFonts.spaceGrotesk(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              child: const Text('Get Started'),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
