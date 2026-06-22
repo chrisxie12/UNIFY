@@ -50,10 +50,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     return emailErr == null && passErr == null;
   }
 
-  void _onGoogle() {
-    // Google OAuth is not wired up yet — surface that honestly instead of
-    // silently doing nothing.
-    UnifySnackbar.info(context, 'Google sign-in is coming soon.');
+  Future<void> _onGoogle() async {
+    await ref.read(authNotifierProvider.notifier).signInWithGoogle();
+    if (!mounted) return;
+    ref.read(authNotifierProvider).whenOrNull(
+          error: (e, _) => UnifySnackbar.error(context, ErrorMapper.toUserMessage(e)),
+        );
   }
 
   Future<void> _showForgotPassword() async {
