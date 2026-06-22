@@ -164,11 +164,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         return StepShsGoals(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
       case 5:
         return StepInterests(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
       case 6:
         return StepPreview(
@@ -387,7 +389,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       case 4:
         return _data.goals.isNotEmpty;
       case 5:
-        return _data.interests.isNotEmpty;
+        // SHS interests require at least three selections.
+        return _data.isSHS
+            ? _data.interests.length >= 3
+            : _data.interests.isNotEmpty;
       case 6:
         return true;
       default:
