@@ -6,12 +6,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/design/design_tokens.dart';
 import 'steps/step_identity.dart';
-import 'steps/step_shs_personal_info.dart';
+import 'steps/step_personal_details.dart';
 import 'steps/step_shs_education.dart';
 import 'steps/step_shs_university_interest.dart';
 import 'steps/step_shs_goals.dart';
 import 'steps/step_uni_selection.dart';
-import 'steps/step_uni_email_verify.dart';
 import 'steps/step_uni_academic_details.dart';
 import 'steps/step_interests.dart';
 import 'steps/step_preview.dart';
@@ -20,6 +19,10 @@ enum UserIdentity { shs, uni }
 
 class OnboardingData {
   UserIdentity? identity;
+
+  // Shared personal details (collected for both paths at step 2)
+  String? fullName;
+  String? email;
 
   String? shsFullName;
   String? shsPhone;
@@ -46,7 +49,7 @@ class OnboardingData {
   Map<String, dynamic> toProfilePayload() {
     final base = <String, dynamic>{
       'user_type': isSHS ? 'shs_graduate' : 'university_student',
-      'full_name': isSHS ? shsFullName : '',
+      'full_name': fullName ?? shsFullName ?? '',
       'phone': isSHS ? shsPhone : '',
       'goals': goals,
       'interests': interests,
@@ -64,7 +67,7 @@ class OnboardingData {
     } else {
       base.addAll({
         'university': uniSelectedUniversity,
-        'university_email': uniEmail,
+        'university_email': email ?? uniEmail,
         'email_verified': uniEmailVerified,
         'department': uniDepartment,
         'level': uniLevel,
@@ -110,6 +113,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   List<Widget> get _steps {
     final buildStep = _buildStep;
     if (_data.identity == null) return [buildStep(0)];
+    // Shared: identity (0) → personal details (1) → ...path-specific... →
+    // goals (4) → interests (5) → preview (6). Both paths total 7 steps.
     if (_data.isSHS) {
       return [
         buildStep(0), buildStep(1), buildStep(2),
@@ -117,7 +122,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       ];
     }
     return [
-      buildStep(0), buildStep(7), buildStep(8),
+      buildStep(0), buildStep(1), buildStep(7),
       buildStep(9), buildStep(4), buildStep(5), buildStep(6),
     ];
   }
@@ -140,9 +145,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           onChanged: () => setState(() {}),
         );
       case 1:
-        return StepShsPersonalInfo(
+        return StepPersonalDetails(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
       case 2:
         return StepShsEducation(
@@ -171,11 +177,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         );
       case 7:
         return StepUniSelection(
-          data: _data,
-          animCtrl: _enterCtrl,
-        );
-      case 8:
-        return StepUniEmailVerify(
           data: _data,
           animCtrl: _enterCtrl,
         );
@@ -373,14 +374,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       case 0:
         return _data.identity != null;
       case 1:
-        if (_data.isSHS) {
-          return (_data.shsFullName?.isNotEmpty ?? false) &&
-              (_data.shsPhone?.isNotEmpty ?? false);
-        }
-        return _data.uniSelectedUniversity != null;
+        // Shared personal details: valid full name + university email.
+        return (_data.fullName?.trim().length ?? 0) >= 2 &&
+            isValidOnboardingEmail(_data.email);
       case 2:
         if (_data.isSHS) return _data.shsSchoolName != null;
-        return _data.uniEmailVerified;
+        return _data.uniSelectedUniversity != null;
       case 3:
         if (_data.isSHS) return _data.shsPreferredUniversity != null;
         return (_data.uniDepartment?.isNotEmpty ?? false) &&
