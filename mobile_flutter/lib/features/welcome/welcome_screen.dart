@@ -14,18 +14,12 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen>
-    with TickerProviderStateMixin {
-  late final AnimationController _floatCtrl;
+    with SingleTickerProviderStateMixin {
   late final AnimationController _staggerCtrl;
 
   @override
   void initState() {
     super.initState();
-    _floatCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    )..repeat(reverse: true);
-
     _staggerCtrl = AnimationController(
       vsync: this,
       duration: UnifyAnim.enter,
@@ -34,7 +28,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   void dispose() {
-    _floatCtrl.dispose();
     _staggerCtrl.dispose();
     super.dispose();
   }
@@ -49,55 +42,68 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final safeBottom = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
+      backgroundColor: UnifyColors.surfaceWhite,
       body: Stack(
         children: [
-          // ── Top 60%: Gradient ──────────────────────────────────
+          // ── Top 60%: Blue gradient ─────────────────────────────
           SizedBox(
             height: size.height * 0.60,
+            width: double.infinity,
             child: Stack(
+              clipBehavior: Clip.hardEdge,
               children: [
-                Container(
-                  decoration: const BoxDecoration(
+                const DecoratedBox(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        UnifyColors.accentPurple,
-                        Color(0xFF8B7CB3),
+                        UnifyColors.primaryBlue,
+                        UnifyColors.primaryDark,
                       ],
                     ),
                   ),
+                  child: SizedBox.expand(),
                 ),
-                // Decorative floating circles
-                AnimatedBuilder(
-                  animation: _floatCtrl,
-                  builder: (_, __) {
-                    final f = _floatCtrl.value;
-                    return Stack(
-                      children: [
-                        _floatCircle(200, -40, size.height * 0.08, f * 15),
-                        _floatCircle(150, size.width - 100, size.height * 0.20, -f * 12),
-                        _floatCircle(100, size.width * 0.3, size.height * 0.35, f * 18),
-                      ],
-                    );
-                  },
+
+                // Geometric ring cutout, bottom-right, partly off-screen
+                Positioned(
+                  right: -80,
+                  bottom: -80,
+                  child: Container(
+                    width: 400,
+                    height: 400,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: UnifyColors.textInverse.withValues(alpha: 0.05),
+                        width: 60,
+                      ),
+                    ),
+                  ),
                 ),
-                // Center content
+
+                // Center content: layered logo + wordmark + tagline
                 Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      UnifyLogo(
-                        size: 120,
-                        backgroundColor: UnifyColors.textInverse.withValues(alpha: 0.20),
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              UnifyColors.textInverse.withValues(alpha: 0.20),
+                        ),
+                        alignment: Alignment.center,
+                        child: const UnifyLogo(size: 80),
                       ),
                       const SizedBox(height: 20),
-                      Text(
-                        'UNIFY',
-                        style: UnifyTextStyle.display(),
-                      ),
+                      Text('UNIFY', style: UnifyTextStyle.display()),
                       const SizedBox(height: 8),
                       Text(
                         'Your campus, connected.',
@@ -113,44 +119,37 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             ),
           ),
 
-          // ── Bottom 40%: White card ─────────────────────────────
+          // ── Bottom 40%: White card overlapping the gradient ────
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: size.height * 0.40 + MediaQuery.of(context).padding.bottom,
+              height: size.height * 0.40 + 32 + safeBottom,
               decoration: const BoxDecoration(
                 color: UnifyColors.surfaceWhite,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(UnifyRadius.xxl),
                   topRight: Radius.circular(UnifyRadius.xxl),
                 ),
-                boxShadow: UnifyShadows.lg,
+                border: Border(
+                  top: BorderSide(color: UnifyColors.divider),
+                ),
               ),
               padding: EdgeInsets.fromLTRB(
                 UnifySpacing.s24,
                 UnifySpacing.s24,
                 UnifySpacing.s24,
-                MediaQuery.of(context).padding.bottom + UnifySpacing.s24,
+                safeBottom + UnifySpacing.s24,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // "Welcome to" — staggered slide + fade
                   StaggeredItem(
                     animCtrl: _staggerCtrl,
                     delay: 0.0,
                     child: Text(
-                      'Welcome to',
-                      style: UnifyTextStyle.h1(),
-                    ),
-                  ),
-                  StaggeredItem(
-                    animCtrl: _staggerCtrl,
-                    delay: 0.1,
-                    child: Text(
-                      'UNIFY',
+                      'Welcome to UNIFY',
                       style: UnifyTextStyle.h1(),
                     ),
                   ),
@@ -176,10 +175,24 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   StaggeredItem(
                     animCtrl: _staggerCtrl,
                     delay: 0.4,
-                    child: UnifyPrimaryButton(
-                      label: 'I already have an account',
-                      backgroundColor: UnifyColors.surfaceElevated,
-                      onPressed: () => context.push('/auth'),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () => context.push('/auth'),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          minimumSize: const Size(0, 44),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'I already have an account',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: UnifyColors.primaryBlue,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: UnifySpacing.s16),
@@ -189,7 +202,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child: Center(
                       child: Text(
                         'By continuing you agree to our Terms & Privacy Policy',
-                        style: UnifyTextStyle.micro(),
+                        style: UnifyTextStyle.micro(
+                            color: UnifyColors.textTertiary),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -199,24 +213,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _floatCircle(double r, double left, double top, double offset) {
-    return Positioned(
-      left: left,
-      top: top + offset,
-      child: Transform.translate(
-        offset: Offset(0, offset),
-        child: Container(
-          width: r,
-          height: r,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: UnifyColors.textInverse.withValues(alpha: 0.03),
-          ),
-        ),
       ),
     );
   }
