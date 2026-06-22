@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/design/design_tokens.dart';
-import '../../core/widgets/unify_logo.dart';
-import '../../core/widgets/unify_primary_button.dart';
-import '../../core/widgets/unify_secondary_button.dart';
 import 'steps/step_identity.dart';
 import 'steps/step_shs_personal_info.dart';
 import 'steps/step_shs_education.dart';
@@ -127,7 +125,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   int get _totalSteps => _steps.length;
   int get _currentPage => _pageCtrl.hasClients ? _pageCtrl.page!.round() : 0;
 
-  String get _progressLabel => 'Step ${_currentPage + 1} of $_totalSteps';
+  /// Both the SHS and University flows are 7 steps; show that even before a
+  /// path is chosen (when [_steps] is still just the identity step).
+  static const int _flowLength = 7;
+
+  String get _progressLabel => 'Step ${_currentPage + 1} of $_flowLength';
 
   Widget _buildStep(int index) {
     switch (index) {
@@ -135,6 +137,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         return StepIdentity(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
       case 1:
         return StepShsPersonalInfo(
@@ -272,52 +275,62 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   Widget _buildTopBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: UnifySpacing.s20,
-        vertical: UnifySpacing.s12,
-      ),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      child: Column(
         children: [
-          GestureDetector(
-            onTap: _goBack,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: UnifyColors.surfaceElevated,
-                borderRadius: BorderRadius.circular(UnifyRadius.md),
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: UnifyColors.textPrimary,
-                size: 20,
-              ),
-            ),
-          ),
-          const SizedBox(width: UnifySpacing.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _progressLabel,
-                  style: UnifyTextStyle.caption(color: UnifyColors.textSecondary),
-                ),
-                const SizedBox(height: UnifySpacing.s4),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: (_currentPage + 1) / _totalSteps,
-                    backgroundColor: UnifyColors.surfaceElevated,
-                    valueColor: const AlwaysStoppedAnimation(UnifyColors.primaryBlue),
-                    minHeight: 4,
+          Row(
+            children: [
+              GestureDetector(
+                onTap: _goBack,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: const BoxDecoration(
+                    color: UnifyColors.surfaceElevated,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: UnifyColors.textPrimary,
+                    size: 22,
                   ),
                 ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Text(
+                _progressLabel.toUpperCase(),
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.5,
+                  color: UnifyColors.textTertiary,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: UnifySpacing.s12),
-          UnifyLogo(size: 36, backgroundColor: UnifyColors.primaryBlue),
+          const SizedBox(height: 20),
+          // Segmented progress bar
+          Row(
+            children: [
+              for (int i = 0; i < _flowLength; i++) ...[
+                Expanded(
+                  child: Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      gradient: i <= _currentPage
+                          ? const LinearGradient(
+                              colors: [UnifyColors.primaryBlue, UnifyColors.accentPurple],
+                            )
+                          : null,
+                      color: i <= _currentPage ? null : UnifyColors.surfaceElevated,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+                if (i < _flowLength - 1) const SizedBox(width: 8),
+              ],
+            ],
+          ),
         ],
       ),
     );
@@ -344,19 +357,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
             ),
-          UnifyPrimaryButton(
+          _GradientContinueButton(
             label: isLast ? 'Complete Setup' : 'Continue',
+            enabled: _canProceed,
             loading: _submitting,
-            onPressed: _canProceed ? _goNext : null,
+            onTap: _goNext,
           ),
-          if (_currentPage > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: UnifySpacing.s8),
-              child: UnifySecondaryButton(
-                label: 'Back',
-                onPressed: _goBack,
-              ),
-            ),
         ],
       ),
     );
@@ -388,5 +394,69 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       default:
         return false;
     }
+  }
+}
+
+// ── Gradient continue button ────────────────────────────────────────────────
+
+class _GradientContinueButton extends StatelessWidget {
+  final String label;
+  final bool enabled;
+  final bool loading;
+  final VoidCallback onTap;
+
+  const _GradientContinueButton({
+    required this.label,
+    required this.enabled,
+    required this.loading,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final active = enabled && !loading;
+    return GestureDetector(
+      onTap: active ? onTap : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 54,
+        decoration: BoxDecoration(
+          gradient: active
+              ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [UnifyColors.primaryBlue, UnifyColors.accentPurple],
+                )
+              : null,
+          color: active ? null : UnifyColors.surfaceElevated,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: active
+              ? [
+                  BoxShadow(
+                    color: UnifyColors.primaryBlue.withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        alignment: Alignment.center,
+        child: loading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : Text(
+                label,
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                  color: active ? Colors.white : UnifyColors.textTertiary,
+                ),
+              ),
+      ),
+    );
   }
 }
