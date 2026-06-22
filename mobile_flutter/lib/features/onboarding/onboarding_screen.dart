@@ -7,12 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/design/design_tokens.dart';
 import 'steps/step_identity.dart';
 import 'steps/step_personal_details.dart';
-import 'steps/step_shs_education.dart';
-import 'steps/step_shs_university_interest.dart';
+import 'steps/step_academic.dart';
 import 'steps/step_shs_goals.dart';
-import 'steps/step_uni_selection.dart';
-import 'steps/step_uni_academic_details.dart';
 import 'steps/step_interests.dart';
+import 'steps/step_profile_photo.dart';
 import 'steps/step_preview.dart';
 
 enum UserIdentity { shs, uni }
@@ -24,6 +22,9 @@ class OnboardingData {
   String? fullName;
   String? email;
 
+  // Shared profile photo (local file path, step 6 — optional)
+  String? photoPath;
+
   String? shsFullName;
   String? shsPhone;
   String? shsLocation;
@@ -32,10 +33,12 @@ class OnboardingData {
   String? shsWassceGrades;
   String? shsPreferredUniversity;
   String? shsIntendedProgram;
+  String? shsStatus; // 'student' | 'graduate'
 
   String? uniSelectedUniversity;
   String? uniEmail;
   bool uniEmailVerified = false;
+  String? uniFaculty;
   String? uniDepartment;
   String? uniLevel;
   String? uniStudentId;
@@ -60,7 +63,7 @@ class OnboardingData {
         'location': shsLocation,
         'school_name': shsSchoolName,
         'year_completed': shsYearCompleted,
-        'wassce_grades': shsWassceGrades,
+        'status': shsStatus,
         'preferred_university': shsPreferredUniversity,
         'intended_program': shsIntendedProgram,
       });
@@ -69,6 +72,7 @@ class OnboardingData {
         'university': uniSelectedUniversity,
         'university_email': email ?? uniEmail,
         'email_verified': uniEmailVerified,
+        'faculty': uniFaculty,
         'department': uniDepartment,
         'level': uniLevel,
         'student_id': uniStudentId,
@@ -113,17 +117,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   List<Widget> get _steps {
     final buildStep = _buildStep;
     if (_data.identity == null) return [buildStep(0)];
-    // Shared: identity (0) → personal details (1) → ...path-specific... →
-    // goals (4) → interests (5) → preview (6). Both paths total 7 steps.
-    if (_data.isSHS) {
-      return [
-        buildStep(0), buildStep(1), buildStep(2),
-        buildStep(3), buildStep(4), buildStep(5), buildStep(6),
-      ];
-    }
+    // Both paths: identity → personal details → academic → goals →
+    // interests → profile photo → review. The academic/goals/interests steps
+    // branch internally by path. Always 7 steps.
     return [
-      buildStep(0), buildStep(1), buildStep(7),
-      buildStep(9), buildStep(4), buildStep(5), buildStep(6),
+      buildStep(0), buildStep(1), buildStep(11),
+      buildStep(4), buildStep(5), buildStep(12), buildStep(6),
     ];
   }
 
@@ -150,16 +149,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           animCtrl: _enterCtrl,
           onChanged: () => setState(() {}),
         );
-      case 2:
-        return StepShsEducation(
-          data: _data,
-          animCtrl: _enterCtrl,
-        );
-      case 3:
-        return StepShsUniversityInterest(
-          data: _data,
-          animCtrl: _enterCtrl,
-        );
       case 4:
         return StepShsGoals(
           data: _data,
@@ -177,15 +166,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           data: _data,
           animCtrl: _enterCtrl,
         );
-      case 7:
-        return StepUniSelection(
+      case 11:
+        return StepAcademic(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
-      case 9:
-        return StepUniAcademicDetails(
+      case 12:
+        return StepProfilePhoto(
           data: _data,
           animCtrl: _enterCtrl,
+          onChanged: () => setState(() {}),
         );
       default:
         return const SizedBox.shrink();
@@ -376,23 +367,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       case 0:
         return _data.identity != null;
       case 1:
-        // Shared personal details: valid full name + university email.
+        // Personal details: valid full name + email.
         return (_data.fullName?.trim().length ?? 0) >= 2 &&
             isValidOnboardingEmail(_data.email);
       case 2:
-        if (_data.isSHS) return _data.shsSchoolName != null;
-        return _data.uniSelectedUniversity != null;
+        // Academic info (path-specific).
+        if (_data.isSHS) {
+          return _data.shsSchoolName != null &&
+              _data.shsYearCompleted != null &&
+              _data.shsStatus != null;
+        }
+        return _data.uniSelectedUniversity != null &&
+            _data.uniFaculty != null &&
+            _data.uniLevel != null;
       case 3:
-        if (_data.isSHS) return _data.shsPreferredUniversity != null;
-        return (_data.uniDepartment?.isNotEmpty ?? false) &&
-            (_data.uniLevel?.isNotEmpty ?? false);
-      case 4:
         return _data.goals.isNotEmpty;
-      case 5:
+      case 4:
         // SHS interests require at least three selections.
         return _data.isSHS
             ? _data.interests.length >= 3
             : _data.interests.isNotEmpty;
+      case 5:
+        return true; // Profile photo is optional.
       case 6:
         return true;
       default:
