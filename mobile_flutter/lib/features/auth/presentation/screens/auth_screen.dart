@@ -18,7 +18,8 @@ class AuthScreen extends ConsumerStatefulWidget {
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   late bool _isSignup;
   final _emailCtrl = TextEditingController();
-  final _passCtrl  = TextEditingController();
+  final _passCtrl = TextEditingController();
+  final _emailFocus = FocusNode();
   bool _obscurePass = true;
   String? _emailError;
   String? _passError;
@@ -33,19 +34,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   void dispose() {
     _emailCtrl.dispose();
     _passCtrl.dispose();
+    _emailFocus.dispose();
     super.dispose();
   }
 
   bool _validate() {
     final email = _emailCtrl.text.trim();
-    final pass  = _passCtrl.text;
+    final pass = _passCtrl.text;
     final emailErr = (email.isEmpty || !email.contains('@')) ? 'Enter a valid email' : null;
-    final passErr  = pass.length < 6 ? 'At least 6 characters' : null;
+    final passErr = pass.length < 6 ? 'At least 6 characters' : null;
     setState(() {
       _emailError = emailErr;
-      _passError  = passErr;
+      _passError = passErr;
     });
     return emailErr == null && passErr == null;
+  }
+
+  void _onGoogle() {
+    // Google OAuth is not wired up yet — surface that honestly instead of
+    // silently doing nothing.
+    UnifySnackbar.info(context, 'Google sign-in is coming soon.');
   }
 
   Future<void> _showForgotPassword() async {
@@ -145,146 +153,181 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Brand mark
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: context.primary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    'U',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Heading
-              Text(
-                _isSignup ? 'Create account' : 'Welcome back',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: context.textPrimary,
-                  height: 1.2,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                _isSignup
-                    ? 'Sign up with your university email'
-                    : 'Sign in to your UNIFY account',
-                style: TextStyle(fontSize: 14, color: context.textSecondary),
-              ),
-              const SizedBox(height: 32),
-
-              // Email field
-              _Label('Email'),
-              const SizedBox(height: 6),
-              _InputField(
-                controller: _emailCtrl,
-                hint: 'you@university.edu.gh',
-                keyboardType: TextInputType.emailAddress,
-                errorText: _emailError,
-              ),
-              const SizedBox(height: 16),
-
-              // Password field
-              _Label('Password'),
-              const SizedBox(height: 6),
-              _InputField(
-                controller: _passCtrl,
-                hint: '••••••••',
-                obscure: _obscurePass,
-                errorText: _passError,
-                suffix: IconButton(
-                  icon: Icon(
-                    _obscurePass ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                    size: 18,
-                    color: context.textSecondary,
-                  ),
-                  onPressed: () => setState(() => _obscurePass = !_obscurePass),
-                ),
-              ),
-
-              if (!_isSignup) ...[
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: _showForgotPassword,
-                    child: Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: context.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-
-              const SizedBox(height: 28),
-
-              // Submit button
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: loading ? null : _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.primary,
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: context.primary.withValues(alpha: 0.5),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                  ),
-                  child: loading
-                      ? const SizedBox(
-                          width: 20, height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : Text(_isSignup ? 'Create Account' : 'Sign In'),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Toggle mode
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    _isSignup ? 'Already have an account? ' : "Don't have an account? ",
-                    style: TextStyle(fontSize: 14, color: context.textSecondary),
-                  ),
-                  GestureDetector(
-                    onTap: () => setState(() => _isSignup = !_isSignup),
-                    child: Text(
-                      _isSignup ? 'Sign In' : 'Sign Up',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: context.primary,
+                  // ── Logo ───────────────────────────────────────
+                  Center(
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: context.primary.withValues(alpha: 0.20),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ── Header ─────────────────────────────────────
+                  Text(
+                    _isSignup ? 'Create Account' : 'Welcome back',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: context.textPrimary,
+                      letterSpacing: -0.3,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _isSignup
+                        ? 'Join the campus community and stay connected with your peers.'
+                        : 'Sign in to your UNIFY account.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      height: 1.5,
+                      color: context.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ── Google ─────────────────────────────────────
+                  _GoogleButton(onTap: loading ? null : _onGoogle),
+                  const SizedBox(height: 14),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () => _emailFocus.requestFocus(),
+                      child: Text(
+                        'Use email instead',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: context.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ── Divider ────────────────────────────────────
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: context.borderCol, height: 1)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: context.textSecondary,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Divider(color: context.borderCol, height: 1)),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ── Email ──────────────────────────────────────
+                  _InputField(
+                    controller: _emailCtrl,
+                    focusNode: _emailFocus,
+                    hint: 'Email address',
+                    keyboardType: TextInputType.emailAddress,
+                    errorText: _emailError,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // ── Password ───────────────────────────────────
+                  _InputField(
+                    controller: _passCtrl,
+                    hint: 'Password',
+                    obscure: _obscurePass,
+                    errorText: _passError,
+                    suffix: IconButton(
+                      icon: Icon(
+                        _obscurePass ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        size: 18,
+                        color: context.textSecondary,
+                      ),
+                      onPressed: () => setState(() => _obscurePass = !_obscurePass),
+                    ),
+                  ),
+
+                  if (!_isSignup) ...[
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: _showForgotPassword,
+                        child: Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: context.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+
+                  // ── Submit ─────────────────────────────────────
+                  _PrimaryButton(
+                    label: _isSignup ? 'Create Account' : 'Sign In',
+                    loading: loading,
+                    onTap: loading ? null : _submit,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ── Footer ─────────────────────────────────────
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _isSignup ? 'Already have an account? ' : "Don't have an account? ",
+                        style: TextStyle(fontSize: 14, color: context.textSecondary),
+                      ),
+                      GestureDetector(
+                        onTap: () => setState(() => _isSignup = !_isSignup),
+                        child: Text(
+                          _isSignup ? 'Sign In' : 'Sign Up',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: context.primary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -292,23 +335,91 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 }
 
-// ── Reusable form helpers ──────────────────────────────────────────────────────
+// ── Buttons ────────────────────────────────────────────────────────────────────
 
-class _Label extends StatelessWidget {
-  const _Label(this.text);
-  final String text;
+class _PrimaryButton extends StatelessWidget {
+  const _PrimaryButton({required this.label, required this.loading, this.onTap});
+  final String label;
+  final bool loading;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: context.textPrimary),
-  );
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.primary,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: context.primary.withValues(alpha: 0.5),
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        child: loading
+            ? const SizedBox(
+                width: 20, height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : Text(label),
+      ),
+    );
+  }
 }
+
+class _GoogleButton extends StatelessWidget {
+  const _GoogleButton({this.onTap});
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.primary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 22,
+              height: 22,
+              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              alignment: Alignment.center,
+              child: Text(
+                'G',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: context.primary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Continue with Google'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Input field ────────────────────────────────────────────────────────────────
 
 class _InputField extends StatelessWidget {
   const _InputField({
     required this.controller,
     required this.hint,
+    this.focusNode,
     this.keyboardType,
     this.obscure = false,
     this.errorText,
@@ -317,6 +428,7 @@ class _InputField extends StatelessWidget {
 
   final TextEditingController controller;
   final String hint;
+  final FocusNode? focusNode;
   final TextInputType? keyboardType;
   final bool obscure;
   final String? errorText;
@@ -326,6 +438,7 @@ class _InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       keyboardType: keyboardType,
       obscureText: obscure,
       style: TextStyle(fontSize: 15, color: context.textPrimary),
@@ -336,14 +449,14 @@ class _InputField extends StatelessWidget {
         suffixIcon: suffix,
         filled: true,
         fillColor: context.inputFill,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: context.borderCol, width: 1),
+          borderSide: const BorderSide(color: Colors.transparent),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: context.borderCol, width: 1),
+          borderSide: const BorderSide(color: Colors.transparent),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
