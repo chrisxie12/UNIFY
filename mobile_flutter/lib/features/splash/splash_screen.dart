@@ -36,11 +36,11 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     if (!mounted) return;
-    // Fade out transition
     final session = Supabase.instance.client.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
-      context.go('/app/feed');
+      // GoRouter redirect handles onboarding check
+      context.go('/');
     } else {
       final prefs = await SharedPreferences.getInstance();
       final seen = prefs.getBool('seen_welcome') ?? false;
