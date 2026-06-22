@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/design/design_tokens.dart';
 import '../onboarding_screen.dart';
 
@@ -23,6 +24,7 @@ class StepInterests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: UnifySpacing.s24),
       child: Column(
@@ -31,7 +33,10 @@ class StepInterests extends StatelessWidget {
           const SizedBox(height: UnifySpacing.s32),
           Text('Your Interests', style: UnifyTextStyle.h2()),
           const SizedBox(height: UnifySpacing.s8),
-          Text('Select topics you care about. (Tap to select)', style: UnifyTextStyle.body()),
+          Text(
+            'Select topics you care about. (Tap to select)',
+            style: UnifyTextStyle.body(),
+          ),
           const SizedBox(height: UnifySpacing.s24),
           Wrap(
             spacing: UnifySpacing.s8,
@@ -51,22 +56,33 @@ class StepInterests extends StatelessWidget {
                   duration: UnifyAnim.fast,
                   padding: const EdgeInsets.symmetric(
                     horizontal: UnifySpacing.s16,
-                    vertical: UnifySpacing.s8,
+                    vertical: 12.0,
                   ),
                   decoration: BoxDecoration(
-                    color: selected ? UnifyColors.primaryBlue : UnifyColors.surfaceElevated,
+                    color: selected ? primary : UnifyColors.surfaceWhite,
                     borderRadius: BorderRadius.circular(UnifyRadius.full),
                     border: Border.all(
-                      color: selected ? UnifyColors.primaryBlue : UnifyColors.divider,
+                      color: selected ? primary : UnifyColors.divider,
+                      width: selected ? 2 : 1,
                     ),
+                    boxShadow: selected
+                        ? [
+                            BoxShadow(
+                              color: primary.withValues(alpha: 0.25),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Text(
                     interest,
-                    style: TextStyle(
+                    style: GoogleFonts.spaceGrotesk(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: selected ? UnifyColors.textInverse : UnifyColors.textSecondary,
-                      fontFamily: 'SpaceGrotesk',
+                      color: selected
+                          ? UnifyColors.textInverse
+                          : UnifyColors.textSecondary,
                     ),
                   ),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/design/design_tokens.dart';
-import '../../../core/widgets/unify_logo.dart';
 import '../onboarding_screen.dart';
 
 class StepPreview extends StatelessWidget {
@@ -11,13 +11,26 @@ class StepPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: UnifySpacing.s24),
       child: Column(
         children: [
           const SizedBox(height: UnifySpacing.s32),
-          const UnifyLogo(size: 64, backgroundColor: UnifyColors.primaryBlue),
-          const SizedBox(height: UnifySpacing.s16),
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(UnifyRadius.xl),
+            ),
+            child: Icon(
+              Icons.celebration_outlined,
+              color: primary,
+              size: 36,
+            ),
+          ),
+          const SizedBox(height: UnifySpacing.s20),
           Text("You're all set!", style: UnifyTextStyle.h2()),
           const SizedBox(height: UnifySpacing.s8),
           Text(
@@ -56,7 +69,8 @@ class StepPreview extends StatelessWidget {
               title: 'University Interest',
               children: [
                 _PreviewRow('University', data.shsPreferredUniversity ?? ''),
-                if (data.shsIntendedProgram != null && data.shsIntendedProgram!.isNotEmpty)
+                if (data.shsIntendedProgram != null &&
+                    data.shsIntendedProgram!.isNotEmpty)
                   _PreviewRow('Program', data.shsIntendedProgram!),
               ],
             ),
@@ -101,15 +115,47 @@ class _PreviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return Padding(
       padding: const EdgeInsets.only(bottom: UnifySpacing.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: UnifyTextStyle.h4(color: UnifyColors.primaryBlue)),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 16,
+                decoration: BoxDecoration(
+                  color: primary,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: UnifySpacing.s8),
+              Text(
+                title,
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: UnifyColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: UnifySpacing.s12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(UnifySpacing.s16),
+            decoration: BoxDecoration(
+              color: UnifyColors.surfaceGrey,
+              borderRadius: BorderRadius.circular(UnifyRadius.md),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: children,
+            ),
+          ),
           const SizedBox(height: UnifySpacing.s8),
-          ...children,
-          const Divider(height: UnifySpacing.s24, color: UnifyColors.divider),
         ],
       ),
     );
@@ -125,16 +171,30 @@ class _PreviewRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: UnifySpacing.s4),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 100,
-            child: Text(label, style: UnifyTextStyle.bodySm(color: UnifyColors.textTertiary)),
+            width: 90,
+            child: Text(
+              label,
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: UnifyColors.textTertiary,
+              ),
+            ),
           ),
           Expanded(
-            child: Text(value, style: UnifyTextStyle.body(color: UnifyColors.textPrimary)),
+            child: Text(
+              value,
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: UnifyColors.textPrimary,
+              ),
+            ),
           ),
         ],
       ),

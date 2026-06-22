@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/design/design_tokens.dart';
 import '../onboarding_screen.dart';
 
 class StepIdentity extends StatelessWidget {
@@ -16,21 +15,37 @@ class StepIdentity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: UnifySpacing.s24),
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = theme.colorScheme.onSurface.withValues(alpha: 0.6);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: UnifySpacing.s32),
-          Text('Who are you?', style: UnifyTextStyle.h2()),
-          const SizedBox(height: UnifySpacing.s8),
-          Text(
-            'Select your current status to personalize your UNIFY experience.',
-            style: UnifyTextStyle.body(),
+          const SizedBox(height: 32),
+          Text("What's your role?",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: textPrimary,
+            ),
           ),
-          const SizedBox(height: UnifySpacing.s32),
-          _OptionCard(
+          const SizedBox(height: 8),
+          Text(
+            'Help us personalize your experience by telling us how you use the campus network.',
+            style: TextStyle(
+              fontSize: 15,
+              color: textSecondary,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 32),
+          _RoleCard(
             icon: Icons.school_outlined,
+            iconColor: primary,
             title: 'SHS Graduate',
             subtitle: 'Completed senior high school, exploring university options',
             selected: data.identity == UserIdentity.shs,
@@ -39,9 +54,10 @@ class StepIdentity extends StatelessWidget {
               onChanged?.call();
             },
           ),
-          const SizedBox(height: UnifySpacing.s12),
-          _OptionCard(
+          const SizedBox(height: 12),
+          _RoleCard(
             icon: Icons.auto_stories_outlined,
+            iconColor: textSecondary,
             title: 'University Student',
             subtitle: 'Currently enrolled at a tertiary institution',
             selected: data.identity == UserIdentity.uni,
@@ -56,15 +72,17 @@ class StepIdentity extends StatelessWidget {
   }
 }
 
-class _OptionCard extends StatelessWidget {
+class _RoleCard extends StatelessWidget {
   final IconData icon;
+  final Color iconColor;
   final String title;
   final String subtitle;
   final bool selected;
   final VoidCallback onTap;
 
-  const _OptionCard({
+  const _RoleCard({
     required this.icon,
+    required this.iconColor,
     required this.title,
     required this.subtitle,
     required this.selected,
@@ -73,73 +91,74 @@ class _OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final textPrimary = theme.colorScheme.onSurface;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: UnifyAnim.fast,
-        padding: const EdgeInsets.all(UnifySpacing.s20),
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: selected
-              ? UnifyColors.primaryBlue.withValues(alpha: 0.06)
-              : UnifyColors.surfaceWhite,
-          borderRadius: BorderRadius.circular(UnifyRadius.lg),
+              ? primary.withValues(alpha: 0.02)
+              : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? UnifyColors.primaryBlue : UnifyColors.divider,
-            width: selected ? 2 : 1,
+            color: selected ? primary : theme.colorScheme.outlineVariant,
+            width: selected ? 1.5 : 1,
           ),
-          boxShadow: selected ? UnifyShadows.md : [],
         ),
         child: Row(
           children: [
             Container(
-              width: 52,
-              height: 52,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
-                color: selected
-                    ? UnifyColors.primaryBlue.withValues(alpha: 0.12)
-                    : UnifyColors.surfaceElevated,
-                borderRadius: BorderRadius.circular(UnifyRadius.md),
+                color: theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon,
-                color: selected ? UnifyColors.primaryBlue : UnifyColors.textTertiary,
-                size: 26,
-              ),
+              child: Icon(icon, color: iconColor, size: 24),
             ),
-            const SizedBox(width: UnifySpacing.s16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: selected ? UnifyColors.textPrimary : UnifyColors.textSecondary,
-                      fontFamily: 'SpaceGrotesk',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: selected ? textPrimary : textPrimary.withValues(alpha: 0.7),
                     ),
                   ),
-                  const SizedBox(height: UnifySpacing.s4),
+                  const SizedBox(height: 4),
                   Text(subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: UnifyColors.textTertiary,
-                      fontFamily: 'SpaceGrotesk',
-                      height: 1.3,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
               ),
             ),
-            if (selected)
-              Container(
-                width: 26,
-                height: 26,
-                decoration: const BoxDecoration(
-                  color: UnifyColors.primaryBlue,
-                  shape: BoxShape.circle,
+            Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: selected ? primary : Colors.transparent,
+                border: Border.all(
+                  color: selected ? primary : theme.colorScheme.outlineVariant,
+                  width: 2,
                 ),
-                child: const Icon(Icons.check, color: UnifyColors.textInverse, size: 16),
               ),
+              child: selected
+                  ? const Icon(Icons.check, color: Colors.white, size: 14)
+                  : null,
+            ),
           ],
         ),
       ),

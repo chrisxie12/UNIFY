@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/design/design_tokens.dart';
-import '../../core/widgets/unify_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -141,19 +140,26 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Transform.scale(
                           scale: 0.9 + 0.1 * logoAnim.value,
                           child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: UnifyColors.primaryBlue
-                                      .withValues(alpha: 0.10),
-                                  blurRadius: 24,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: UnifyColors.primaryBlue,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: UnifyColors.primaryBlue
+                                        .withValues(alpha: 0.15),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.group,
+                                color: Colors.white,
+                                size: 36,
+                              ),
                             ),
-                            child: const UnifyLogo(size: 80),
-                          ),
                         ),
                       ),
                     ),

@@ -1,8 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../../core/design/design_tokens.dart';
-import '../../../core/widgets/unify_input_field.dart';
-import '../../../core/widgets/unify_primary_button.dart';
 import '../onboarding_screen.dart';
 
 class StepUniEmailVerify extends StatefulWidget {
@@ -76,78 +73,228 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
     }
   }
 
+  Widget _buildField({
+    required TextEditingController controller,
+    required String hint,
+    TextInputType? keyboardType,
+    Widget? prefixIcon,
+  }) {
+    final theme = Theme.of(context);
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: TextStyle(
+        fontSize: 15,
+        color: theme.colorScheme.onSurface,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+        ),
+        prefixIcon: prefixIcon,
+        filled: true,
+        fillColor: theme.colorScheme.surfaceContainerHighest
+            .withValues(alpha: 0.5),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Color(0xFFEF4444),
+            width: 1,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Color(0xFFEF4444),
+            width: 2,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: UnifySpacing.s24),
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = theme.colorScheme.onSurface.withValues(alpha: 0.6);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: UnifySpacing.s32),
-          Text('Verify Email', style: UnifyTextStyle.h2()),
-          const SizedBox(height: UnifySpacing.s8),
+          const SizedBox(height: 32),
+          Text('Verify Email',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
           Text(
             'Enter your official university email to verify your campus identity.',
-            style: UnifyTextStyle.body(),
+            style: TextStyle(
+              fontSize: 15,
+              color: textSecondary,
+            ),
           ),
-          const SizedBox(height: UnifySpacing.s24),
+          const SizedBox(height: 24),
           if (!_codeSent) ...[
-            UnifyInputField(
+            _buildField(
               controller: _emailCtrl,
-              label: 'University Email',
               hint: 'student@domain.edu.gh',
               keyboardType: TextInputType.emailAddress,
               prefixIcon: const Icon(Icons.email_outlined, size: 20),
             ),
-            const SizedBox(height: UnifySpacing.s16),
+            const SizedBox(height: 16),
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(_error!, style: UnifyTextStyle.caption(color: UnifyColors.error)),
+                child: Text(
+                  _error!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
               ),
-            UnifyPrimaryButton(label: 'Send Verification Code', onPressed: _sendCode),
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: _sendCode,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                  foregroundColor: Colors.white,
+                  elevation: 2,
+                  shadowColor: primary.withValues(alpha: 0.15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                child: const Text('Send Verification Code'),
+              ),
+            ),
           ] else ...[
             Container(
-              padding: const EdgeInsets.all(UnifySpacing.s16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: UnifyColors.success.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(UnifyRadius.md),
-                border: Border.all(color: UnifyColors.success.withValues(alpha: 0.3)),
+                color: theme.colorScheme.primaryContainer
+                    .withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle, color: UnifyColors.success, size: 24),
-                  const SizedBox(width: UnifySpacing.s12),
+                  Icon(
+                    Icons.check_circle,
+                    color: theme.colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Code sent to ${_emailCtrl.text.trim()}',
-                      style: UnifyTextStyle.bodySm(color: UnifyColors.success),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                   TextButton(
-                    onPressed: () => setState(() { _codeSent = false; _error = null; }),
-                    child: const Text('Change', style: TextStyle(fontFamily: 'SpaceGrotesk', fontSize: 13)),
+                    onPressed: () => setState(() {
+                      _codeSent = false;
+                      _error = null;
+                    }),
+                    child: Text(
+                      'Change',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: primary,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: UnifySpacing.s24),
-            Text('Enter verification code', style: UnifyTextStyle.bodySm()),
-            const SizedBox(height: UnifySpacing.s8),
-            UnifyInputField(
+            const SizedBox(height: 24),
+            Text(
+              'Enter verification code',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildField(
               controller: _otpCtrl,
-              label: '6-digit code',
               hint: '000000',
               keyboardType: TextInputType.number,
               prefixIcon: const Icon(Icons.lock_outline, size: 20),
             ),
-            const SizedBox(height: UnifySpacing.s16),
+            const SizedBox(height: 16),
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(_error!, style: UnifyTextStyle.caption(color: UnifyColors.error)),
+                child: Text(
+                  _error!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
               ),
-            UnifyPrimaryButton(label: 'Verify & Continue', onPressed: _verifyCode),
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: _verifyCode,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                  foregroundColor: Colors.white,
+                  elevation: 2,
+                  shadowColor: primary.withValues(alpha: 0.15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                child: const Text('Verify & Continue'),
+              ),
+            ),
           ],
         ],
       ),

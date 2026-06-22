@@ -4,9 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/design/design_tokens.dart';
-import '../../core/widgets/unify_logo.dart';
-import '../../core/widgets/unify_primary_button.dart';
-import '../../core/widgets/unify_secondary_button.dart';
 import 'steps/step_identity.dart';
 import 'steps/step_shs_personal_info.dart';
 import 'steps/step_shs_education.dart';
@@ -16,6 +13,7 @@ import 'steps/step_uni_selection.dart';
 import 'steps/step_uni_email_verify.dart';
 import 'steps/step_uni_academic_details.dart';
 import 'steps/step_interests.dart';
+import 'steps/step_profile_photo.dart';
 import 'steps/step_preview.dart';
 
 enum UserIdentity { shs, uni }
@@ -38,6 +36,8 @@ class OnboardingData {
   String? uniDepartment;
   String? uniLevel;
   String? uniStudentId;
+
+  String? photoUrl;
 
   List<String> goals = [];
   List<String> interests = [];
@@ -115,12 +115,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     if (_data.isSHS) {
       return [
         buildStep(0), buildStep(1), buildStep(2),
-        buildStep(3), buildStep(4), buildStep(5), buildStep(6),
+        buildStep(3), buildStep(4), buildStep(5),
+        buildStep(10), buildStep(6),
       ];
     }
     return [
       buildStep(0), buildStep(7), buildStep(8),
-      buildStep(9), buildStep(4), buildStep(5), buildStep(6),
+      buildStep(9), buildStep(4), buildStep(5),
+      buildStep(10), buildStep(6),
     ];
   }
 
@@ -172,6 +174,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         );
       case 9:
         return StepUniAcademicDetails(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
+        );
+      case 10:
+        return StepProfilePhoto(
           data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       default:
@@ -265,52 +271,70 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   Widget _buildTopBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: UnifySpacing.s20,
-        vertical: UnifySpacing.s12,
-      ),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: _goBack,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: UnifyColors.surfaceElevated,
-                borderRadius: BorderRadius.circular(UnifyRadius.md),
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: UnifyColors.textPrimary,
-                size: 20,
-              ),
-            ),
-          ),
-          const SizedBox(width: UnifySpacing.s12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _progressLabel,
-                  style: UnifyTextStyle.caption(color: UnifyColors.textSecondary),
-                ),
-                const SizedBox(height: UnifySpacing.s4),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: (_currentPage + 1) / _totalSteps,
-                    backgroundColor: UnifyColors.surfaceElevated,
-                    valueColor: const AlwaysStoppedAnimation(UnifyColors.primaryBlue),
-                    minHeight: 4,
+          Row(
+            children: [
+              GestureDetector(
+                onTap: _goBack,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: UnifyColors.surfaceElevated,
+                    borderRadius: BorderRadius.circular(UnifyRadius.md),
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: UnifyColors.textPrimary,
+                    size: 20,
                   ),
                 ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Text(
+                _progressLabel.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: UnifyColors.textSecondary,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: UnifyColors.primaryBlue,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: const Icon(Icons.group, color: Colors.white, size: 18),
+              ),
+            ],
           ),
-          const SizedBox(width: UnifySpacing.s12),
-          const UnifyLogo(size: 36, backgroundColor: UnifyColors.primaryBlue),
+          const SizedBox(height: 10),
+          Row(
+            children: List.generate(_totalSteps, (i) {
+              final filled = i <= _currentPage;
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: Container(
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: filled
+                          ? UnifyColors.primaryBlue
+                          : UnifyColors.surfaceElevated,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
         ],
       ),
     );
@@ -318,12 +342,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   Widget _buildBottomBar() {
     final isLast = _currentPage == _totalSteps - 1;
-    return Padding(
+    return Container(
       padding: EdgeInsets.fromLTRB(
-        UnifySpacing.s20,
-        UnifySpacing.s12,
-        UnifySpacing.s20,
-        MediaQuery.of(context).padding.bottom + UnifySpacing.s20,
+        24,
+        12,
+        24,
+        MediaQuery.of(context).padding.bottom + 20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -337,17 +361,53 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
             ),
-          UnifyPrimaryButton(
-            label: isLast ? 'Complete Setup' : 'Continue',
-            loading: _submitting,
-            onPressed: _canProceed ? _goNext : null,
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: ElevatedButton(
+              onPressed: _canProceed
+                  ? (_submitting ? null : _goNext)
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: UnifyColors.primaryBlue,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor:
+                    UnifyColors.primaryBlue.withValues(alpha: 0.4),
+                elevation: 2,
+                shadowColor: UnifyColors.primaryBlue.withValues(alpha: 0.15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              child: _submitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(isLast ? 'Complete Setup' : 'Continue'),
+            ),
           ),
           if (_currentPage > 0)
             Padding(
-              padding: const EdgeInsets.only(top: UnifySpacing.s8),
-              child: UnifySecondaryButton(
-                label: 'Back',
-                onPressed: _goBack,
+              padding: const EdgeInsets.only(top: 16),
+              child: GestureDetector(
+                onTap: _goBack,
+                child: Text(
+                  'Go back',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: UnifyColors.textSecondary,
+                  ),
+                ),
               ),
             ),
         ],
@@ -377,6 +437,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       case 5:
         return _data.interests.isNotEmpty;
       case 6:
+        return true;
+      case 7:
         return true;
       default:
         return false;
