@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 import '../../../../core/errors/error_mapper.dart';
@@ -393,18 +394,11 @@ class _GoogleButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 22,
-              height: 22,
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(4),
               decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              alignment: Alignment.center,
-              child: Text(
-                'G',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: context.primary,
-                ),
-              ),
+              child: SvgPicture.asset('assets/images/google.svg'),
             ),
             const SizedBox(width: 12),
             const Text('Continue with Google'),
