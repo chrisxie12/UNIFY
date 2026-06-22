@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,7 @@ import 'offline_banner.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart' as notif;
 import '../../features/messaging/presentation/providers/messaging_provider.dart' as msg;
 
-class MainShell extends ConsumerWidget {
+class MainShell extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
 
   const MainShell({super.key, required this.navigationShell});
@@ -24,7 +26,81 @@ class MainShell extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends ConsumerState<MainShell> {
+  /// How long the nav stays expanded with no interaction before collapsing.
+  static const _autoCollapse = Duration(seconds: 15);
+
+  bool _expanded = true;
+  Timer? _idleTimer;
+  DateTime? _lastTapDown;
+
+  @override
+  void initState() {
+    super.initState();
+    _restartIdleTimer();
+  }
+
+  @override
+  void dispose() {
+    _idleTimer?.cancel();
+    super.dispose();
+  }
+
+  /// (Re)start the 15s inactivity timer that collapses the nav into one icon.
+  void _restartIdleTimer() {
+    _idleTimer?.cancel();
+    _idleTimer = Timer(_autoCollapse, () {
+      if (mounted && _expanded) setState(() => _expanded = false);
+    });
+  }
+
+  void _expand() {
+    if (!_expanded) setState(() => _expanded = true);
+    _restartIdleTimer();
+  }
+
+  void _collapse() {
+    _idleTimer?.cancel();
+    if (_expanded) setState(() => _expanded = false);
+  }
+
+  void _toggle() => _expanded ? _collapse() : _expand();
+
+  /// Manual double-tap detection via raw pointer events. A [Listener] never
+  /// competes in the gesture arena, so it fires even over scrollables/buttons
+  /// and adds no tap delay to the page content.
+  void _onPointerDown(PointerDownEvent _) {
+    final now = DateTime.now();
+    if (_lastTapDown != null &&
+        now.difference(_lastTapDown!) < const Duration(milliseconds: 300)) {
+      _lastTapDown = null;
+      _toggle();
+    } else {
+      _lastTapDown = now;
+    }
+  }
+
+  bool _onScroll(UserScrollNotification n) {
+    // Hide while scrolling down through content, reveal when scrolling back up.
+    switch (n.direction) {
+      case ScrollDirection.reverse:
+        _collapse();
+        break;
+      case ScrollDirection.forward:
+        _expand();
+        break;
+      case ScrollDirection.idle:
+        break;
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final navigationShell = widget.navigationShell;
     final notifBadge = ref.watch(notif.unreadCountProvider).valueOrNull ?? 0;
     final msgBadge = ref.watch(msg.unreadCountProvider).valueOrNull ?? 0;
 
@@ -73,14 +149,41 @@ class MainShell extends ConsumerWidget {
 
     return Scaffold(
       extendBody: true,
-      body: OfflineBanner(child: navigationShell),
-      bottomNavigationBar: _UnifyBottomNav(
-        currentIndex: navigationShell.currentIndex,
-        badges: [notifBadge, 0, msgBadge, 0, 0, 0],
-        onTap: (index) => navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
+      body: Listener(
+        // Double-tap anywhere collapses/expands the nav (raw pointer events,
+        // so it works over scrollables without stealing their gestures).
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: _onPointerDown,
+        child: NotificationListener<UserScrollNotification>(
+          onNotification: _onScroll,
+          child: OfflineBanner(child: navigationShell),
         ),
+      ),
+      bottomNavigationBar: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 240),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, anim) =>
+            FadeTransition(opacity: anim, child: child),
+        child: _expanded
+            ? _UnifyBottomNav(
+                key: const ValueKey('nav-expanded'),
+                currentIndex: navigationShell.currentIndex,
+                badges: [notifBadge, 0, msgBadge, 0, 0, 0],
+                onTap: (index) {
+                  navigationShell.goBranch(
+                    index,
+                    initialLocation: index == navigationShell.currentIndex,
+                  );
+                  _expand();
+                },
+              )
+            : _CollapsedNavButton(
+                key: const ValueKey('nav-collapsed'),
+                icon: MainShell._tabs[navigationShell.currentIndex].icon,
+                showDot: notifBadge + msgBadge > 0,
+                onTap: _expand,
+              ),
       ),
     );
   }
@@ -273,6 +376,87 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   child: Text(widget.tab.label),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Collapsed single-icon pill ───────────────────────────────────────────
+
+class _CollapsedNavButton extends StatelessWidget {
+  final IconData icon;
+  final bool showDot;
+  final VoidCallback onTap;
+
+  const _CollapsedNavButton({
+    super.key,
+    required this.icon,
+    required this.showDot,
+    required this.onTap,
+  });
+
+  // Keep the same reserved height as the full bar so the body doesn't jump.
+  static const double _pillHeight = 50;
+  static const double _topGap     = 16;
+  static const double _bottomGap  = 8;
+
+  @override
+  Widget build(BuildContext context) {
+    final safeBottom = MediaQuery.of(context).padding.bottom;
+    return SizedBox(
+      height: _topGap + _pillHeight + _bottomGap + safeBottom,
+      child: Padding(
+        padding: const EdgeInsets.only(top: _topGap),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              HapticFeedback.selectionClick();
+              onTap();
+            },
+            child: Container(
+              height: _pillHeight,
+              width: 70,
+              decoration: BoxDecoration(
+                color: context.surfaceCard
+                    .withValues(alpha: context.isDark ? 0.95 : 0.97),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: context.borderCol, width: 0.5),
+                boxShadow: context.shadowMd,
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: context.primary, size: 22),
+                      const SizedBox(width: 3),
+                      Icon(CupertinoIcons.chevron_up,
+                          color: context.textSecondary, size: 12),
+                    ],
+                  ),
+                  if (showDot)
+                    Positioned(
+                      top: 9,
+                      right: 16,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: context.error,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: context.surfaceCard, width: 1.5),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
