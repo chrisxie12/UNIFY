@@ -14,23 +14,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animCtrl;
+    with TickerProviderStateMixin {
+  // Entrance: staggered fade/slide for logo, title, tagline, loading line.
+  late final AnimationController _entryCtrl;
+  // Slow breathing pulse for the background geometric ring.
+  late final AnimationController _pulseCtrl;
 
   @override
   void initState() {
     super.initState();
-    _animCtrl = AnimationController(
+    _entryCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 8),
-    )..repeat();
+      duration: const Duration(milliseconds: 1400),
+    )..forward();
+    _pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat(reverse: true);
 
     Future.delayed(const Duration(seconds: 3), _navigate);
   }
 
   @override
   void dispose() {
-    _animCtrl.dispose();
+    _entryCtrl.dispose();
+    _pulseCtrl.dispose();
     super.dispose();
   }
 
@@ -49,92 +57,161 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  /// A staggered slice of the entrance timeline.
+  Animation<double> _stage(double begin, double end,
+          [Curve curve = Curves.easeOutCubic]) =>
+      CurvedAnimation(
+        parent: _entryCtrl,
+        curve: Interval(begin, end, curve: curve),
+      );
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animCtrl,
-      builder: (_, __) {
-        final t = _animCtrl.value;
+    final size = MediaQuery.of(context).size;
 
-        // Cycle through 3 colour phases over the 8s loop
-        final phase = (t * 3).floor();
-        final frac = (t * 3) - phase;
-        final colors = [
-          UnifyColors.primaryBlue,
-          UnifyColors.primaryDark,
-          UnifyColors.accentPurple,
-          UnifyColors.primaryBlue,
-        ];
-        final topColor = Color.lerp(colors[phase], colors[phase + 1], frac)!;
-        final bottomColor = Color.lerp(colors[phase + 1], colors[phase + 2], frac)!;
+    final logoAnim = _stage(0.0, 0.45);
+    final titleAnim = _stage(0.2, 0.6);
+    final tagAnim = _stage(0.45, 0.9);
+    final loadAnim = _stage(0.6, 1.0);
 
-        // Logo scale: 0.8→1.0 over first 60% of 3s (1.8s)
-        final logoScale = Tween<double>(begin: 0.8, end: 1.0)
-            .animate(CurvedAnimation(
-              parent: _animCtrl,
-              curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
-            ))
-            .value;
-
-        // Text fade & slide
-        final textOpacity = ((t * 3) - 0.6).clamp(0.0, 1.0);
-        final textSlide = 20.0 * (1.0 - textOpacity);
-        final tagOpacity = ((t * 3) - 0.9).clamp(0.0, 1.0);
-
-        return Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [topColor, bottomColor],
-              ),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Transform.scale(
-                    scale: logoScale,
-                    child: UnifyLogo(
-                      size: 80,
-                      backgroundColor: UnifyColors.textInverse.withValues(alpha: 0.20),
-                    ),
+    return Scaffold(
+      backgroundColor: UnifyColors.surfaceWhite,
+      body: Stack(
+        // overflow-hidden: clip the off-screen ring
+        clipBehavior: Clip.hardEdge,
+        children: [
+          // ── Top gradient wash (blue-50 → transparent over top half) ──
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              height: size.height * 0.5,
+              width: double.infinity,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x80EFF6FF), Color(0x00EFF6FF)],
                   ),
-                  const SizedBox(height: 24),
-                  Opacity(
-                    opacity: textOpacity,
-                    child: Transform.translate(
-                      offset: Offset(0, textSlide),
-                      child: Text(
-                        'UNIFY',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 8,
-                          color: UnifyColors.textInverse,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Opacity(
-                    opacity: tagOpacity,
-                    child: Text(
-                      'Your campus, connected.',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: UnifyColors.textInverse.withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        );
-      },
+
+          // ── Subtle geometric ring accent ──
+          AnimatedBuilder(
+            animation: _pulseCtrl,
+            builder: (_, child) {
+              final v = _pulseCtrl.value;
+              return Positioned(
+                top: size.height * 0.10,
+                right: -80,
+                child: Opacity(
+                  opacity: 0.4 + 0.4 * v,
+                  child: Transform.scale(scale: 1.0 + 0.05 * v, child: child),
+                ),
+              );
+            },
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: UnifyColors.divider.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+
+          // ── Foreground content ──
+          Center(
+            child: AnimatedBuilder(
+              animation: _entryCtrl,
+              builder: (_, __) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Hero logo — float + fade in
+                    Opacity(
+                      opacity: logoAnim.value,
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - logoAnim.value)),
+                        child: Transform.scale(
+                          scale: 0.9 + 0.1 * logoAnim.value,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: UnifyColors.primaryBlue
+                                      .withValues(alpha: 0.10),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: const UnifyLogo(size: 80),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Brand title
+                    Opacity(
+                      opacity: titleAnim.value,
+                      child: Transform.translate(
+                        offset: Offset(0, 8 * (1 - titleAnim.value)),
+                        child: Text(
+                          'UNIFY',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -1.5,
+                            height: 1,
+                            color: UnifyColors.primaryBlue,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Tagline
+                    Opacity(
+                      opacity: tagAnim.value,
+                      child: Text(
+                        'Your campus, connected.',
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                          color: UnifyColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 64),
+
+                    // Loading hint
+                    Opacity(
+                      opacity: loadAnim.value,
+                      child: Text(
+                        'Loading experience...',
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: UnifyColors.textSecondary.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

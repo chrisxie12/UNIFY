@@ -50,10 +50,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           // ── Top 60%: Blue gradient ──────────────────────────────
           SizedBox(
             height: size.height * 0.60,
+            width: double.infinity,
             child: Stack(
+              clipBehavior: Clip.hardEdge,
               children: [
-                Container(
-                  decoration: const BoxDecoration(
+                const DecoratedBox(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -63,6 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       ],
                     ),
                   ),
+                  child: SizedBox.expand(),
                 ),
                 // Geometric cutout decoration
                 Positioned(
@@ -92,6 +95,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           shape: BoxShape.circle,
                           color: UnifyColors.textInverse.withValues(alpha: 0.20),
                         ),
+                        alignment: Alignment.center,
                         child: const UnifyLogo(size: 80),
                       ),
                       const SizedBox(height: 20),
@@ -201,8 +205,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           animCtrl: _staggerCtrl,
                           delay: 0.4,
                           child: Center(
-                            child: GestureDetector(
-                              onTap: () => context.push('/auth'),
+                            child: TextButton(
+                              onPressed: () => context.push('/auth'),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                minimumSize: const Size(0, 44),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
                               child: Text(
                                 'I already have an account',
                                 style: GoogleFonts.spaceGrotesk(
