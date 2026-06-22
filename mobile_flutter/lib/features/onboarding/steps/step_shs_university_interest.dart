@@ -6,8 +6,14 @@ import '../onboarding_screen.dart';
 class StepShsUniversityInterest extends StatefulWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepShsUniversityInterest({super.key, required this.data, required this.animCtrl});
+  const StepShsUniversityInterest({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   @override
   State<StepShsUniversityInterest> createState() => _StepShsUniversityInterestState();
@@ -36,6 +42,7 @@ class _StepShsUniversityInterestState extends State<StepShsUniversityInterest> {
     super.initState();
     _uniCtrl.text = widget.data.shsPreferredUniversity ?? '';
     _progCtrl.text = widget.data.shsIntendedProgram ?? '';
+    _progCtrl.addListener(_save);
   }
 
   @override
@@ -48,6 +55,7 @@ class _StepShsUniversityInterestState extends State<StepShsUniversityInterest> {
   void _save() {
     widget.data.shsPreferredUniversity = _uniCtrl.text.trim();
     widget.data.shsIntendedProgram = _progCtrl.text.trim();
+    widget.onChanged?.call();
   }
 
   @override
@@ -91,7 +99,6 @@ class _StepShsUniversityInterestState extends State<StepShsUniversityInterest> {
             label: 'Intended Program (optional)',
             hint: 'e.g. Computer Science',
             prefixIcon: const Icon(Icons.menu_book_outlined, size: 20),
-            onChanged: (_) => _save(),
           ),
         ],
       ),

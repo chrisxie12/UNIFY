@@ -5,8 +5,14 @@ import '../onboarding_screen.dart';
 class StepIdentity extends StatelessWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepIdentity({super.key, required this.data, required this.animCtrl});
+  const StepIdentity({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +34,10 @@ class StepIdentity extends StatelessWidget {
             title: 'SHS Graduate',
             subtitle: 'Completed senior high school, exploring university options',
             selected: data.identity == UserIdentity.shs,
-            onTap: () => data.identity = UserIdentity.shs,
+            onTap: () {
+              data.identity = UserIdentity.shs;
+              onChanged?.call();
+            },
           ),
           const SizedBox(height: UnifySpacing.s12),
           _OptionCard(
@@ -36,7 +45,10 @@ class StepIdentity extends StatelessWidget {
             title: 'University Student',
             subtitle: 'Currently enrolled at a tertiary institution',
             selected: data.identity == UserIdentity.uni,
-            onTap: () => data.identity = UserIdentity.uni,
+            onTap: () {
+              data.identity = UserIdentity.uni;
+              onChanged?.call();
+            },
           ),
         ],
       ),
@@ -108,7 +120,7 @@ class _OptionCard extends StatelessWidget {
                   ),
                   const SizedBox(height: UnifySpacing.s4),
                   Text(subtitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       color: UnifyColors.textTertiary,
                       fontFamily: 'SpaceGrotesk',

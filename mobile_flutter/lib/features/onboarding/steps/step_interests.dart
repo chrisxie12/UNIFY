@@ -5,8 +5,14 @@ import '../onboarding_screen.dart';
 class StepInterests extends StatelessWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepInterests({super.key, required this.data, required this.animCtrl});
+  const StepInterests({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   static const _allInterests = [
     'Technology', 'Music', 'Sports', 'Art & Design',
@@ -39,6 +45,7 @@ class StepInterests extends StatelessWidget {
                   } else {
                     data.interests.add(interest);
                   }
+                  onChanged?.call();
                 },
                 child: AnimatedContainer(
                   duration: UnifyAnim.fast,

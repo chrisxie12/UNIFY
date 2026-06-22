@@ -5,8 +5,14 @@ import '../onboarding_screen.dart';
 class StepUniSelection extends StatelessWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepUniSelection({super.key, required this.data, required this.animCtrl});
+  const StepUniSelection({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   static const _universities = [
     'Ghana Communication Technology University (GCTU)',
@@ -40,7 +46,10 @@ class StepUniSelection extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: UnifySpacing.s8),
               child: GestureDetector(
-                onTap: () => data.uniSelectedUniversity = uni,
+                onTap: () {
+                  data.uniSelectedUniversity = uni;
+                  onChanged?.call();
+                },
                 child: AnimatedContainer(
                   duration: UnifyAnim.fast,
                   padding: const EdgeInsets.symmetric(

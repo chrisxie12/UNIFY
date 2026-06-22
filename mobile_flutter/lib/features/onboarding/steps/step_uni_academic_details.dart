@@ -6,8 +6,14 @@ import '../onboarding_screen.dart';
 class StepUniAcademicDetails extends StatefulWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepUniAcademicDetails({super.key, required this.data, required this.animCtrl});
+  const StepUniAcademicDetails({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   @override
   State<StepUniAcademicDetails> createState() => _StepUniAcademicDetailsState();
@@ -24,6 +30,9 @@ class _StepUniAcademicDetailsState extends State<StepUniAcademicDetails> {
     _deptCtrl = TextEditingController(text: widget.data.uniDepartment ?? '');
     _levelCtrl = TextEditingController(text: widget.data.uniLevel ?? '');
     _idCtrl = TextEditingController(text: widget.data.uniStudentId ?? '');
+    _deptCtrl.addListener(_save);
+    _levelCtrl.addListener(_save);
+    _idCtrl.addListener(_save);
   }
 
   @override
@@ -38,6 +47,7 @@ class _StepUniAcademicDetailsState extends State<StepUniAcademicDetails> {
     widget.data.uniDepartment = _deptCtrl.text.trim();
     widget.data.uniLevel = _levelCtrl.text.trim();
     widget.data.uniStudentId = _idCtrl.text.trim();
+    widget.onChanged?.call();
   }
 
   @override
@@ -57,7 +67,6 @@ class _StepUniAcademicDetailsState extends State<StepUniAcademicDetails> {
             label: 'Department / Programme',
             hint: 'e.g. Computer Science',
             prefixIcon: const Icon(Icons.menu_book_outlined, size: 20),
-            onChanged: (_) => _save(),
           ),
           const SizedBox(height: UnifySpacing.s16),
           UnifyInputField(
@@ -65,7 +74,6 @@ class _StepUniAcademicDetailsState extends State<StepUniAcademicDetails> {
             label: 'Current Level',
             hint: 'e.g. Level 200',
             prefixIcon: const Icon(Icons.trending_up_outlined, size: 20),
-            onChanged: (_) => _save(),
           ),
           const SizedBox(height: UnifySpacing.s16),
           UnifyInputField(
@@ -73,7 +81,6 @@ class _StepUniAcademicDetailsState extends State<StepUniAcademicDetails> {
             label: 'Student ID Number',
             hint: 'e.g. 20241001',
             prefixIcon: const Icon(Icons.badge_outlined, size: 20),
-            onChanged: (_) => _save(),
           ),
         ],
       ),

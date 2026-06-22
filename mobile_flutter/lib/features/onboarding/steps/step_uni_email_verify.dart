@@ -8,8 +8,14 @@ import '../onboarding_screen.dart';
 class StepUniEmailVerify extends StatefulWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepUniEmailVerify({super.key, required this.data, required this.animCtrl});
+  const StepUniEmailVerify({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   @override
   State<StepUniEmailVerify> createState() => _StepUniEmailVerifyState();
@@ -57,15 +63,13 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
     widget.data.uniEmail = _emailCtrl.text.trim();
     _sentCode = (100000 + Random().nextInt(900000)).toString();
     debugPrint('[OTP] Sent code $_sentCode to ${_emailCtrl.text.trim()}');
-    setState(() {
-      _codeSent = true;
-      _error = null;
-    });
+    setState(() { _codeSent = true; _error = null; });
   }
 
   void _verifyCode() {
     if (_otpCtrl.text.trim() == _sentCode) {
       widget.data.uniEmailVerified = true;
+      widget.onChanged?.call();
       setState(() => _error = null);
     } else {
       setState(() => _error = 'Invalid code. Please try again.');

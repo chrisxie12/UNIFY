@@ -16,7 +16,7 @@ class StepPreview extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: UnifySpacing.s32),
-          UnifyLogo(size: 64, backgroundColor: UnifyColors.primaryBlue),
+          const UnifyLogo(size: 64, backgroundColor: UnifyColors.primaryBlue),
           const SizedBox(height: UnifySpacing.s16),
           Text("You're all set!", style: UnifyTextStyle.h2()),
           const SizedBox(height: UnifySpacing.s8),

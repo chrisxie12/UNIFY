@@ -129,57 +129,50 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   String get _progressLabel => 'Step ${_currentPage + 1} of $_totalSteps';
 
+  void _onStepDataChanged() => setState(() {});
+
   Widget _buildStep(int index) {
+    final onChanged = _onStepDataChanged;
     switch (index) {
       case 0:
         return StepIdentity(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 1:
         return StepShsPersonalInfo(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 2:
         return StepShsEducation(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 3:
         return StepShsUniversityInterest(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 4:
         return StepShsGoals(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 5:
         return StepInterests(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 6:
         return StepPreview(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl,
         );
       case 7:
         return StepUniSelection(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 8:
         return StepUniEmailVerify(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 9:
         return StepUniAcademicDetails(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       default:
         return const SizedBox.shrink();
@@ -317,7 +310,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
             ),
           ),
           const SizedBox(width: UnifySpacing.s12),
-          UnifyLogo(size: 36, backgroundColor: UnifyColors.primaryBlue),
+          const UnifyLogo(size: 36, backgroundColor: UnifyColors.primaryBlue),
         ],
       ),
     );

@@ -6,8 +6,14 @@ import '../onboarding_screen.dart';
 class StepShsGoals extends StatelessWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepShsGoals({super.key, required this.data, required this.animCtrl});
+  const StepShsGoals({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   static const _allGoals = [
     ('Explore University Admissions', Icons.school_outlined, UnifyColors.accentPurple),
@@ -43,6 +49,7 @@ class StepShsGoals extends StatelessWidget {
                 } else {
                   data.goals.add(g.$1);
                 }
+                onChanged?.call();
               },
               height: 90,
             ),

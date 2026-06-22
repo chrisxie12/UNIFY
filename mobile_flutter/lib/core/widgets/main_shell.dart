@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -85,15 +86,10 @@ class _MainShellState extends ConsumerState<MainShell> {
 
   bool _onScroll(UserScrollNotification n) {
     // Hide while scrolling down through content, reveal when scrolling back up.
-    switch (n.direction) {
-      case ScrollDirection.reverse:
-        _collapse();
-        break;
-      case ScrollDirection.forward:
-        _expand();
-        break;
-      case ScrollDirection.idle:
-        break;
+    if (n.direction == ScrollDirection.reverse) {
+      _collapse();
+    } else if (n.direction == ScrollDirection.forward) {
+      _expand();
     }
     return false;
   }
@@ -110,16 +106,16 @@ class _MainShellState extends ConsumerState<MainShell> {
       ref.read(adminAccessDeniedProvider.notifier).state = false;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Row(
+          content: const Row(
             children: [
-              const Icon(Icons.lock_outline_rounded,
+              Icon(Icons.lock_outline_rounded,
                   color: Colors.white, size: 18),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text(
                       'Access Denied',
                       style: TextStyle(
@@ -197,6 +193,7 @@ class _UnifyBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
 
   const _UnifyBottomNav({
+    super.key,
     required this.currentIndex,
     required this.badges,
     required this.onTap,

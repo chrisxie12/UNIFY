@@ -10,9 +10,7 @@ import '../../features/splash/splash_screen.dart';
 import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
-import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
-import '../../features/auth/presentation/screens/onboarding_flow_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
@@ -188,7 +186,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-      GoRoute(path: '/onboarding-flow', builder: (_, __) => const OnboardingFlowScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const MultiUniversityAdminScreen()),
       GoRoute(path: '/admin/legacy', builder: (_, __) => const AdminScreen()),
       GoRoute(path: '/admin/analytics', builder: (_, __) => const AnalyticsDashboardScreen()),

@@ -6,8 +6,14 @@ import '../onboarding_screen.dart';
 class StepShsEducation extends StatefulWidget {
   final OnboardingData data;
   final AnimationController animCtrl;
+  final VoidCallback? onChanged;
 
-  const StepShsEducation({super.key, required this.data, required this.animCtrl});
+  const StepShsEducation({
+    super.key,
+    required this.data,
+    required this.animCtrl,
+    this.onChanged,
+  });
 
   @override
   State<StepShsEducation> createState() => _StepShsEducationState();
@@ -25,6 +31,7 @@ class _StepShsEducationState extends State<StepShsEducation> {
   void initState() {
     super.initState();
     _schoolCtrl = TextEditingController(text: widget.data.shsSchoolName ?? '');
+    _schoolCtrl.addListener(_save);
     _yearCompleted = widget.data.shsYearCompleted?.toString();
     _wassceGrade = widget.data.shsWassceGrades;
   }
@@ -39,6 +46,7 @@ class _StepShsEducationState extends State<StepShsEducation> {
     widget.data.shsSchoolName = _schoolCtrl.text.trim();
     widget.data.shsYearCompleted = _yearCompleted != null ? int.tryParse(_yearCompleted!) : null;
     widget.data.shsWassceGrades = _wassceGrade;
+    widget.onChanged?.call();
   }
 
   @override
@@ -58,7 +66,6 @@ class _StepShsEducationState extends State<StepShsEducation> {
             label: 'School Name',
             hint: 'Enter your senior high school',
             prefixIcon: const Icon(Icons.school_outlined, size: 20),
-            onChanged: (_) => _save(),
           ),
           const SizedBox(height: UnifySpacing.s16),
           Text('Year Completed', style: UnifyTextStyle.bodySm()),
@@ -67,7 +74,9 @@ class _StepShsEducationState extends State<StepShsEducation> {
             value: _yearCompleted,
             hint: 'Select year',
             items: _years,
-            onChanged: (v) => setState(() { _yearCompleted = v; _save(); }),
+            onChanged: (v) {
+              setState(() { _yearCompleted = v; _save(); });
+            },
           ),
           const SizedBox(height: UnifySpacing.s16),
           Text('Best WASSCE Grade', style: UnifyTextStyle.bodySm()),
@@ -76,7 +85,9 @@ class _StepShsEducationState extends State<StepShsEducation> {
             value: _wassceGrade,
             hint: 'Select grade',
             items: _grades,
-            onChanged: (v) => setState(() { _wassceGrade = v; _save(); }),
+            onChanged: (v) {
+              setState(() { _wassceGrade = v; _save(); });
+            },
           ),
         ],
       ),
