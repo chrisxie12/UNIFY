@@ -99,18 +99,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               UnifyColors.textInverse.withValues(alpha: 0.20),
                         ),
                         alignment: Alignment.center,
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: UnifyColors.primaryBlue,
-                          ),
-                          alignment: Alignment.center,
-                          child: const Icon(
-                            Icons.groups_rounded,
-                            color: UnifyColors.textInverse,
-                            size: 44,
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
