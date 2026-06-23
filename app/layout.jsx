@@ -1,6 +1,7 @@
 import './globals.css';
 import VercelAnalytics from './analytics';
 import FeedbackButton from '@/components/FeedbackButton';
+import SessionTracker from '@/components/SessionTracker';
 
 export const metadata = {
   title: 'UNIFY — Campus Identity & Announcement Platform',
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased bg-white" style={{ fontFamily: "system-ui, sans-serif" }}>
         {children}
+        <SessionTracker />
         <FeedbackButton />
         <VercelAnalytics />
       </body>
