@@ -83,17 +83,17 @@ class _MainShellState extends ConsumerState<MainShell> {
     }
   }
 
-  bool _onScroll(UserScrollNotification n) {
+  bool _onScroll(ScrollNotification n) {
     // Hide while scrolling down through content, reveal when scrolling back up.
-    switch (n.direction) {
-      case ScrollDirection.reverse:
+    // Uses scrollDelta instead of ScrollDirection to avoid an import-ambiguity
+    // on that enum and stay version-proof.
+    if (n is ScrollUpdateNotification) {
+      final delta = n.scrollDelta ?? 0;
+      if (delta > 6) {
         _collapse();
-        break;
-      case ScrollDirection.forward:
+      } else if (delta < -6) {
         _expand();
-        break;
-      case ScrollDirection.idle:
-        break;
+      }
     }
     return false;
   }
@@ -154,7 +154,7 @@ class _MainShellState extends ConsumerState<MainShell> {
         // so it works over scrollables without stealing their gestures).
         behavior: HitTestBehavior.translucent,
         onPointerDown: _onPointerDown,
-        child: NotificationListener<UserScrollNotification>(
+        child: NotificationListener<ScrollNotification>(
           onNotification: _onScroll,
           child: OfflineBanner(child: navigationShell),
         ),
@@ -197,6 +197,7 @@ class _UnifyBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
 
   const _UnifyBottomNav({
+    super.key,
     required this.currentIndex,
     required this.badges,
     required this.onTap,
