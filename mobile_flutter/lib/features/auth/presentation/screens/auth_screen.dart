@@ -61,6 +61,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   Future<void> _showForgotPassword() async {
     final emailCtrl = TextEditingController(text: _emailCtrl.text.trim());
+    // Capture notifier and messenger before any async gaps so we never
+    // touch `ref` or `context` after the widget may have been disposed.
+    final notifier = ref.read(authNotifierProvider.notifier);
+    final messenger = ScaffoldMessenger.of(context);
     bool sending = false;
 
     await showDialog<void>(
@@ -94,20 +98,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       if (email.isEmpty || !email.contains('@')) return;
                       setS(() => sending = true);
                       try {
-                        await ref.read(authNotifierProvider.notifier).resetPassword(email);
-                        if (ctx.mounted) {
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Check your inbox for a reset link.')),
-                          );
-                        }
+                        await notifier.resetPassword(email);
+                        if (ctx.mounted) Navigator.pop(ctx);
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('Check your inbox for a reset link.')),
+                        );
                       } catch (e) {
                         if (ctx.mounted) {
                           setS(() => sending = false);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-                          );
                         }
+                        messenger.showSnackBar(
+                          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+                        );
                       }
                     },
               child: sending
