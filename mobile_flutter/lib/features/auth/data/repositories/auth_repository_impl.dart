@@ -30,6 +30,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> signInWithGoogle() async {
+    await _client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: 'com.gctu.unify://auth/callback',
+    );
+  }
+
+  @override
   Future<void> signOut() => _client.auth.signOut();
 
   @override
