@@ -41,7 +41,10 @@ CREATE POLICY "Anyone can view avatars"
   ON storage.objects FOR SELECT TO anon, authenticated
   USING (bucket_id = 'profiles');
 
--- 5. Update handle_new_user trigger to not require university_id
+-- 5. Make university_id nullable (onboarding resolves it at submit time)
+ALTER TABLE profiles ALTER COLUMN university_id DROP NOT NULL;
+
+-- 6. Update handle_new_user trigger to handle missing GCTU gracefully
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN

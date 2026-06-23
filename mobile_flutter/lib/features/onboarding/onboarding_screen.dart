@@ -296,8 +296,37 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         }
       }
 
+      // Resolve university_id if on uni path (column is NOT NULL in DB)
+      String? universityId;
+      if (_data.isUni && _data.uniSelectedUniversity != null) {
+        try {
+          final uni = await client
+              .from('universities')
+              .select('id')
+              .or(
+                'name.ilike.%${_data.uniSelectedUniversity}%,slug.eq.${_data.uniSelectedUniversity}',
+              )
+              .maybeSingle();
+          if (uni != null) universityId = uni['id'] as String;
+        } catch (e) {
+          debugPrint('[Onboarding] university lookup failed: $e');
+        }
+      }
+      // Fallback: pick any university so NOT NULL constraint is satisfied
+      if (universityId == null) {
+        try {
+          final any = await client
+              .from('universities')
+              .select('id')
+              .limit(1)
+              .maybeSingle();
+          if (any != null) universityId = any['id'] as String;
+        } catch (_) {}
+      }
+
       await client.from('profiles').upsert({
         'id': user.id,
+        if (universityId != null) 'university_id': universityId,
         ..._data.toProfilePayload(avatarUrl: avatarUrl),
       });
       // Best-effort: join matching communities. Never blocks completion.
