@@ -31,9 +31,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> signInWithGoogle() async {
+    // Google rejects OAuth performed inside an embedded WebView
+    // (error: disallowed_useragent). Force the external browser / Custom Tab.
+    // The session is delivered back via the com.gctu.unify://auth deep link,
+    // which Supabase consumes through onAuthStateChange (PKCE flow).
     await _client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: 'com.gctu.unify://auth/callback',
+      authScreenLaunchMode: LaunchMode.externalApplication,
     );
   }
 
