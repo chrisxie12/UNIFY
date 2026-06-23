@@ -75,6 +75,9 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       backgroundColor: UnifyColors.surfaceWhite,
       body: Stack(
+        // Fill the screen — without this the Stack collapses to its children
+        // under the Scaffold's loose constraints and the content drifts upward.
+        fit: StackFit.expand,
         // overflow-hidden: clip the off-screen ring
         clipBehavior: Clip.hardEdge,
         children: [
