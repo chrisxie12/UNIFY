@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -96,16 +98,17 @@ class OnboardingData {
     return raw.split(' ').take(2).join(' ');
   }
 
-  Map<String, dynamic> toProfilePayload() {
+  Map<String, dynamic> toProfilePayload({String? avatarUrl}) {
     final base = <String, dynamic>{
       'user_type': isSHS ? 'shs_graduate' : 'university_student',
       'full_name': fullName ?? '',
-      'email': email ?? '',
+      'email_backup': email ?? '',
       'headline': headline,
       'goals': goals,
       'interests': interests,
       'onboarding_complete': true,
     };
+    if (avatarUrl != null) base['avatar_url'] = avatarUrl;
     if (isSHS) {
       base.addAll({
         'school_name': shsSchoolName,
@@ -114,12 +117,20 @@ class OnboardingData {
       });
     } else {
       base.addAll({
-        'university': uniSelectedUniversity,
+        'university_name': uniSelectedUniversity,
         'faculty': uniFaculty,
-        'level': uniLevel,
+        'level': OnboardingData._shortLevel(uniLevel),
       });
     }
     return base;
+  }
+
+  static String? _shortLevel(String? raw) {
+    if (raw == null) return null;
+    final m = RegExp(r'Level\s+(\d+)').firstMatch(raw);
+    if (m != null) return m.group(1);
+    if (['100','200','300','400','pg','staff'].contains(raw)) return raw;
+    return null;
   }
 }
 
@@ -252,7 +263,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       _error = null;
     });
     try {
-      final user = Supabase.instance.client.auth.currentUser;
+      final client = Supabase.instance.client;
+      final user = client.auth.currentUser;
       if (user == null) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(
@@ -263,9 +275,30 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         context.go('/auth');
         return;
       }
-      await Supabase.instance.client.from('profiles').upsert({
+
+      // Upload profile photo if chosen
+      String? avatarUrl;
+      if (_data.photoPath != null) {
+        try {
+          final file = File(_data.photoPath!);
+          if (await file.exists()) {
+            final ext = _data.photoPath!.split('.').last;
+            final path = 'avatars/${user.id}.$ext';
+            await client.storage.from('profiles').upload(
+                  path,
+                  file,
+                  fileOptions: const FileOptions(upsert: true),
+                );
+            avatarUrl = client.storage.from('profiles').getPublicUrl(path);
+          }
+        } catch (e) {
+          debugPrint('[Onboarding] photo upload failed: $e');
+        }
+      }
+
+      await client.from('profiles').upsert({
         'id': user.id,
-        ..._data.toProfilePayload(),
+        ..._data.toProfilePayload(avatarUrl: avatarUrl),
       });
       // Best-effort: join matching communities. Never blocks completion.
       await _autoJoinCommunities(user.id);

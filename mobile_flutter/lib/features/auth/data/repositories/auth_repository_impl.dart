@@ -72,10 +72,10 @@ class AuthRepositoryImpl implements AuthRepository {
     if (userId == null) throw Exception('Not authenticated');
     await _client.from('profiles').upsert({
       'id': userId,
-      'display_name': displayName,
-      'school': school,
+      'full_name': displayName,
+      'university_name': school,
       'programme': programme,
-      'year_of_study': yearOfStudy,
+      'level': yearOfStudy.toString(),
       'onboarding_complete': true,
     });
   }
@@ -92,6 +92,6 @@ class AuthRepositoryImpl implements AuthRepository {
         createdAt: DateTime.now(),
       );
     }
-    return AppUserModel.fromJson({...data, 'email': email});
+    return AppUserModel.fromJson({...data, 'email': email, 'email_backup': data['email_backup']});
   }
 }
