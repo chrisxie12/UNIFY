@@ -15,7 +15,13 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-await dotenv.load(fileName: 'assets/.env');
+  try {
+    await dotenv.load(fileName: 'assets/.env');
+  } catch (e) {
+    // Missing or unreadable .env should not hard-crash the app at launch.
+    // Supabase init below is already guarded on the keys being present.
+    debugPrint('dotenv: could not load assets/.env ($e)');
+  }
   await bootstrap(() async {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     await Hive.initFlutter();

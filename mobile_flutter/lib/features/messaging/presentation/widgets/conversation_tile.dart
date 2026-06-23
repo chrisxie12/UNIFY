@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/conversation_model.dart';
 
 /// Formats [dt] relative to [now]:

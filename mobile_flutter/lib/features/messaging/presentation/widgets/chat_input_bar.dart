@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/messaging_provider.dart';
 
 class ChatInputBar extends ConsumerStatefulWidget {
