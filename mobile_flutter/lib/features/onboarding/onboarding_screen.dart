@@ -49,33 +49,74 @@ class OnboardingData {
   bool get isSHS => identity == UserIdentity.shs;
   bool get isUni => identity == UserIdentity.uni;
 
+  /// Auto-generates a concise profile headline from onboarding answers.
+  String get headline {
+    if (isUni) {
+      final levelShort = _parseLevel(uniLevel);
+      final facultyShort = _shortFaculty(uniFaculty);
+      final uniShort = _shortUni(uniSelectedUniversity);
+      if (levelShort != null && facultyShort != null && uniShort != null) {
+        return '$levelShort $facultyShort Student at $uniShort';
+      }
+      if (uniShort != null) return 'Student at $uniShort';
+      return 'University Student';
+    }
+    // SHS path — pick first career-flavoured interest, else first goal
+    final careerTerms = ['Engineering', 'Medicine', 'Business', 'Law', 'Teaching',
+        'Technology', 'Arts & Design', 'Agriculture', 'Media & Communication',
+        'Accounting', 'Entrepreneurship', 'Research'];
+    final career = interests.firstWhere(
+      (i) => careerTerms.any((t) => i.contains(t)),
+      orElse: () => goals.isNotEmpty ? goals.first : '',
+    );
+    if (career.isNotEmpty) return 'Aspiring $career Student';
+    return 'SHS Graduate';
+  }
+
+  static String? _parseLevel(String? raw) {
+    if (raw == null) return null;
+    final m = RegExp(r'Level\s+(\d+)').firstMatch(raw);
+    return m != null ? 'Level ${m.group(1)}' : null;
+  }
+
+  static String? _shortFaculty(String? raw) {
+    if (raw == null) return null;
+    return raw
+        .replaceAll('College of ', '')
+        .replaceAll('Faculty of ', '')
+        .replaceAll('School of ', '')
+        .trim();
+  }
+
+  static String? _shortUni(String? raw) {
+    if (raw == null) return null;
+    // Extract acronym in parentheses e.g. "KNUST" from "... (KNUST)"
+    final m = RegExp(r'\(([^)]+)\)').firstMatch(raw);
+    if (m != null) return m.group(1);
+    return raw.split(' ').take(2).join(' ');
+  }
+
   Map<String, dynamic> toProfilePayload() {
     final base = <String, dynamic>{
       'user_type': isSHS ? 'shs_graduate' : 'university_student',
-      'full_name': fullName ?? shsFullName ?? '',
-      'phone': isSHS ? shsPhone : '',
+      'full_name': fullName ?? '',
+      'email': email ?? '',
+      'headline': headline,
       'goals': goals,
       'interests': interests,
       'onboarding_complete': true,
     };
     if (isSHS) {
       base.addAll({
-        'location': shsLocation,
         'school_name': shsSchoolName,
         'year_completed': shsYearCompleted,
         'status': shsStatus,
-        'preferred_university': shsPreferredUniversity,
-        'intended_program': shsIntendedProgram,
       });
     } else {
       base.addAll({
         'university': uniSelectedUniversity,
-        'university_email': email ?? uniEmail,
-        'email_verified': uniEmailVerified,
         'faculty': uniFaculty,
-        'department': uniDepartment,
         'level': uniLevel,
-        'student_id': uniStudentId,
       });
     }
     return base;
@@ -226,6 +267,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         'id': user.id,
         ..._data.toProfilePayload(),
       });
+      // Best-effort: join matching communities. Never blocks completion.
+      await _autoJoinCommunities(user.id);
       if (!mounted) return;
       context.go('/app/feed');
     } catch (e) {
@@ -234,6 +277,88 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       debugPrint('[Onboarding] $e');
     } finally {
       if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  /// Silently joins communities that match the user's profile.
+  /// All failures are swallowed — onboarding always completes.
+  Future<void> _autoJoinCommunities(String userId) async {
+    try {
+      final db = Supabase.instance.client;
+      final candidates = <Map<String, dynamic>>[];
+
+      if (_data.isUni) {
+        // 1. University-wide community
+        if (_data.uniSelectedUniversity != null) {
+          final uniShort = OnboardingData._shortUni(_data.uniSelectedUniversity);
+          final keyword = uniShort ?? _data.uniSelectedUniversity!.split(' ').first;
+          final rows = await db
+              .from('communities')
+              .select('id')
+              .eq('community_type', 'university')
+              .eq('is_active', true)
+              .ilike('name', '%$keyword%')
+              .limit(1);
+          candidates.addAll((rows as List).cast<Map<String, dynamic>>());
+        }
+
+        // 2. Faculty community
+        if (_data.uniFaculty != null) {
+          final fShort = OnboardingData._shortFaculty(_data.uniFaculty);
+          if (fShort != null) {
+            final rows = await db
+                .from('communities')
+                .select('id')
+                .eq('community_type', 'faculty')
+                .eq('is_active', true)
+                .ilike('name', '%$fShort%')
+                .limit(2);
+            candidates.addAll((rows as List).cast<Map<String, dynamic>>());
+          }
+        }
+
+        // 3. Level community
+        if (_data.uniLevel != null) {
+          final lvl = OnboardingData._parseLevel(_data.uniLevel);
+          if (lvl != null) {
+            final rows = await db
+                .from('communities')
+                .select('id')
+                .eq('community_type', 'level')
+                .eq('is_active', true)
+                .ilike('name', '%$lvl%')
+                .limit(2);
+            candidates.addAll((rows as List).cast<Map<String, dynamic>>());
+          }
+        }
+      } else {
+        // SHS: look for prospective-student communities
+        final rows = await db
+            .from('communities')
+            .select('id')
+            .eq('is_active', true)
+            .or("community_type.eq.prospective,name.ilike.%Prospective%,name.ilike.%SHS Graduate%")
+            .limit(3);
+        candidates.addAll((rows as List).cast<Map<String, dynamic>>());
+      }
+
+      // Deduplicate by id
+      final seen = <String>{};
+      final unique = candidates.where((c) => seen.add(c['id'] as String)).toList();
+
+      if (unique.isEmpty) return;
+
+      await db.from('community_members').upsert(
+        unique.map((c) => {
+          'community_id': c['id'],
+          'user_id': userId,
+          'role': 'member',
+        }).toList(),
+        onConflict: 'community_id,user_id',
+        ignoreDuplicates: true,
+      );
+    } catch (e) {
+      debugPrint('[Onboarding] auto-join skipped: $e');
     }
   }
 
