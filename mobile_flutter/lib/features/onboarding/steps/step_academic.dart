@@ -19,6 +19,7 @@ class StepAcademic extends StatelessWidget {
   });
 
   static const _universities = [
+    'Ghana Communication Technology University (GCTU)',
     'University of Ghana (UG)',
     'Kwame Nkrumah University of Science and Technology (KNUST)',
     'University of Cape Coast (UCC)',
