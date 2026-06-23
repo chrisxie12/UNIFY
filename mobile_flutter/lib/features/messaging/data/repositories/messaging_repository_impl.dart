@@ -17,7 +17,6 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('conversations')
         .stream(primaryKey: ['id'])
-        .eq('user_id', userId)
         .order('last_message_at', ascending: false)
         .map((maps) =>
             maps.map((m) => ConversationModel.fromMap(m)).toList());

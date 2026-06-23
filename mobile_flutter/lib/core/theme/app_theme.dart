@@ -19,6 +19,14 @@ class AppTheme {
       seedColor: preset.primary,
       brightness: Brightness.light,
     ).copyWith(
+      // Force the exact brand colors — fromSeed tonally desaturates the
+      // seed into a muted slate, which is NOT the UNIFY blue. Pin them.
+      primary: preset.primary,
+      onPrimary: Colors.white,
+      primaryContainer: preset.primaryLight,
+      onPrimaryContainer: Colors.white,
+      secondary: preset.primary,
+      onSecondary: Colors.white,
       onSurface: const Color(0xFF1A1D26),
       onSurfaceVariant: const Color(0xFF6C7284),
       outline: const Color(0xFFE2E5EB),

@@ -17,16 +17,21 @@ class AppUserModel extends AppUser {
   factory AppUserModel.fromJson(Map<String, dynamic> json) {
     return AppUserModel(
       id: json['id'] as String,
-      email: json['email'] as String,
-      displayName: json['display_name'] as String?,
+      email: json['email'] as String? ?? json['email_backup'] as String? ?? '',
+      displayName: json['display_name'] as String? ?? json['full_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       universityId: json['university_id'] as String?,
       programme: json['programme'] as String?,
-      yearOfStudy: json['year_of_study'] as int?,
+      yearOfStudy: _parseYearOfStudy(json['level'] as String?),
       role: json['role'] as String? ?? 'student',
       onboardingComplete: json['onboarding_complete'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
+  }
+
+  static int? _parseYearOfStudy(String? level) {
+    if (level == null) return null;
+    return int.tryParse(level);
   }
 
   Map<String, dynamic> toJson() => {
