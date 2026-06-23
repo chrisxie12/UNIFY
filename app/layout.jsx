@@ -1,5 +1,6 @@
 import './globals.css';
 import VercelAnalytics from './analytics';
+import FeedbackButton from '@/components/FeedbackButton';
 
 export const metadata = {
   title: 'UNIFY — Campus Identity & Announcement Platform',
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased bg-white" style={{ fontFamily: "system-ui, sans-serif" }}>
         {children}
+        <FeedbackButton />
         <VercelAnalytics />
       </body>
     </html>

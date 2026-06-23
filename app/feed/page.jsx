@@ -36,7 +36,8 @@ export default async function FeedPage() {
     .order('published_at', { ascending: false })
     .limit(50);
 
-  const isAdmin = ['admin', 'superadmin'].includes(profile.role);
+  const isAdmin      = ['admin', 'superadmin'].includes(profile.role);
+  const isSuperAdmin = profile.role === 'superadmin';
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
@@ -49,6 +50,11 @@ export default async function FeedPage() {
             <span className="font-bold text-base text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
           <div className="flex items-center gap-3">
+            {isSuperAdmin && (
+              <Link href="/launch/founder" className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full hover:bg-orange-100 transition-colors">
+                Founder
+              </Link>
+            )}
             {isAdmin && (
               <Link href="/admin" className="text-xs font-semibold text-[#003F8A] bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">
                 Admin
