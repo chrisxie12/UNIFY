@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/design/design_tokens.dart';
+import '../../core/errors/error_mapper.dart';
 import 'steps/step_identity.dart';
 import 'steps/step_personal_details.dart';
 import 'steps/step_academic.dart';
@@ -246,14 +247,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     }
   }
 
-  void _goBack() {
+  Future<void> _goBack() async {
     if (_currentPage > 0) {
       _pageCtrl.previousPage(
         duration: UnifyAnim.normal,
         curve: UnifyAnim.easeInOut,
       );
     } else {
-      context.pop();
+      await Supabase.instance.client.auth.signOut();
+      if (!mounted) return;
+      context.go('/welcome');
     }
   }
 
@@ -276,7 +279,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         return;
       }
 
-      // Upload profile photo if chosen
+      // Upload profile photo if chosen (best-effort — bucket may not exist yet)
       String? avatarUrl;
       if (_data.photoPath != null) {
         try {
@@ -292,7 +295,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
             avatarUrl = client.storage.from('profiles').getPublicUrl(path);
           }
         } catch (e) {
-          debugPrint('[Onboarding] photo upload failed: $e');
+          debugPrint('[Onboarding] photo upload skipped: $e');
         }
       }
 
@@ -300,14 +303,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       String? universityId;
       if (_data.isUni && _data.uniSelectedUniversity != null) {
         try {
-          final uni = await client
+          final name = _data.uniSelectedUniversity!;
+          var uni = await client
               .from('universities')
               .select('id')
-              .or(
-                'name.ilike.%${_data.uniSelectedUniversity}%,slug.eq.${_data.uniSelectedUniversity}',
-              )
+              .ilike('name', '%$name%')
               .maybeSingle();
-          if (uni != null) universityId = uni['id'] as String;
+          if (uni != null) {
+            universityId = uni['id'] as String;
+          } else {
+            // Try acronym from parentheses, e.g. "KNUST" from "... (KNUST)"
+            final acronym = OnboardingData._shortUni(name);
+            if (acronym != null) {
+              uni = await client
+                  .from('universities')
+                  .select('id')
+                  .or('slug.eq.$acronym,name.ilike.%$acronym%')
+                  .maybeSingle();
+              if (uni != null) universityId = uni['id'] as String;
+            }
+          }
         } catch (e) {
           debugPrint('[Onboarding] university lookup failed: $e');
         }
@@ -335,7 +350,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       context.go('/app/feed');
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Failed to save. Please try again.');
+      setState(() => _error = 'Failed to save profile: ${ErrorMapper.toUserMessage(e)}');
       debugPrint('[Onboarding] $e');
     } finally {
       if (mounted) setState(() => _submitting = false);
