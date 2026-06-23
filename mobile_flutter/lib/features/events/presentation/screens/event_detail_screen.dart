@@ -466,19 +466,18 @@ class _AttendeesPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => context.push('/events/${event.id}/attendees'),
-      child: Row(children: [
-        SizedBox(
-          height: 28,
-          child: Stack(children: List.generate(3, (i) => Positioned(
-            left: i * 16.0,
-            child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: context.textSecondary)),
-          ))),
-        ),
-        const SizedBox(width: USpacing.sm),
-        Text('${event.attendeeCount} attending', style: UText.bodyXS.copyWith(color: context.textSecondary)),
-      ]),
-    );
+    // Static preview — there is no standalone attendees screen yet, so this
+    // row simply displays the count instead of navigating to a dead route.
+    return Row(children: [
+      SizedBox(
+        height: 28,
+        child: Stack(children: List.generate(3, (i) => Positioned(
+          left: i * 16.0,
+          child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: context.textSecondary)),
+        ))),
+      ),
+      const SizedBox(width: USpacing.sm),
+      Text('${event.attendeeCount} attending', style: UText.bodyXS.copyWith(color: context.textSecondary)),
+    ]);
   }
 }

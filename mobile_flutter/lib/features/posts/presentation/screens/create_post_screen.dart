@@ -122,7 +122,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     child: GestureDetector(
                       onTap: () {
                         if (type.id == 'poll') {
-                          context.push('/communities/${widget.communityId}/create-poll');
+                          context.push('/community/${widget.communityId}/create-poll');
                           return;
                         }
                         if (type.id == 'image') {

@@ -1552,7 +1552,7 @@ class _AccountCard extends StatelessWidget {
               );
               if (confirmed == true) {
                 await ref.read(authNotifierProvider.notifier).signOut();
-                if (context.mounted) context.go('/get-started');
+                if (context.mounted) context.go('/welcome');
               }
             },
           ),

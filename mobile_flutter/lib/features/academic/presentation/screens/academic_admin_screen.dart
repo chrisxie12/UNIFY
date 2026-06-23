@@ -62,8 +62,9 @@ class AcademicAdminScreen extends ConsumerWidget {
                 else
                   ...stats.mostDownloaded.map((r) => ResourceCard(
                         resource: r,
-                        onTap: () =>
-                            context.push('/academic/resource/${r.id}'),
+                        // No standalone resource-detail screen exists; open the
+                        // shared resources repository rather than a dead route.
+                        onTap: () => context.push('/academic/resources'),
                       )),
                 const SizedBox(height: USpacing.xl),
                 Text('Most searched topics',

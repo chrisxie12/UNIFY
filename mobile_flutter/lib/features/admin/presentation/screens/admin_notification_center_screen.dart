@@ -108,7 +108,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                       ref.invalidate(_adminNotificationsProvider);
                       ref.invalidate(_adminUnreadNotificationsProvider);
                     }
-                    if (n.type == 'admin_request') {
+                    if (n.type == 'admin_request' && context.mounted) {
                       context.push('/admin');
                     }
                   },
