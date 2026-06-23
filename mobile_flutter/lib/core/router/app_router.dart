@@ -9,7 +9,6 @@ import '../guards/admin_guard.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
-import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_carousel_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_flow_screen.dart';
@@ -147,12 +146,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // ── Auth guard ──────────────────────────────────────────────────────
       final isAuthPage = loc == '/' ||
-          loc == '/get-started' ||
           loc == '/welcome' ||
           loc.startsWith('/auth') ||
           loc.startsWith('/onboarding');
 
-      if (!loggedIn && !isAuthPage) return '/get-started';
+      if (!loggedIn && !isAuthPage) return '/welcome';
       if (loggedIn && isAuthPage && loc != '/onboarding') {
         final userAsync = ref.read(currentAppUserProvider);
         if (userAsync.isLoading) return null;
@@ -179,7 +177,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
       GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: '/get-started', builder: (_, __) => const GetStartedScreen()),
       GoRoute(
         path: '/auth',
         builder: (_, state) {
