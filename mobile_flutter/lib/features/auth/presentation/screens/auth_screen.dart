@@ -218,6 +218,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                   // ── Google ─────────────────────────────────────
                   _GoogleButton(onTap: loading ? null : _onGoogle),
+                  if (_isSignup) ...[
+                    const SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        'Recommended for SHS students & graduates',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                          color: context.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 14),
                   Center(
                     child: GestureDetector(
@@ -254,11 +268,45 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  // ── University-student guidance ─────────────────
+                  if (_isSignup) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: context.primary.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: context.primary.withValues(alpha: 0.18),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.school_outlined,
+                              size: 18, color: context.primary),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'University students: sign up with your student email.',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                height: 1.35,
+                                fontWeight: FontWeight.w500,
+                                color: context.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
                   // ── Email ──────────────────────────────────────
                   _InputField(
                     controller: _emailCtrl,
                     focusNode: _emailFocus,
-                    hint: 'Email address',
+                    hint: _isSignup ? 'Student email address' : 'Email address',
                     keyboardType: TextInputType.emailAddress,
                     errorText: _emailError,
                   ),
