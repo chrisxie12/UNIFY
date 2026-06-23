@@ -39,6 +39,9 @@ export default function OnboardingPage() {
       .eq('id', user.id);
 
     if (updateError) { setError(updateError.message); setStatus('idle'); return; }
+
+    // Assign beta badge, add to beta_testers, send welcome notifications
+    await supabase.rpc('handle_onboarding_complete', { p_user_id: user.id });
     router.push('/feed');
   }
 

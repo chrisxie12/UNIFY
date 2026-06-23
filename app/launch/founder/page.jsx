@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import FeatureFlagToggles from './FeatureFlagToggles';
+import ReEngagementButton from './ReEngagementButton';
+import { getCohortRetention, getGrowthSeries, cumulateSeries } from '@/lib/activation';
 
 // ── Formatting helpers ────────────────────────────────────────────────────────
 
@@ -99,6 +101,34 @@ function FunnelBar({ label, value, base, highlight }) {
   );
 }
 
+// ── Growth chart sub-component (server-rendered) ─────────────────────────────
+
+function GrowthChart({ series, metric, color = '#003F8A' }) {
+  const max = Math.max(...series.map((d) => d[metric] ?? 0), 1);
+  return (
+    <div className="flex items-end gap-1 h-16 w-full">
+      {series.map((d) => {
+        const val = d[metric] ?? 0;
+        const heightPct = Math.round((val / max) * 100);
+        const isToday = d.day === isoDateStr(new Date());
+        return (
+          <div key={d.day} className="flex-1 flex flex-col items-center gap-0.5 min-w-0">
+            {val > 0 && <span className="text-[8px] font-semibold text-gray-500">{val}</span>}
+            <div
+              className="w-full rounded-t-sm"
+              style={{
+                height: `${Math.max(heightPct, 3)}%`,
+                backgroundColor: isToday ? color : `${color}44`,
+                minHeight: '2px',
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export const revalidate = 0;
@@ -126,6 +156,10 @@ export default async function FounderDashboard() {
   const threeDaysAgoISO  = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 3).toISOString();
 
   // ── All data fetched in one parallel batch ────────────────────────────────
+  // Start activation analytics concurrently with the main data fetch
+  const cohortPromise = getCohortRetention(supabase);
+  const growthPromise = getGrowthSeries(supabase, 14);
+
   const [
     // Platform counts
     { count: totalUsers },
@@ -225,6 +259,10 @@ export default async function FounderDashboard() {
     // Top events by RSVPs
     supabase.from('community_events').select('id, title, rsvp_count, event_date, community_id').order('rsvp_count', { ascending: false }).limit(3),
   ]);
+
+  // ── Activation analytics (ran concurrently above) ─────────────────────────
+  const [cohortRetention, growthSeries] = await Promise.all([cohortPromise, growthPromise]);
+  const cumulativeGrowth = cumulateSeries(growthSeries);
 
   // ── Tester profile lookup ─────────────────────────────────────────────────
   const testerUserIds = (testers ?? []).map((t) => t.user_id);
@@ -557,7 +595,7 @@ export default async function FounderDashboard() {
                 <span className="text-base">🔴</span>
                 <h2 className="font-semibold text-gray-900 text-sm">Dormant Users</h2>
               </div>
-              <span className="text-xs text-red-500 font-medium">Inactive 3+ days</span>
+              <ReEngagementButton dormantCount={dormantUsers.length} />
             </div>
             <div className="divide-y divide-gray-50">
               {dormantUsers.map((u) => (
@@ -573,20 +611,97 @@ export default async function FounderDashboard() {
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="text-xs text-gray-500">Joined {fmtDate(u.created_at)}</p>
-                    <p className="text-xs text-red-400 font-medium">No recent activity</p>
+                    <p className="text-xs text-red-400 font-medium">Inactive 3d+</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="px-5 py-3 bg-red-50/50 border-t border-red-50">
-              <p className="text-xs text-red-400">
-                Re-engage via <Link href="/admin/announcements/new" className="underline">Broadcast Announcement</Link> or direct message.
-              </p>
-            </div>
           </section>
         )}
 
-        {/* ── SECTION 7: Platform Metrics ──────────────────────────────────── */}
+        {/* ── SECTION 7: Cohort Retention + Growth ────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* Cohort Retention */}
+          <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-50">
+              <h2 className="font-semibold text-gray-900 text-sm">Cohort Retention <span className="text-gray-400 font-normal">· All-time</span></h2>
+            </div>
+            <div className="px-5 py-4 space-y-4">
+              {/* Activation rate */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-3xl text-gray-900">
+                    {cohortRetention.activationRate != null ? `${cohortRetention.activationRate}%` : '—'}
+                  </p>
+                  <p className="text-gray-400 text-xs mt-0.5">Activation rate</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-2xl text-gray-900">{cohortRetention.totalCohort}</p>
+                  <p className="text-gray-400 text-xs mt-0.5">Total cohort</p>
+                </div>
+              </div>
+              <div className="h-px bg-gray-50" />
+              {/* D1 / D3 / D7 */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'D1', value: cohortRetention.d1, eligible: cohortRetention.d1Eligible, retained: cohortRetention.d1Retained },
+                  { label: 'D3', value: cohortRetention.d3, eligible: cohortRetention.d3Eligible, retained: cohortRetention.d3Retained },
+                  { label: 'D7', value: cohortRetention.d7, eligible: cohortRetention.d7Eligible, retained: cohortRetention.d7Retained },
+                ].map(({ label, value, eligible, retained }) => (
+                  <div key={label} className="bg-gray-50 rounded-xl p-3 text-center">
+                    <p className={`font-bold text-xl ${value == null ? 'text-gray-300' : value >= 40 ? 'text-green-600' : value >= 20 ? 'text-yellow-600' : 'text-red-500'}`}>
+                      {value != null ? `${value}%` : '—'}
+                    </p>
+                    <p className="text-gray-500 text-xs font-semibold mt-0.5">{label}</p>
+                    <p className="text-gray-400 text-[10px] mt-0.5">
+                      {eligible ? `${retained ?? 0}/${eligible}` : 'not yet eligible'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] text-gray-400">D1/D3/D7 = % of users active exactly on day 1, 3, or 7 after signup.</p>
+            </div>
+          </section>
+
+          {/* 14-day Growth Widget */}
+          <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-50">
+              <h2 className="font-semibold text-gray-900 text-sm">Growth <span className="text-gray-400 font-normal">· Last 14 days</span></h2>
+            </div>
+            <div className="px-5 py-4 space-y-4">
+              {/* Cumulative totals */}
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: 'New Users',        key: 'users',       color: '#003F8A' },
+                  { label: 'Posts',            key: 'posts',       color: '#7c3aed' },
+                  { label: 'Messages',         key: 'messages',    color: '#16a34a' },
+                  { label: 'Community Joins',  key: 'communities', color: '#ea580c' },
+                ].map(({ label, key, color }) => {
+                  const total = cumulativeGrowth[cumulativeGrowth.length - 1]?.[key] ?? 0;
+                  return (
+                    <div key={key} className="bg-gray-50 rounded-xl px-3 py-2">
+                      <p className="font-bold text-lg" style={{ color }}>{total}</p>
+                      <p className="text-gray-400 text-xs">{label}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="h-px bg-gray-50" />
+              {/* Daily new users chart */}
+              <div>
+                <p className="text-xs text-gray-500 font-medium mb-2">Daily new users (14d)</p>
+                <GrowthChart series={growthSeries} metric="users" color="#003F8A" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium mb-2">Daily posts (14d)</p>
+                <GrowthChart series={growthSeries} metric="posts" color="#7c3aed" />
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* ── SECTION 8: Platform Metrics ──────────────────────────────────── */}
         <section>
           <h2 className="font-semibold text-gray-900 text-sm mb-3">Platform Metrics</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
