@@ -62,9 +62,13 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      final session = Supabase.instance.client.auth.currentSession;
-      if (session != null) {
-        Supabase.instance.client.auth.refreshSession();
+      try {
+        final session = Supabase.instance.client.auth.currentSession;
+        if (session != null) {
+          Supabase.instance.client.auth.refreshSession();
+        }
+      } catch (_) {
+        // Supabase not initialized — nothing to refresh.
       }
     }
   }

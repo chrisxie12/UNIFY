@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show AuthSession, AuthState, Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthState, Supabase;
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
@@ -126,7 +126,7 @@ class _GoRouterRefreshStream extends ChangeNotifier {
     });
   }
 
-  final dynamic _authSub;
+  dynamic _authSub;
 
   @override
   void dispose() {
@@ -144,11 +144,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: refreshListenable,
     redirect: (context, state) {
       // Guard: Supabase may not be initialized if credentials are missing.
-      AuthSession? session;
+      bool loggedIn = false;
       try {
-        session = Supabase.instance.client.auth.currentSession;
+        loggedIn = Supabase.instance.client.auth.currentSession != null;
       } catch (_) {}
-      final loggedIn = session != null;
       final loc = state.matchedLocation;
 
       // ── Auth guard ──────────────────────────────────────────────────────
