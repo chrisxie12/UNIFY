@@ -279,23 +279,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         return;
       }
 
-      // Upload profile photo if chosen (best-effort — bucket may not exist yet)
+      // Upload the chosen profile photo to the `avatars` bucket and capture
+      // its public URL, which is written to profiles.avatar_url below. Uses the
+      // same bucket and path scheme as ProfileRepository.uploadAvatar
+      // ("<userId>/avatar.<ext>") so it satisfies the avatars-bucket RLS policy
+      // that keys the first path segment to auth.uid().
       String? avatarUrl;
       if (_data.photoPath != null) {
         try {
           final file = File(_data.photoPath!);
           if (await file.exists()) {
-            final ext = _data.photoPath!.split('.').last;
-            final path = 'avatars/${user.id}.$ext';
-            await client.storage.from('profiles').upload(
+            final rawExt = _data.photoPath!.split('.').last.toLowerCase();
+            final ext = (rawExt.length <= 4 &&
+                    RegExp(r'^[a-z0-9]+$').hasMatch(rawExt))
+                ? rawExt
+                : 'jpg';
+            final bytes = await file.readAsBytes();
+            final path = '${user.id}/avatar.$ext';
+            await client.storage.from('avatars').uploadBinary(
                   path,
-                  file,
+                  bytes,
                   fileOptions: const FileOptions(upsert: true),
                 );
-            avatarUrl = client.storage.from('profiles').getPublicUrl(path);
+            avatarUrl = client.storage.from('avatars').getPublicUrl(path);
           }
         } catch (e) {
-          debugPrint('[Onboarding] photo upload skipped: $e');
+          debugPrint('[Onboarding] avatar upload failed: $e');
         }
       }
 
