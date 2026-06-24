@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthSession, Supabase;
 import '../../core/design/design_tokens.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -43,7 +43,13 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     if (!mounted) return;
-    final session = Supabase.instance.client.auth.currentSession;
+    // Guard against Supabase not being initialized (e.g. missing credentials on web).
+    AuthSession? session;
+    try {
+      session = Supabase.instance.client.auth.currentSession;
+    } catch (_) {
+      // Not initialized — treat as logged out.
+    }
     if (!mounted) return;
     if (session != null) {
       context.go('/app/feed');
