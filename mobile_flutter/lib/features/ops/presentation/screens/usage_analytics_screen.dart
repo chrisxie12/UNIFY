@@ -140,7 +140,7 @@ class _DauChartCard extends StatelessWidget {
       children: [
         if (series.isEmpty)
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(vertical: 24),
             child: Center(
               child: Text('No activity data yet',
                   style: TextStyle(color: context.textSecondary)),

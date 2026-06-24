@@ -63,13 +63,13 @@ class ReferralAdminScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 if (referrals.isEmpty)
                   Padding(
-                    padding: EdgeInsets.only(top: 60),
+                    padding: const EdgeInsets.only(top: 60),
                     child: Center(
                       child: Column(
                         children: [
                           Icon(Icons.group_off_rounded,
                               size: 48, color: context.borderCol),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Text('No referrals yet',
                               style: TextStyle(
                                   fontSize: 14, color: context.textDisabled)),

@@ -57,7 +57,7 @@ class _EventDiscussionScreenState extends ConsumerState<EventDiscussionScreen> {
               error: (e, _) => AppErrorWidget(e),
               data: (discussions) {
                 if (discussions.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: UEmptyState(
                       icon: Icons.chat_bubble_outline,
                       title: 'No discussions yet',

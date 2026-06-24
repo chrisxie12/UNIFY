@@ -283,7 +283,7 @@ class _InviteCodesTab extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: type,
+                      initialValue: type,
                       decoration: const InputDecoration(
                         labelText: 'Type',
                         border: OutlineInputBorder(),

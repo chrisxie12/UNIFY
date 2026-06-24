@@ -46,11 +46,13 @@ class AmbassadorProfileScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorWidget(e),
         data: (ambassador) {
-          if (ambassador == null) return UEmptyState(
+          if (ambassador == null) {
+            return const UEmptyState(
             icon: Icons.campaign_rounded,
             title: "You're not a campus ambassador yet",
             subtitle: 'Campus ambassadors represent UNIFY at their university — organising events, growing the community and earning rewards. Reach out to the UNIFY team to get involved.',
           );
+          }
           return _AmbassadorBody(ambassador: ambassador);
         },
       ),

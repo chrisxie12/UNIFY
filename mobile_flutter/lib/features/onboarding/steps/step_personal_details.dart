@@ -129,7 +129,7 @@ class _StepPersonalDetailsState extends State<StepPersonalDetails> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.verified_user_outlined,
+              const Icon(Icons.verified_user_outlined,
                   size: 15, color: UnifyColors.textTertiary),
               const SizedBox(width: 6),
               Expanded(
@@ -249,8 +249,8 @@ class _LabeledField extends StatelessWidget {
                 ),
               ),
               if (error)
-                Padding(
-                  padding: const EdgeInsets.only(right: 14),
+                const Padding(
+                  padding: EdgeInsets.only(right: 14),
                   child: Icon(Icons.error_outline_rounded,
                       size: 20, color: UnifyColors.error),
                 ),

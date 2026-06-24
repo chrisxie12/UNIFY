@@ -111,7 +111,7 @@ class ListingCard extends ConsumerWidget {
                     ),
                   if (listing.isNegotiable)
                     Padding(
-                      padding: EdgeInsets.only(top: 1),
+                      padding: const EdgeInsets.only(top: 1),
                       child: Text('Negotiable',
                           style:
                               TextStyle(fontSize: 10, color: context.textDisabled)),

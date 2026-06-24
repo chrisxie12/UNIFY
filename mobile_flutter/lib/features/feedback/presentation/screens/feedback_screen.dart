@@ -191,7 +191,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
             data: (items) {
               if (items.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text('You have not submitted any feedback yet.',
                       style: TextStyle(color: context.textSecondary)),
                 );

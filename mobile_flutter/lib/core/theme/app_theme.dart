@@ -170,8 +170,8 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-      badgeTheme: BadgeThemeData(
-        backgroundColor: const Color(0xFFEF4444),
+      badgeTheme: const BadgeThemeData(
+        backgroundColor: Color(0xFFEF4444),
         textColor: Colors.white,
         smallSize: 8,
         largeSize: 18,
@@ -211,7 +211,7 @@ class AppTheme {
 
       scrollbarTheme: ScrollbarThemeData(
         thumbColor: WidgetStatePropertyAll(cs.onSurfaceVariant.withValues(alpha: 0.3)),
-        thickness: WidgetStatePropertyAll(4),
+        thickness: const WidgetStatePropertyAll(4),
         radius: const Radius.circular(4),
       ),
     );
@@ -251,7 +251,7 @@ class AppTheme {
       onSurface: _text,
       onSurfaceVariant: _muted,
       outline: _border,
-      surfaceVariant: _surface2,
+      surfaceContainerHighest: _surface2,
       inverseSurface: const Color(0xFFE4E7ED),
       onInverseSurface: const Color(0xFF0D0F13),
       inversePrimary: preset.primary,
@@ -286,7 +286,7 @@ class AppTheme {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
         ),
-        iconTheme: IconThemeData(color: _text),
+        iconTheme: const IconThemeData(color: _text),
       ),
 
       inputDecorationTheme: InputDecorationTheme(
@@ -299,7 +299,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: _border, width: 0.5),
+          borderSide: const BorderSide(color: _border, width: 0.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -309,7 +309,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFFF87171), width: 1),
         ),
-        hintStyle: TextStyle(color: _muted, fontSize: 14),
+        hintStyle: const TextStyle(color: _muted, fontSize: 14),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -338,13 +338,13 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: _border, width: 0.5),
+          side: const BorderSide(color: _border, width: 0.5),
         ),
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
       ),
 
-      dividerTheme: DividerThemeData(
+      dividerTheme: const DividerThemeData(
         color: _border,
         thickness: 0.5,
         space: 0,
@@ -354,7 +354,7 @@ class AppTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: _surface2,
-        contentTextStyle: TextStyle(color: _text, fontSize: 13),
+        contentTextStyle: const TextStyle(color: _text, fontSize: 13),
       ),
 
       dialogTheme: DialogThemeData(
@@ -363,10 +363,10 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
 
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: _surface,
         surfaceTintColor: Colors.transparent,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
@@ -380,7 +380,7 @@ class AppTheme {
 
       chipTheme: ChipThemeData(
         backgroundColor: _surface2,
-        labelStyle: TextStyle(color: _text, fontSize: 13),
+        labelStyle: const TextStyle(color: _text, fontSize: 13),
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -392,8 +392,8 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-      badgeTheme: BadgeThemeData(
-        backgroundColor: const Color(0xFFF87171),
+      badgeTheme: const BadgeThemeData(
+        backgroundColor: Color(0xFFF87171),
         textColor: Colors.white,
         smallSize: 8,
         largeSize: 18,
@@ -433,7 +433,7 @@ class AppTheme {
 
       scrollbarTheme: ScrollbarThemeData(
         thumbColor: WidgetStatePropertyAll(_muted.withValues(alpha: 0.3)),
-        thickness: WidgetStatePropertyAll(4),
+        thickness: const WidgetStatePropertyAll(4),
         radius: const Radius.circular(4),
       ),
     );

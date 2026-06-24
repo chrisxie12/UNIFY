@@ -259,9 +259,9 @@ class _PhotoPreview extends StatelessWidget {
         child: Container(
           color: Colors.white12,
           alignment: Alignment.center,
-          child: Column(
+          child: const Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(Icons.add_photo_alternate_outlined, size: 48, color: Colors.white54),
               SizedBox(height: 8),
               Text('Tap to pick a photo', style: TextStyle(color: Colors.white54, fontSize: 14)),

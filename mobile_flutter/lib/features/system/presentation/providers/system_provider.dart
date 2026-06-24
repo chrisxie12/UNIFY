@@ -49,7 +49,7 @@ final appUpdateProvider =
 
   if (latest == null) return AppUpdateStatus.none();
 
-  final current = AppConstants.appBuildNumber;
+  const current = AppConstants.appBuildNumber;
   if (current < latest.minSupportedBuild) {
     return AppUpdateStatus(level: AppUpdateLevel.required, version: latest);
   }

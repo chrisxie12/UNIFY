@@ -173,7 +173,7 @@ class _AnnouncementsAdminScreenState
               const SizedBox(height: 8),
               if (list.isEmpty)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
+                  padding: const EdgeInsets.symmetric(vertical: 24),
                   child: Center(
                     child: Text(
                       'No announcements yet',
@@ -379,7 +379,7 @@ class _AnnouncementsAdminScreenState
               ),
               Switch(
                 value: a.isActive,
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
                 onChanged: (v) => _toggle(a, v),
               ),
               IconButton(

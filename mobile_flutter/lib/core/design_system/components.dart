@@ -368,9 +368,9 @@ class UShimmerCard extends StatelessWidget {
             Row(children: [
               UShimmerBox(width: 40, height: 40, radius: BorderRadius.circular(20)),
               const SizedBox(width: USpacing.md),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const UShimmerBox(height: 14),
-                const SizedBox(height: 6),
+              const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                UShimmerBox(height: 14),
+                SizedBox(height: 6),
                 UShimmerBox(width: 100, height: 11),
               ])),
             ]),
@@ -379,7 +379,7 @@ class UShimmerCard extends StatelessWidget {
             const SizedBox(height: 6),
             const UShimmerBox(height: 12),
             const SizedBox(height: 6),
-            UShimmerBox(width: 160, height: 12),
+            const UShimmerBox(width: 160, height: 12),
           ],
         ),
       ),
