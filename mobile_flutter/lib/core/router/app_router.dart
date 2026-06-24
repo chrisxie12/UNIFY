@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthSession, AuthState, Supabase;
 import '../widgets/main_shell.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
@@ -113,19 +113,24 @@ bool _isAdminPath(String loc) =>
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Ref ref) {
-    _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
-      notifyListeners();
-    });
+    // Guard: Supabase may not be initialized if credentials are missing (web).
+    try {
+      _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+        notifyListeners();
+      });
+    } catch (_) {
+      _authSub = null;
+    }
     ref.listen<AsyncValue<AppUser?>>(currentAppUserProvider, (_, __) {
       notifyListeners();
     });
   }
 
-  late final dynamic _authSub;
+  final dynamic _authSub;
 
   @override
   void dispose() {
-    _authSub.cancel();
+    _authSub?.cancel();
     super.dispose();
   }
 }
@@ -138,7 +143,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     refreshListenable: refreshListenable,
     redirect: (context, state) {
-      final session = Supabase.instance.client.auth.currentSession;
+      // Guard: Supabase may not be initialized if credentials are missing.
+      AuthSession? session;
+      try {
+        session = Supabase.instance.client.auth.currentSession;
+      } catch (_) {}
       final loggedIn = session != null;
       final loc = state.matchedLocation;
 
