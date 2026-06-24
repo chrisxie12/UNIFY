@@ -6,7 +6,6 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 
 class TicketScreen extends ConsumerWidget {
   final String ticketId;

@@ -31,7 +31,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .order('created_at', ascending: false)
         .limit(50)
         .map((maps) => maps
-            .map((m) => NotificationModel.fromJson(m as Map<String, dynamic>))
+            .map((m) => NotificationModel.fromJson(m))
             .toList());
   }
 

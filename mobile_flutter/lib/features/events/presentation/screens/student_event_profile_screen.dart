@@ -6,7 +6,6 @@ import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 
 class StudentEventProfileScreen extends ConsumerWidget {
   final String? userId;

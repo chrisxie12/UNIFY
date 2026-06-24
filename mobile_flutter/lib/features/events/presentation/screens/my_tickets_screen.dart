@@ -8,7 +8,6 @@ import '../providers/event_provider.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/design_system/components.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 
 class MyTicketsScreen extends ConsumerWidget {
   const MyTicketsScreen({super.key});

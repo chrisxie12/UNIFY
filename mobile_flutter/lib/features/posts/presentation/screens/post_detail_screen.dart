@@ -50,7 +50,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
               } else if (value == 'delete') {
                 final repo = ref.read(postRepositoryProvider);
                 await repo.deletePost(widget.postId);
-                if (mounted) context.pop();
+                if (context.mounted) context.pop();
               }
             },
             itemBuilder: (context) => [

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/extensions/theme_extensions.dart';
-import '../../../../core/design_system/tokens.dart';
-import '../../../../core/design_system/typography.dart';
 import '../../../../core/design_system/components.dart';
 
 class AssignmentHubScreen extends ConsumerWidget {
