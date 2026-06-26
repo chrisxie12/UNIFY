@@ -99,6 +99,9 @@ import '../../features/ambassadors/presentation/screens/ambassador_profile_scree
 import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
 import '../../features/snapshots/presentation/screens/story_create_screen.dart';
 import '../../features/snapshots/data/models/snapshot_models.dart';
+import '../../features/attendance/presentation/screens/start_attendance_session_screen.dart';
+import '../../features/attendance/presentation/screens/attendance_session_screen.dart';
+import '../../features/attendance/presentation/screens/attendance_history_screen.dart';
 
 // ── Admin path detection ──────────────────────────────────────────────────────
 //
@@ -346,6 +349,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/launch/ambassador/:id',
         builder: (_, state) =>
             AmbassadorDetailScreen(ambassadorId: state.pathParameters['id']!),
+      ),
+
+      // ── Attendance ───────────────────────────────────────────
+      GoRoute(
+        path: '/attendance/start',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return StartAttendanceSessionScreen(
+            courseId:      extra['courseId'] as String? ?? '',
+            courseCode:    extra['courseCode'] as String? ?? '',
+            courseName:    extra['courseName'] as String? ?? '',
+            lecturerId:    extra['lecturerId'] as String?,
+            lecturerName:  extra['lecturerName'] as String?,
+            university:    extra['university'] as String?,
+            enrolledCount: extra['enrolledCount'] as int? ?? 0,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/attendance/session/:id',
+        builder: (_, state) =>
+            AttendanceSessionScreen(sessionId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/attendance/history/:courseId',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return AttendanceHistoryScreen(
+            courseId:   state.pathParameters['courseId']!,
+            courseCode: extra['courseCode'] as String? ?? '',
+            courseName: extra['courseName'] as String? ?? '',
+          );
+        },
       ),
 
       // ── Launch — student facing ──────────────────────────────

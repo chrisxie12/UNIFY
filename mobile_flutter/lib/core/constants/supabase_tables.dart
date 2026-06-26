@@ -29,6 +29,11 @@ class SupabaseTables {
   static const String opportunities         = 'opportunities';
   static const String marketplaceReports    = 'marketplace_reports';
   static const String analyticsSnapshots    = 'analytics_snapshots';
+
+  // Attendance
+  static const String attendanceSessions = 'attendance_sessions';
+  static const String attendanceRecords  = 'attendance_records';
+  static const String attendanceReports  = 'attendance_reports';
 }
 
 class SupabaseColumns {
