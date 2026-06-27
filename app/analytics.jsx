@@ -1,9 +1,5 @@
-'use client';
-
-import { inject } from '@vercel/analytics';
-
-inject();
+import { Analytics } from '@vercel/analytics/next';
 
 export default function VercelAnalytics() {
-  return null;
+  return <Analytics />;
 }
