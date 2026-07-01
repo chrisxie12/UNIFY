@@ -9,7 +9,6 @@ import '../guards/admin_guard.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
-import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
@@ -185,7 +184,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
       GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: '/get-started', builder: (_, __) => const GetStartedScreen()),
+      GoRoute(path: '/get-started', builder: (_, __) => const AuthScreen(mode: 'signup')),
       GoRoute(
         path: '/auth',
         builder: (_, state) {
