@@ -52,10 +52,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _onGoogle() async {
-    await ref.read(authNotifierProvider.notifier).signInWithGoogle();
+    debugPrint('[Auth] Google sign-in requested');
+    try {
+      await ref.read(authNotifierProvider.notifier).signInWithGoogle();
+    } catch (e) {
+      debugPrint('[Auth] Google sign-in error: $e');
+      if (!mounted) return;
+      UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
+      return;
+    }
+    // On web, signInWithOAuth redirects away — code below never runs.
+    // On mobile, the external browser opens and the callback is async.
     if (!mounted) return;
     ref.read(authNotifierProvider).whenOrNull(
-          error: (e, _) => UnifySnackbar.error(context, ErrorMapper.toUserMessage(e)),
+          error: (e, _) {
+            debugPrint('[Auth] Provider state error: $e');
+            UnifySnackbar.error(context, ErrorMapper.toUserMessage(e));
+          },
         );
   }
 

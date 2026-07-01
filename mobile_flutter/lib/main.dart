@@ -17,55 +17,65 @@ const _kSupabaseKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 const _kSentryDsn   = String.fromEnvironment('SENTRY_DSN');
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // --dart-define is a compile-time constant (available everywhere). The .env
+  // fallback is loaded inside the bootstrap zone below. Other ⚡-heavy init
+  // (dotenv, Firebase, Hive, Supabase) also lives inside the zone so that
+  // WidgetsFlutterBinding.ensureInitialized() and runApp() share one zone.
+  final sentryDsn = _kSentryDsn.isNotEmpty ? _kSentryDsn : null;
 
-  // Firebase is only configured for Android/iOS. On web, currentPlatform throws
-  // UnsupportedError by design (FlutterFire CLI never ran for web), so skip it.
-  if (!kIsWeb) {
-    try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-    } catch (e) {
-      debugPrint('Firebase init failed: $e');
-    }
-    // .env is bundled as an asset for local mobile dev only; not present on Vercel.
-    try {
-      await dotenv.load(fileName: 'assets/.env');
-    } catch (e) {
-      debugPrint('dotenv: could not load assets/.env ($e)');
-    }
-  }
+  await bootstrap(
+    () async {
+      // ── .env ──────────────────────────────────────────────
+      try {
+        await dotenv.load(fileName: 'assets/.env');
+      } catch (e) {
+        debugPrint('dotenv: could not load assets/.env ($e)');
+      }
 
-  // Prefer --dart-define values (set at build time via Vercel env vars).
-  // Fall back to .env values for local mobile development.
-  final supabaseUrl = _kSupabaseUrl.isNotEmpty
-      ? _kSupabaseUrl
-      : dotenv.env['SUPABASE_URL'] ?? '';
-  final supabaseKey = _kSupabaseKey.isNotEmpty
-      ? _kSupabaseKey
-      : dotenv.env['SUPABASE_ANON_KEY'] ?? '';
-  final sentryDsn = _kSentryDsn.isNotEmpty
-      ? _kSentryDsn
-      : dotenv.env['SENTRY_DSN'];
+      // ── Firebase ──────────────────────────────────────────
+      if (!kIsWeb) {
+        try {
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+        } catch (e) {
+          debugPrint('Firebase init failed: $e');
+        }
+      }
 
-  await bootstrap(() async {
-    if (!kIsWeb) {
-      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    }
-    await Hive.initFlutter();
-    if (supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
-      await Supabase.initialize(
-        url: supabaseUrl,
-        anonKey: supabaseKey,
-        authOptions: const FlutterAuthClientOptions(
-          autoRefreshToken: true,
-          authFlowType: AuthFlowType.pkce,
-        ),
-      );
-    } else {
-      debugPrint('[main] Supabase credentials missing — set SUPABASE_URL and SUPABASE_ANON_KEY env vars in Vercel, or add assets/.env for local dev');
-    }
-    return const ProviderScope(child: UnifyApp());
-  }, sentryDsn: sentryDsn);
+      // Prefer --dart-define, fall back to .env for local dev.
+      final supabaseUrl = _kSupabaseUrl.isNotEmpty
+          ? _kSupabaseUrl
+          : dotenv.env['SUPABASE_URL'] ?? '';
+      final supabaseKey = _kSupabaseKey.isNotEmpty
+          ? _kSupabaseKey
+          : dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+
+      // ── Platform chrome ───────────────────────────────────
+      if (!kIsWeb) {
+        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+      }
+
+      // ── Hive ──────────────────────────────────────────────
+      await Hive.initFlutter();
+
+      // ── Supabase ──────────────────────────────────────────
+      if (supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
+        await Supabase.initialize(
+          url: supabaseUrl,
+          anonKey: supabaseKey,
+          authOptions: const FlutterAuthClientOptions(
+            autoRefreshToken: true,
+            authFlowType: AuthFlowType.pkce,
+          ),
+        );
+      } else {
+        debugPrint('[main] Supabase credentials missing — set SUPABASE_URL and SUPABASE_ANON_KEY env vars in Vercel, or add assets/.env for local dev');
+      }
+
+      // ── App ───────────────────────────────────────────────
+      return const ProviderScope(child: UnifyApp());
+    },
+    sentryDsn: sentryDsn,
+  );
 }

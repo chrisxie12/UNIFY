@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/app_user.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -31,15 +32,24 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> signInWithGoogle() async {
-    // Google rejects OAuth performed inside an embedded WebView
-    // (error: disallowed_useragent). Force the external browser / Custom Tab.
-    // The session is delivered back via the com.gctu.unify://auth deep link,
-    // which Supabase consumes through onAuthStateChange (PKCE flow).
-    await _client.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: 'com.gctu.unify://auth/callback',
-      authScreenLaunchMode: LaunchMode.externalApplication,
-    );
+    if (kIsWeb) {
+      // Flutter Web: redirect to the current page URL so the PKCE callback
+      // parameters in the URL hash/query are picked up by the Supabase client
+      // when the page reloads after Google's OAuth redirect.
+      await _client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        authScreenLaunchMode: LaunchMode.platformDefault,
+      );
+    } else {
+      // Mobile: Google rejects OAuth in embedded WebViews (disallowed_useragent).
+      // Use the system browser + custom-scheme deep link so Supabase captures
+      // the PKCE callback via onAuthStateChange.
+      await _client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'com.gctu.unify://auth/callback',
+        authScreenLaunchMode: LaunchMode.externalApplication,
+      );
+    }
   }
 
   @override
