@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -83,17 +84,12 @@ class _MainShellState extends ConsumerState<MainShell> {
     }
   }
 
-  bool _onScroll(ScrollNotification n) {
+  bool _onScroll(UserScrollNotification n) {
     // Hide while scrolling down through content, reveal when scrolling back up.
-    // Uses scrollDelta instead of ScrollDirection to avoid an import-ambiguity
-    // on that enum and stay version-proof.
-    if (n is ScrollUpdateNotification) {
-      final delta = n.scrollDelta ?? 0;
-      if (delta > 6) {
-        _collapse();
-      } else if (delta < -6) {
-        _expand();
-      }
+    if (n.direction == ScrollDirection.reverse) {
+      _collapse();
+    } else if (n.direction == ScrollDirection.forward) {
+      _expand();
     }
     return false;
   }
@@ -154,7 +150,7 @@ class _MainShellState extends ConsumerState<MainShell> {
         // so it works over scrollables without stealing their gestures).
         behavior: HitTestBehavior.translucent,
         onPointerDown: _onPointerDown,
-        child: NotificationListener<ScrollNotification>(
+        child: NotificationListener<UserScrollNotification>(
           onNotification: _onScroll,
           child: OfflineBanner(child: navigationShell),
         ),

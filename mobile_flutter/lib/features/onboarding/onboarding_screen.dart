@@ -1,17 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/design/design_tokens.dart';
-import '../../core/errors/error_mapper.dart';
 import 'steps/step_identity.dart';
-import 'steps/step_personal_details.dart';
-import 'steps/step_academic.dart';
+import 'steps/step_shs_personal_info.dart';
+import 'steps/step_shs_education.dart';
+import 'steps/step_shs_university_interest.dart';
 import 'steps/step_shs_goals.dart';
+import 'steps/step_uni_selection.dart';
+import 'steps/step_uni_email_verify.dart';
+import 'steps/step_uni_academic_details.dart';
 import 'steps/step_interests.dart';
 import 'steps/step_profile_photo.dart';
 import 'steps/step_preview.dart';
@@ -21,13 +21,6 @@ enum UserIdentity { shs, uni }
 class OnboardingData {
   UserIdentity? identity;
 
-  // Shared personal details (collected for both paths at step 2)
-  String? fullName;
-  String? email;
-
-  // Shared profile photo (local file path, step 6 — optional)
-  String? photoPath;
-
   String? shsFullName;
   String? shsPhone;
   String? shsLocation;
@@ -36,15 +29,15 @@ class OnboardingData {
   String? shsWassceGrades;
   String? shsPreferredUniversity;
   String? shsIntendedProgram;
-  String? shsStatus; // 'student' | 'graduate'
 
   String? uniSelectedUniversity;
   String? uniEmail;
   bool uniEmailVerified = false;
-  String? uniFaculty;
   String? uniDepartment;
   String? uniLevel;
   String? uniStudentId;
+
+  String? photoUrl;
 
   List<String> goals = [];
   List<String> interests = [];
@@ -52,86 +45,35 @@ class OnboardingData {
   bool get isSHS => identity == UserIdentity.shs;
   bool get isUni => identity == UserIdentity.uni;
 
-  /// Auto-generates a concise profile headline from onboarding answers.
-  String get headline {
-    if (isUni) {
-      final levelShort = _parseLevel(uniLevel);
-      final facultyShort = _shortFaculty(uniFaculty);
-      final uniShort = _shortUni(uniSelectedUniversity);
-      if (levelShort != null && facultyShort != null && uniShort != null) {
-        return '$levelShort $facultyShort Student at $uniShort';
-      }
-      if (uniShort != null) return 'Student at $uniShort';
-      return 'University Student';
-    }
-    // SHS path — pick first career-flavoured interest, else first goal
-    final careerTerms = ['Engineering', 'Medicine', 'Business', 'Law', 'Teaching',
-        'Technology', 'Arts & Design', 'Agriculture', 'Media & Communication',
-        'Accounting', 'Entrepreneurship', 'Research'];
-    final career = interests.firstWhere(
-      (i) => careerTerms.any((t) => i.contains(t)),
-      orElse: () => goals.isNotEmpty ? goals.first : '',
-    );
-    if (career.isNotEmpty) return 'Aspiring $career Student';
-    return 'SHS Graduate';
-  }
-
-  static String? _parseLevel(String? raw) {
-    if (raw == null) return null;
-    final m = RegExp(r'Level\s+(\d+)').firstMatch(raw);
-    return m != null ? 'Level ${m.group(1)}' : null;
-  }
-
-  static String? _shortFaculty(String? raw) {
-    if (raw == null) return null;
-    return raw
-        .replaceAll('College of ', '')
-        .replaceAll('Faculty of ', '')
-        .replaceAll('School of ', '')
-        .trim();
-  }
-
-  static String? _shortUni(String? raw) {
-    if (raw == null) return null;
-    // Extract acronym in parentheses e.g. "KNUST" from "... (KNUST)"
-    final m = RegExp(r'\(([^)]+)\)').firstMatch(raw);
-    if (m != null) return m.group(1);
-    return raw.split(' ').take(2).join(' ');
-  }
-
-  Map<String, dynamic> toProfilePayload({String? avatarUrl}) {
+  Map<String, dynamic> toProfilePayload() {
     final base = <String, dynamic>{
       'user_type': isSHS ? 'shs_graduate' : 'university_student',
-      'full_name': fullName ?? '',
-      'email_backup': email ?? '',
-      'headline': headline,
+      'full_name': isSHS ? shsFullName : '',
+      'phone': isSHS ? shsPhone : '',
       'goals': goals,
       'interests': interests,
       'onboarding_complete': true,
     };
-    if (avatarUrl != null) base['avatar_url'] = avatarUrl;
     if (isSHS) {
       base.addAll({
+        'location': shsLocation,
         'school_name': shsSchoolName,
         'year_completed': shsYearCompleted,
-        'status': shsStatus,
+        'wassce_grades': shsWassceGrades,
+        'preferred_university': shsPreferredUniversity,
+        'intended_program': shsIntendedProgram,
       });
     } else {
       base.addAll({
-        'university_name': uniSelectedUniversity,
-        'faculty': uniFaculty,
-        'level': OnboardingData._shortLevel(uniLevel),
+        'university': uniSelectedUniversity,
+        'university_email': uniEmail,
+        'email_verified': uniEmailVerified,
+        'department': uniDepartment,
+        'level': uniLevel,
+        'student_id': uniStudentId,
       });
     }
     return base;
-  }
-
-  static String? _shortLevel(String? raw) {
-    if (raw == null) return null;
-    final m = RegExp(r'Level\s+(\d+)').firstMatch(raw);
-    if (m != null) return m.group(1);
-    if (['100','200','300','400','pg','staff'].contains(raw)) return raw;
-    return null;
   }
 }
 
@@ -170,66 +112,73 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   List<Widget> get _steps {
     final buildStep = _buildStep;
     if (_data.identity == null) return [buildStep(0)];
-    // Both paths: identity → personal details → academic → goals →
-    // interests → profile photo → review. The academic/goals/interests steps
-    // branch internally by path. Always 7 steps.
+    if (_data.isSHS) {
+      return [
+        buildStep(0), buildStep(1), buildStep(2),
+        buildStep(3), buildStep(4), buildStep(5),
+        buildStep(10), buildStep(6),
+      ];
+    }
     return [
-      buildStep(0), buildStep(1), buildStep(11),
-      buildStep(4), buildStep(5), buildStep(12), buildStep(6),
+      buildStep(0), buildStep(7), buildStep(8),
+      buildStep(9), buildStep(4), buildStep(5),
+      buildStep(10), buildStep(6),
     ];
   }
 
   int get _totalSteps => _steps.length;
   int get _currentPage => _pageCtrl.hasClients ? _pageCtrl.page!.round() : 0;
 
-  /// Both the SHS and University flows are 7 steps; show that even before a
-  /// path is chosen (when [_steps] is still just the identity step).
-  static const int _flowLength = 7;
+  String get _progressLabel => 'Step ${_currentPage + 1} of $_totalSteps';
 
-  String get _progressLabel => 'Step ${_currentPage + 1} of $_flowLength';
+  void _onStepDataChanged() => setState(() {});
 
   Widget _buildStep(int index) {
+    final onChanged = _onStepDataChanged;
     switch (index) {
       case 0:
         return StepIdentity(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 1:
-        return StepPersonalDetails(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+        return StepShsPersonalInfo(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
+        );
+      case 2:
+        return StepShsEducation(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
+        );
+      case 3:
+        return StepShsUniversityInterest(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 4:
         return StepShsGoals(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 5:
         return StepInterests(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       case 6:
         return StepPreview(
-          data: _data,
-          animCtrl: _enterCtrl,
+          data: _data, animCtrl: _enterCtrl,
         );
-      case 11:
-        return StepAcademic(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+      case 7:
+        return StepUniSelection(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
-      case 12:
+      case 8:
+        return StepUniEmailVerify(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
+        );
+      case 9:
+        return StepUniAcademicDetails(
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
+        );
+      case 10:
         return StepProfilePhoto(
-          data: _data,
-          animCtrl: _enterCtrl,
-          onChanged: () => setState(() {}),
+          data: _data, animCtrl: _enterCtrl, onChanged: onChanged,
         );
       default:
         return const SizedBox.shrink();
@@ -247,16 +196,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     }
   }
 
-  Future<void> _goBack() async {
+  void _goBack() {
     if (_currentPage > 0) {
       _pageCtrl.previousPage(
         duration: UnifyAnim.normal,
         curve: UnifyAnim.easeInOut,
       );
     } else {
-      await Supabase.instance.client.auth.signOut();
-      if (!mounted) return;
-      context.go('/welcome');
+      context.pop();
     }
   }
 
@@ -266,8 +213,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       _error = null;
     });
     try {
-      final client = Supabase.instance.client;
-      final user = client.auth.currentUser;
+      final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(
@@ -278,173 +224,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         context.go('/auth');
         return;
       }
-
-      // Upload the chosen profile photo to the `avatars` bucket and capture
-      // its public URL, which is written to profiles.avatar_url below. Uses the
-      // same bucket and path scheme as ProfileRepository.uploadAvatar
-      // ("<userId>/avatar.<ext>") so it satisfies the avatars-bucket RLS policy
-      // that keys the first path segment to auth.uid().
-      String? avatarUrl;
-      if (_data.photoPath != null) {
-        try {
-          final file = File(_data.photoPath!);
-          if (await file.exists()) {
-            final rawExt = _data.photoPath!.split('.').last.toLowerCase();
-            final ext = (rawExt.length <= 4 &&
-                    RegExp(r'^[a-z0-9]+$').hasMatch(rawExt))
-                ? rawExt
-                : 'jpg';
-            final bytes = await file.readAsBytes();
-            final path = '${user.id}/avatar.$ext';
-            await client.storage.from('avatars').uploadBinary(
-                  path,
-                  bytes,
-                  fileOptions: const FileOptions(upsert: true),
-                );
-            avatarUrl = client.storage.from('avatars').getPublicUrl(path);
-          }
-        } catch (e) {
-          debugPrint('[Onboarding] avatar upload failed: $e');
-        }
-      }
-
-      // Resolve university_id if on uni path (column is NOT NULL in DB)
-      String? universityId;
-      if (_data.isUni && _data.uniSelectedUniversity != null) {
-        try {
-          final name = _data.uniSelectedUniversity!;
-          var uni = await client
-              .from('universities')
-              .select('id')
-              .ilike('name', '%$name%')
-              .maybeSingle();
-          if (uni != null) {
-            universityId = uni['id'] as String;
-          } else {
-            // Try acronym from parentheses, e.g. "KNUST" from "... (KNUST)"
-            final acronym = OnboardingData._shortUni(name);
-            if (acronym != null) {
-              uni = await client
-                  .from('universities')
-                  .select('id')
-                  .or('slug.eq.$acronym,name.ilike.%$acronym%')
-                  .maybeSingle();
-              if (uni != null) universityId = uni['id'] as String;
-            }
-          }
-        } catch (e) {
-          debugPrint('[Onboarding] university lookup failed: $e');
-        }
-      }
-      // Fallback: pick any university so NOT NULL constraint is satisfied
-      if (universityId == null) {
-        try {
-          final any = await client
-              .from('universities')
-              .select('id')
-              .limit(1)
-              .maybeSingle();
-          if (any != null) universityId = any['id'] as String;
-        } catch (_) {}
-      }
-
-      await client.from('profiles').upsert({
+      await Supabase.instance.client.from('profiles').upsert({
         'id': user.id,
-        if (universityId != null) 'university_id': universityId,
-        ..._data.toProfilePayload(avatarUrl: avatarUrl),
+        ..._data.toProfilePayload(),
       });
-      // Best-effort: join matching communities. Never blocks completion.
-      await _autoJoinCommunities(user.id);
       if (!mounted) return;
       context.go('/app/feed');
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = 'Failed to save profile: ${ErrorMapper.toUserMessage(e)}');
+      setState(() => _error = 'Failed to save. Please try again.');
       debugPrint('[Onboarding] $e');
     } finally {
       if (mounted) setState(() => _submitting = false);
-    }
-  }
-
-  /// Silently joins communities that match the user's profile.
-  /// All failures are swallowed — onboarding always completes.
-  Future<void> _autoJoinCommunities(String userId) async {
-    try {
-      final db = Supabase.instance.client;
-      final candidates = <Map<String, dynamic>>[];
-
-      if (_data.isUni) {
-        // 1. University-wide community
-        if (_data.uniSelectedUniversity != null) {
-          final uniShort = OnboardingData._shortUni(_data.uniSelectedUniversity);
-          final keyword = uniShort ?? _data.uniSelectedUniversity!.split(' ').first;
-          final rows = await db
-              .from('communities')
-              .select('id')
-              .eq('community_type', 'university')
-              .eq('is_active', true)
-              .ilike('name', '%$keyword%')
-              .limit(1);
-          candidates.addAll((rows as List).cast<Map<String, dynamic>>());
-        }
-
-        // 2. Faculty community
-        if (_data.uniFaculty != null) {
-          final fShort = OnboardingData._shortFaculty(_data.uniFaculty);
-          if (fShort != null) {
-            final rows = await db
-                .from('communities')
-                .select('id')
-                .eq('community_type', 'faculty')
-                .eq('is_active', true)
-                .ilike('name', '%$fShort%')
-                .limit(2);
-            candidates.addAll((rows as List).cast<Map<String, dynamic>>());
-          }
-        }
-
-        // 3. Level community
-        if (_data.uniLevel != null) {
-          final lvl = OnboardingData._parseLevel(_data.uniLevel);
-          if (lvl != null) {
-            final rows = await db
-                .from('communities')
-                .select('id')
-                .eq('community_type', 'level')
-                .eq('is_active', true)
-                .ilike('name', '%$lvl%')
-                .limit(2);
-            candidates.addAll((rows as List).cast<Map<String, dynamic>>());
-          }
-        }
-      } else {
-        // SHS: look for prospective-student communities
-        final rows = await db
-            .from('communities')
-            .select('id')
-            .eq('is_active', true)
-            .or("community_type.eq.prospective,name.ilike.%Prospective%,name.ilike.%SHS Graduate%")
-            .limit(3);
-        candidates.addAll((rows as List).cast<Map<String, dynamic>>());
-      }
-
-      // Deduplicate by id
-      final seen = <String>{};
-      final unique = candidates.where((c) => seen.add(c['id'] as String)).toList();
-
-      if (unique.isEmpty) return;
-
-      await db.from('community_members').upsert(
-        unique.map((c) => {
-          'community_id': c['id'],
-          'user_id': userId,
-          'role': 'member',
-        }).toList(),
-        onConflict: 'community_id,user_id',
-        ignoreDuplicates: true,
-      );
-    } catch (e) {
-      debugPrint('[Onboarding] auto-join skipped: $e');
     }
   }
 
@@ -480,61 +271,69 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   Widget _buildTopBar() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               GestureDetector(
                 onTap: _goBack,
                 child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: const BoxDecoration(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
                     color: UnifyColors.surfaceElevated,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(UnifyRadius.md),
                   ),
                   child: const Icon(
                     Icons.arrow_back_rounded,
                     color: UnifyColors.textPrimary,
-                    size: 22,
+                    size: 20,
                   ),
                 ),
               ),
               const Spacer(),
               Text(
                 _progressLabel.toUpperCase(),
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.5,
-                  color: UnifyColors.textTertiary,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: UnifyColors.textSecondary,
+                  letterSpacing: 1.2,
                 ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: UnifyColors.primaryBlue,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: const Icon(Icons.group, color: Colors.white, size: 18),
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          // Segmented progress bar
+          const SizedBox(height: 10),
           Row(
-            children: [
-              for (int i = 0; i < _flowLength; i++) ...[
-                Expanded(
+            children: List.generate(_totalSteps, (i) {
+              final filled = i <= _currentPage;
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 4),
                   child: Container(
-                    height: 8,
+                    height: 4,
                     decoration: BoxDecoration(
-                      gradient: i <= _currentPage
-                          ? const LinearGradient(
-                              colors: [UnifyColors.primaryBlue, UnifyColors.accentPurple],
-                            )
-                          : null,
-                      color: i <= _currentPage ? null : UnifyColors.surfaceElevated,
-                      borderRadius: BorderRadius.circular(999),
+                      color: filled
+                          ? UnifyColors.primaryBlue
+                          : UnifyColors.surfaceElevated,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-                if (i < _flowLength - 1) const SizedBox(width: 8),
-              ],
-            ],
+              );
+            }),
           ),
         ],
       ),
@@ -543,12 +342,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   Widget _buildBottomBar() {
     final isLast = _currentPage == _totalSteps - 1;
-    return Padding(
+    return Container(
       padding: EdgeInsets.fromLTRB(
-        UnifySpacing.s20,
-        UnifySpacing.s12,
-        UnifySpacing.s20,
-        MediaQuery.of(context).padding.bottom + UnifySpacing.s20,
+        24,
+        12,
+        24,
+        MediaQuery.of(context).padding.bottom + 20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -562,12 +361,55 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
             ),
-          _GradientContinueButton(
-            label: isLast ? 'Complete Setup' : 'Continue',
-            enabled: _canProceed,
-            loading: _submitting,
-            onTap: _goNext,
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: ElevatedButton(
+              onPressed: _canProceed
+                  ? (_submitting ? null : _goNext)
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: UnifyColors.primaryBlue,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor:
+                    UnifyColors.primaryBlue.withValues(alpha: 0.4),
+                elevation: 2,
+                shadowColor: UnifyColors.primaryBlue.withValues(alpha: 0.15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              child: _submitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(isLast ? 'Complete Setup' : 'Continue'),
+            ),
           ),
+          if (_currentPage > 0)
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: GestureDetector(
+                onTap: _goBack,
+                child: Text(
+                  'Go back',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: UnifyColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -578,96 +420,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       case 0:
         return _data.identity != null;
       case 1:
-        // Personal details: valid full name + email.
-        return (_data.fullName?.trim().length ?? 0) >= 2 &&
-            isValidOnboardingEmail(_data.email);
-      case 2:
-        // Academic info (path-specific).
         if (_data.isSHS) {
-          return _data.shsSchoolName != null &&
-              _data.shsYearCompleted != null &&
-              _data.shsStatus != null;
+          return (_data.shsFullName?.isNotEmpty ?? false) &&
+              (_data.shsPhone?.isNotEmpty ?? false);
         }
-        return _data.uniSelectedUniversity != null &&
-            _data.uniFaculty != null &&
-            _data.uniLevel != null;
+        return _data.uniSelectedUniversity != null;
+      case 2:
+        if (_data.isSHS) return _data.shsSchoolName != null;
+        return _data.uniEmailVerified;
       case 3:
-        return _data.goals.isNotEmpty;
+        if (_data.isSHS) return _data.shsPreferredUniversity != null;
+        return (_data.uniDepartment?.isNotEmpty ?? false) &&
+            (_data.uniLevel?.isNotEmpty ?? false);
       case 4:
-        // SHS interests require at least three selections.
-        return _data.isSHS
-            ? _data.interests.length >= 3
-            : _data.interests.isNotEmpty;
+        return _data.goals.isNotEmpty;
       case 5:
-        return true; // Profile photo is optional.
+        return _data.interests.isNotEmpty;
       case 6:
+        return true;
+      case 7:
         return true;
       default:
         return false;
     }
-  }
-}
-
-// ── Gradient continue button ────────────────────────────────────────────────
-
-class _GradientContinueButton extends StatelessWidget {
-  final String label;
-  final bool enabled;
-  final bool loading;
-  final VoidCallback onTap;
-
-  const _GradientContinueButton({
-    required this.label,
-    required this.enabled,
-    required this.loading,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final active = enabled && !loading;
-    return GestureDetector(
-      onTap: active ? onTap : null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 54,
-        decoration: BoxDecoration(
-          gradient: active
-              ? const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [UnifyColors.primaryBlue, UnifyColors.accentPurple],
-                )
-              : null,
-          color: active ? null : UnifyColors.surfaceElevated,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                    color: UnifyColors.primaryBlue.withValues(alpha: 0.25),
-                    blurRadius: 24,
-                    offset: const Offset(0, 8),
-                  ),
-                ]
-              : null,
-        ),
-        alignment: Alignment.center,
-        child: loading
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-              )
-            : Text(
-                label,
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                  color: active ? Colors.white : UnifyColors.textTertiary,
-                ),
-              ),
-      ),
-    );
   }
 }

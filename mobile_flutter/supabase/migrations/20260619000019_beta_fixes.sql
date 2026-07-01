@@ -33,10 +33,12 @@ VALUES ('profiles', 'profiles', TRUE, FALSE, 5242880, ARRAY['image/png','image/j
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Storage RLS: authenticated users can upload to their own folder
+DROP POLICY IF EXISTS "Users can upload their own avatar" ON storage.objects;
 CREATE POLICY "Users can upload their own avatar"
   ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id = 'profiles' AND (storage.foldername(name))[1] = 'avatars');
 
+DROP POLICY IF EXISTS "Anyone can view avatars" ON storage.objects;
 CREATE POLICY "Anyone can view avatars"
   ON storage.objects FOR SELECT TO anon, authenticated
   USING (bucket_id = 'profiles');

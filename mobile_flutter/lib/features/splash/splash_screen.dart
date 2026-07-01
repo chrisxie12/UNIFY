@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/design/design_tokens.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -43,16 +43,11 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     if (!mounted) return;
-    // Guard against Supabase not being initialized (e.g. missing credentials on web).
-    bool loggedIn = false;
-    try {
-      loggedIn = Supabase.instance.client.auth.currentSession != null;
-    } catch (_) {
-      // Not initialized — treat as logged out.
-    }
+    final session = Supabase.instance.client.auth.currentSession;
     if (!mounted) return;
-    if (loggedIn) {
-      context.go('/app/feed');
+    if (session != null) {
+      // GoRouter redirect handles onboarding check
+      context.go('/');
     } else {
       final prefs = await SharedPreferences.getInstance();
       final seen = prefs.getBool('seen_welcome') ?? false;
@@ -81,9 +76,6 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       backgroundColor: UnifyColors.surfaceWhite,
       body: Stack(
-        // Fill the screen — without this the Stack collapses to its children
-        // under the Scaffold's loose constraints and the content drifts upward.
-        fit: StackFit.expand,
         // overflow-hidden: clip the off-screen ring
         clipBehavior: Clip.hardEdge,
         children: [
@@ -148,26 +140,26 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Transform.scale(
                           scale: 0.9 + 0.1 * logoAnim.value,
                           child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: UnifyColors.primaryBlue
-                                      .withValues(alpha: 0.10),
-                                  blurRadius: 24,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
-                            ),
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/logo.png',
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: UnifyColors.primaryBlue,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: UnifyColors.primaryBlue
+                                        .withValues(alpha: 0.15),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.group,
+                                color: Colors.white,
+                                size: 36,
                               ),
                             ),
-                          ),
                         ),
                       ),
                     ),
