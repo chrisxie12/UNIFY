@@ -1,4 +1,3 @@
 {
-  "framework": null,
-  "outputDirectory": "mobile_flutter/build/web"
+  "framework": "nextjs"
 }
