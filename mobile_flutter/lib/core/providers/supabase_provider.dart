@@ -7,7 +7,7 @@ final supabaseProvider = Provider<SupabaseClient>((ref) {
     return Supabase.instance.client;
   } catch (e) {
     debugPrint('[supabase] Not initialized — some features will be unavailable: $e');
-    rethrow;
+    throw Exception('Supabase not initialized — check SUPABASE_URL / SUPABASE_ANON_KEY');
   }
 });
 
