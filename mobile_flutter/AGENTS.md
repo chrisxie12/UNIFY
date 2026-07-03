@@ -111,6 +111,9 @@ Make UNIFY fully reproducible from a fresh Supabase project. Compete canonical `
 - Real device testing for messaging (streaming may need `.eq()` filter on `SupabaseStreamBuilder`).
 - Run `flutter build apk --debug` to verify build.
 
+## Safety Rules
+- **Firebase deploy** — Always run `firebase deploy` from `mobile_flutter/` directory only. Never run it from repo root. The `firebase.json` lives at `mobile_flutter/firebase.json` and targets `mobile_flutter/build/web`.
+
 ## Key decisions
 - **FCM + Sentry + connectivity_plus deps** use try/catch graceful degradation — app works without native configs.
 - **Stream vs Select:** Messaging uses Supabase `.stream()`. Filtering with `.eq()` on stream builder not available in supabase 2.12.2 — deferred to RLS.
