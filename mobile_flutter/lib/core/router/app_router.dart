@@ -113,7 +113,6 @@ bool _isAdminPath(String loc) =>
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Ref ref) {
-    // Guard: Supabase may not be initialized if credentials are missing (web).
     try {
       _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
         notifyListeners();
@@ -143,11 +142,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     refreshListenable: refreshListenable,
     redirect: (context, state) {
-      // Guard: Supabase may not be initialized if credentials are missing.
       bool loggedIn = false;
       try {
         loggedIn = Supabase.instance.client.auth.currentSession != null;
-      } catch (_) {}
+      } catch (_) {
+        // Supabase not initialized — treat as logged-out.
+      }
       final loc = state.matchedLocation;
 
       // ── Auth guard ──────────────────────────────────────────────────────

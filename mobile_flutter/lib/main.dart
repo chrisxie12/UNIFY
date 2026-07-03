@@ -57,7 +57,11 @@ Future<void> main() async {
       }
 
       // ── Hive ──────────────────────────────────────────────
-      await Hive.initFlutter();
+      try {
+        await Hive.initFlutter();
+      } catch (e) {
+        debugPrint('[main] Hive init failed: $e');
+      }
 
       // ── Supabase ──────────────────────────────────────────
       if (supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {

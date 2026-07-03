@@ -23,6 +23,10 @@ class PushNotificationService {
     String userId, {
     void Function(Map<String, dynamic> data)? onTap,
   }) async {
+    if (kIsWeb) {
+      debugPrint('[PushNotificationService] Not available on web');
+      return;
+    }
     try {
       await _configure(userId, onTap: onTap);
       _initialized = true;
@@ -91,7 +95,7 @@ class PushNotificationService {
       await _supabase.from('device_tokens').upsert({
         'user_id': userId,
         'token': token,
-        'platform': Platform.isIOS ? 'ios' : 'android',
+        'platform': kIsWeb ? 'web' : (Platform.isIOS ? 'ios' : 'android'),
         'is_active': true,
       }, onConflict: 'token');
       debugPrint('[PushNotificationService] Token saved');
@@ -101,8 +105,7 @@ class PushNotificationService {
   }
 
   Future<void> dispose() async {
-    // Deactivate only the current device's token, not all tokens for the user.
-    // This way logging out of one device doesn't silence other devices.
+    if (kIsWeb) return;
     if (_currentToken != null) {
       try {
         await _supabase

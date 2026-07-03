@@ -33,9 +33,12 @@ class OnboardingData {
   String? uniSelectedUniversity;
   String? uniEmail;
   bool uniEmailVerified = false;
+  String? uniFaculty;
   String? uniDepartment;
   String? uniLevel;
   String? uniStudentId;
+
+  String? shsStatus;
 
   String? photoUrl;
 

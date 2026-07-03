@@ -4,12 +4,7 @@
 _flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
     try {
-      const appRunner = await engineInitializer.initializeEngine({
-        // Self-host CanvasKit (bundled into ./canvaskit/ by `flutter build web`)
-        // instead of fetching ~7 MB of WASM from gstatic.com, which can be
-        // blocked/unreachable on restricted networks.
-        canvasKitBaseUrl: "canvaskit/",
-      });
+      const appRunner = await engineInitializer.initializeEngine();
       await appRunner.runApp();
       // App painted — remove the plain-HTML boot overlay from index.html.
       var boot = document.getElementById('boot-status');

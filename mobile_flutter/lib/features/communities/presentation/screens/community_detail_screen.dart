@@ -583,7 +583,8 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
     setState(() => _submitting = true);
     try {
       final client = ref.read(supabaseProvider);
-      final user = client.auth.currentUser!;
+      final user = client.auth.currentUser;
+      if (user == null) return;
       await ref.read(communitiesRepositoryProvider).createPost(
         communityId: widget.communityId,
         authorId: user.id,
