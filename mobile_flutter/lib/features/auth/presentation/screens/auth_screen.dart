@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/unify_logo.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key, required this.mode});
@@ -196,11 +197,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                       ],
                     ),
-                    child: const Icon(
-                      Icons.group,
-                      color: Colors.white,
-                      size: 32,
-                    ),
+                    child: const UnifyLogo(size: 72),
                   ),
                   const SizedBox(height: 24),
 

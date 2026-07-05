@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/design/design_tokens.dart';
+import '../../core/widgets/unify_logo.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
@@ -95,19 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           color: UnifyColors.textInverse.withValues(alpha: 0.20),
                         ),
                         alignment: Alignment.center,
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            color: UnifyColors.primaryBlue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.group,
-                            color: UnifyColors.textInverse,
-                            size: 48,
-                          ),
-                        ),
+                        child: const UnifyLogo(size: 80),
                       ),
                       const SizedBox(height: 20),
                       Text(

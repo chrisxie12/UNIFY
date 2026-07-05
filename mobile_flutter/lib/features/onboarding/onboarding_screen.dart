@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/design/design_tokens.dart';
+import '../../core/widgets/unify_logo.dart';
 import 'steps/step_identity.dart';
 import 'steps/step_shs_personal_info.dart';
 import 'steps/step_shs_education.dart';
@@ -314,7 +315,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                   color: UnifyColors.primaryBlue,
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
-                child: const Icon(Icons.group, color: Colors.white, size: 18),
+                child: const UnifyLogo(size: 32),
               ),
             ],
           ),

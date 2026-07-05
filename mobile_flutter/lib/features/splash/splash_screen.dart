@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/design/design_tokens.dart';
+import '../../core/widgets/unify_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -158,11 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.group,
-                                color: Colors.white,
-                                size: 36,
-                              ),
+                              child: const UnifyLogo(size: 80),
                             ),
                         ),
                       ),
