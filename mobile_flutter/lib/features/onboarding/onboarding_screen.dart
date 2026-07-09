@@ -300,7 +300,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               const Spacer(),
               Text(
                 _progressLabel.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: UnifyColors.textSecondary,
@@ -404,7 +404,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               padding: const EdgeInsets.only(top: 16),
               child: GestureDetector(
                 onTap: _goBack,
-                child: Text(
+                child: const Text(
                   'Go back',
                   style: TextStyle(
                     fontSize: 14,

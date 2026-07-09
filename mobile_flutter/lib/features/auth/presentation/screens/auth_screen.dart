@@ -250,9 +250,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 size: 24,
                               ),
                             ),
-                      label: Text(
+                      label: const Text(
                         'Continue with Google',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
