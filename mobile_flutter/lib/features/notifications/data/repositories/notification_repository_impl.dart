@@ -50,7 +50,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .from('notifications')
         .select('id')
         .eq('user_id', userId)
-        .eq('is_read', false) as List;
+        .eq('is_read', false)
+        .limit(500) as List;
     return response.length;
   }
 
@@ -155,7 +156,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .select('*')
         .eq('user_id', userId)
         .gt('created_at', cutoff)
-        .order('created_at', ascending: false) as List;
+        .order('created_at', ascending: false)
+        .limit(500) as List;
     return response.map((j) => NotificationLog.fromJson(j)).toList();
   }
 

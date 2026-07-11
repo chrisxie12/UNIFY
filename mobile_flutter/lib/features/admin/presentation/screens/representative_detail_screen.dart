@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
@@ -118,25 +119,25 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
                       verifReqsAsync.when(
                         data: (reqs) => _VerificationDocumentsSection(requests: reqs),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       verifLogAsync.when(
                         data: (logs) => _VerificationHistorySection(logs: logs),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       managedAsync.when(
                         data: (managers) => _ManagedCommunitiesSection(managers: managers),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       postsAsync.when(
                         data: (posts) => _RecentActivitySection(posts: posts),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       if (status == 'pending') _ActionButtons(profile: profile, userId: widget.userId),
@@ -436,10 +437,10 @@ class _VerificationDocumentsSection extends StatelessWidget {
           height: 400,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              url,
+            child: CachedNetworkImage(
+              imageUrl: url,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Column(
+              errorWidget: (_, __, ___) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.link_rounded, size: 40, color: context.textDisabled),
@@ -452,10 +453,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
                   ),
                 ],
               ),
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return const Center(child: CircularProgressIndicator());
-              },
+              placeholder: (_, __) => const Center(child: CircularProgressIndicator()),
             ),
           ),
         ),
@@ -909,6 +907,8 @@ class _ActionButtons extends ConsumerWidget {
 }
 
 class _SectionLoading extends StatelessWidget {
+  const _SectionLoading();
+
   @override
   Widget build(BuildContext context) {
     return Container(

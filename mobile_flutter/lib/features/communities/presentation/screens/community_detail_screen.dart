@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -164,8 +165,8 @@ class _CommunityHeader extends ConsumerWidget {
       children: [
         // Banner background
         community.coverUrl != null
-            ? Image.network(
-                community.coverUrl!,
+            ? CachedNetworkImage(
+                imageUrl: community.coverUrl!,
                 fit: BoxFit.cover,
               )
             : Container(

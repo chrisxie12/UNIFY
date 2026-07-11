@@ -162,7 +162,7 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
 
               // Request Community Creation button (verified leaders only)
               if (widget.isLeader) ...[
-                s(idx++, _RequestCommunityCard()),
+                s(idx++, const _RequestCommunityCard()),
                 const SizedBox(height: 12),
               ],
 
@@ -541,9 +541,9 @@ class _StatsStrip extends StatelessWidget {
         Row(
           children: [
             _StatCell(value: postCount, label: 'Posts'),
-            _Divider(),
+            const _Divider(),
             const _StatCell(value: 0, label: 'Connections', cta: true),
-            _Divider(),
+            const _Divider(),
             _StatCell(value: 0, label: 'Communities', cta: true, onTap: () => context.go('/app/communities')),
           ],
         ),
@@ -600,6 +600,8 @@ class _StatCell extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
   Widget build(BuildContext context) =>
       Container(width: 1, height: 36, color: context.borderCol);
@@ -1468,6 +1470,8 @@ class _VerificationStatusCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _RequestCommunityCard extends StatelessWidget {
+  const _RequestCommunityCard();
+
   @override
   Widget build(BuildContext context) {
     return _Card(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_empty_widget.dart';
@@ -96,7 +97,7 @@ class _PhotoGrid extends StatelessWidget {
           onTap: () => _showPhotoViewer(context, photo),
           child: ClipRRect(
             borderRadius: URadius.smAll,
-            child: Image.network(photo.url as String, fit: BoxFit.cover),
+            child: CachedNetworkImage(imageUrl: photo.url as String, fit: BoxFit.cover),
           ),
         );
       },
@@ -113,7 +114,7 @@ class _PhotoGrid extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: URadius.mdAll,
-              child: Image.network(photo.url as String, fit: BoxFit.contain),
+              child: CachedNetworkImage(imageUrl: photo.url as String, fit: BoxFit.contain),
             ),
             if (photo.caption != null) ...[
               const SizedBox(height: USpacing.sm),

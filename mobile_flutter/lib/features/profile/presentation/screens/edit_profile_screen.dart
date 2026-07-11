@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -824,8 +825,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
             clipBehavior: Clip.antiAlias,
             child: coverUrl != null && coverUrl.isNotEmpty
-                ? Image.network(coverUrl, fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const SizedBox())
+                ? CachedNetworkImage(imageUrl: coverUrl, fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) => const SizedBox())
                 : null,
           ),
           Positioned.fill(
@@ -874,10 +875,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               ),
               child: ClipOval(
                 child: avatarUrl != null && avatarUrl.isNotEmpty
-                    ? Image.network(
-                        avatarUrl,
+                    ? CachedNetworkImage(
+                        imageUrl: avatarUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _AvatarInitials(initials: initials),
+                        errorWidget: (_, __, ___) => _AvatarInitials(initials: initials),
                       )
                     : _AvatarInitials(initials: initials),
               ),

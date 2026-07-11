@@ -49,7 +49,7 @@ class AdminGuard extends ConsumerWidget {
       ),
       data: (user) {
         if (user == null || !user.isAdmin) {
-          return _AccessDeniedScreen();
+          return const _AccessDeniedScreen();
         }
         return child;
       },
@@ -60,6 +60,8 @@ class AdminGuard extends ConsumerWidget {
 // ── Branded access-denied screen ──────────────────────────────────────────────
 
 class _AccessDeniedScreen extends StatelessWidget {
+  const _AccessDeniedScreen();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

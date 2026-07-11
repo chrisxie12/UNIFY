@@ -119,7 +119,8 @@ class AmbassadorRepository {
         .from('ambassador_events')
         .select('*')
         .eq('ambassador_id', ambassadorId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
 
     return (data as List)
         .map((row) => AmbassadorEvent.fromJson(row as Map<String, dynamic>))

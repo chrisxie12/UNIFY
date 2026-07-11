@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -1135,7 +1136,7 @@ class _VerificationCard extends ConsumerWidget {
           width: double.maxFinite,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(url, fit: BoxFit.contain, errorBuilder: (_, __, ___) => const Text('Could not load image')),
+            child: CachedNetworkImage(imageUrl: url, fit: BoxFit.contain, errorWidget: (_, __, ___) => const Text('Could not load image')),
           ),
         ),
         actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],

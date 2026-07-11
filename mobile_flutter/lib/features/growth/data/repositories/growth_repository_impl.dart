@@ -161,7 +161,8 @@ class GrowthRepositoryImpl {
         .from('referrals')
         .select('*')
         .eq('referrer_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
 
     return (data as List)
         .map((row) => Referral.fromJson(row as Map<String, dynamic>))
@@ -172,7 +173,8 @@ class GrowthRepositoryImpl {
     final data = await _client
         .from('referrals')
         .select('status')
-        .eq('referrer_id', userId);
+        .eq('referrer_id', userId)
+        .limit(500);
 
     final rows = (data as List).cast<Map<String, dynamic>>();
     var sent = 0;

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -179,12 +180,12 @@ class _FeedbackCard extends ConsumerWidget {
               const SizedBox(height: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  item.screenshotUrl!,
+                child: CachedNetworkImage(
+                  imageUrl: item.screenshotUrl!,
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorWidget: (_, __, ___) => Container(
                     height: 120,
                     color: context.cardBg,
                     alignment: Alignment.center,

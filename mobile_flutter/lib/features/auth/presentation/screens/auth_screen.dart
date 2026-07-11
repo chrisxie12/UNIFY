@@ -161,7 +161,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loading = ref.watch(authNotifierProvider).isLoading;
+    final loading = ref.watch(authNotifierProvider.select((s) => s.isLoading));
     final theme = Theme.of(context);
     final primaryBlue = theme.colorScheme.primary;
     final textPrimary = theme.colorScheme.onSurface;

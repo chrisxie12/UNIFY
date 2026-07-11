@@ -74,7 +74,8 @@ class EventRepositoryImpl implements EventRepository {
     final rsvpResponse = await _client
         .from('event_rsvps')
         .select('event_id, status')
-        .filter('user_id', 'eq', userId) as List;
+        .filter('user_id', 'eq', userId)
+        .limit(500) as List;
     final rsvpMap = rsvpResponse
         .cast<Map<String, dynamic>>()
         .fold<Map<String, String>>({}, (map, r) {
@@ -94,7 +95,8 @@ class EventRepositoryImpl implements EventRepository {
     final savedResponse = await _client
         .from('event_saves')
         .select('event_id')
-        .filter('user_id', 'eq', userId) as List;
+        .filter('user_id', 'eq', userId)
+        .limit(500) as List;
     final savedIds = savedResponse
         .cast<Map<String, dynamic>>()
         .map((r) => r['event_id'] as String)
@@ -111,7 +113,8 @@ class EventRepositoryImpl implements EventRepository {
     final ticketResponse = await _client
         .from('event_tickets')
         .select('event_id, id, qr_code, attended')
-        .filter('user_id', 'eq', userId) as List;
+        .filter('user_id', 'eq', userId)
+        .limit(500) as List;
     final ticketMap = ticketResponse
         .cast<Map<String, dynamic>>()
         .fold<Map<String, Map<String, dynamic>>>({}, (map, t) {

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -382,23 +383,20 @@ class _PostContent extends ConsumerWidget {
             const SizedBox(height: 16),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                post.mediaUrl!,
+              child: CachedNetworkImage(
+                imageUrl: post.mediaUrl!,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorWidget: (_, __, ___) => Container(
                   height: 200,
                   color: context.textSecondary,
                   child: Center(child: Icon(Icons.broken_image, color: context.textSecondary)),
                 ),
-                loadingBuilder: (_, child, progress) {
-                  if (progress == null) return child;
-                  return Container(
-                    height: 200,
-                    color: context.textSecondary,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                },
+                placeholder: (_, __) => Container(
+                  height: 200,
+                  color: context.textSecondary,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
               ),
             ),
           ],

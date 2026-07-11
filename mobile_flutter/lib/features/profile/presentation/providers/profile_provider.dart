@@ -45,7 +45,8 @@ final profileStatsProvider =
   final result = await client
       .from('announcements')
       .select('id')
-      .eq('author_id', user.id);
+      .eq('author_id', user.id)
+      .limit(5000);
 
   final postCount = (result as List).length;
   return _ProfileStats(postCount: postCount);

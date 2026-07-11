@@ -53,7 +53,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('user_achievements')
         .select('*, achievement:achievement_id(*)')
         .filter('user_id', 'eq', userId)
-        .order('unlocked_at', ascending: false) as List;
+        .order('unlocked_at', ascending: false)
+        .limit(100) as List;
     return data.map((j) => UserAchievement.fromJson(j as Map<String, dynamic>)).toList();
   }
 
@@ -171,7 +172,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('user_skills')
         .select('*, endorsement_count:skill_endorsements(count)')
         .filter('user_id', 'eq', userId)
-        .order('skill_name', ascending: true) as List;
+        .order('skill_name', ascending: true)
+        .limit(100) as List;
     return data.map((j) {
       final map = j as Map<String, dynamic>;
       final countResult = map['endorsement_count'] as Map<String, dynamic>?;
@@ -218,7 +220,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('skill_endorsements')
         .select('*, profiles!endorsed_by(display_name, avatar_url)')
         .filter('skill_id', 'eq', skillId)
-        .order('created_at', ascending: false) as List;
+        .order('created_at', ascending: false)
+        .limit(100) as List;
     return data.map((j) {
       final map = j as Map<String, dynamic>;
       final profile = map['profiles'] as Map<String, dynamic>?;
@@ -304,7 +307,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('portfolio_projects')
         .select()
         .filter('user_id', 'eq', userId)
-        .order('created_at', ascending: false) as List;
+        .order('created_at', ascending: false)
+        .limit(50) as List;
     return data.map((j) => PortfolioProject.fromJson(j as Map<String, dynamic>)).toList();
   }
 
@@ -348,7 +352,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('leadership_history')
         .select()
         .filter('user_id', 'eq', userId)
-        .order('start_date', ascending: false) as List;
+        .order('start_date', ascending: false)
+        .limit(50) as List;
     return data.map((j) => LeadershipHistory.fromJson(j as Map<String, dynamic>)).toList();
   }
 
@@ -392,7 +397,8 @@ class ReputationRepositoryImpl implements ReputationRepository {
         .from('user_certificates')
         .select()
         .filter('user_id', 'eq', userId)
-        .order('created_at', ascending: false) as List;
+        .order('created_at', ascending: false)
+        .limit(50) as List;
     return data.map((j) => UserCertificate.fromJson(j as Map<String, dynamic>)).toList();
   }
 

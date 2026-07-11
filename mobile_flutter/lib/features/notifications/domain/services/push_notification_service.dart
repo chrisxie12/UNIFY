@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,9 @@ class PushNotificationService {
   final SupabaseClient _supabase;
   bool _initialized = false;
   String? _currentToken;
+  StreamSubscription<RemoteMessage>? _onMessageSub;
+  StreamSubscription<RemoteMessage>? _onMessageOpenedSub;
+  StreamSubscription<String>? _onTokenRefreshSub;
 
   PushNotificationService(this._supabase);
 
@@ -67,17 +71,17 @@ class PushNotificationService {
       await _saveToken(userId, token);
     }
 
-    messaging.onTokenRefresh.listen((newToken) {
+    _onTokenRefreshSub = messaging.onTokenRefresh.listen((newToken) {
       _currentToken = newToken;
       _saveToken(userId, newToken);
     });
 
-    FirebaseMessaging.onMessage.listen((message) {
+    _onMessageSub = FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[PushNotificationService] Foreground: ${message.notification?.title}');
     });
 
     // App in background — user tapped the notification.
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    _onMessageOpenedSub = FirebaseMessaging.onMessageOpenedApp.listen((message) {
       onTap?.call(message.data);
     });
 
@@ -105,6 +109,12 @@ class PushNotificationService {
   }
 
   Future<void> dispose() async {
+    await _onTokenRefreshSub?.cancel();
+    await _onMessageSub?.cancel();
+    await _onMessageOpenedSub?.cancel();
+    _onTokenRefreshSub = null;
+    _onMessageSub = null;
+    _onMessageOpenedSub = null;
     if (kIsWeb) return;
     if (_currentToken != null) {
       try {

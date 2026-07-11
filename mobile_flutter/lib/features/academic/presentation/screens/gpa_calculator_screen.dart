@@ -24,6 +24,9 @@ class _GPACalculatorScreenState extends ConsumerState<GPACalculatorScreen> {
   @override
   void dispose() {
     _semesterController.dispose();
+    for (final c in _courses) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -32,6 +35,7 @@ class _GPACalculatorScreenState extends ConsumerState<GPACalculatorScreen> {
   }
 
   void _removeCourse(int index) {
+    _courses[index].dispose();
     setState(() => _courses.removeAt(index));
   }
 
@@ -171,6 +175,11 @@ class _CourseEntry {
   _CourseEntry()
       : nameController = TextEditingController(),
         codeController = TextEditingController();
+
+  void dispose() {
+    nameController.dispose();
+    codeController.dispose();
+  }
 }
 
 class _CourseInputCard extends StatelessWidget {

@@ -63,7 +63,8 @@ class LeadershipRepositoryImpl {
         .from('user_badges')
         .select('*, badges(*)')
         .eq('user_id', userId)
-        .order('assigned_at', ascending: false);
+        .order('assigned_at', ascending: false)
+        .limit(100);
 
     return (data as List).map((row) {
       final badge = BadgeModel.fromJson(row['badges'] as Map<String, dynamic>);
@@ -79,7 +80,8 @@ class LeadershipRepositoryImpl {
         .select('*, leadership_roles(*)')
         .eq('user_id', userId)
         .eq('is_active', true)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
 
     return (data as List).map((row) {
       final role = LeadershipRoleModel.fromJson(row['leadership_roles'] as Map<String, dynamic>);
@@ -103,7 +105,8 @@ class LeadershipRepositoryImpl {
         .from('user_leadership')
         .select('id')
         .eq('user_id', userId)
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .limit(1);
     return (data as List).isNotEmpty;
   }
 
@@ -123,7 +126,8 @@ class LeadershipRepositoryImpl {
         .from('community_requests')
         .select()
         .eq('requester_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
 
     return data.map((row) => CommunityRequestModel.fromJson(row)).toList();
   }
@@ -227,7 +231,8 @@ class LeadershipRepositoryImpl {
         .from('community_managers')
         .select('*, profiles!community_managers_user_id_fkey(full_name, avatar_url)')
         .eq('community_id', communityId)
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .limit(100);
 
     return (data as List).map((row) => CommunityManagerModel.fromJson(row as Map<String, dynamic>)).toList();
   }
@@ -262,7 +267,8 @@ class LeadershipRepositoryImpl {
         .from('announcement_requests')
         .select()
         .eq('requester_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
 
     return (data as List).map((row) => AnnouncementRequestModel.fromJson(row as Map<String, dynamic>)).toList();
   }
@@ -343,8 +349,8 @@ class LeadershipRepositoryImpl {
     final data = await _client
         .from('community_members')
         .select('*, communities(*)')
-        .eq('user_id', userId);
-    // Filter in Dart for compatibility with current Supabase client version
+        .eq('user_id', userId)
+        .limit(200);
     return (data as List)
         .where((r) => (r['role'] as String) == 'owner' || (r['role'] as String) == 'moderator')
         .cast<Map<String, dynamic>>()
@@ -368,8 +374,8 @@ class LeadershipRepositoryImpl {
         .select('id, status')
         .eq('requester_id', userId)
         .eq('community_name', communityName)
-        .eq('community_type', communityType);
-    // Filter in Dart for compatibility with current Supabase client version
+        .eq('community_type', communityType)
+        .limit(10);
     final list = (data as List);
     return list.any((r) => (r['status'] as String) == 'pending' || (r['status'] as String) == 'approved');
   }

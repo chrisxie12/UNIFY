@@ -104,7 +104,8 @@ class MarketplaceRepositoryImpl {
         .from('marketplace_listings')
         .select(_listingSelect)
         .eq('seller_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((r) => ListingModel.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -210,7 +211,8 @@ class MarketplaceRepositoryImpl {
     final data = await _client
         .from('saved_listings')
         .select('listing_id')
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .limit(500);
     return (data as List).map((e) => e['listing_id'] as String).toSet();
   }
 
@@ -240,7 +242,8 @@ class MarketplaceRepositoryImpl {
         .from('saved_listings')
         .select('listing_id, marketplace_listings($_listingSelect)')
         .eq('user_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((e) => e['marketplace_listings'])
         .whereType<Map<String, dynamic>>()
@@ -314,7 +317,8 @@ class MarketplaceRepositoryImpl {
         .select(
             '*, profiles!marketplace_reviews_reviewer_id_fkey(full_name, avatar_url)')
         .eq('reviewee_id', revieweeId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((r) => ListingReview.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -392,7 +396,8 @@ class MarketplaceRepositoryImpl {
             '*, marketplace_listings(id, title, category, status, seller_id), '
             'profiles!listing_reports_reporter_id_fkey(full_name)')
         .eq('status', 'pending')
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((r) => ListingReportItem.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -420,7 +425,8 @@ class MarketplaceRepositoryImpl {
       final rows = await _client
           .from('marketplace_listings')
           .select('id')
-          .eq(column, value);
+          .eq(column, value)
+          .limit(5000);
       return (rows as List).length;
     }
 
@@ -444,7 +450,8 @@ class MarketplaceRepositoryImpl {
     final pendingReports = (await _client
             .from('listing_reports')
             .select('id')
-            .eq('status', 'pending') as List)
+            .eq('status', 'pending')
+            .limit(5000) as List)
         .length;
 
     return MarketplaceStats(

@@ -20,7 +20,7 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return user?.id;
 });
 
-final conversationsProvider = StreamProvider<List<ConversationModel>>((ref) {
+final conversationsProvider = StreamProvider.autoDispose<List<ConversationModel>>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return Stream.value([]);
@@ -31,7 +31,7 @@ final selectedConversationProvider = StateProvider<String?>((ref) => null);
 
 final selectedChannelProvider = StateProvider<String?>((ref) => null);
 
-final messagesProvider = StreamProvider<List<MessageModel>>((ref) {
+final messagesProvider = StreamProvider.autoDispose<List<MessageModel>>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final conversationId = ref.watch(selectedConversationProvider);
   final channelId = ref.watch(selectedChannelProvider);
@@ -39,7 +39,7 @@ final messagesProvider = StreamProvider<List<MessageModel>>((ref) {
   return repo.messages(conversationId, channelId: channelId);
 });
 
-final channelsProvider = StreamProvider.family<List<ChannelModel>, String>((ref, conversationId) {
+final channelsProvider = StreamProvider.autoDispose.family<List<ChannelModel>, String>((ref, conversationId) {
   final repo = ref.watch(messagingRepositoryProvider);
   return repo.channels(conversationId);
 });
@@ -198,7 +198,7 @@ final pinnedConversationsProvider =
 
 // ── Per-conversation typing stream ────────────────────────────────────────
 final typingProvider =
-    StreamProvider.family<int, String>((ref, conversationId) {
+    StreamProvider.autoDispose.family<int, String>((ref, conversationId) {
   final repo = ref.watch(messagingRepositoryProvider);
   return repo.typingStatus(conversationId);
 });

@@ -124,7 +124,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 }
 
                 if (messages.isEmpty) {
-                  return _EmptyState();
+                  return const _EmptyState();
                 }
 
                 return GestureDetector(
@@ -698,6 +698,8 @@ class _ReplyPreviewBar extends StatelessWidget {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
     return Center(
