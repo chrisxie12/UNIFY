@@ -9,6 +9,9 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.gctu.unify
       vars:
         APP_ID: com.gctu.unify
 
@@ -39,6 +42,10 @@ workflows:
           else
             echo "No tests found — skipping test step"
           fi
+
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
 
       - name: Build iOS IPA for TestFlight
         script: |
