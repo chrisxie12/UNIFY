@@ -1,46 +1,16 @@
-# codemagic.yaml — UNIFY TestFlight Release
-#
-# Location: repository root (mobile_flutter/ is the Flutter project).
-# Trigger: pushes to release/testflight-v1.
-#
-# HOW TO USE:
-#   1. Connect your repository at https://codemagic.io.
-#   2. In the Codemagic UI → Teams → Your Team → Environment variables, add:
-#      - APP_STORE_CONNECT_PRIVATE_KEY    (base64-encoded .p8 file, secret)
-#      - APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID from App Store Connect)
-#      - APP_STORE_CONNECT_ISSUER_ID      (Issuer ID from App Store Connect)
-#   3. In the Codemagic UI → Teams → Your Team → Code signing identities →
-#      Upload your Apple Distribution certificate and App Store provisioning profile.
-#   4. Push to release/testflight-v1 — Codemagic runs this workflow.
-#
-# NO secrets are hardcoded here. All credentials are injected via
-# Codemagic environment variables configured in the UI.
-
 workflows:
   testflight-release:
     name: UNIFY TestFlight Release
     instance_type: mac_mini_m2
     max_build_duration: 60
-    labels:
-      - testflight
-      - ios
-      - release
+    working_directory: mobile_flutter
 
     environment:
-      # ── Flutter ─────────────────────────────────────────────
       flutter: stable
       xcode: latest
       cocoapods: default
-
-      # ── App metadata (safe to hardcode — not secrets) ───────
       vars:
         APP_ID: com.gctu.unify
-        APP_NAME: UNIFY
-        FLUTTER_PROJECT_DIR: mobile_flutter
-
-      # Optional: add a variable group in the Codemagic UI and reference it here
-      # groups:
-      #   - appstore_credentials
 
     triggering:
       events:
@@ -53,103 +23,51 @@ workflows:
 
     cache:
       cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $FLUTTER_PROJECT_DIR/.dart_tool
-        - $FLUTTER_PROJECT_DIR/build
-        - ~/.cocoapods
+        - $HOME/.pub-cache
 
     scripts:
-      # ── 1. Dependencies ──────────────────────────────────────
-      - name: Install Flutter dependencies
-        script: |
-          cd $FLUTTER_PROJECT_DIR
-          flutter pub get
+      - name: Get Flutter packages
+        script: flutter pub get
 
-      # ── 2. Static analysis ───────────────────────────────────
       - name: Run flutter analyze
-        script: |
-          cd $FLUTTER_PROJECT_DIR
-          flutter analyze
-        # Fails the build if any issue is found (exit code != 0).
+        script: flutter analyze
 
-      # ── 3. Tests ─────────────────────────────────────────────
       - name: Run flutter test
         script: |
-          cd $FLUTTER_PROJECT_DIR
           if [ -d "test" ] && [ "$(ls -A test 2>/dev/null)" ]; then
             flutter test
           else
             echo "No tests found — skipping test step"
           fi
 
-      # ── 4. iOS build for TestFlight ──────────────────────────
-      #
-      # Code signing setup:
-      #   Codemagic injects code signing identities and provisioning
-      #   profiles based on what you upload in the UI under
-      #   Teams → Your Team → Code signing identities.
-      #
-      #   The environment variable $CM_EXPORT_OPTIONS_PLIST is
-      #   generated automatically by Codemagic from your UI settings.
-      #
-      # App Store Connect API key:
-      #   Set in Codemagic UI → Teams → Your Team → Environment variables:
-      #   - $APP_STORE_CONNECT_PRIVATE_KEY    (base64-encoded .p8 file)
-      #   - $APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID)
-      #   - $APP_STORE_CONNECT_ISSUER_ID      (Issuer ID)
       - name: Build iOS IPA for TestFlight
         script: |
-          cd $FLUTTER_PROJECT_DIR
           flutter build ipa \
             --release \
-            --export-options-plist=$CM_EXPORT_OPTIONS_PLIST \
+            --export-options-plist=/Users/builder/export_options.plist \
             --build-name=1.0.0 \
             --build-number=$(($(git rev-list --count HEAD)))
-        # build-number uses total commit count for ascending TestFlight numbers
 
-    # ── Artifacts ─────────────────────────────────────────────
     artifacts:
-      - $FLUTTER_PROJECT_DIR/build/ios/ipa/*.ipa
-      - $FLUTTER_PROJECT_DIR/build/ios/ipa/*.plist
-      - $FLUTTER_PROJECT_DIR/build/ios/**/*.log
-      - $FLUTTER_PROJECT_DIR/build/ios/**/*.symbols
+      - build/ios/ipa/*.ipa
+      - build/ios/ipa/*.plist
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
 
-    # ── Publishing ────────────────────────────────────────────
     publishing:
-      # ── App Store Connect (TestFlight) ──────────────────────
-      # Credentials come from the Codemagic UI:
-      #   Teams → Your Team → Environment variables.
-      #
-      # Required variables (all three):
-      #   - $APP_STORE_CONNECT_PRIVATE_KEY      (base64-encoded .p8 file)
-      #   - $APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID from App Store Connect)
-      #   - $APP_STORE_CONNECT_ISSUER_ID        (Issuer ID from App Store Connect)
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-
-        # Submit to TestFlight (not App Store review)
         submit_to_testflight: true
         submit_to_app_store: false
-
-        # Which Apple ID to notify
         beta_groups:
-          - name: Internal Testers
-          - name: External Testers
+          - Internal Testers
+          - External Testers
 
-      # ── Email notifications ─────────────────────────────────
       email:
         recipients:
           - chrisxie12@example.com
         notify:
           success: true
           failure: true
-
-      # ── Slack notifications (optional — uncomment to use) ───
-      # slack:
-      #   channel: '#builds'
-      #   notify_on_build_start: true
-      #   notify:
-      #     success: true
-      #     failure: true
