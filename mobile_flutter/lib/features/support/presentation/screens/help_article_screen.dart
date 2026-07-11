@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/support_provider.dart';
 
 class HelpArticleScreen extends ConsumerStatefulWidget {
@@ -61,7 +62,7 @@ class _HelpArticleScreenState extends ConsumerState<HelpArticleScreen> {
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: article.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (e, _) => AppErrorWidget(e),
         data: (a) {
           if (a == null) {

@@ -84,9 +84,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     try {
       await repo.createEvent(data);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event created!')),
-        );
+        UnifySnackbar.success(context, 'Event created!');
         context.pop();
       }
     } catch (e) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   final String? communityId;
@@ -86,8 +87,8 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
           Wrap(
             spacing: 8,
             children: [
-              _TypeChip('Study Group', 'study_group', theme),
-              _TypeChip('Class Chat', 'group', theme),
+              _typeChip('Study Group', 'study_group', theme),
+              _typeChip('Class Chat', 'group', theme),
             ],
           ),
           const SizedBox(height: 20),
@@ -123,7 +124,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             onChanged: _search,
           ),
           if (_isSearching)
-            const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+            const Padding(padding: EdgeInsets.all(16), child: AppLoadingWidget.list(itemCount: 3)),
           ..._searchResults.map((user) {
             final userId = user['id'] as String;
             final name = user['full_name'] as String? ?? 'Unknown';
@@ -156,7 +157,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
     );
   }
 
-  Widget _TypeChip(String label, String value, ThemeData theme) {
+  Widget _typeChip(String label, String value, ThemeData theme) {
     final selected = _groupType == value;
     return ChoiceChip(
       label: Text(label),

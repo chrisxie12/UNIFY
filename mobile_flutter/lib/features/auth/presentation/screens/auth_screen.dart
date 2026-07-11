@@ -93,13 +93,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         if (ctx.mounted) {
                           Navigator.pop(ctx);
                           UnifySnackbar.success(
-                              context, 'Check your inbox for a reset link.');
+                              ctx, 'Check your inbox for a reset link.');
                         }
                       } catch (e) {
                         if (ctx.mounted) {
                           setS(() => sending = false);
                           UnifySnackbar.error(
-                              context, ErrorMapper.toUserMessage(e));
+                              ctx, ErrorMapper.toUserMessage(e));
                         }
                       }
                     },

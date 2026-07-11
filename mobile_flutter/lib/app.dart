@@ -6,6 +6,7 @@ import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'core/providers/supabase_provider.dart';
+import 'core/services/analytics_service.dart';
 import 'features/system/presentation/widgets/update_gate.dart';
 import 'features/notifications/presentation/providers/push_notification_provider.dart';
 import 'features/notifications/domain/services/push_notification_service.dart';
@@ -26,7 +27,12 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _startAuthListener());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAuthListener();
+      try {
+        ref.read(analyticsServiceProvider).log('app_launched', feature: 'app');
+      } catch (_) {}
+    });
   }
 
   void _startAuthListener() {

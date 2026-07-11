@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 
 class StudentDirectoryScreen extends ConsumerStatefulWidget {
   const StudentDirectoryScreen({super.key});
@@ -60,7 +62,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
           ),
           Expanded(
             child: resultsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(itemCount: 5),
               error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(searchUsersProvider(_query))),
               data: (users) {
                 if (_query.isEmpty) {
@@ -78,7 +80,10 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                   );
                 }
                 if (users.isEmpty) {
-                  return Center(child: Text('No results for "$_query"', style: TextStyle(color: context.textSecondary)));
+                  return AppEmptyWidget(
+                    icon: Icons.search_off_rounded,
+                    title: 'No results for "$_query"',
+                  );
                 }
                 return ListView.builder(
                   itemCount: users.length,

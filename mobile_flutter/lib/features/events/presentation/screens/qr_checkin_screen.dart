@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
@@ -165,7 +166,7 @@ class _AttendeeListSection extends ConsumerWidget {
             SizedBox(
               height: 300,
               child: tickets.isEmpty
-                  ? Center(child: Text('No registrations yet', style: TextStyle(color: context.textSecondary)))
+                  ? const AppEmptyWidget(icon: Icons.inbox_rounded, title: 'No registrations yet')
                   : ListView.builder(
                       itemCount: tickets.length,
                       itemBuilder: (_, i) {

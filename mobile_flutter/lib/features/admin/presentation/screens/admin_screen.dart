@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -200,18 +201,12 @@ class _PendingRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        const SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-                      ],
-                    ),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
+                  child: AppEmptyWidget(
+                    icon: Icons.check_circle_outline_rounded,
+                    title: 'All caught up!',
+                    subtitle: 'No pending requests to review.',
                   ),
                 );
               }
@@ -244,15 +239,9 @@ class _AllRequestsTab extends ConsumerWidget {
       child: allAsync.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.inbox_rounded, size: 48, color: context.borderCol),
-                  const SizedBox(height: 12),
-                  Text('No requests yet', style: TextStyle(fontSize: 15, color: context.textSecondary)),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.pending_actions_rounded,
+              title: 'No requests yet',
             );
           }
           return ListView(
@@ -717,19 +706,10 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        const SizedBox(height: 12),
-                        Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
-                        Text('No pending announcements.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-                      ],
-                    ),
-                  ),
+                return const AppEmptyWidget(
+                  icon: Icons.campaign_outlined,
+                  title: 'All caught up!',
+                  subtitle: 'No pending announcements.',
                 );
               }
               return Column(
@@ -987,17 +967,9 @@ class _VerificationTab extends ConsumerWidget {
           pendingAsync.when(
             data: (requests) {
               if (requests.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        const SizedBox(height: 12),
-                        Text('No pending verifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                  ),
+                return const AppEmptyWidget(
+                  icon: Icons.verified_outlined,
+                  title: 'No pending verifications',
                 );
               }
               return Column(

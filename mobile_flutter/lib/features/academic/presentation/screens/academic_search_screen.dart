@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
@@ -80,17 +82,19 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                 children: [
                   const _SectionHeader(title: 'Courses'),
                   coursesAsync.when(
-                    loading: () => const Padding(padding: EdgeInsets.all(USpacing.base), child: Center(child: CircularProgressIndicator())),
+                    loading: () => const AppLoadingWidget.list(itemCount: 2),
                     error: (e, _) => Padding(
                       padding: const EdgeInsets.all(16),
                       child: AppErrorWidget(e),
                     ),
                     data: (courses) {
                       if (courses.isEmpty) {
-                        return Padding(
-                        padding: const EdgeInsets.all(USpacing.base),
-                        child: Text('No courses found',
-                            style: UText.bodyS.copyWith(color: context.textSecondary)),
+                        return const Padding(
+                        padding: EdgeInsets.all(USpacing.base),
+                        child: AppEmptyWidget(
+                          icon: Icons.menu_book_rounded,
+                          title: 'No courses found',
+                        ),
                       );
                       }
                       return Column(
@@ -114,17 +118,19 @@ class _AcademicSearchScreenState extends ConsumerState<AcademicSearchScreen> {
                   const SizedBox(height: USpacing.sm),
                   const _SectionHeader(title: 'Resources'),
                   resourcesAsync.when(
-                    loading: () => const Padding(padding: EdgeInsets.all(USpacing.base), child: Center(child: CircularProgressIndicator())),
+                    loading: () => const AppLoadingWidget.list(itemCount: 2),
                     error: (e, _) => Padding(
                       padding: const EdgeInsets.all(16),
                       child: AppErrorWidget(e),
                     ),
                     data: (resources) {
                       if (resources.isEmpty) {
-                        return Padding(
-                        padding: const EdgeInsets.all(USpacing.base),
-                        child: Text('No resources found',
-                            style: UText.bodyS.copyWith(color: context.textSecondary)),
+                        return const Padding(
+                        padding: EdgeInsets.all(USpacing.base),
+                        child: AppEmptyWidget(
+                          icon: Icons.menu_book_rounded,
+                          title: 'No resources found',
+                        ),
                       );
                       }
                       return Column(

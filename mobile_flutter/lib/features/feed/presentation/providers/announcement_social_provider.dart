@@ -9,35 +9,35 @@ final announcementSocialRepoProvider = Provider<AnnouncementSocialRepository>((r
 
 // ── Like state per announcement ───────────────────────────────────────────────
 
-class _LikeState {
+class LikeState {
   final bool isLiked;
   final int count;
   final bool isLoading;
-  const _LikeState({required this.isLiked, required this.count, this.isLoading = false});
-  _LikeState copyWith({bool? isLiked, int? count, bool? isLoading}) => _LikeState(
+  const LikeState({required this.isLiked, required this.count, this.isLoading = false});
+  LikeState copyWith({bool? isLiked, int? count, bool? isLoading}) => LikeState(
         isLiked: isLiked ?? this.isLiked,
         count: count ?? this.count,
         isLoading: isLoading ?? this.isLoading,
       );
 }
 
-class AnnouncementLikeNotifier extends FamilyNotifier<_LikeState, ({String id, int initialCount})> {
+class AnnouncementLikeNotifier extends FamilyNotifier<LikeState, ({String id, int initialCount})> {
   @override
-  _LikeState build(({String id, int initialCount}) arg) {
+  LikeState build(({String id, int initialCount}) arg) {
     // Load status from DB lazily after first frame
     Future.microtask(() async {
       final repo = ref.read(announcementSocialRepoProvider);
       final (isLiked, count) = await repo.getLikeStatus(arg.id);
-      state = _LikeState(isLiked: isLiked, count: count);
+      state = LikeState(isLiked: isLiked, count: count);
     });
-    return _LikeState(isLiked: false, count: arg.initialCount);
+    return LikeState(isLiked: false, count: arg.initialCount);
   }
 
   Future<void> toggle() async {
     if (state.isLoading) return;
     // Optimistic update
     final prev = state;
-    state = _LikeState(
+    state = LikeState(
       isLiked: !prev.isLiked,
       count: prev.isLiked ? prev.count - 1 : prev.count + 1,
       isLoading: true,
@@ -45,7 +45,7 @@ class AnnouncementLikeNotifier extends FamilyNotifier<_LikeState, ({String id, i
     try {
       final repo = ref.read(announcementSocialRepoProvider);
       final (isLiked, count) = await repo.toggleLike(arg.id);
-      state = _LikeState(isLiked: isLiked, count: count);
+      state = LikeState(isLiked: isLiked, count: count);
     } catch (_) {
       state = prev; // roll back on error
     }
@@ -53,7 +53,7 @@ class AnnouncementLikeNotifier extends FamilyNotifier<_LikeState, ({String id, i
 }
 
 final announcementLikeProvider =
-    NotifierProvider.family<AnnouncementLikeNotifier, _LikeState, ({String id, int initialCount})>(
+    NotifierProvider.family<AnnouncementLikeNotifier, LikeState, ({String id, int initialCount})>(
   AnnouncementLikeNotifier.new,
 );
 

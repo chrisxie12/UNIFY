@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
@@ -79,7 +80,7 @@ class _PhotoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (photos.isEmpty) {
-      return Center(child: Text('No photos', style: UText.bodyS.copyWith(color: context.textSecondary)));
+      return const AppEmptyWidget(icon: Icons.photo_camera_outlined, title: 'No photos');
     }
     return GridView.builder(
       padding: const EdgeInsets.all(USpacing.sm),
@@ -132,7 +133,7 @@ class _VideoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (videos.isEmpty) {
-      return Center(child: Text('No videos', style: UText.bodyS.copyWith(color: context.textSecondary)));
+      return const AppEmptyWidget(icon: Icons.videocam_outlined, title: 'No videos');
     }
     return ListView.builder(
       padding: const EdgeInsets.all(USpacing.md),

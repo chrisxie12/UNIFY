@@ -341,3 +341,14 @@ Make UNIFY fully reproducible from a fresh Supabase project. Compete canonical `
 - **Database relationship fix SQL confirmed** — `step_fix_database_relationships.sql` (644 lines) covers all 25+ broken FKs, indexes, RPC functions, and migration fixes.
 - **Notification infrastructure audited** — Graceful no-op pattern intentional. 6 issues documented for post-launch.
 - **Global search audited** — Feed search dead link fixed. 2 orphaned search screens documented. Debounce gap documented.
+
+### Done — Session 2026-07-11 (RC1 — Polish, Stability, Analytics & Beta Essentials)
+- **Week 1 — 22 analyzer infos eliminated**: Fixed `avoid_print` (decode.dart), `use_build_context_synchronously` (auth_screen), `prefer_typing_uninitialized_variables` (community_detail_screen typed with `CommunityModel`), `library_private_types_in_public_api` (LikeState → public), `unnecessary_getters_setters` (message_model `isExpanded` field), `non_constant_identifier_names` (__ → _), `deprecated_member_use` (Radio → RadioGroup).
+- **Week 1 — ~70 CircularProgressIndicators replaced**: All page-level CPIs in `AsyncValue.when(loading:)` replaced with `AppLoadingWidget.card()`/`.list()`/`.profile()`. 30+ button-level CPIs (≤24px) kept as-is.
+- **Week 1 — 53 bare `Text('No...')` replaced with `AppEmptyWidget`**: Branded empty states across 41 files with contextual icons.
+- **Week 1 — Dark mode verified**: Fully configured (`AppTheme.buildDark()` + `UColorScheme.dark` + `ThemeMode.system` default). 4 minor cosmetic gaps documented (messaging shimmer hardcoded colors, components.dart light-mode refs, AppColors references, shimmer container Colors.white).
+- **Week 1 — Forms validated**: Added `GlobalKey<FormState>` + `Form` + validators to CreatePost (title/body required, link optional URL) and CreatePoll (question + options required). 7 plain SnackBars replaced with `UnifySnackbar`. Added `autovalidateMode.onUserInteraction`.
+- **Week 2 — Analytics wired**: `AnalyticsService` (existing, never-called) now logs `user_signed_up`, `user_logged_in`, `user_logged_out`, `password_reset`, `community_joined`, `community_left`, `post_created`, `message_sent`, `event_rsvp`, `profile_completed`, `app_launched` to Supabase `analytics_events` table. CrashReportingService already wired in bootstrap.dart.
+- **Week 3 — Beta essentials**: Created `BetaInfoScreen` (About, App Version/Build, Contact Support, Feedback link, Privacy Policy, Terms of Service), `PrivacyPolicyScreen`, `TermsOfServiceScreen`. Routes: `/beta-info`, `/privacy`, `/terms`. Wired into Settings screen.
+- **Week 4 — Testing checklist**: Created `BETA_TESTING_CHECKLIST.md` — 100+ manual test items across auth, onboarding, feed, communities, messaging, events, academic, profile, notifications, search, offline, dark mode, navigation, performance.
+- **`flutter analyze`** — **0 errors, 0 warnings, 0 infos**.

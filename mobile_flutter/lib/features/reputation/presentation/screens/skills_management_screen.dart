@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/reputation_provider.dart';
 
 class SkillsManagementScreen extends ConsumerWidget {
@@ -29,17 +31,10 @@ class SkillsManagementScreen extends ConsumerWidget {
       body: skillsAsync.when(
         data: (skills) {
           if (skills.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.handyman_outlined, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
-                  const SizedBox(height: 12),
-                  Text('No skills yet', style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 4),
-                  Text('Tap + to add your first skill', style: theme.textTheme.bodySmall),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.psychology_rounded,
+              title: 'No skills yet',
+              subtitle: 'Tap + to add your first skill',
             );
           }
           return ListView.builder(
@@ -136,7 +131,7 @@ class SkillsManagementScreen extends ConsumerWidget {
             },
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (err, _) => AppErrorWidget(err),
       ),
     );

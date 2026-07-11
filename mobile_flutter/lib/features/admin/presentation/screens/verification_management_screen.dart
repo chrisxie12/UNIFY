@@ -4,6 +4,7 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/guards/admin_guard.dart';
@@ -56,15 +57,9 @@ class _VerificationList extends ConsumerWidget {
       child: asyncData.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.verified_user_rounded, size: 48, color: context.borderCol),
-                  const SizedBox(height: 12),
-                  Text('No verification requests', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.verified_outlined,
+              title: 'No verification requests',
             );
           }
           return ListView.builder(

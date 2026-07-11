@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
 import '../widgets/ops_widgets.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class UsageAnalyticsScreen extends ConsumerWidget {
   const UsageAnalyticsScreen({super.key});
@@ -139,11 +141,11 @@ class _DauChartCard extends StatelessWidget {
       icon: Icons.show_chart_rounded,
       children: [
         if (series.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Center(
-              child: Text('No activity data yet',
-                  style: TextStyle(color: context.textSecondary)),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: AppEmptyWidget(
+              icon: Icons.history_rounded,
+              title: 'No activity data yet',
             ),
           )
         else
@@ -276,10 +278,7 @@ class _RetentionPill extends StatelessWidget {
 class _LoadingBox extends StatelessWidget {
   const _LoadingBox();
   @override
-  Widget build(BuildContext context) => const Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(child: CircularProgressIndicator()),
-      );
+  Widget build(BuildContext context) => const AppLoadingWidget.list(itemCount: 5);
 }
 
 class _ErrorBox extends StatelessWidget {

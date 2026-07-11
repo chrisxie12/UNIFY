@@ -1,1120 +1,379 @@
-# 📱 UNIFY iOS TestFlight Audit Report
-**Date:** July 9, 2026 | **Status:** Audit Complete (No Code Changes) | **Version:** 1.0.0+1
+# UNIFY iOS TestFlight Audit Report
+**Date:** July 11, 2026 | **Status:** Audit Complete | **Version:** 1.0.0+1
 
 ---
 
-## Executive Summary
+## 1. Hardcoded API Keys / Secrets
 
-UNIFY has a **solid architectural foundation** (Clean Architecture, Riverpod, Supabase RLS, multi-feature build) but requires **critical fixes in 3 areas** before TestFlight can launch:
+### 🔴 CRITICAL: Firebase API keys in source code (implicit exposure risk)
+- **File:** `lib/firebase_options.dart:52-68`
+- **Issue:** The FlutterFire CLI generated file embeds Firebase API keys (`apiKey`, `appId`, `messagingSenderId`, `projectId`, `storageBucket`, `iosClientId`, `iosBundleId`) as constants in source code
+- **Risk:** These are intentionally public per Firebase design (API keys are not secrets). However, the `iosClientId` (`752669005350-bfqtdv4q2arsut5084sinp3hr9h9o5ae.apps.googleusercontent.com`) is exposed for Google Sign-In OAuth
+- **Severity:** LOW — Firebase API keys are designed to be public
+- **Recommendation:** Ensure `google-services.json` and `GoogleService-Info.plist` are NOT committed to git
 
-1. **Firebase/FCM initialization** — App won't receive notifications
-2. **13 missing GoRouter routes** — Profile and search features crash
-3. **iOS configuration** — Missing APNS certificate, deep links, GoogleService-Info.plist
+### 🔴 CRITICAL: Supabase anon key in source-controlled `.env` file
+- **File:** `assets/.env:2`
+- **Issue:** Supabase anon key stored in tracked asset:
+  ```
+  SUPABASE_URL=https://tuepkmjedmbxdlriform.supabase.co
+  SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  ```
+- **Risk:** Public anon key (by design), but if the project is open-source or shared, anyone can make anonymous Supabase queries up to RLS limits
+- **Severity:** LOW (RLS is the actual security boundary)
+- **Recommendation:** Exclude `assets/.env` from git and use `--dart-define` for CI builds
 
-**TestFlight Readiness Score: 35/100** ❌ **NOT READY**
-- Build status: 60/100
-- Functionality: 40/100
-- iOS configuration: 25/100
-- UX/Polish: 30/100
-
----
-
-# 1. BUILD STATUS
-
-## ✅ What's Working
-
-### Flutter Environment
-- Flutter: 3.44.4 (stable)
-- Dart: 3.12.2
-- Target SDK: 34 (Android), iOS 11+ (implied)
-- Analysis: **0 errors, 0 warnings, 82 infos** (clean build)
-
-### Dependencies
-- ✅ `supabase_flutter: 2.8.4` — backend connectivity
-- ✅ `firebase_core: 3.3.0`, `firebase_messaging: 15.0.3` — push notifications (installed but not initialized)
-- ✅ `flutter_riverpod: 2.6.1` — state management
-- ✅ `go_router: 14.8.1` — navigation
-- ✅ `hive_flutter: 1.1.0` — local caching
-- ✅ `connectivity_plus: 6.1.4` — network monitoring
-- ✅ All UI deps (google_fonts, flutter_svg, shimmer, image_picker)
-
-### Android Configuration
-- ✅ Namespace: `com.gctu.unify`
-- ✅ Min SDK: `flutter.minSdkVersion` (typically 21)
-- ✅ Target SDK: `flutter.targetSdkVersion` (typically 34)
-- ✅ Permissions correct: `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`, `VIBRATE`
-- ✅ Deep links configured: `com.gctu.unify://auth/callback` intent filter
-- ✅ FCM channel: `unify_notifications` configured
-- ✅ `google-services.json` exists ✅
-
-### iOS Configuration (Partial)
-- ✅ Bundle name: "Unify" (display name)
-- ✅ Background modes: `remote-notification` enabled in `Info.plist`
-- ✅ Orientations: Portrait + Landscape (both phones and tablets)
-- ✅ Scene delegation configured
-- ❌ **Missing:** Push Notifications capability in Xcode
-- ❌ **Missing:** APNS certificate configuration
-- ❌ **Missing:** Associated Domains capability
+### 🟡 MEDIUM: Vercel OIDC token committed
+- **File:** `.env.local:2`
+- **Issue:** Full Vercel OIDC JWT token with `owner:ctwumgyan-7759s-project:unify-web` scope
+- **Risk:** This is a short-lived deployment token but should NOT be in source control
+- **Severity:** MEDIUM
+- **Recommendation:** Add `.env.local` to `.gitignore`
 
 ---
 
-## 🔴 Critical Build Blockers
+## 2. Supabase RLS Bypass / Query Injection
 
-### **BLOCKER #1: Firebase NOT Initialized in main.dart**
+### 🟡 MEDIUM: `!inner` hints bypass soft joins
+- **Files:**
+  - `lib/features/admin/data/repositories/admin_repository_impl.dart:328` — `admin_roles!inner(role)`
+  - `lib/features/admin/data/repositories/admin_repository_impl.dart:444` — `fk_reported_by!inner`
+  - `lib/features/events/data/repositories/event_repository_impl.dart:273,500,519,748` — `community_events!inner(*)`
+- **Issue:** `!inner` forces an INNER JOIN, which acts as a filter: if the joined row doesn't exist, the parent row is excluded. This is legitimate but can be used (in combination with RLS bypass) to enumerate data
+- **Severity:** LOW — these are all within the app's legitimate data model. RLS still applies
 
-**Severity:** CRITICAL (P0)  
-**Impact:** App won't boot Firebase, FCM won't initialize, no push notifications  
-**Evidence:**
+### 🟢 LOW: `.rpc()` calls safe (no user-provided SQL injection)
+- **Files:** 28 `.rpc()` calls across the codebase (admin, events, messaging, academic, marketplace, opportunities, etc.)
+- **Verification:** All `.rpc()` calls pass fixed function names and structured params (`{'p_resource_id': resourceId}`). No raw SQL string concatenation with user input. **No injection risk.**
+- **Severity:** NONE
+
+---
+
+## 3. Insecure Data Storage
+
+### 🟢 LOW: Hive caches non-sensitive data
+- **File:** `lib/core/services/cache_service.dart`
+- **Boxes used:** `feed_cache`, `profile_cache`, `opportunities_cache`, `academic_cache`, `offline_resources`, `launch_cache`
+- **Data stored:** Cached API responses (JSON-encoded), typed as plain `String`
+- **No tokens, passwords, or credentials stored** in Hive
+- **Severity:** NONE
+
+### 🟢 LOW: SharedPreferences stores non-sensitive data
+- **Files:**
+  - `lib/core/providers/theme_provider.dart:18,30` — theme preset name (string like `"ocean"`)
+  - `lib/core/providers/theme_mode_provider.dart:19,30` — theme mode string (`"system"`, `"light"`, `"dark"`)
+  - `lib/features/welcome/welcome_screen.dart:36` — `hasSeenWelcome` boolean
+  - `lib/features/splash/splash_screen.dart:58` — same
+  - `lib/features/onboarding/onboarding_screen.dart:225` — `onboarding_complete` boolean
+  - `lib/features/search/presentation/providers/search_provider.dart:214-237` — recent search history strings
+- **Issue:** No sensitive data (no tokens, passwords, or personal data beyond user preferences)
+- **Severity:** NONE
+
+### 🟢 LOW: `debugPrint` used extensively (no credential logging)
+- **Pattern:** `debugPrint('[ClassName] Error: $e')` used across all repository/provider/service files (~250 occurrences)
+- **Verification:** No credentials, tokens, or passwords are logged. Error messages contain exception descriptions and object IDs only
+- **Severity:** NONE
+
+---
+
+## 4. Insecure HTTP Connections
+
+### 🟢 LOW: Only 1 `http://` reference (SVG namespace)
+- **File:** `lib/features/profile/presentation/screens/profile_screen.dart:994`
+- **Code:** `'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'`
+- **Issue:** This is a hardcoded SVG namespace URI used for rendering inline SVG icons. It is NOT a network request
+- **Severity:** NONE
+
+### ✅ No insecure HTTP network calls found
+- All Supabase calls use HTTPS (Supabase client enforces it)
+- All storage URLs use HTTPS
+- No `http://` URL strings in network request code
+- **Severity:** NONE
+
+---
+
+## 5. Deep Link / URL Scheme Security
+
+### 🟡 MEDIUM: Android deep link not verified
+- **File:** `android/app/src/main/AndroidManifest.xml:32`
+- **Code:** `<intent-filter android:autoVerify="false">`
+- **Issue:** `autoVerify=false` means Android does not verify domain ownership. Any app can declare the same intent filter on a rooted device
+- **Impact:** On Android 12+, unverified deep links show a disambiguation dialog instead of routing directly to the app. Phishing risk (another app could register `com.gctu.unify://auth/callback`)
+- **Severity:** MEDIUM
+
+### 🔴 CRITICAL: iOS has NO deep link handling at all
+- **File:** `ios/Runner/AppDelegate.swift:1-16`
+- **Issue:** Standard Flutter `FlutterAppDelegate` with NO custom URL scheme handling. No `CFBundleURLTypes` in `ios/Runner/Info.plist`
+- **Result:** Google OAuth deep link callback (`com.gctu.unify://auth/callback`) works on Android (manifest intent filter) but **will NOT work on iOS**
+- **Impact:** Google Sign-In will fail on iOS — the OAuth flow completes in Safari but the app never receives the callback
+- **Severity:** 🔴 CRITICAL
+
+### 🔴 CRITICAL: Push notification deep link routing uses hardcoded paths
+- **File:** `lib/features/notifications/domain/services/push_notification_service.dart:124-178`
+- **Issue:** `routeFromData()` switches on notification type and builds routes like `/messaging/chat/$convId` directly without validation of `convId` format
+- **Risk:** If a malicious notification payload contains `conversation_id: '../../../admin'`, it could redirect to an admin route. However, GoRouter has path validation and admin routes are protected by `AdminGuard`
+- **Severity:** LOW (guarded by AdminGuard)
+
+### 🟢 LOW: Push notification routes reference unverified GoRouter paths
+- **Paths like** `/event/$eventId` (line 140) vs app router uses `/events/:id` — possible navigation error but no security risk
+
+---
+
+## 6. Input Validation / Path Traversal
+
+### 🟡 MEDIUM: File upload paths use user-controlled extension without sanitization
+- **Files (7 upload sites use the same pattern):**
+  - `lib/features/verification/presentation/screens/verification_request_screen.dart:87-89`
+  - `lib/features/academic/presentation/screens/resource_upload_screen.dart:253-259`
+  - `lib/features/posts/presentation/screens/create_post_screen.dart:257-258`
+  - `lib/features/messaging/data/repositories/messaging_repository_impl.dart:445-446`
+  - `lib/features/snapshots/data/repositories/snapshot_repository.dart:161-162`
+  - `lib/features/onboarding/steps/step_profile_photo.dart:28-30`
+  - `lib/features/snapshots/presentation/screens/snapshot_composer_screen.dart:139`
+- **Pattern:**
+  ```dart
+  final ext = imageFile.path.split('.').last;
+  final path = 'verification/${user.id}/${DateTime.now().millisecondsSinceEpoch}.$ext';
+  ```
+- **Risk:** Image file extensions are taken directly from the filename. A file named `malicious.php;.png` could potentially bypass extension checks on some storage providers. However, Supabase Storage enforces content-type based on file magic bytes, and the path is namespaced by user ID
+- **Severity:** LOW (Supabase Storage muxes by MIME detection, not extension)
+- **Recommendation:** Whitelist allowed extensions (`jpg`, `jpeg`, `png`, `gif`, `webp`, `pdf`, `doc`, `docx`)
+- **Safe patterns:** All upload paths are namespaced by user ID (`${user.id}/...`) which prevents path traversal
+
+---
+
+## 7. Debug Mode Checks
+
+### 🟢 LOW: `kDebugMode` used safely
+- **File:** `lib/bootstrap.dart:21,28,67`
+- **Usage:**
+  - Line 21: Only presents Flutter errors visually in debug mode
+  - Line 28: Only prints `[PlatformError]` in debug mode
+  - Line 67: Only prints `[ZonedError]` in debug mode
+- **Assessment:** These are standard patterns. In release mode, errors go to Sentry (crash reporting) but are not printed. **No security risk.**
+- **Severity:** NONE
+
+### 🟢 LOW: `assert()` used correctly
+- **Files:**
+  - `lib/features/messaging/presentation/widgets/typing_indicator.dart:105` — `assert(typingCount > 0)`
+  - `lib/core/widgets/main_shell.dart:200` — `assert(badges.length == MainShell._tabs.length)`
+- **Assessment:** Both are compile-time sanity checks for internal widget logic. No security-sensitive assertions. **No issue.**
+- **Severity:** NONE
+
+---
+
+## 8. Environment Configuration
+
+### 🔴 CRITICAL: `Supabase.initialize()` NEVER CALLED
+- **File:** `lib/main.dart:6-16`
+- **Issue:** The app initializes Firebase but **never calls `Supabase.initialize(url: ..., anonKey: ...)`**
+- **Evidence:**
+  - Previous version (commit `3517c12`) had proper initialization with dotenv
+  - Commit `50ea10f` ("dee") replaced main.dart with a 900-line prototype stub
+  - Current working tree has a simplified version with only `Firebase.initializeApp()`
+  - `flutter_dotenv: ^5.2.1` in `pubspec.yaml:45` but never imported or used
+  - `assets/.env` exists with credentials but never loaded
+- **Impact:** Any access to `Supabase.instance.client` (used in 49+ files) will throw `LateInitializationError`. **App will crash on startup for any feature that requires Supabase**
+- **Severity:** 🔴 CRITICAL — P0 BLOCKER
+
+### 🟡 MEDIUM: No environment separation (dev/staging/prod)
+- **Issue:** No flavor configuration (no `FlavorConfig`, no `--dart-define` for Supabase in current code). The app hardcodes one environment
+- **Impact:** Cannot test against staging DB without modifying `assets/.env`. Risk of testing against production data
+- **Severity:** MEDIUM
+- **Recommendation:** Add `--dart-define` support for `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SENTRY_DSN` with `.env` fallback
+
+---
+
+## 9. Analytics / Tracking Consent
+
+### 🔴 CRITICAL: No GDPR/opt-in consent before analytics logging
+- **File:** `lib/core/services/analytics_service.dart:66-82`
+- **Issue:** `AnalyticsService.log()` is called on:
+  - `app_launched` — at app startup (`lib/app.dart:33`)
+  - `user_signed_up` — on sign-up (`lib/features/auth/presentation/providers/auth_provider.dart:29`)
+  - `user_logged_in` — on login (`lib/features/auth/presentation/providers/auth_provider.dart:38`)
+  - `user_logged_out` — on logout (`lib/features/auth/presentation/providers/auth_provider.dart:51`)
+  - `password_reset` — on password reset (`lib/features/auth/presentation/providers/auth_provider.dart:56`)
+  - `community_joined` / `community_left` / `post_created` / `message_sent` / `event_rsvp` / `profile_completed` / `app_launched`
+- **Impact:** **GDPR violation for EU users.** App Store requires explicit opt-in before tracking. EU users' data sent to Supabase `analytics_events` table without consent
+- **Severity:** 🔴 CRITICAL — REJECTED BY APP REVIEW
+
+### 🟡 MEDIUM: Session tracking without consent
+- **File:** `lib/core/services/analytics_service.dart:34-63`
+- **Issue:** `startSession()` / `endSession()` track user sessions in `user_sessions` table with `user_id`, `app_version`, `platform`, `duration_seconds`. No opt-in mechanism.
+- **Impact:** Violates GDPR Article 7 (consent) and ePrivacy Directive. Apple App Store requires consent for analytics
+- **Severity:** MEDIUM
+- **Recommendation:** Gate all analytics behind a consent dialog on first launch
+
+---
+
+## 10. Release Build Settings
+
+### 🔴 CRITICAL: Android release signed with debug key
+- **File:** `android/app/build.gradle.kts:44`
+- **Code:** `signingConfig = signingConfigs.getByName("debug")`
+- **Issue:** Release builds use the public Android debug keystore. Any developer can repackage and sign the app
+- **Impact:**
+  - Google Play Store will reject (debug-signed APKs/AABs not allowed)
+  - Anyone can tamper with the APK and re-sign it
+  - Users who sideload from untrusted sources won't be able to verify authenticity
+- **Severity:** 🔴 CRITICAL — P0 BLOCKER
+
+### 🟡 MEDIUM: Android namespace mismatch
+- **File:** `android/app/src/main/kotlin/com/example/unify/MainActivity.kt:1`
+- **Code:** `package com.example.unify`
+- **Issue:** Namespace in `AndroidManifest.xml` is `com.gctu.unify` (line 15 of build.gradle.kts) but Kotlin file uses `com.example.unify`
+- **Impact:** Minor — the actual namespace is set in build.gradle.kts which takes precedence, but this is confusing
+- **Severity:** LOW
+
+### 🟡 MEDIUM: iOS `CFBundleName` lowercase
+- **File:** `ios/Runner/Info.plist:18`
+- **Code:** `<string>unify</string>`
+- **Issue:** Bundle name is lowercase `unify` while display name is `Unify` (line 10). Minor inconsistency
+- **Severity:** LOW
+
+---
+
+## 11. Error Messages Leaking Internals
+
+### 🔴 CRITICAL: Startup error widget leaks full exception + stack trace
+- **File:** `lib/bootstrap.dart:74-119`
+- **Code:** `_StartupErrorApp` renders `'$error'` and `'${stackTrace ?? ''}'` to the user
+- **Issue:** If the app fails to start, the error screen displays the **full exception message and stack trace** in release builds (the comment in line 75-76 says "Exception *messages* survive minification")
+- **Impact:** Sensitive information (file paths, Dart runtime internals, database error messages) visible to end users. Could leak Supabase table names, column names, or internal app structure
+- **Severity:** 🔴 CRITICAL — PRIVACY LEAK
+
+### 🔴 CRITICAL: Build error widget leaks exception details
+- **File:** `lib/bootstrap.dart:36-49`
+- **Code:** `ErrorWidget.builder` renders `details.exception` and `details.stack` to users
+- **Issue:** Release builds show `'Build error:\n${details.exception}\n\n${details.stack ?? ''}'` in red text
+- **Impact:** Same as above — internal details exposed to end users
+- **Severity:** 🔴 CRITICAL
+
+### 🟡 MEDIUM: Snackbar leaks raw error on photo upload failure
+- **File:** `lib/features/onboarding/steps/step_profile_photo.dart:38`
+- **Code:** `SnackBar(content: Text('Upload failed: $e'))`
+- **Issue:** Caught exception `$e` is shown directly to user. Could expose Supabase storage error details
+- **Severity:** MEDIUM
+
+### 🟡 MEDIUM: Snackbar leaks error on chat open failure
+- **File:** `lib/features/messaging/presentation/screens/student_directory_screen.dart:121`
+- **Code:** `SnackBar(content: Text('Could not open chat: $e'))`
+- **Issue:** Raw exception shown to user
+- **Severity:** MEDIUM
+
+### 🟢 LOW: Most error sites use `AppErrorWidget` or `ErrorMapper`
+- 88+ error sites properly mapped via `ErrorMapper.toUserMessage(e)` ✅
+- Support center (`lib/features/support/presentation/screens/support_center_screen.dart:626`) uses `ErrorMapper.toUserMessage(error)` ✅
+- Representative detail screen (`lib/features/admin/presentation/screens/representative_detail_screen.dart:161`) uses `ErrorMapper.toUserMessage(e)` ✅
+
+---
+
+## 12. Firebase Configuration Check
+
+### 🔴 CRITICAL: Firebase properly initialized but Supabase not initialized
+- **Files:**
+  - `lib/firebase_options.dart` — **Valid Firebase options** with real project IDs (`unify-b92fd`), real API keys, real iOS client ID
+  - `lib/main.dart:10-12` — `Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)` — **CORRECT**
+- **Issue:** `Supabase.initialize()` is never called. `lib/bootstrap.dart:54` calls `Hive.initFlutter()` but no Supabase init
+- **Firebase options status:** All values are **real** (not placeholders)
+  - `apiKey` (Android): `AIzaSyCaQNgkoosm_DoyBSK1EWuHH-H9FAlFQRs`
+  - `apiKey` (iOS): `AIzaSyA3Zbz9BMDw7SU5nHtPrE8UHSAfw67rXGk`
+  - `projectId`: `unify-b92fd`
+  - `iosClientId`: `752669005350-bfqtdv4q2arsut5084sinp3hr9h9o5ae.apps.googleusercontent.com` (for Google Sign-In)
+- **Firebase native configs:**
+  - `android/app/google-services.json` — **exists** ✅
+  - `ios/Runner/GoogleService-Info.plist` — **exists** ✅
+- **Sentry:** `CrashReportingService` in `lib/core/services/crash_reporting_service.dart:3-26` is a **graceful no-op** — never initialized with a DSN. All errors silently dropped in production
+- **Single environment:** No dev/prod Firebase separation. Same Firebase project for all builds
+
+### 🟡 MEDIUM: Missing `flutter_dotenv` import in main.dart
+- **File:** `lib/main.dart` — no `flutter_dotenv` import
+- **Impact:** `assets/.env` file exists with Supabase credentials but is never loaded
+- **Severity:** MEDIUM (critical because Supabase.initialize is also missing)
+
+---
+
+## Summary of Findings
+
+### 🔴 CRITICAL (P0 — Blocks TestFlight)
+
+| # | Issue | File | Line(s) |
+|---|-------|------|---------|
+| 1 | `Supabase.initialize()` never called — app crashes on any Supabase access | `lib/main.dart` | 6-16 |
+| 2 | iOS deep link handling completely missing — Google Sign-In will fail on iOS | `ios/Runner/AppDelegate.swift`, `ios/Runner/Info.plist` | 1-16 |
+| 3 | Error widget leaks stack traces to end users | `lib/bootstrap.dart` | 36-49, 74-119 |
+| 4 | Analytics events fire without user consent — GDPR violation for App Store | `lib/core/services/analytics_service.dart` | 66-82 |
+| 5 | Android release build signed with debug key — Play Store rejection | `android/app/build.gradle.kts` | 44 |
+| 6 | Uncommitted working tree vs HEAD mismatch — `main.dart` was replaced by `50ea10f` | Working tree dirty | — |
+
+### 🟡 MEDIUM (P1 — Fix Before Launch)
+
+| # | Issue | File | Line(s) |
+|---|-------|------|---------|
+| 7 | No environment separation (dev/staging/prod) | Entire codebase | — |
+| 8 | Vercel OIDC token committed | `.env.local` | 2 |
+| 9 | Android deep link `autoVerify=false` — disambiguation dialog | `AndroidManifest.xml` | 32 |
+| 10 | 2 bare `SnackBar(content: Text('$e'))` — error details leaked | `step_profile_photo.dart:38`, `student_directory_screen.dart:121` | — |
+| 11 | File upload extension whitelist missing (7 upload sites) | Various | — |
+
+### 🟢 LOW (P2 — Nice to Have)
+
+| # | Issue | File | Line(s) |
+|---|-------|------|---------|
+| 12 | Firebase API keys in source code (by design, but track) | `firebase_options.dart` | 52-68 |
+| 13 | Supabase anon key in tracked `assets/.env` | `assets/.env` | 2 |
+| 14 | Android Kotlin package mismatch (`com.example.unify` vs `com.gctu.unify`) | `MainActivity.kt` | 1 |
+| 15 | iOS bundle name lowercase (`unify` vs `Unify`) | `Info.plist` | 18 |
+| 16 | Push notification deep link routing unvalidated payload paths | `push_notification_service.dart` | 124-178 |
+| 17 | `Sentry DSN` empty — crash reporting silently disabled | `CrashReportingService` | 3-26 |
+
+---
+
+## Most Critical Code Fix Needed
+
+**`lib/main.dart`** — Missing Supabase initialization. The previous version (commit `3517c12`) had correct initialization:
 ```dart
-// main.dart (CURRENT — WRONG)
-void main() {
-  runApp(const UnifyApp());  // ❌ Firebase.initializeApp() missing
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: 'assets/.env');
+  await bootstrap(() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    final supabaseUrl = dotenv.env['SUPABASE_URL']!;
+    final supabaseKey = dotenv.env['SUPABASE_ANON_KEY']!;
+    await Supabase.initialize(
+      url: supabaseUrl,
+      anonKey: supabaseKey,
+      authOptions: const FlutterAuthClientOptions(
+        autoRefreshToken: true,
+        authFlowType: AuthFlowType.pkce,
+      ),
+    );
+    return const UnifyApp();
+  }, sentryDsn: dotenv.env['SENTRY_DSN']);
 }
 ```
-
-**What's Missing:**
-1. `Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)`
-2. `firebase_options.dart` file (not auto-generated)
-3. Bootstrap integration for error handlers
-
-**Consequence:**  
-- `FirebaseMessaging.instance` will throw "Firebase not initialized" at runtime
-- All push notification code silently fails (wrapped in try/catch with `debugPrint`)
-- No crash reporting via Sentry (also needs DSN setup)
-
-**Fix Effort:** 30 minutes
-- Generate `firebase_options.dart` via `flutterfire configure` (requires Firebase project linked)
-- Add `Firebase.initializeApp()` to `main.dart` before `runApp()`
-- Ensure `google-services.json` + `GoogleService-Info.plist` present
+This was removed in commit `50ea10f` and not fully restored.
 
 ---
 
-### **BLOCKER #2: iOS Missing GoogleService-Info.plist**
+## Readiness Verdict
 
-**Severity:** CRITICAL (P0)  
-**Impact:** iOS app won't authenticate to Firebase  
-**Status:** File not present locally  
+**❌ NOT READY FOR TESTFLIGHT**
 
-**What's Needed:**
-- Download from Firebase Console → Project Settings → Download plist for iOS
-- Add to Xcode project: `ios/Runner/`
-- Ensure bundled in "Copy Bundle Resources" build phase
+6 Critical (P0) blockers exist, any one of which would prevent a successful beta:
 
-**Consequence:**  
-- Firebase initialization fails on iOS (Swift code can't find plist)
-- App may crash or silently disable Firebase features
+1. `Supabase.initialize()` missing → app crashes on startup when any feature queries Supabase
+2. iOS deep links missing → Google Sign-In fails on iOS (OAuth callback never received)
+3. Stack trace leak in error widget → App Store privacy violation
+4. No analytics consent → GDPR violation, App Store rejection
+5. Debug-signed release build → Play Store rejection
+6. No Supabase credentials loaded → all 49+ `Supabase.instance.client` calls fail
 
-**Fix Effort:** 10 minutes (download + add to project)
-
----
-
-### **BLOCKER #3: 13 Missing GoRouter Routes**
-
-**Severity:** CRITICAL (P0) — TestFlight Crash Risk  
-**Impact:** Tapping on profile/marketplace/opportunities tabs crashes app  
-**Files Affected:** `lib/core/router/app_router.dart`
-
-**Routes Imported But NOT Defined:**
-1. `/profile` — **CoreNav Tab #6**
-2. `/profile/edit`
-3. `/marketplace` — Disabled feature
-4. `/marketplace/search`
-5. `/marketplace/category/:key`
-6. `/opportunities` — Disabled feature
-7. `/opportunities/search`
-8. `/opportunities/type/:key`
-9. `/opportunities/deadlines`
-10. `/opportunities/saved`
-11. `/opportunities/mine`
-12. `/marketplace/sell`
-13. `/marketplace/saved`
-
-**Evidence:** Imports exist (line 77+), but route definitions not in GoRouter constructor.
-
-**Consequence:**  
-- Tapping "Profile" tab → `GoRouter.of(context).go('/profile')` → route not found → crash with "Could not find a matching route for path: /profile"
-- Beta testers unable to access profile, edit profile, or saved items
-
-**Fix Effort:** 2-3 hours
-- Add all 13 routes to GoRouter config
-- For disabled features (marketplace, opportunities), either:
-  - Redirect to placeholder screen, OR
-  - Redirect to `/app/feed` with toast "Coming soon"
-
----
-
-### **BLOCKER #4: Android Release Signing Uses Debug Key**
-
-**Severity:** HIGH (P1)  
-**Impact:** Cannot create TestFlight build (needs signed IPA), play store build fails  
-**Files:** `android/app/build.gradle.kts:43`
-
-**Current Config:**
-```kotlin
-buildTypes {
-    release {
-        signingConfig = signingConfigs.getByName("debug")  // ❌ WRONG
-    }
-}
-```
-
-**Problem:**  
-- Debug key is public (anyone can repackage your app)
-- App Store / Play Store reject debug-signed builds
-
-**Fix Effort:** 30 minutes
-- Create release signing config (or import existing keystore)
-- Update `signingConfig` to point to release keystore
-- Document password securely
-
----
-
-### **BLOCKER #5: iOS Missing APNS Entitlements**
-
-**Severity:** CRITICAL (P0)  
-**Impact:** iOS won't receive push notifications  
-**Status:** Capability not enabled in Xcode
-
-**What's Needed:**
-1. Open `ios/Runner.xcworkspace` (NOT .xcodeproj)
-2. Select "Runner" target → "Signing & Capabilities"
-3. Click "+ Capability" → Add "Push Notifications"
-4. Request APNS certificate from Apple Developer Account
-5. Upload certificate to Apple & Firebase
-
-**Consequence:**  
-- `FirebaseMessaging.instance.getToken()` returns null
-- Device token never saved to DB
-- No push delivery possible
-
-**Fix Effort:** 20 minutes (Xcode config) + 10 min (Apple Developer Account)
-
----
-
-## ⚠️ Android/iOS Configuration Issues
-
-### Android Build.gradle Namespace Mismatch
-```kotlin
-namespace = "com.example.unify"  // ❌ Old placeholder
-applicationId = "com.gctu.unify"  // ✅ Correct
-```
-**Fix:** Change namespace to `"com.gctu.unify"`
-
-### iOS Deep Links Not Configured
-**Status:** Android has intent filter ✅ but iOS missing  
-**Needed for:** Notification tap → navigate to specific screen  
-**Fix:**
-1. Add Associated Domains capability in Xcode
-2. Configure `apple-app-site-association` (if using web-based deep links)
-3. OR: Use `firebase_dynamic_links` package (simpler for Firebase)
-
-### iOS Bundle ID
-**Status:** Using `$(PRODUCT_BUNDLE_IDENTIFIER)` (correct)  
-**Verify:** In Xcode, should resolve to `com.gctu.unify` (or match Firebase)
-
----
-
-# 2. BETA BLOCKERS (P0 — Would Stop Users From Key Actions)
-
-## ✅ WORKING (Verified from Code Review)
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Create Account | ✅ | Email/password + Google OAuth, Supabase auth trigger creates profile |
-| Sign In | ✅ | Email/password + Google, session persisted |
-| Onboarding | ✅ | Carousel screens complete, university auto-assigned (GCTU) |
-| Upload Profile Photo | ✅ | `image_picker` + Supabase Storage (`profiles_avatars` bucket) |
-| View Feed | ✅ | Infinite scroll, pagination, post cards with upvotes |
-| Join Communities | ✅ | `join_community()` RPC, immediate visibility |
-| Create Posts | ✅ | Text/image/poll support, appears in feed |
-| Messaging | ✅ | Conversations, DMs, group chats, message reactions |
-| View Events | ✅ | Upcoming/Trending/Featured tabs, RSVP + tickets |
-| Receive Notifications | ❌ | See detailed issues below |
-| Edit Profile | ✅ | Name, bio, profile pic, theme, preferences |
-
----
-
-## 🔴 CRITICAL FAILURES (Will Stop Users)
-
-### **P0-A: Push Notifications NOT Initialized**
-
-**Impact:** Users won't know about:
-- New messages
-- Event reminders
-- Community approvals
-- Admin notifications
-- Deadline alerts
-
-**Root Cause Chain:**
-1. `Firebase.initializeApp()` not called (blocker #1)
-2. `PushNotificationService.init()` never invoked from auth listener
-3. Even if invoked, `_saveToken()` would work, but:
-4. `push_notification_queue` table never populated (RPC doesn't insert)
-5. Edge Function has no messages to send
-
-**Current Code Flow (BROKEN):**
-```dart
-// app.dart:_startAuthListener()
-// ❌ pushService.init() NEVER CALLED
-// Even though ref.read(pushNotificationServiceProvider) exists
-```
-
-**Consequence:** 🚨 **Beta testers receive ZERO notifications**
-
-**Evidence:**
-- `lib/features/notifications/domain/services/push_notification_service.dart` — full FCM implementation exists ✅
-- `lib/app.dart:_startAuthListener()` — initializes push but Firebase not set up 
-- No Edge Function deployment (commented in LAUNCH_READINESS.md)
-
-**Fix Effort:** 1-2 days
-1. Fix blocker #1 (Firebase init)
-2. Wire `pushService.init()` call in `_startAuthListener()`
-3. Verify `device_tokens` table receives tokens
-4. Modify `create_notification()` RPC to INSERT into `push_notification_queue`
-5. Deploy Edge Function: `send_push_notification`
-6. Test end-to-end: send notification → check FCM logs → verify delivery
-
----
-
-### **P0-B: Unread Count Stream Missing User Filter (Data Leak)**
-
-**Impact:** Each user receives ALL notifications from ALL users  
-**Files:** `lib/features/notifications/data/repositories/notification_repository_impl.dart:26-31`
-
-**Current Code (BROKEN):**
-```dart
-Stream<int> unreadCountStream() {
-  return _supabase
-      .from('notifications')
-      .stream(primaryKey: ['id'])  // ❌ NO .eq('user_id', userId) FILTER
-      .length
-      .map((length) => length);
-}
-```
-
-**Problem:**  
-- Supabase Realtime broadcasts ALL `notifications` table changes to all subscribers
-- Each user's app receives update events for messages to OTHER users
-- **Privacy concern:** user IDs, message content visible to all
-
-**Consequence:** 
-- Wasted bandwidth (10k students → 10k× message events)
-- Potential data leakage if notification payloads contain sensitive info
-- **Breach of privacy expectations**
-
-**Fix Effort:** 5 minutes — add `.eq('user_id', userId)` before `.stream()`
-
----
-
-### **P0-C: 13 Broken GoRouter Routes (Crash on Tab Tap)**
-
-**Already Documented Above** — see BLOCKER #3
-
-**Impact on Beta Test:**
-- Tap "Profile" tab → **CRASH** 🚨
-- Tap "Search" and try profile/marketplace result → **CRASH** 🚨
-
-**Core Tabs Affected:**
-- ❌ Tab 6 (Profile) — doesn't work at all
-- ❌ Search deep links — broken
-
----
-
-### **P0-D: Admin Notification Parameters Wrong (RPC Fails)**
-
-**Severity:** HIGH (P1)  
-**Impact:** Admin notifications (approve community, verify user) silently fail  
-**Files:** `lib/features/admin/presentation/screens/admin_screen.dart` — 4 call sites
-
-**Bug:** RPC parameter names don't match function signature
-
-**Calls with Wrong Parameters (Lines 588, 661, 672, 1311):**
-```dart
-// ❌ WRONG param names
-ref.read(adminRepositoryProvider).createNotification(
-  title: 'Community Approved',
-  p_message: 'Your community...',  // ❌ should be p_body
-  p_ref_id: communityId,           // ❌ should be p_reference_id
-  p_ref_type: 'community',          // ❌ should be p_reference_type
-);
-```
-
-**Consequence:**  
-- Admin actions silently fail (no notification sent)
-- Admin thinks action succeeded but beta users don't get notified
-- **Trust-breaking bug:** admins can't approve communities
-
-**Fix Effort:** 10 minutes — fix param names in 4 locations
-
----
-
-### **P0-E: Push Queue Never Populated**
-
-**Severity:** CRITICAL (P0)  
-**Impact:** Edge Function has nothing to send  
-**Root Cause:** `create_notification()` RPC inserts into `notifications` table but NOT `push_notification_queue`
-
-**Current RPC Logic:**
-```sql
-INSERT INTO notifications (user_id, title, body, data, created_at)  -- ✅ correct
--- ❌ Missing: INSERT INTO push_notification_queue (user_id, title, body, data, status, created_at)
-```
-
-**Consequence:**
-- Notifications appear in-app (via `notificationsProvider`)
-- But never sent via push (Edge Function has empty queue)
-
-**Fix Effort:** 30 minutes — add INSERT to RPC
-
----
-
-## 🟠 HIGH PRIORITY (P1 — Fix Before Launch)
-
-### **P1-A: No APNs Certificate Configured**
-
-**Impact:** iOS won't deliver any notifications  
-**Fix:** Enable Push Notifications capability + request APNS certificate from Apple  
-**Effort:** 20 minutes
-
----
-
-### **P1-B: Global Search Unbounded**
-
-**Impact:** Search query fetches ALL communities (10k+ rows at scale), freezes UI  
-**Files:** `lib/features/search/data/providers/search_provider.dart`  
-**Fix:** Add `.limit(20)` + `.eq('is_active', true)` server-side filter  
-**Effort:** 20 minutes
-
----
-
-### **P1-C: Offline Support Broken**
-
-**Impact:** User types message → loses connection → message lost  
-**Status:** Hive cache partial, no offline queue  
-**Fix Effort:** 2-3 days (implement offline-first for key screens)
-
----
-
-# 3. HIGH PRIORITY BUGS (P1 — Likely to Frustrate Beta Users)
-
-## Performance Issues
-
-| Issue | Severity | Impact | Files | Fix Effort |
-|-------|----------|--------|-------|------------|
-| ~20 unbounded queries (no `.limit()`) | HIGH | App freezes at scale (10k+ students) | academic_*, community_*, event_*, etc. | 4h |
-| Unfiltered message streams | HIGH | Bandwidth blowout + data leak | messaging_repository_impl | 5min |
-| No pagination in 10+ list screens | MEDIUM | Scroll lag on long lists | conversations, members, etc. | 3h |
-| ~90% screens use `CircularProgressIndicator` | MEDIUM | Visual jumps, poor perceived performance | ~50 screens | 4h |
-
-## Notification System
-
-| Issue | Severity | Impact | Fix Effort |
-|-------|----------|--------|------------|
-| Unread badge never updates in real-time | HIGH | Users see stale counts | Fix stream filter | 5min |
-| Notification preferences not accessible | HIGH | Users can't disable notifications | Add settings route | 1h |
-| No notification deep link routing | HIGH | Tap notification → wrong screen | Implement route logic | 2h |
-
-## UI/UX Issues
-
-| Issue | Severity | Impact | Screens | Fix Effort |
-|-------|----------|--------|---------|------------|
-| 294 hardcoded hex colors | HIGH | Dark mode completely broken | 55+ files | 4h |
-| 665 `AppColors.*` references | HIGH | Won't adapt to theme changes | 60+ files | 3h |
-| ~87 bare `Text('No...')` empty states | MEDIUM | Inconsistent UX, confusing | All list screens | 3h |
-
----
-
-# 4. UI/UX AUDIT
-
-## ✅ What Looks Good
-
-- **6-Tab Navigation:** Clean pill-style nav bar, proper spacing (50px, 16px top gap)
-- **Community Home:** 5-tab layout (Announcements, Discussions, Events, Resources, Members) — well-structured
-- **Event Cards:** Responsive, show scope/category badges, date countdown
-- **Form Fields:** Labels, validation, error messages consistent
-- **Verified Badge:** Has tooltip, consistent across screens
-- **Theme System:** 6 color presets working, theme switching functional
-
----
-
-## 🔴 Critical UX Issues
-
-### **Issue #1: Dark Mode Completely Broken**
-
-**Severity:** CRITICAL (P0 for UX)  
-**Impact:** ~30+ screens unreadable in dark mode
-
-**Evidence:**
-- 294 hardcoded `Color(0xFF...)` hex codes (won't adapt)
-- 665 `AppColors.*` references (static, not theme-aware)
-- Usage of `Colors.grey[200]`, `Colors.white` (hardcoded)
-
-**Worst Offenders:**
-- `profile_screen.dart` — 34 hardcoded colors
-- `multi_university_admin_screen.dart` — 13 hardcoded colors
-- `feed_screen.dart` — 10 hardcoded colors
-
-**Consequence:**  
-- Text invisible on dark background (white text on light background)
-- Beta testers using dark mode see broken layout
-
-**Fix Effort:** 4-5 hours
-- Replace all `Color(0xFF...)` with `context.primary`, `context.error`, etc.
-- Replace `AppColors.*` with theme extensions
-- Add 6 missing color accessors: `brandOrange`, `gold`, `blueTint`, `blueLight`, `blueBorder`, `violet`
-
----
-
-### **Issue #2: 90% of Screens Use Bare CircularProgressIndicator**
-
-**Severity:** HIGH (P1 for UX)  
-**Impact:** Ugly loading states, layout jumps, poor perceived performance
-
-**Affected Screens:** ~50 screens across:
-- Academic hub (course list, assignment hub, exam prep, GPA calculator)
-- Events (all 12 event screens)
-- Admin dashboard (15+ screens)
-- Messaging (conversations, messages)
-
-**Current Code (BROKEN):**
-```dart
-// ❌ UGLY
-Center(child: CircularProgressIndicator())
-
-// ✅ CORRECT
-AsyncValue.loading => const UShimmerCard(),  // shimmer placeholder
-```
-
-**Consequence:**  
-- Blank loading screen → sudden content appears → jarring UX
-- Looks unprofessional
-- Low perceived performance
-
-**Fix Effort:** 4-6 hours
-- Replace with `UShimmerCard` / `UShimmerBox` (already implemented in design system)
-- Apply to all `AsyncValue.loading` cases
-
----
-
-### **Issue #3: ~87 Bare Text('No...') Empty States**
-
-**Severity:** MEDIUM (P2 for UX)  
-**Impact:** Confusing UX, inconsistent design
-
-**Examples (BROKEN):**
-```dart
-// ❌ BARE TEXT
-if (posts.isEmpty) Text('No posts yet'),
-
-// ✅ CORRECT
-if (posts.isEmpty) AppEmptyWidget(
-  icon: Icons.article_outlined,
-  title: 'No posts',
-  subtitle: 'Be the first to post in this community',
-  action: ElevatedButton(...),
-)
-```
-
-**Consequence:**  
-- Users unsure if list is loading, empty, or broken
-- No guidance on what to do next
-
-**Fix Effort:** 2-3 hours
-- Replace all with `AppEmptyWidget`
-- Add contextual icons, subtitle, optional action button
-
----
-
-### **Issue #4: Error States Inconsistent**
-
-**Severity:** MEDIUM (P2)  
-**Impact:** No retry, unclear errors, non-recoverable state
-
-**Current Patterns (BROKEN):**
-```dart
-// ❌ BARE TEXT
-AsyncValue.error((e, st) => Text('Error: $e'),
-
-// ✅ CORRECT
-AsyncValue.error((e, st) => AppErrorWidget(e, onRetry: () {...})
-```
-
-**Missing in Screens:**
-- Community home (5 tabs use `Text('Error loading...')`)
-- Feed (error state unclear)
-- Academic screens
-
-**Fix Effort:** 2 hours
-- Replace with `AppErrorWidget` across all screens
-
----
-
-## 🟡 Medium-Severity UX Issues
-
-| Issue | Impact | Screens | Fix Effort |
-|-------|--------|---------|------------|
-| No shimmer loading | Visual jumps | 50+ | 4h |
-| Bare Text errors | Confusing | 30+ | 2h |
-| Hardcoded colors | Dark mode broken | 55 | 4h |
-| AppColors references | Theme inconsistent | 60 | 3h |
-| Missing empty states | Unclear UX | 87 locations | 2h |
-| Form validation unclear | User confusion | 10+ screens | 1h |
-| Scroll lag (no pagination) | Slow scrolling | messaging, members | 3h |
-| Search debounce missing | Excessive queries | event_search, academic_search | 30min |
-
----
-
-# 5. PERFORMANCE AUDIT
-
-## ✅ What's Optimized
-
-- Feed pagination: Cursor-based ✅
-- Search queries: `.limit(20)` + server-side filters ✅
-- Event queries: `.limit()` on most queries ✅
-- Image caching: `cached_network_image` in 3 places ✅
-
----
-
-## 🔴 Critical Performance Issues
-
-### **Issue #1: ~20 Unbounded Queries (No `.limit()`)**
-
-**Severity:** CRITICAL at scale  
-**Impact:** 10k+ students → multi-second load times, OOM crashes on low-end devices
-
-**Affected Queries:**
-
-| File | Method | Risk |
-|------|--------|------|
-| `community_repository_impl.dart` | `searchCommunities()` | ALL communities |
-| `community_repository_impl.dart` | `getRecommendedCommunities()` | ALL communities |
-| `academic_repository_impl.dart` | `getCourses()` | ALL courses |
-| `academic_repository_impl.dart` | `getResources()` | ALL resources |
-| `academic_repository_impl.dart` | `getAssignments()` | ALL assignments |
-| `event_repository_impl.dart` | `getDiscussions()` | ALL discussion posts |
-| `notification_repository_impl.dart` | `getNotifications()` | ALL notifications, then `.take(50)` in Dart |
-| `messaging_repository_impl.dart` | `messageRequests()` | ALL requests |
-| Admin queries (10+) | Various | ALL rows per query |
-
-**Example (BROKEN):**
-```dart
-// ❌ WRONG — fetches ALL courses, filters in Dart
-final courses = await _supabase.from('courses').select();
-return courses.map(CourseModel.fromJson).toList();
-
-// ✅ CORRECT
-final courses = await _supabase
-    .from('courses')
-    .select()
-    .eq('faculty_id', facultyId)  // server-side filter
-    .limit(40)  // server-side limit
-    .order('created_at', ascending: false);
-```
-
-**Consequence:**
-- 1,000 communities → fetch 1,000 rows to filter 5
-- 1,000 courses → fetch all, filter in memory
-- **At 10k students: queries take 5+ seconds**
-
-**Fix Effort:** 3-4 hours
-- Add `.limit(20-40)` to all queries
-- Add server-side `.eq()` filters before `.select()`
-- Replace client-side filtering with server-side
-
----
-
-### **Issue #2: Unfiltered Realtime Streams (Data Leak + Bandwidth)**
-
-**Severity:** CRITICAL  
-**Impact:** Each user receives ALL users' updates
-
-**Affected:**
-- `notifications` stream (already identified in P0-B)
-- `conversations` stream (messaging)
-- `messages` stream (messaging)
-
-**Consequence:**
-- 10k users × 100 messages/day = 1M message events
-- Each user receives 1M events (not just their own)
-- **Bandwidth cost: 10× normal**
-
-**Fix Effort:** 30 minutes per stream
-- Add `.eq()` filter on user_id/participant filters
-
----
-
-### **Issue #3: SELECT * (Anti-Pattern)**
-
-**Severity:** MEDIUM  
-**Impact:** Fetches unnecessary columns, slows queries
-
-**Occurrences:** ~70+ in codebase
-
-**Example (BROKEN):**
-```dart
-// ❌ Fetches all 30 columns
-final posts = await _supabase.from('posts').select();
-
-// ✅ CORRECT — fetch only needed columns
-final posts = await _supabase.from('posts').select(
-  'id, title, content, author_id, created_at, upvote_count, downvote_count'
-);
-```
-
-**Fix Effort:** 2-3 hours
-- Audit high-frequency queries
-- Replace `.select()` with specific column lists
-
----
-
-### **Issue #4: No Pagination in 10+ List Screens**
-
-**Severity:** MEDIUM  
-**Impact:** Scroll lag on lists with 100+ items
-
-**Affected:**
-- Conversation list
-- Member list
-- Resource list
-- Notification list (unread)
-- Admin queries
-
-**Example (BROKEN):**
-```dart
-// ❌ Fetches all 500 members at once
-final members = await repo.getMembers(communityId);
-
-// ✅ CORRECT — paginate
-final page1 = await repo.getMembers(communityId, limit: 20, offset: 0);
-// onScroll: fetch page 2, page 3, etc.
-```
-
-**Fix Effort:** 2-3 hours
-- Add `ScrollController` + `loadMore()` callback
-- Implement offset-based pagination (or cursor-based)
-
----
-
-## 🟡 Medium Performance Issues
-
-| Issue | Impact | Fix Effort |
-|-------|--------|------------|
-| Image memory not capped | OOM on photo-heavy screens | Add `memCacheWidth`/`memCacheHeight` | 30min |
-| No cache invalidation strategy | Stale data shown | Implement cache expiry check | 1h |
-| Notification badge updates slow | User sees stale count | Fix Riverpod provider | 10min |
-| Search no debounce (some screens) | 1 query per keystroke | Add 300ms debounce | 20min |
-
----
-
-# 6. SUPABASE AUDIT
-
-## ✅ What's Configured Correctly
-
-- **Auth:** Supabase Auth with email/password + Google OAuth ✅
-- **RLS:** Enabled on most tables ✅
-- **Storage:** `profiles_avatars` bucket configured ✅
-- **Edge Functions:** Exist but not deployed (commented)
-- **Migrations:** 9 canonical migrations exist ✅
-- **Realtime:** Enabled (but unfiltered — see P0-B)
-
----
-
-## 🔴 Critical Supabase Issues
-
-### **Issue #1: push_notification_queue Never Populated**
-
-**Already identified in P0-E**
-
----
-
-### **Issue #2: Streams Missing User Filters**
-
-**Already identified in P0-B**
-
----
-
-### **Issue #3: RLS Policies Incomplete**
-
-**Severity:** MEDIUM (P2)  
-**Gaps:**
-- `gpa_courses` and `study_plan_items` have RLS enabled but **ZERO policies** (data accessible to all)
-- Missing DELETE on `academic_resources`
-- Missing INSERT/UPDATE/DELETE on `exam_timetables`
-
-**Fix Effort:** 1-2 hours
-- Apply `step17_production_readiness.sql` (includes missing policies)
-
----
-
-### **Issue #4: Edge Functions Not Deployed**
-
-**Severity:** MEDIUM (P1)  
-**Functions Needed:**
-1. `send_push_notification` — processes queue → FCM v1 API
-2. `daily-analytics` — aggregates daily metrics
-
-**Status:** Code exists but not deployed
-
-**Fix Effort:** 30 minutes
-```bash
-supabase functions deploy send_push_notification --no-verify-jwt
-supabase functions deploy daily-analytics --no-verify-jwt
-```
-
----
-
-### **Issue #5: Analytics Never Populated**
-
-**Severity:** MEDIUM (P2)  
-**Impact:** Analytics dashboard shows all zeros
-
-**Root Cause:** `aggregate_daily_analytics()` RPC exists but never called
-
-**Fix Effort:** 1 hour
-- Schedule daily pg_cron job OR
-- Call from client on app launch
-
----
-
-# 7. iOS AUDIT
-
-## 🔴 Critical Issues
-
-| Item | Status | Issue | Fix |
-|------|--------|-------|-----|
-| **GoogleService-Info.plist** | ❌ MISSING | Firebase won't initialize | Download from Console, add to Xcode |
-| **Push Notifications Capability** | ❌ MISSING | APNS won't work | Enable in Xcode, request certificate |
-| **APNS Certificate** | ❌ MISSING | Can't send notifications | Request + upload to Apple + Firebase |
-| **Associated Domains** | ❌ MISSING | Deep links won't work | Add capability, configure apple-app-site-association |
-| **App Icons** | ⚠️ CHECK | Verify all sizes generated | Run `flutter pub run flutter_launcher_icons` |
-| **Launch Screen** | ✅ OK | `LaunchScreen.storyboard` configured | No changes needed |
-
----
-
-## ⚠️ Configuration Checklist
-
-### Info.plist
-- ✅ `CFBundleDisplayName`: "Unify"
-- ✅ `UIBackgroundModes`: `remote-notification`
-- ✅ `LSRequiresIPhoneOS`: true
-- ❌ Missing: `UIApplicationSupportsIndirectInputEvents` (may need for keyboard)
-- ❌ Missing: `NSAppTransportSecurity` exceptions (if needed)
-
-### Xcode Project
-- ⚠️ Bundle ID: Must match Firebase project
-- ⚠️ Signing Team: Must have Apple Developer account
-- ⚠️ Provisioning Profile: Must allow push notifications
-
-### Entitlements
-- ❌ `aps-environment`: Missing (should be "development" for TestFlight)
-- ❌ `com.apple.developer.associated-domains`: Missing
-
----
-
-## 📋 TestFlight Preparation Checklist
-
-- [ ] `GoogleService-Info.plist` downloaded + added to Xcode
-- [ ] Push Notifications capability enabled
-- [ ] APNS certificate requested + uploaded
-- [ ] Bundle ID matches Firebase
-- [ ] Signing team configured
-- [ ] Provisioning profile supports push
-- [ ] `flutter build ipa --release` builds successfully
-- [ ] IPA uploaded to App Store Connect
-- [ ] TestFlight beta testers invited
-
----
-
-# 8. ANDROID AUDIT
-
-## ✅ What's Configured
-
-- ✅ Permissions: `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`, `VIBRATE`
-- ✅ Deep links: `com.gctu.unify://auth/callback`
-- ✅ FCM channel: `unify_notifications`
-- ✅ `google-services.json` exists
-- ✅ Min/Target SDK: Appropriate values
-
----
-
-## 🔴 Issues
-
-| Item | Status | Issue | Fix |
-|------|--------|-------|-----|
-| **Namespace** | ⚠️ MISMATCH | `com.example.unify` vs `com.gctu.unify` | Change namespace to `com.gctu.unify` |
-| **Release Signing** | ❌ DEBUG KEY | Uses debug key for release builds | Create release keystore, update signingConfig |
-| **App ID** | ✅ OK | `com.gctu.unify` correct | No changes needed |
-
----
-
-## 📋 Build Checklist
-
-- [ ] Namespace changed to `com.gctu.unify`
-- [ ] Release signing keystore created
-- [ ] `flutter build appbundle --release` succeeds
-- [ ] App signed with release key
-- [ ] Upload to Play Console (for future release)
-
----
-
-# 9. CODE QUALITY AUDIT
-
-## ✅ Strengths
-
-- **Clean Architecture:** Data/domain/presentation layers properly separated ✅
-- **Riverpod:** Providers follow best practices (no global state) ✅
-- **Error Handling:** Centralized `ErrorMapper` ✅
-- **Theme System:** 6 presets, extensible ✅
-- **Naming:** Consistent, clear naming conventions ✅
-- **Navigation:** GoRouter properly configured (mostly) ✅
-
----
-
-## 🟡 Technical Debt
-
-### **Issue #1: Dead Code**
-
-**Status:** ~10-15 unused imports, unused locals, unnecessary casts  
-**Examples:**
-- `_ErrorView` class (replaced by `AppErrorWidget`)
-- Unused imports in ~10 files
-
-**Fix Effort:** 30 minutes
-```bash
-dart fix --apply
-```
-
----
-
-### **Issue #2: Deprecated API Usage**
-
-**Status:** 39+ `prefer_const_constructors` infos, deprecation warnings
-
-**Deprecated Parameters:**
-- `Radio.groupValue` → use `RadioGroup`
-- `Switch.activeColor` → `activeThumbColor`
-- `DropdownButtonFormField.value` → `initialValue`
-- `anonKey` → `publishableKey`
-
-**Fix Effort:** 30 minutes
-```bash
-dart fix --apply
-```
-
----
-
-### **Issue #3: Large Files**
-
-**Severity:** LOW  
-**Worst Offenders:**
-- `admin_screen.dart` — 1,400+ lines (consider splitting by tab)
-- `app_router.dart` — 400+ lines (consider modular routing)
-- `feed_screen.dart` — 600+ lines (consider extracting widgets)
-
-**Best Practice:** Max 400 lines per file
-
-**Fix Effort:** 3-4 hours (refactor if time permits)
-
----
-
-### **Issue #4: Duplicate Code**
-
-**Severity:** MEDIUM  
-**Patterns:**
-- 3+ screens with identical "add error state" pattern
-- 5+ screens with identical "empty state" pattern
-- Multiple RSVP/registration flows with similar logic
-
-**Already Addressed:** `AppEmptyWidget`, `AppErrorWidget` extracted ✅
-
----
-
-## 📊 Code Quality Score
-
-| Metric | Score | Notes |
-|--------|-------|-------|
-| Type Safety | 95/100 | Excellent use of Dart 3 features |
-| Architecture | 90/100 | Clean Architecture well-followed |
-| Testing | 0/100 | ⚠️ **NO TESTS** (unit, widget, integration) |
-| Documentation | 70/100 | Good code comments, missing architecture docs |
-| Performance | 60/100 | Unbounded queries, unfiltered streams hurt perf |
-| Accessibility | 20/100 | Zero Semantics widgets, hardcoded text sizes |
-
----
-
-# 10. BETA READINESS SCORE
-
-## Final Score: 35/100 ❌ **NOT READY FOR TESTFLIGHT**
-
-### Breakdown by Category
-
-| Category | Score | Comments |
-|----------|-------|----------|
-| **Build Status** | 60/100 | Missing Firebase init, signing config, iOS capabilities |
-| **Functionality** | 40/100 | FCM stubbed, 13 routes broken, streams unfiltered |
-| **iOS Configuration** | 25/100 | Missing APNS, GoogleService-Info.plist, entitlements |
-| **Android Configuration** | 70/100 | Mostly good, minor namespace fix needed |
-| **UX/Polish** | 30/100 | Dark mode broken, no shimmer loading, bare errors |
-| **Performance** | 50/100 | Unbounded queries, unfiltered streams, no pagination |
-| **Security** | 65/100 | RLS enabled, but some policies missing, stream data leak |
-| **Offline Support** | 30/100 | Minimal caching, no offline queue |
-| **Analytics** | 20/100 | Infra exists but never populated |
-| **Crash Reporting** | 30/100 | Sentry wired but no DSN configured |
-
----
-
-## Summary Assessment
-
-### What Works (MVP Ready)
-- ✅ Authentication (email + Google)
-- ✅ Onboarding
-- ✅ Feed (posts, comments, upvotes)
-- ✅ Communities (join, manage, members)
-- ✅ Messaging (conversations, DMs, group chats)
-- ✅ Events (create, RSVP, tickets)
-- ✅ Academic hub (courses, resources, GPA)
-- ✅ Admin dashboard
-
-### What's Broken (Blocks TestFlight)
-- ❌ **Push notifications** (not initialized)
-- ❌ **Profile access** (13 missing routes)
-- ❌ **iOS platform setup** (missing APNS, plist, capabilities)
-- ❌ **Dark mode** (hardcoded colors)
-- ❌ **Offline support** (no offline queue)
-
-### What's Suboptimal (Fix After TestFlight)
-- ⚠️ Unbounded queries (performance)
-- ⚠️ Unfiltered streams (data leak, bandwidth)
-- ⚠️ Bare loading states (UX)
-- ⚠️ No testing (reliability)
-- ⚠️ Analytics not populated (metrics)
-
----
-
-# RECOMMENDED ROADMAP TO TESTFLIGHT
-
-## Phase 1: Critical Build Fixes (1-2 Days)
-
-### Day 1 AM — Firebase & Signing
-- [ ] Generate `firebase_options.dart` via `flutterfire configure`
-- [ ] Add `Firebase.initializeApp()` to `main.dart`
-- [ ] Download `GoogleService-Info.plist`, add to Xcode
-- [ ] Create release signing keystore (Android)
-- [ ] Update `build.gradle.kts` with release signing config
-
-### Day 1 PM — iOS Capabilities
-- [ ] Open `ios/Runner.xcworkspace` in Xcode
-- [ ] Add "Push Notifications" capability
-- [ ] Request APNS certificate from Apple Developer Account
-- [ ] Upload APNS certificate to Apple + Firebase
-- [ ] Add "Associated Domains" capability (for deep links)
-- [ ] Configure `apple-app-site-association`
-
-### Day 2 — GoRouter Routes
-- [ ] Add 13 missing routes to GoRouter config
-- [ ] For disabled features (marketplace, opportunities): redirect to feed + show toast
-- [ ] Test all tabs navigate without crash
-
----
-
-## Phase 2: Core Functionality Fixes (1-2 Days)
-
-### Day 1 — Push Notifications
-- [ ] Wire `PushNotificationService.init()` in `app.dart` auth listener
-- [ ] Verify device tokens saved to DB
-- [ ] Fix `create_notification()` RPC to INSERT into `push_notification_queue`
-- [ ] Fix RPC parameter names (4 call sites in admin_screen.dart)
-- [ ] Deploy Edge Function: `send_push_notification`
-- [ ] Test end-to-end notification delivery
-
-### Day 2 — Stream Filters & Queries
-- [ ] Add `.eq('user_id', userId)` to `unreadCountStream()`
-- [ ] Add `.limit(20)` to global search (communities)
-- [ ] Fix notification query filtering in admin screens
-- [ ] Test at scale: 1,000+ rows shouldn't cause slowdown
-
----
-
-## Phase 3: UX Polish (1 Day)
-
-### Day 1 — Dark Mode & Loading States
-- [ ] Replace hardcoded colors with `context.*` theme tokens (focus on worst offenders)
-- [ ] Replace 50 `CircularProgressIndicator` with `UShimmerCard`
-- [ ] Replace 87 bare `Text('No...')` with `AppEmptyWidget`
-- [ ] Test dark mode on 10+ screens
-
----
-
-## Phase 4: Final Testing & Submission (1 Day)
-
-### Day 1 — Testing
-- [ ] `flutter analyze`: 0 errors, 0 warnings
-- [ ] `flutter build ipa --release`: succeeds
-- [ ] `flutter build appbundle --release`: succeeds (for Play Store later)
-- [ ] Internal testing on 3-5 beta devices (iOS + Android)
-- [ ] Test all 6 tabs navigation
-- [ ] Test notification delivery
-- [ ] Test profile access
-- [ ] Test sign-out/sign-in
-- [ ] Upload IPA to App Store Connect
-- [ ] Invite TestFlight testers
-
----
-
-## Total Effort Estimate
-- **Phase 1 (Build):** 2 days
-- **Phase 2 (Functionality):** 2 days
-- **Phase 3 (UX):** 1 day
-- **Phase 4 (Testing):** 1 day
-- **Total:** 6 days of focused work
-
-### Parallel Work (to Reduce Timeline)
-- iOS APNS certificate can be requested while Firebase is being set up (Day 1 AM/PM split)
-- GoRouter routes can be added while push notifications are being wired
-- **Optimistic timeline: 4 days** with parallel work
-
----
-
-# SUMMARY FOR DECISION-MAKING
-
-## Can We Launch TestFlight Next Week?
-
-**Answer: NO** ❌
-
-**Why:**
-1. Firebase not initialized — app won't boot properly for new users
-2. 13 missing routes — core features (profile) crash
-3. iOS APNS not configured — push notifications impossible
-4. Dark mode broken — ~30% of users will have unreadable app
-
-**Required Fixes Before TestFlight:**
-1. ✅ Firebase initialization (30 min)
-2. ✅ 13 missing routes (3 hours)
-3. ✅ iOS APNS + capabilities (2-3 hours + Apple processing time)
-4. ✅ Fix push notification wiring (4 hours)
-5. ✅ Stream filters + RPC parameters (30 minutes)
-6. ✅ Dark mode critical colors (3-4 hours)
-
-**Realistic Timeline:**
-- **Optimistic:** 4-5 days (with parallel iOS certificate request)
-- **Comfortable:** 6-7 days (staged, careful testing)
-- **Target Launch:** July 15-16, 2026
-
----
-
-## Recommended Next Steps
-
-1. **Today (July 9):** Kick off Firebase setup + iOS APNS request (can be parallel)
-2. **July 10-11:** Complete Phase 1 (Build fixes)
-3. **July 12-13:** Complete Phase 2 (Functionality fixes)
-4. **July 14:** Phase 3 UX polish + full testing
-5. **July 15:** Upload to App Store Connect, invite TestFlight testers
-
----
-
-# END OF AUDIT REPORT
-
-**Report Generated:** July 9, 2026 | **Status:** NOT READY FOR TESTFLIGHT | **Next Action:** Begin Phase 1 Fixes
-
----
-
+**Estimated effort to fix P0 items:** 1-2 days
+**Estimated effort to fix P0 + P1 items:** 3-4 days

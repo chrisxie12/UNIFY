@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/extensions/datetime_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/opportunity_models.dart';
 import '../providers/opportunities_provider.dart';
 import 'opportunity_form_screen.dart';
@@ -66,13 +68,13 @@ class _ManageTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(opportunitiesProvider);
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
-          return Center(
-            child: Text('No opportunities yet. Tap "New" to add one.',
-                style: TextStyle(color: context.textSecondary)),
+          return const AppEmptyWidget(
+            icon: Icons.inbox_rounded,
+            title: 'No opportunities yet. Tap "New" to add one.',
           );
         }
         return RefreshIndicator(
@@ -227,7 +229,7 @@ class _ReportsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(opportunityReportQueueProvider);
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
@@ -370,7 +372,7 @@ class _AnalyticsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(opportunityStatsProvider);
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (stats) {
         final types = stats.typeCounts.entries.toList()
@@ -400,8 +402,10 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (types.isEmpty)
-                Text('No data yet.',
-                    style: TextStyle(color: context.textDisabled))
+                const AppEmptyWidget(
+                  icon: Icons.inbox_rounded,
+                  title: 'No data yet.',
+                )
               else
                 ...types.map((e) {
                   final t = OpportunityType.fromKey(e.key);
@@ -413,8 +417,10 @@ class _AnalyticsTab extends ConsumerWidget {
                       TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               if (searches.isEmpty)
-                Text('No searches recorded yet.',
-                    style: TextStyle(color: context.textDisabled))
+                const AppEmptyWidget(
+                  icon: Icons.search_off_rounded,
+                  title: 'No searches recorded yet.',
+                )
               else
                 Wrap(
                   spacing: 8,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -407,6 +408,7 @@ class _RsvpSheetState extends ConsumerState<_RsvpSheet> {
     final ok = await ref.read(eventRepositoryProvider).rsvpEvent(widget.eventId, widget.userId, status);
     if (!mounted) return;
     if (ok) {
+      ref.read(analyticsServiceProvider).log('event_rsvp', feature: 'events');
       ref.invalidate(eventDetailProvider(widget.eventId));
       Navigator.pop(context);
     } else {

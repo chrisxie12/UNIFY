@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 
 class MessageRequestsScreen extends ConsumerWidget {
   const MessageRequestsScreen({super.key});
@@ -16,19 +17,13 @@ class MessageRequestsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Message Requests')),
       body: requestsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 3),
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(messageRequestsProvider)),
         data: (requests) {
           if (requests.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.mail_outline, size: 64, color: context.textSecondary),
-                  const SizedBox(height: 16),
-                  Text('No pending requests', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.pending_actions_rounded,
+              title: 'No pending requests',
             );
           }
           return ListView.builder(

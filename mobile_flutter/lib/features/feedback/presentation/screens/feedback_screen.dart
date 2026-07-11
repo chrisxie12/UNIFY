@@ -8,6 +8,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/services/analytics_service.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -182,10 +183,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
           mine.when(
-            loading: () => const Center(
-                child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: CircularProgressIndicator())),
+            loading: () => const AppLoadingWidget.list(itemCount: 3),
             error: (e, _) => Text(ErrorMapper.toUserMessage(e),
                 style: const TextStyle(color: AppColors.grey2)),
             data: (items) {

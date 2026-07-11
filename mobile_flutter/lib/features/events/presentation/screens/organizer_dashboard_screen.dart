@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/models/event_model.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
@@ -207,7 +208,7 @@ class _AttendeeListSection extends ConsumerWidget {
             ]),
             const SizedBox(height: 8),
             if (tickets.isEmpty)
-              Center(child: Padding(padding: const EdgeInsets.all(32), child: Text('No registrations yet', style: TextStyle(color: context.textSecondary))))
+              const AppEmptyWidget(icon: Icons.inbox_rounded, title: 'No registrations yet')
             else
               SizedBox(
                 height: 300,

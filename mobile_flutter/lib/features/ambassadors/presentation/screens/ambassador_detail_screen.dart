@@ -6,8 +6,10 @@ import '../../../../core/design_system/typography.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/ambassador_models.dart';
 import '../providers/ambassador_provider.dart';
 import 'ambassador_admin_screen.dart' show statusColor;
@@ -61,7 +63,7 @@ class AmbassadorDetailScreen extends ConsumerWidget {
             showAddEventDialog(context, ref, ambassadorId: ambassadorId),
       ),
       body: detailAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.profile(),
         error: (e, _) => AppErrorWidget(e),
         data: (ambassador) {
           return RefreshIndicator(
@@ -81,22 +83,19 @@ class AmbassadorDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: USpacing.sm),
                 eventsAsync.when(
-                  loading: () => const Padding(
-                    padding: EdgeInsets.only(top: 24),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  error: (e, _) => Padding(
-                    padding: const EdgeInsets.only(top: 24),
-                    child: AppErrorWidget(e),
-                  ),
-                  data: (events) {
+        loading: () => const Padding(
+          padding: EdgeInsets.only(top: 24),
+          child: AppLoadingWidget.list(itemCount: 3),
+        ),
+        error: (e, _) => Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: AppErrorWidget(e),
+        ),
+        data: (events) {
                     if (events.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 40),
-                        child: Center(
-                          child: Text('No events yet',
-                              style: UText.bodyXS.copyWith(color: context.textSecondary)),
-                        ),
+                      return const AppEmptyWidget(
+                        icon: Icons.event_busy_rounded,
+                        title: 'No events yet',
                       );
                     }
                     return Column(

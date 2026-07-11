@@ -4,6 +4,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 
@@ -373,12 +374,9 @@ class _VerificationDocumentsSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (urls.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No documents submitted', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.inbox_rounded,
+              title: 'No documents submitted',
             )
           else
             ...urls.map((url) => Padding(
@@ -498,12 +496,9 @@ class _VerificationHistorySection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (logs.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No verification history', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.history_rounded,
+              title: 'No verification history',
             )
           else
             ...logs.map((log) => _buildLogEntry(context, log)),
@@ -690,12 +685,9 @@ class _RecentActivitySection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (posts.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No recent activity', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.history_rounded,
+              title: 'No recent activity',
             )
           else
             ...posts.map((p) {
@@ -921,7 +913,7 @@ class _SectionLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      child: const AppLoadingWidget.card(),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -524,7 +525,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         body: Stack(
           children: [
             profileAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.card(),
               error: (e, _) => AppErrorWidget(e),
               data: (_) => _buildForm(currentAvatarUrl, currentCoverUrl, initials),
             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
+import '../../../../core/widgets/unify_snackbar.dart';
 import '../providers/notification_provider.dart';
 import '../../data/models/notification_model.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -15,7 +17,7 @@ class NotificationPreferencesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Notification Preferences')),
       body: prefsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 6),
         error: (e, _) => AppErrorWidget(e),
         data: (prefs) {
           if (prefs == null) {
@@ -53,9 +55,7 @@ class _PreferencesFormState extends ConsumerState<_PreferencesForm> {
     ref.invalidate(notificationPreferencesProvider);
     if (!mounted) return;
     setState(() => _saving = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Preferences saved'), behavior: SnackBarBehavior.floating),
-    );
+    UnifySnackbar.success(context, 'Preferences saved');
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
+import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -29,13 +31,16 @@ class ChannelViewScreen extends ConsumerWidget {
               const Divider(height: 1),
               Expanded(
                 child: channelsAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () => const AppLoadingWidget.list(itemCount: 4),
                   error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(channelsProvider(conversationId))),
                   data: (channels) {
                     if (channels.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text('No channels yet', style: TextStyle(color: context.textSecondary, fontSize: 13)),
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: AppEmptyWidget(
+                          icon: Icons.chat_bubble_outline_rounded,
+                          title: 'No channels yet',
+                        ),
                       );
                     }
                     return ListView.builder(

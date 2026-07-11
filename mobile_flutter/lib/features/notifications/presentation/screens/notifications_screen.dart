@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../providers/notification_provider.dart';
 import '../../data/models/notification_model.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -35,7 +37,7 @@ class NotificationsScreen extends ConsumerWidget {
         ],
       ),
       body: notificationsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (e, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -144,17 +146,10 @@ class NotificationsScreen extends ConsumerWidget {
   }
 
   Widget _emptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.notifications_none, size: 64, color: context.textDisabled),
-          const SizedBox(height: 12),
-          Text('No notifications yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
-          const SizedBox(height: 4),
-          Text('We\'ll let you know when something happens', style: TextStyle(fontSize: 13, color: context.textSecondary)),
-        ],
-      ),
+    return const AppEmptyWidget(
+      icon: Icons.notifications_none_rounded,
+      title: 'No notifications yet',
+      subtitle: 'We\'ll let you know when something happens',
     );
   }
 }

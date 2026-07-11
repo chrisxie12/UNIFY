@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
@@ -57,8 +58,10 @@ class AcademicAdminScreen extends ConsumerWidget {
                     style: UText.h4.copyWith(color: context.textPrimary)),
                 const SizedBox(height: USpacing.md),
                 if (stats.mostDownloaded.isEmpty)
-                  Text('No downloads yet.',
-                      style: UText.bodyS.copyWith(color: context.textSecondary))
+                  const AppEmptyWidget(
+                    icon: Icons.download_outlined,
+                    title: 'No downloads yet.',
+                  )
                 else
                   ...stats.mostDownloaded.map((r) => ResourceCard(
                         resource: r,
@@ -71,8 +74,10 @@ class AcademicAdminScreen extends ConsumerWidget {
                     style: UText.h4.copyWith(color: context.textPrimary)),
                 const SizedBox(height: USpacing.md),
                 if (searches.isEmpty)
-                  Text('No searches recorded yet.',
-                      style: UText.bodyS.copyWith(color: context.textSecondary))
+                  const AppEmptyWidget(
+                    icon: Icons.search_off_rounded,
+                    title: 'No searches recorded yet.',
+                  )
                 else
                   Wrap(
                     spacing: USpacing.sm,

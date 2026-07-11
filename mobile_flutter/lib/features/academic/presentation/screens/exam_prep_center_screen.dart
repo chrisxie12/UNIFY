@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
@@ -50,11 +51,9 @@ class ExamPrepCenterScreen extends ConsumerWidget {
               Text('Exam Timetable', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
               const SizedBox(height: 8),
               if (exams.isEmpty)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text('No exam dates added yet', style: TextStyle(color: context.textSecondary)),
-                  ),
+                const AppEmptyWidget(
+                  icon: Icons.event_busy_rounded,
+                  title: 'No exam dates added yet',
                 )
               else
                 ...exams.map((exam) => Card(

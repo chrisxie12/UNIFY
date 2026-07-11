@@ -97,6 +97,9 @@ import '../../features/ambassadors/presentation/screens/ambassador_profile_scree
 import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
 import '../../features/snapshots/presentation/screens/story_create_screen.dart';
 import '../../features/snapshots/data/models/snapshot_models.dart';
+import '../../features/settings/presentation/screens/beta_info_screen.dart';
+import '../../features/settings/presentation/screens/privacy_policy_screen.dart';
+import '../../features/settings/presentation/screens/terms_of_service_screen.dart';
 
 // ── Admin path detection ──────────────────────────────────────────────────────
 //
@@ -359,6 +362,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ── Launch — student facing ──────────────────────────────
       GoRoute(path: '/referrals', builder: (_, __) => const MyReferralsScreen()),
       GoRoute(path: '/feedback', builder: (_, __) => const FeedbackScreen()),
+      GoRoute(path: '/beta-info', builder: (_, __) => const BetaInfoScreen()),
+      GoRoute(path: '/privacy', builder: (_, __) => const PrivacyPolicyScreen()),
+      GoRoute(path: '/terms', builder: (_, __) => const TermsOfServiceScreen()),
       GoRoute(path: '/support', builder: (_, __) => const SupportCenterScreen()),
       GoRoute(path: '/ambassador', builder: (_, __) => const AmbassadorProfileScreen()),
       GoRoute(

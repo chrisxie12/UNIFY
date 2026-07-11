@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/support_models.dart';
 import '../providers/support_provider.dart';
 
@@ -57,13 +59,13 @@ class _TicketsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(allTicketsProvider(null));
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (tickets) {
         if (tickets.isEmpty) {
-          return Center(
-              child: Text('No support tickets',
-                  style: TextStyle(color: context.textSecondary)));
+          return const AppEmptyWidget(
+              icon: Icons.feedback_outlined,
+              title: 'No support tickets');
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(allTicketsProvider(null)),
@@ -221,13 +223,13 @@ class _AbuseTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(abuseReportsProvider(null));
     return async.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (reports) {
         if (reports.isEmpty) {
-          return Center(
-              child: Text('No abuse reports',
-                  style: TextStyle(color: context.textSecondary)));
+          return const AppEmptyWidget(
+              icon: Icons.flag_outlined,
+              title: 'No abuse reports');
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(abuseReportsProvider(null)),
@@ -720,10 +722,7 @@ class _SheetShell extends StatelessWidget {
 class _Loading extends StatelessWidget {
   const _Loading();
   @override
-  Widget build(BuildContext context) => const Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(child: CircularProgressIndicator()),
-      );
+  Widget build(BuildContext context) => const AppLoadingWidget.list(itemCount: 5);
 }
 
 class _Empty extends StatelessWidget {

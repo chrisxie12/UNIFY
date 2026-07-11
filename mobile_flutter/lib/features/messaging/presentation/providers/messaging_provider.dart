@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:unify/core/providers/supabase_provider.dart';
+import 'package:unify/core/services/analytics_service.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
@@ -66,8 +67,9 @@ final searchUsersProvider = FutureProvider.family<List<Map<String, dynamic>>, St
 class MessagingNotifier extends StateNotifier<MessagingState> {
   final MessagingRepository _repo;
   final String? _userId;
+  final AnalyticsService _analytics;
 
-  MessagingNotifier(this._repo, this._userId) : super(MessagingState());
+  MessagingNotifier(this._repo, this._userId, this._analytics) : super(MessagingState());
 
   Future<void> sendMessage({
     required String conversationId,
@@ -90,6 +92,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
       isSending: false,
     );
     await _repo.sendMessage(msg);
+    _analytics.log('message_sent', feature: 'messaging');
   }
 
   Future<bool> sendImageMessage({
@@ -120,6 +123,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
       attachments: [attachment],
     );
     await _repo.sendMessage(msg);
+    _analytics.log('message_sent', feature: 'messaging');
     return true;
   }
 
@@ -174,7 +178,8 @@ class MessagingState {
 final messagingProvider = StateNotifierProvider<MessagingNotifier, MessagingState>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
-  return MessagingNotifier(repo, userId);
+  final analytics = ref.watch(analyticsServiceProvider);
+  return MessagingNotifier(repo, userId, analytics);
 });
 
 // ── Pinned conversations (client-side, session-scoped) ────────────────────

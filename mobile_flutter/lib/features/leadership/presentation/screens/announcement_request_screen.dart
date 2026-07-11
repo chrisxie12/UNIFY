@@ -83,12 +83,7 @@ class _AnnouncementRequestScreenState extends ConsumerState<AnnouncementRequestS
       ref.invalidate(myAnnouncementRequestsProvider);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Announcement submitted for admin approval!'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.success(context, 'Announcement submitted for admin approval!');
         context.pop();
       }
     } catch (e) {

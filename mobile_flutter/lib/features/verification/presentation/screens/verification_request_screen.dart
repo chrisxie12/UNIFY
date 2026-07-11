@@ -65,9 +65,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_evidenceFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please upload evidence to support your application'), behavior: SnackBarBehavior.floating),
-      );
+      UnifySnackbar.error(context, 'Please upload evidence to support your application');
       return;
     }
 
@@ -118,12 +116,7 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
       }).eq('id', user.id);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Verification request submitted! An admin will review it shortly.'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.success(context, 'Verification request submitted! An admin will review it shortly.');
         context.pop();
       }
     } catch (e) {
@@ -210,14 +203,18 @@ class _VerificationRequestScreenState extends ConsumerState<VerificationRequestS
             // Evidence upload
             _label('Evidence Upload'),
             const SizedBox(height: 8),
-            ..._evidenceTypes.map((t) => RadioListTile<String>(
-              title: Text(t.$2, style: const TextStyle(fontSize: 14)),
-              value: t.$1,
+            RadioGroup<String>(
               groupValue: _evidenceType,
-              onChanged: (v) => setState(() => _evidenceType = v!),
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-            )),
+              onChanged: (v) { if (v != null) setState(() => _evidenceType = v); },
+              child: Column(
+                children: _evidenceTypes.map((t) => RadioListTile<String>(
+                  title: Text(t.$2, style: const TextStyle(fontSize: 14)),
+                  value: t.$1,
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                )).toList(),
+              ),
+            ),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: _pickFile,

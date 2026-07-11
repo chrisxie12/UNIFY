@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../data/models/snapshot_models.dart';
 import '../providers/snapshots_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 /// Bottom sheet showing reach, reactions and viewer list for a leader's
 /// snapshot. Opened from the viewer's "Insights" action.
@@ -29,10 +31,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: async.when(
-            loading: () => const Center(
-              heightFactor: 6,
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const AppLoadingWidget.list(itemCount: 4),
             error: (e, _) => Center(
               heightFactor: 6,
               child: Text('Could not load insights',
@@ -47,13 +46,10 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
                   SliverToBoxAdapter(child: _reactionsRow(context, a)),
                 SliverToBoxAdapter(child: _viewersHeader(context, a.viewers.length)),
                 if (a.viewers.isEmpty)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Center(
-                        child: Text('No views yet',
-                            style: TextStyle(color: context.textDisabled)),
-                      ),
+                  const SliverToBoxAdapter(
+                    child: AppEmptyWidget(
+                      icon: Icons.history_rounded,
+                      title: 'No views yet',
                     ),
                   )
                 else

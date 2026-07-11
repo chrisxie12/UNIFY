@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
@@ -36,20 +37,9 @@ class NotesRepositoryScreen extends ConsumerWidget {
         error: (e, _) => AppErrorWidget(e),
         data: (items) {
           if (items.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.library_books_outlined, size: 64, color: context.textSecondary),
-                  const SizedBox(height: 16),
-                  Text('No resources yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Upload Resource'),
-                  ),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.menu_book_rounded,
+              title: 'No resources yet',
             );
           }
           return ListView.builder(
