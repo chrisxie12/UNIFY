@@ -5,11 +5,12 @@
 #
 # HOW TO USE:
 #   1. Connect your repository at https://codemagic.io.
-#   2. In the Codemagic UI → Teams → Your Team → App Store Connect → Add API key.
-#      That key is referenced below as $APP_STORE_CONNECT_KEY_ID et al.
+#   2. In the Codemagic UI → Teams → Your Team → Environment variables, add:
+#      - APP_STORE_CONNECT_PRIVATE_KEY    (base64-encoded .p8 file, secret)
+#      - APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID from App Store Connect)
+#      - APP_STORE_CONNECT_ISSUER_ID      (Issuer ID from App Store Connect)
 #   3. In the Codemagic UI → Teams → Your Team → Code signing identities →
 #      Upload your Apple Distribution certificate and App Store provisioning profile.
-#      Codemagic sets environment variables that the build step reads.
 #   4. Push to release/testflight-v1 — Codemagic runs this workflow.
 #
 # NO secrets are hardcoded here. All credentials are injected via
@@ -37,17 +38,18 @@ workflows:
         APP_NAME: UNIFY
         FLUTTER_PROJECT_DIR: mobile_flutter
 
-      # ── Android (required by pub get; build is iOS only) ────
-      groups: []
+      # Optional: add a variable group in the Codemagic UI and reference it here
+      # groups:
+      #   - appstore_credentials
 
     triggering:
-      # Only run on the release branch
-      branch:
-        patterns:
-          - release/testflight-v1
+      events:
+        - push
+      branch_patterns:
+        - pattern: release/testflight-v1
+          include: true
+          source: true
       cancel_previous_builds: true
-      pull_request:
-        enabled: false
 
     cache:
       cache_paths:
@@ -91,11 +93,10 @@ workflows:
       #   generated automatically by Codemagic from your UI settings.
       #
       # App Store Connect API key:
-      #   Upload in UI under Teams → Your Team → App Store Connect.
-      #   The variables $APP_STORE_CONNECT_KEY_ID,
-      #   $APP_STORE_CONNECT_ISSUER_ID, and
-      #   $APP_STORE_CONNECT_KEY (base64-encoded) are injected
-      #   automatically by Codemagic.
+      #   Set in Codemagic UI → Teams → Your Team → Environment variables:
+      #   - $APP_STORE_CONNECT_PRIVATE_KEY    (base64-encoded .p8 file)
+      #   - $APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID)
+      #   - $APP_STORE_CONNECT_ISSUER_ID      (Issuer ID)
       - name: Build iOS IPA for TestFlight
         script: |
           cd $FLUTTER_PROJECT_DIR
@@ -117,16 +118,16 @@ workflows:
     publishing:
       # ── App Store Connect (TestFlight) ──────────────────────
       # Credentials come from the Codemagic UI:
-      #   Teams → Your Team → App Store Connect → Add your API key.
+      #   Teams → Your Team → Environment variables.
       #
-      # Required when you upload the API key:
-      #   - $APP_STORE_CONNECT_KEY_ID    (from UI)
-      #   - $APP_STORE_CONNECT_ISSUER_ID (from UI)
-      #   - $APP_STORE_CONNECT_KEY       (base64, from UI)
+      # Required variables (all three):
+      #   - $APP_STORE_CONNECT_PRIVATE_KEY      (base64-encoded .p8 file)
+      #   - $APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID from App Store Connect)
+      #   - $APP_STORE_CONNECT_ISSUER_ID        (Issuer ID from App Store Connect)
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_KEY_ID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key: $APP_STORE_CONNECT_KEY
 
         # Submit to TestFlight (not App Store review)
         submit_to_testflight: true
