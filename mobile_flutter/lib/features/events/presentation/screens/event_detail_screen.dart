@@ -148,15 +148,21 @@ class _EventDetailContent extends ConsumerWidget {
           children: [
             Expanded(
               child: FilledButton.icon(
-                onPressed: event.isCancelled || event.isPast ? null : () async {
-                  if (userId == null) return;
-                  if (event.registrationType == 'free') {
-                    final ticket = await ref.read(eventRepositoryProvider).registerForEvent(event.id, userId);
-                    if (ticket != null && context.mounted) {
-                      context.push('/events/ticket/${ticket.id}');
-                    }
-                  }
-                },
+                onPressed: (event.isCancelled || event.isPast) && event.myTicketId == null
+                    ? null
+                    : () async {
+                        if (userId == null) return;
+                        if (event.myTicketId != null) {
+                          if (context.mounted) context.push('/events/ticket/${event.myTicketId}');
+                          return;
+                        }
+                        if (event.registrationType == 'free') {
+                          final ticket = await ref.read(eventRepositoryProvider).registerForEvent(event.id, userId);
+                          if (ticket != null && context.mounted) {
+                            context.push('/events/ticket/${ticket.id}');
+                          }
+                        }
+                      },
                 icon: Icon(event.myTicketId != null ? Icons.confirmation_number : Icons.event),
                 label: Text(event.myTicketId != null ? 'View Ticket' : event.isPast ? 'Event Ended' : 'Register Now'),
               ),
@@ -363,23 +369,7 @@ class _ActionButtons extends StatelessWidget {
             } else {
               showModalBottomSheet(
                 context: context,
-                builder: (_) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ListTile(leading: const Icon(Icons.check, color: Colors.green), title: const Text('Going'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'going');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                  ListTile(leading: const Icon(Icons.help, color: Colors.orange), title: const Text('Maybe'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'maybe');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                  ListTile(leading: const Icon(Icons.close, color: Colors.red), title: const Text('Not Going'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'not_going');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                ])),
+                builder: (ctx) => _RsvpSheet(eventId: event.id, userId: userId),
               );
             }
           },
@@ -396,6 +386,70 @@ class _ActionButtons extends StatelessWidget {
         label: const Text('Calendar'),
       ),
     ]);
+  }
+}
+
+class _RsvpSheet extends ConsumerStatefulWidget {
+  final String eventId;
+  final String userId;
+  const _RsvpSheet({required this.eventId, required this.userId});
+
+  @override
+  ConsumerState<_RsvpSheet> createState() => _RsvpSheetState();
+}
+
+class _RsvpSheetState extends ConsumerState<_RsvpSheet> {
+  String? _loadingStatus;
+  String? _error;
+
+  Future<void> _rsvp(String status) async {
+    setState(() { _loadingStatus = status; _error = null; });
+    final ok = await ref.read(eventRepositoryProvider).rsvpEvent(widget.eventId, widget.userId, status);
+    if (!mounted) return;
+    if (ok) {
+      ref.invalidate(eventDetailProvider(widget.eventId));
+      Navigator.pop(context);
+    } else {
+      setState(() {
+        _loadingStatus = null;
+        _error = 'RSVP failed. Please try again.';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        if (_error != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: Text(_error!, style: TextStyle(color: theme.colorScheme.error, fontSize: 13)),
+          ),
+        ListTile(
+          leading: _loadingStatus == 'going'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.check, color: Colors.green),
+          title: const Text('Going'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('going'),
+        ),
+        ListTile(
+          leading: _loadingStatus == 'maybe'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.help, color: Colors.orange),
+          title: const Text('Maybe'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('maybe'),
+        ),
+        ListTile(
+          leading: _loadingStatus == 'not_going'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.close, color: Colors.red),
+          title: const Text('Not Going'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('not_going'),
+        ),
+      ]),
+    );
   }
 }
 

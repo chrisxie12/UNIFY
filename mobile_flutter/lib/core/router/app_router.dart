@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 import '../widgets/main_shell.dart';
+import '../widgets/not_found_screen.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
 import '../guards/admin_guard.dart';
@@ -141,6 +142,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     refreshListenable: refreshListenable,
+    errorBuilder: (context, state) => NotFoundScreen(
+      message: state.error?.toString(),
+    ),
     redirect: (context, state) {
       bool loggedIn = false;
       try {
@@ -387,7 +391,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/app/profile',
-              builder: (_, __) => const ProfileScreen(),
+              builder: (_, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                return ProfileScreen(viewUserId: extra?['viewUserId'] as String?);
+              },
               routes: [
                 GoRoute(
                   path: 'edit',

@@ -13,6 +13,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
 import '../../../leadership/data/models/user_badge_model.dart';
 import '../../domain/entities/profile.dart';
+import '../../../../core/providers/supabase_provider.dart';
 import '../providers/profile_provider.dart';
 
 // ---------------------------------------------------------------------------
@@ -24,21 +25,27 @@ import '../providers/profile_provider.dart';
 // ---------------------------------------------------------------------------
 
 class ProfileScreen extends ConsumerWidget {
-  const ProfileScreen({super.key});
+  final String? viewUserId;
+  const ProfileScreen({super.key, this.viewUserId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsync = ref.watch(profileProvider);
-    final statsAsync   = ref.watch(profileStatsProvider);
-    final badgesAsync  = ref.watch(userBadgesProvider);
-    final leadershipAsync = ref.watch(userLeadershipProvider);
-    final isLeaderAsync = ref.watch(isVerifiedLeaderProvider);
+    final currentUserId = ref.read(supabaseProvider).auth.currentUser?.id;
+    final isOwnProfile = viewUserId == null || viewUserId == currentUserId;
+
+    final profileAsync = isOwnProfile
+        ? ref.watch(profileProvider)
+        : ref.watch(viewProfileProvider(viewUserId!));
+    final statsAsync = isOwnProfile ? ref.watch(profileStatsProvider) : const AsyncValue.data(null);
+    final badgesAsync = isOwnProfile ? ref.watch(userBadgesProvider) : const AsyncValue.data(<UserBadgeModel>[]);
+    final leadershipAsync = isOwnProfile ? ref.watch(userLeadershipProvider) : const AsyncValue.data(<UserLeadershipModel>[]);
+    final isLeaderAsync = isOwnProfile ? ref.watch(isVerifiedLeaderProvider) : const AsyncValue.data(false);
 
     return Scaffold(
       backgroundColor: context.bg,
       body: profileAsync.when(
         loading: () => const _Skeleton(),
-        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(profileProvider)),
+        error: (e, _) => AppErrorWidget(e, onRetry: isOwnProfile ? () => ref.invalidate(profileProvider) : null),
         data: (profile) {
           if (profile == null) return const AppErrorWidget('Profile not found.');
           return _Body(

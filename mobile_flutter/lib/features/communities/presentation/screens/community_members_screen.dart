@@ -235,7 +235,7 @@ class _MemberListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             )
           : null,
-      onTap: () => context.push('/app/profile'),
+      onTap: () => context.push('/app/profile', extra: {'viewUserId': member['user_id']}),
     );
   }
 }

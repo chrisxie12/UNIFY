@@ -29,7 +29,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
         .from('messages')
         .stream(primaryKey: ['id'])
         .eq('conversation_id', conversationId)
-        .order('created_at', ascending: true)
+        .order('created_at', ascending: false)
         .map((maps) => maps
             .where((m) {
               final exp = m['expires_at'];
@@ -345,12 +345,21 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return result != null;
   }
 
+  String _escapeSearch(String s) {
+    return s
+        .replaceAll('\\', '\\\\')
+        .replaceAll('%', '\\%')
+        .replaceAll('_', '\\_')
+        .replaceAll(',', ' ');
+  }
+
   @override
   Future<List<Map<String, dynamic>>> searchUsers(String query) async {
+    final safe = _escapeSearch(query);
     final data = await _client
         .from('profiles')
         .select('id, full_name, avatar_url, programme, level, department, community_name')
-        .or('full_name.ilike.%$query%,programme.ilike.%$query%,department.ilike.%$query%')
+        .or('full_name.ilike.%$safe%,programme.ilike.%$safe%,department.ilike.%$safe%')
         .limit(20);
     return (data as List).cast<Map<String, dynamic>>();
   }

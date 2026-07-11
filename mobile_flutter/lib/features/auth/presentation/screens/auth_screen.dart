@@ -147,6 +147,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     if (!mounted) return;
     state.whenOrNull(
       error: (e, _) => UnifySnackbar.error(context, ErrorMapper.toUserMessage(e)),
+      data: (_) {
+        if (_isSignup) {
+          UnifySnackbar.success(
+            context,
+            'Account created! Check your inbox for a confirmation link, then sign in.',
+          );
+          setState(() => _isSignup = false);
+        }
+      },
     );
   }
 

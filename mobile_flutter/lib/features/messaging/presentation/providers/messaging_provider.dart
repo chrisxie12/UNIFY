@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:unify/core/providers/supabase_provider.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
@@ -79,7 +80,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
     if (_userId == null) return;
 
     final msg = MessageModel(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: const Uuid().v4(),
       conversationId: conversationId,
       channelId: channelId,
       senderId: _userId,
@@ -102,13 +103,14 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
     final url = await _repo.uploadChatImage(imageFile);
     if (url == null) return false;
 
+    final id = const Uuid().v4();
     final attachment = MessageAttachment(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: id,
       type: 'image',
       url: url,
     );
     final msg = MessageModel(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: id,
       conversationId: conversationId,
       channelId: channelId,
       senderId: _userId,

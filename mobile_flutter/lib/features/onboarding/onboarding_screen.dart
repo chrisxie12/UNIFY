@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -57,6 +59,7 @@ class OnboardingData {
       'goals': goals,
       'interests': interests,
       'onboarding_complete': true,
+      if (photoUrl != null) 'avatar_url': photoUrl,
     };
     if (isSHS) {
       base.addAll({

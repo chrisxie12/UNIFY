@@ -67,7 +67,12 @@ class CacheService {
   Future<void> invalidateAll() async {
     try {
       await Hive.deleteBoxFromDisk(AppConstants.feedBoxName);
+      await Hive.deleteBoxFromDisk('feed');
+      await Hive.deleteBoxFromDisk(AppConstants.opportunitiesBox);
       await Hive.deleteBoxFromDisk(AppConstants.profileCacheBox);
+      await Hive.deleteBoxFromDisk(AppConstants.academicBox);
+      await Hive.deleteBoxFromDisk(AppConstants.offlineResourcesBox);
+      await Hive.deleteBoxFromDisk(AppConstants.launchBox);
     } catch (e) {
       debugPrint('[CacheService] Invalidate all failed: $e');
     }

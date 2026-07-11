@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'core/services/crash_reporting_service.dart';
 
 final crashReportingService = CrashReportingService();
@@ -50,6 +51,7 @@ Future<void> bootstrap(
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      await Hive.initFlutter();
       try {
         final widget = await builder();
         runApp(widget);

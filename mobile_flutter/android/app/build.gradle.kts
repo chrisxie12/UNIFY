@@ -12,7 +12,7 @@ if (hasGoogleServices) {
 }
 
 android {
-    namespace = "com.example.unify"
+    namespace = "com.gctu.unify"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

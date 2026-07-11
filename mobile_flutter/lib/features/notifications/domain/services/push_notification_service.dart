@@ -126,7 +126,7 @@ class PushNotificationService {
     switch (type) {
       case 'new_message':
         final convId = data['conversation_id'];
-        return convId != null ? '/messages/chat/$convId' : '/messages';
+        return convId != null ? '/messaging/chat/$convId' : '/app/messaging';
       case 'admin_broadcast':
       case 'community_announcement':
       case 'announcement_posted':
@@ -137,34 +137,34 @@ class PushNotificationService {
       case 'event_approved':
       case 'event_rejected':
         final eventId = data['event_id'];
-        return eventId != null ? '/events/$eventId' : '/app/events';
+        return eventId != null ? '/event/$eventId' : '/app/events';
       case 'marketplace_report_resolved':
-        return '/marketplace';
+        return '/app/feed';
       case 'announcement_approved':
         return '/app/feed';
       case 'announcement_rejected':
-        return '/profile';
+        return '/app/profile';
       case 'admin_removed':
-        return '/profile';
+        return '/app/profile';
       case 'community_approval':
       case 'community_approved':
       case 'community_join_request':
       case 'community_changes_requested':
         final communityId = data['community_id'];
-        return communityId != null ? '/app/communities/$communityId' : '/app/communities';
+        return communityId != null ? '/community/$communityId' : '/app/communities';
       case 'community_rejected':
         return '/app/communities';
       case 'marketplace_inquiry':
       case 'marketplace_sale':
-        return '/marketplace';
+        return '/app/feed';
       case 'opportunity_deadline_reminder':
       case 'scholarship_alert':
-        return '/opportunities';
+        return '/app/feed';
       case 'academic_resource_upload':
         return '/academic/resources';
       case 'verification_approved':
       case 'verification_rejected':
-        return '/profile';
+        return '/app/profile';
       case 'role_assigned':
       case 'leadership_approved':
         return '/reputation';
@@ -172,7 +172,7 @@ class PushNotificationService {
         return '/admin';
       case 'leadership_request_submitted':
       case 'leadership_rejected':
-        return '/profile';
+        return '/app/profile';
       default:
         return null;
     }
