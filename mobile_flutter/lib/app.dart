@@ -25,17 +25,27 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
 
   @override
   void initState() {
+    debugPrint('[STARTUP] _UnifyAppState.initState() entered');
     super.initState();
+    debugPrint('[STARTUP] _UnifyAppState.initState() super done, adding observer...');
     WidgetsBinding.instance.addObserver(this);
+    debugPrint('[STARTUP] _UnifyAppState.initState() observer added, scheduling postFrameCallback...');
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint('[STARTUP] _UnifyAppState postFrameCallback fired');
       _startAuthListener();
       try {
+        debugPrint('[STARTUP] _UnifyAppState calling analyticsServiceProvider.log...');
         ref.read(analyticsServiceProvider).log('app_launched', feature: 'app');
-      } catch (_) {}
+        debugPrint('[STARTUP] _UnifyAppState analyticsServiceProvider.log done');
+      } catch (e) {
+        debugPrint('[STARTUP] _UnifyAppState analyticsServiceProvider.log ERROR: $e');
+      }
     });
+    debugPrint('[STARTUP] _UnifyAppState.initState() done');
   }
 
   void _startAuthListener() {
+    debugPrint('[STARTUP] _UnifyAppState._startAuthListener() entered');
     _authSub = ref.listenManual(authStateProvider, (_, next) {
       next.whenData((authState) {
         final userId = authState.session?.user.id;
@@ -45,8 +55,6 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
           pushService.init(userId, onTap: (data) {
             final route = PushNotificationService.routeFromData(data);
             if (route != null) {
-              // Set the pending route — build() listener navigates safely
-              // from within the widget tree, avoiding Navigator key conflicts.
               ref.read(pendingPushRouteProvider.notifier).state = route;
             }
           });
@@ -56,6 +64,7 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
         }
       });
     });
+    debugPrint('[STARTUP] _UnifyAppState._startAuthListener() done');
   }
 
   @override
@@ -81,12 +90,17 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('[STARTUP] _UnifyAppState.build() entered');
+    debugPrint('[STARTUP] _UnifyAppState.build() calling ref.watch(appRouterProvider)...');
     final router = ref.watch(appRouterProvider);
+    debugPrint('[STARTUP] _UnifyAppState.build() appRouterProvider done');
+    debugPrint('[STARTUP] _UnifyAppState.build() calling ref.watch(themeNotifierProvider)...');
     final theme = ref.watch(themeNotifierProvider);
+    debugPrint('[STARTUP] _UnifyAppState.build() themeNotifierProvider done');
+    debugPrint('[STARTUP] _UnifyAppState.build() calling ref.watch(themeModeProvider)...');
     final mode = ref.watch(themeModeProvider);
+    debugPrint('[STARTUP] _UnifyAppState.build() themeModeProvider done');
 
-    // Navigate when a push notification tap sets a pending route.
-    // Running from build() ensures we're always inside the widget tree.
     ref.listen(pendingPushRouteProvider, (_, route) {
       if (route != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -96,6 +110,7 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
       }
     });
 
+    debugPrint('[STARTUP] _UnifyAppState.build() returning MaterialApp.router');
     return MaterialApp.router(
       title: 'UNIFY',
       debugShowCheckedModeBanner: false,
