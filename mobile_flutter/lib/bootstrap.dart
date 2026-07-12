@@ -11,10 +11,7 @@ Future<void> bootstrap(
   String? sentryDsn,
   String? environment,
 }) async {
-  debugPrint('[STARTUP] bootstrap() entered');
-  debugPrint('[STARTUP] calling crashReportingService.init()...');
   await crashReportingService.init(dsn: sentryDsn, environment: environment);
-  debugPrint('[STARTUP] crashReportingService.init() done');
 
   FlutterError.onError = (FlutterErrorDetails details) {
     crashReportingService.captureException(
@@ -51,24 +48,14 @@ Future<void> bootstrap(
     );
   };
 
-  debugPrint('[STARTUP] entering runZonedGuarded...');
   await runZonedGuarded(
     () async {
-      debugPrint('[STARTUP] inside runZonedGuarded lambda');
-      debugPrint('[STARTUP] calling WidgetsFlutterBinding.ensureInitialized()...');
       WidgetsFlutterBinding.ensureInitialized();
-      debugPrint('[STARTUP] WidgetsFlutterBinding.ensureInitialized() done');
-      debugPrint('[STARTUP] calling Hive.initFlutter()...');
       await Hive.initFlutter();
-      debugPrint('[STARTUP] Hive.initFlutter() done');
       try {
-        debugPrint('[STARTUP] calling builder()...');
         final widget = await builder();
-        debugPrint('[STARTUP] builder() returned, calling runApp()...');
         runApp(widget);
-        debugPrint('[STARTUP] runApp() returned');
       } catch (error, stackTrace) {
-        debugPrint('[STARTUP] ERROR in builder/runApp: $error');
         // A failure during startup (Supabase/Hive/etc.) would otherwise leave
         // a permanently blank screen. Render the error so it's diagnosable.
         crashReportingService.captureException(error, stackTrace: stackTrace);
@@ -82,7 +69,6 @@ Future<void> bootstrap(
       }
     },
   );
-  debugPrint('[STARTUP] runZonedGuarded done — bootstrap complete');
 }
 
 /// Shown when [bootstrap]'s builder throws — surfaces the real error instead
