@@ -19,7 +19,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: release/testflight-v1
+        - pattern: main
           include: true
           source: true
       cancel_previous_builds: true
