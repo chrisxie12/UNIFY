@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
+import 'package:unify/core/widgets/unify_snackbar.dart';
 import 'package:unify/features/messaging/presentation/providers/messaging_provider.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
 import 'package:unify/core/widgets/app_loading_widget.dart';
@@ -17,17 +19,26 @@ class StudentDirectoryScreen extends ConsumerStatefulWidget {
 class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen> {
   final _searchController = TextEditingController();
   String _query = '';
+  Timer? _debounce;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String v) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) setState(() => _query = v.trim());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final resultsAsync = ref.watch(searchUsersProvider(_query));
-    final theme = Theme.of(context);
+    final textSecondary = context.textSecondary;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,9 +65,9 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                     : null,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: textSecondary.withValues(alpha: 0.05),
               ),
-              onChanged: (v) => setState(() => _query = v.trim()),
+              onChanged: _onSearchChanged,
               textInputAction: TextInputAction.search,
             ),
           ),
@@ -70,11 +81,13 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.people_outline, size: 64, color: context.textSecondary),
+                        Icon(Icons.people_outline, size: 64, color: textSecondary),
                         const SizedBox(height: 16),
-                        Text('Search for students by name,\nprogramme, or department',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: context.textSecondary)),
+                        Text(
+                          'Search for students by name,\nprogramme, or department',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: textSecondary),
+                        ),
                       ],
                     ),
                   );
@@ -91,10 +104,10 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                     final user = users[i];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+                        backgroundColor: context.primary.withValues(alpha: 0.15),
                         child: Text(
                           ((user['full_name'] as String?)?[0] ?? '?').toUpperCase(),
-                          style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
+                          style: TextStyle(color: context.primary, fontWeight: FontWeight.w600),
                         ),
                       ),
                       title: Text(user['full_name'] as String? ?? 'Unknown'),
@@ -104,7 +117,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                           user['level'],
                           user['department'],
                         ].whereType<String>().join(' · '),
-                        style: TextStyle(fontSize: 13, color: context.textSecondary),
+                        style: TextStyle(fontSize: 13, color: textSecondary),
                       ),
                       onTap: () async {
                         final userId = user['id'] as String;
@@ -117,9 +130,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                           }
                         } catch (e) {
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Could not open chat: $e')),
-                            );
+                            UnifySnackbar.error(context, 'Could not open chat');
                           }
                         }
                       },

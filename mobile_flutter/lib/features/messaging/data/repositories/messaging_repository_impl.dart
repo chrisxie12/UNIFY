@@ -364,7 +364,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
     final safe = _escapeSearch(query);
     final data = await _client
         .from('profiles')
-        .select('id, full_name, avatar_url, programme, level, department, community_name')
+        .select('id, full_name, avatar_url, programme, level, department')
         .or('full_name.ilike.%$safe%,programme.ilike.%$safe%,department.ilike.%$safe%')
         .limit(20);
     return (data as List).cast<Map<String, dynamic>>();
