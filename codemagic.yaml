@@ -1,17 +1,12 @@
 workflows:
-  testflight-release:
-    name: UNIFY TestFlight Release
-    instance_type: mac_mini_m2
+  android-release:
+    name: UNIFY Android Release
+    instance_type: ubuntu
     max_build_duration: 60
     working_directory: mobile_flutter
 
     environment:
       flutter: stable
-      xcode: latest
-      cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.gctu.unify
       vars:
         APP_ID: com.gctu.unify
 
@@ -43,38 +38,28 @@ workflows:
             echo "No tests found — skipping test step"
           fi
 
-      - name: Set up code signing
+      - name: Build Android APK
         script: |
-          xcode-project use-profiles
-
-      - name: Build iOS IPA for TestFlight
-        script: |
-          flutter build ipa \
-            --release \
-            --export-options-plist=/Users/builder/export_options.plist \
+          flutter build apk --release \
             --build-name=1.0.0 \
             --build-number=$(($(git rev-list --count HEAD)))
 
     artifacts:
-      - build/ios/ipa/*.ipa
-      - build/ios/ipa/*.plist
-      - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
+      - build/app/outputs/flutter-apk/*.apk
 
     publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: true
-        submit_to_app_store: false
-        beta_groups:
-          - Internal Testers
-          - External Testers
-
       email:
         recipients:
           - chrisxie12@example.com
         notify:
           success: true
           failure: true
+
+      github_releases:
+        release_name: UNIFY v1.0.0
+        tag: v1.0.0
+        description: |
+          UNIFY — build $(date +%Y%m%d-%H%M)
+          Commit: $CM_COMMIT
+        artifacts: true
+        draft: true
