@@ -126,20 +126,26 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
           // ── Bottom 40%: White card ─────────────────────────────
           Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: -32),
-              decoration: const BoxDecoration(
-                color: UnifyColors.surfaceWhite,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(UnifyRadius.xxl),
-                  topRight: Radius.circular(UnifyRadius.xxl),
-                ),
-                border: Border(
-                  top: BorderSide(color: UnifyColors.divider),
-                ),
-                boxShadow: UnifyShadows.lg,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(UnifyRadius.xxl),
+                topRight: Radius.circular(UnifyRadius.xxl),
               ),
-              child: Column(
+              child: Transform.translate(
+                offset: const Offset(0, -32),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: UnifyColors.surfaceWhite,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(UnifyRadius.xxl),
+                      topRight: Radius.circular(UnifyRadius.xxl),
+                    ),
+                    border: const Border(
+                      top: BorderSide(color: UnifyColors.divider),
+                    ),
+                    boxShadow: UnifyShadows.lg,
+                  ),
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -263,6 +269,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ],
               ),
+            ),
+            ),
             ),
           ),
         ],

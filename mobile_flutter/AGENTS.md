@@ -352,3 +352,12 @@ Make UNIFY fully reproducible from a fresh Supabase project. Compete canonical `
 - **Week 3 — Beta essentials**: Created `BetaInfoScreen` (About, App Version/Build, Contact Support, Feedback link, Privacy Policy, Terms of Service), `PrivacyPolicyScreen`, `TermsOfServiceScreen`. Routes: `/beta-info`, `/privacy`, `/terms`. Wired into Settings screen.
 - **Week 4 — Testing checklist**: Created `BETA_TESTING_CHECKLIST.md` — 100+ manual test items across auth, onboarding, feed, communities, messaging, events, academic, profile, notifications, search, offline, dark mode, navigation, performance.
 - **`flutter analyze`** — **0 errors, 0 warnings, 0 infos**.
+
+### Done — Session 2026-07-13 (Feed Redesign, User Search Fix, Welcome Screen Crash)
+- **Feed screen redesigned** — Instagram-style header (camera | UNIFY | heart+msgs), full-bleed post cards, animated heart like button, bookmark action. `feed_screen.dart` + `announcement_card.dart`.
+- **Student directory search fixed** — Removed phantom `community_name` column from `.select()`, added 300ms debounce, replaced bare `SnackBar` with `UnifySnackbar.error`. `messaging_repository_impl.dart:367`, `student_directory_screen.dart`.
+- **RLS policy for profile search** — `profiles_search_read` migration created and applied in Supabase SQL Editor.
+- **Welcome screen crash fixed** — Flutter 3.41.7 rejects negative `Container.margin`. Replaced with `Transform.translate(offset: Offset(0, -32))` at `welcome_screen.dart:129`.
+- **Android APK distribution** — Pivoted from TestFlight to free sideloading. Debug APK builds successfully (167 MB). Release build blocked (no internet for Flutter engine JARs).
+- **`codemagic.yaml`** — Updated to build Android release APK on Linux, publish to GitHub Releases.
+- **`flutter analyze`** — **0 errors, 0 warnings, 7 infos** (all cosmetic `prefer_const_constructors`).
