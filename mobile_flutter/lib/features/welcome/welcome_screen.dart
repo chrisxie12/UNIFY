@@ -132,12 +132,12 @@ class _MeshGradientPainter extends CustomPainter {
     final t = progress * math.pi * 2;
     return LinearGradient(
       colors: const [
-        Color(0xFF0B0F1A),
-        Color(0xFF141828),
-        Color(0xFF1A1F3A),
-        Color(0xFF1E2A5A),
-        Color(0xFF162247),
-        Color(0xFF0F172A),
+        Color(0xFF1E40AF),
+        Color(0xFF2563EB),
+        Color(0xFF1D4ED8),
+        Color(0xFF1E3A8A),
+        Color(0xFF172554),
+        Color(0xFF0F1D3A),
       ],
       stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
       begin: Alignment(
