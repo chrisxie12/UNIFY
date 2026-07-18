@@ -144,15 +144,15 @@ class AnnouncementCard extends ConsumerWidget {
           ),
 
           if (item.isUrgent)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(14, 4, 14, 0),
               child: Row(
                 children: [
-                  Icon(Icons.priority_high_rounded, size: 12, color: const Color(0xFFDC2626)),
-                  const SizedBox(width: 3),
+                  Icon(Icons.priority_high_rounded, size: 12, color: Color(0xFFDC2626)),
+                  SizedBox(width: 3),
                   Text(
                     'Urgent',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: const Color(0xFFDC2626)),
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFDC2626)),
                   ),
                 ],
               ),
