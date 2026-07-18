@@ -7,6 +7,9 @@ import '../../../../features/leadership/presentation/providers/leadership_provid
 import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
+import 'package:unify/core/design_system/tokens.dart';
+import 'package:unify/core/design_system/typography.dart';
+import 'package:unify/core/extensions/theme_extensions.dart';
 
 class CommunitiesScreen extends ConsumerWidget {
   const CommunitiesScreen({super.key});
@@ -41,7 +44,7 @@ class CommunitiesScreen extends ConsumerWidget {
                 label: const Text('Request New Community'),
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                 ),
               );
             }
@@ -53,13 +56,13 @@ class CommunitiesScreen extends ConsumerWidget {
                   label: const Text('Get Verified'),
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFF6B35),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
+                const SizedBox(height: USpacing.sm),
+                Text(
                   'Community creation is restricted to verified student representatives.',
-                  style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                  style: UText.tiny.copyWith(color: context.textSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -77,68 +80,55 @@ class CommunitiesScreen extends ConsumerWidget {
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(myCommunitiesProvider(userId)),
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(USpacing.base),
               itemCount: communities.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(bottom: USpacing.base),
                     child: requestButton(),
                   );
                 }
 
                 final community = communities[index - 1];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFE5E7EB)),
-                  ),
+                return Card(
+                  margin: const EdgeInsets.only(bottom: USpacing.md),
+                  shape: RoundedRectangleBorder(borderRadius: URadius.mdAll),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: URadius.mdAll,
                     onTap: () => context.push('/community/${community.id}'),
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(USpacing.md),
                       child: Row(
                         children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2563EB).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(Icons.group, color: Color(0xFF2563EB), size: 24),
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                            backgroundImage: community.avatarUrl != null ? NetworkImage(community.avatarUrl!) : null,
+                            child: community.avatarUrl == null
+                                ? Text(
+                                    community.name.isNotEmpty ? community.name[0].toUpperCase() : 'C',
+                                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+                                  )
+                                : null,
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: USpacing.md),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  community.name,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                ),
+                                Text(community.name, style: UText.labelL),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '${community.memberCount} members',
-                                  style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                                  community.communityTypeLabel,
+                                  style: UText.caption.copyWith(color: context.textSecondary),
                                 ),
                               ],
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () => context.push('/community/${community.id}'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF2563EB),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                            ),
-                            child: const Text('Join', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          Text(
+                            '${community.memberCount} members',
+                            style: UText.caption.copyWith(color: context.textSecondary),
                           ),
                         ],
                       ),

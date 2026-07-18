@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/messaging_provider.dart';
 import '../../data/models/conversation_model.dart';
+import '../widgets/conversation_tile.dart';
 
 class MessagingScreen extends ConsumerStatefulWidget {
   const MessagingScreen({super.key});
@@ -193,9 +194,10 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
     final requestsCount = requestsAsync.asData?.value.length ?? 0;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.bg,
       body: CustomScrollView(
         slivers: [
+          // ── SliverAppBar (floating + snap) ────────────────────────────
           SliverAppBar(
             floating: true,
             snap: true,
@@ -209,7 +211,8 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
                 ? TextField(
                     controller: _searchController,
                     autofocus: true,
-                    style: TextStyle(color: context.textPrimary, fontSize: 16),
+                    style:
+                        TextStyle(color: context.textPrimary, fontSize: 16),
                     decoration: InputDecoration(
                       hintText: 'Search conversations…',
                       hintStyle: TextStyle(
@@ -245,10 +248,12 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
                 )
               else ...[
                 IconButton(
-                  icon: Icon(Icons.search_rounded, color: context.textPrimary),
+                  icon:
+                      Icon(Icons.search_rounded, color: context.textPrimary),
                   onPressed: _startSearch,
                   tooltip: 'Search',
                 ),
+                // Requests icon with badge
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -257,7 +262,8 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
                         Icons.person_add_alt_1_rounded,
                         color: context.textPrimary,
                       ),
-                      onPressed: () => context.push('/messaging/requests'),
+                      onPressed: () =>
+                          context.push('/messaging/requests'),
                       tooltip: 'Message requests',
                     ),
                     if (requestsCount > 0)
@@ -297,6 +303,8 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
               ],
             ],
           ),
+
+          // ── Conversations content ─────────────────────────────────────
           _ConversationsSliver(
             searchQuery: _searchQuery,
             onShowOptions: _showConversationOptions,
@@ -351,6 +359,7 @@ class _ConversationsSliver extends ConsumerWidget {
         ),
       ),
       data: (conversations) {
+        // Search filter
         final filtered = searchQuery.isEmpty
             ? conversations
             : conversations
@@ -369,6 +378,7 @@ class _ConversationsSliver extends ConsumerWidget {
           );
         }
 
+        // Partition pinned / unpinned
         final pinned =
             filtered.where((c) => pinnedIds.contains(c.id)).toList();
         final unpinned =
@@ -376,6 +386,7 @@ class _ConversationsSliver extends ConsumerWidget {
 
         return SliverList(
           delegate: SliverChildListDelegate([
+            // ── Pinned section ─────────────────────────────────────────
             if (pinned.isNotEmpty) ...[
               _SectionHeader(
                 label: 'Pinned',
@@ -396,6 +407,8 @@ class _ConversationsSliver extends ConsumerWidget {
                 color: context.textSecondary,
               ),
             ],
+
+            // ── Main list ──────────────────────────────────────────────
             for (final conv in unpinned)
               _SwipeableTile(
                 key: ValueKey('conv_${conv.id}'),
@@ -404,6 +417,8 @@ class _ConversationsSliver extends ConsumerWidget {
                 currentUserId: currentUserId,
                 onShowOptions: onShowOptions,
               ),
+
+            // Bottom padding for FAB
             const SizedBox(height: 80),
           ]),
         );
@@ -437,68 +452,11 @@ class _SwipeableTile extends ConsumerWidget {
     }
   }
 
-  ConversationParticipant? get _otherParticipant {
-    try {
-      return conversation.participants.firstWhere(
-        (p) => !p.isCurrentUser,
-      );
-    } catch (_) {
-      return conversation.participants.isNotEmpty
-          ? conversation.participants.first
-          : null;
-    }
-  }
-
-  bool get _isDirect => conversation.type == 'direct';
-  bool get _isChannel =>
-      conversation.type == 'channel' || conversation.type == 'announcement';
-
-  String get _displayName {
-    if (_isDirect) {
-      return _otherParticipant?.displayName ?? conversation.title ?? 'Unknown';
-    }
-    if (_isChannel) {
-      return '#${conversation.title ?? ''}';
-    }
-    return conversation.title ?? 'Group';
-  }
-
-  String get _subtitleText {
-    if (_isDirect) {
-      return conversation.lastMessageContent ?? '';
-    }
-    final sender = conversation.lastMessageSenderName;
-    final content = conversation.lastMessageContent ?? '';
-    return sender != null && sender.isNotEmpty
-        ? '$sender: $content'
-        : content;
-  }
-
-  bool get _isMuted {
-    if (currentUserId == null) return false;
-    try {
-      final me = conversation.participants.firstWhere(
-        (p) => p.userId == currentUserId,
-      );
-      return me.isMuted;
-    } catch (_) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = DateTime.now();
-    final timeStr = _formatTime(conversation.lastMessageAt, now);
-    final isUnread = conversation.unreadCount > 0;
-    final muted = _isMuted;
-    final name = _displayName;
-    final subtitle = _subtitleText;
-    final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
-    final color = _avatarColor(conversation.id);
-
     return Dismissible(
       key: ValueKey('dismiss_${conversation.id}'),
+      // End→Start (right→left): delete — red background
       background: _SwipeBg(
         alignment: Alignment.centerRight,
         color: context.error,
@@ -506,6 +464,7 @@ class _SwipeableTile extends ConsumerWidget {
         label: 'Delete',
         padding: const EdgeInsets.only(right: 24),
       ),
+      // Start→End (left→right): pin/unpin — blue background
       secondaryBackground: _SwipeBg(
         alignment: Alignment.centerLeft,
         color: context.primary,
@@ -522,133 +481,14 @@ class _SwipeableTile extends ConsumerWidget {
               .read(pinnedConversationsProvider.notifier)
               .toggle(conversation.id);
         }
-        return false;
+        return false; // never remove from list unilaterally
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => _navigate(context),
-              onLongPress: () => onShowOptions(conversation, isPinned),
-              child: SizedBox(
-                height: 72,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      // Avatar
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            initial,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Title + subtitle
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                if (muted)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4),
-                                    child: Icon(
-                                      Icons.volume_off_rounded,
-                                      size: 14,
-                                      color: context.textSecondary,
-                                    ),
-                                  ),
-                                if (isPinned)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4),
-                                    child: Icon(
-                                      Icons.push_pin_rounded,
-                                      size: 14,
-                                      color: context.textSecondary,
-                                    ),
-                                  ),
-                                Expanded(
-                                  child: Text(
-                                    name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      color: context.textPrimary,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              subtitle,
-                              style: TextStyle(
-                                color: context.textSecondary,
-                                fontSize: 13,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Time + unread badge
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            timeStr,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: context.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          if (isUnread)
-                            _UnreadBadge(
-                              count: conversation.unreadCount,
-                              muted: muted,
-                              primary: context.primary,
-                            )
-                          else
-                            const SizedBox(height: 18),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Divider(
-            height: 0.5,
-            thickness: 0.5,
-            indent: 76,
-            endIndent: 0,
-            color: context.borderCol.withValues(alpha: 0.5),
-          ),
-        ],
+      child: ConversationTile(
+        conversation: conversation,
+        isPinned: isPinned,
+        currentUserId: currentUserId,
+        onTap: () => _navigate(context),
+        onLongPress: () => onShowOptions(conversation, isPinned),
       ),
     );
   }
@@ -732,44 +572,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-// ── Unread Badge ──────────────────────────────────────────────────────────────
-
-class _UnreadBadge extends StatelessWidget {
-  const _UnreadBadge({
-    required this.count,
-    required this.muted,
-    required this.primary,
-  });
-
-  final int count;
-  final bool muted;
-  final Color primary;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = count > 99 ? '99+' : count.toString();
-    final bg = muted ? context.textSecondary.withValues(alpha: 0.4) : primary;
-    return Container(
-      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 // ── Empty State ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
@@ -821,7 +623,8 @@ class _SkeletonSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final base = isDark ? const Color(0xFF2A2A3A) : const Color(0xFFE0E0E0);
+    final base =
+        isDark ? const Color(0xFF2A2A3A) : const Color(0xFFE0E0E0);
     final highlight =
         isDark ? const Color(0xFF3A3A4A) : const Color(0xFFF5F5F5);
 
@@ -849,6 +652,7 @@ class _SkeletonTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
+            // Avatar
             Container(
               width: 48,
               height: 48,
@@ -858,6 +662,7 @@ class _SkeletonTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
+            // Text lines
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -883,6 +688,7 @@ class _SkeletonTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
+            // Time pill
             Container(
               height: 10,
               width: 36,
@@ -896,41 +702,4 @@ class _SkeletonTile extends StatelessWidget {
       ),
     );
   }
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-String _formatTime(DateTime? dt, DateTime now) {
-  if (dt == null) return '';
-  final local = dt.toLocal();
-  final today = DateTime(now.year, now.month, now.day);
-  final msgDay = DateTime(local.year, local.month, local.day);
-  final diff = today.difference(msgDay).inDays;
-  if (diff == 0) {
-    final h = local.hour.toString().padLeft(2, '0');
-    final m = local.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  } else if (diff < 7) {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days[local.weekday - 1];
-  } else {
-    final d = local.day.toString().padLeft(2, '0');
-    final mo = local.month.toString().padLeft(2, '0');
-    return '$d/$mo';
-  }
-}
-
-Color _avatarColor(String id) {
-  const palette = [
-    Color(0xFF2563EB),
-    Color(0xFF7C3AED),
-    Color(0xFFDC2626),
-    Color(0xFF059669),
-    Color(0xFFD97706),
-    Color(0xFF0891B2),
-    Color(0xFFDB2777),
-    Color(0xFF4F46E5),
-  ];
-  final hash = id.codeUnits.fold(0, (a, b) => a + b);
-  return palette[hash % palette.length];
 }

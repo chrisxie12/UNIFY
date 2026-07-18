@@ -9,7 +9,7 @@ import '../providers/feed_provider.dart';
 import '../providers/announcement_social_provider.dart';
 import '../../domain/entities/announcement.dart';
 import '../widgets/comment_sheet.dart';
-import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
@@ -25,6 +25,7 @@ class FeedScreen extends ConsumerStatefulWidget {
 
 class _FeedScreenState extends ConsumerState<FeedScreen> {
   final _scrollCtrl = ScrollController();
+  final Map<String, int> _postImageIndices = {};
 
   @override
   void initState() {
@@ -54,40 +55,41 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final storyGroupsAsync = ref.watch(storyGroupsProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.white,
       body: RefreshIndicator(
         onRefresh: () async {
           await ref.read(feedProvider.notifier).refresh();
           await ref.read(storyGroupsProvider.notifier).refresh();
         },
-        color: Theme.of(context).colorScheme.primary,
+        color: const Color(0xFF2563EB),
         strokeWidth: 2.5,
         displacement: 80,
         edgeOffset: 0,
         child: CustomScrollView(
           controller: _scrollCtrl,
           slivers: [
-            // ── Top bar ─────────────────────────────
+            // ── Instagram-style top bar ────────────────────────────
             SliverToBoxAdapter(
-              child: Padding(
+              child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.add_box_outlined, size: 28),
+                      icon: const Icon(Icons.add_box_outlined,
+                          size: 28, color: Colors.black),
                       onPressed: () => context.push('/stories/create'),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
                     const Spacer(),
-                    Text(
+                    const Text(
                       'UNIFY',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w900,
                         fontStyle: FontStyle.italic,
+                        color: Colors.black,
                         letterSpacing: -0.5,
-                        color: context.textPrimary,
                       ),
                     ),
                     const Spacer(),
@@ -96,7 +98,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                         _NotifBadgeIcon(),
                         const SizedBox(width: 16),
                         IconButton(
-                          icon: const Icon(Icons.send_outlined, size: 28),
+                          icon: const Icon(Icons.send_outlined,
+                              size: 28, color: Colors.black),
                           onPressed: () => context.go('/app/messaging'),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -110,7 +113,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
             const SliverToBoxAdapter(child: SystemAnnouncementBanner()),
 
-            // ── Stories row ──────────────────────────
+            // ── Stories row ────────────────────────────────────────
             SliverToBoxAdapter(
               child: _StoriesRow(
                 avatarUrl: avatarUrl,
@@ -120,10 +123,13 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             ),
 
             SliverToBoxAdapter(
-              child: Container(height: 0.5, color: context.borderSubtle),
+              child: Container(
+                height: 0.5,
+                color: const Color(0xFFE5E7EB),
+              ),
             ),
 
-            // ── Feed content ─────────────────────────
+            // ── Feed content ───────────────────────────────────────
             feedAsync.when(
               loading: () => SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -155,7 +161,23 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final post = feedState.items[index];
-                          return _FeedPostCard(post: post);
+                          final images = post.imageUrl != null
+                              ? [post.imageUrl!]
+                              : <String>[];
+                          final hasMore = images.length > 1;
+                          final currentIdx =
+                              _postImageIndices[post.id] ?? 0;
+
+                          return _buildPostCard(
+                            post: post,
+                            images: images,
+                            hasMore: hasMore,
+                            currentImageIndex: currentIdx,
+                            onPageChanged: hasMore
+                                ? (i) => setState(
+                                    () => _postImageIndices[post.id] = i)
+                                : null,
+                          );
                         },
                         childCount: feedState.items.length,
                       ),
@@ -183,30 +205,31 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                                 width: 56,
                                 height: 56,
                                 decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
                                   gradient: LinearGradient(
                                     colors: [
-                                      context.primary.withValues(alpha: 0.15),
-                                      context.primary.withValues(alpha: 0.05),
+                                      const Color(0xFF2563EB).withValues(alpha: 0.15),
+                                      const Color(0xFF2563EB).withValues(alpha: 0.05),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
-                                  shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.check_circle_outline_rounded,
-                                    size: 28, color: context.primary),
+                                child: const Icon(
+                                    Icons.check_circle_outline_rounded,
+                                    size: 28, color: Color(0xFF2563EB)),
                               ),
                               const SizedBox(height: 14),
-                              Text("You're all caught up",
+                              const Text("You're all caught up",
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
-                                      color: context.textPrimary)),
+                                      color: Colors.black)),
                               const SizedBox(height: 4),
                               Text('Pull down to refresh',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: context.textSecondary)),
+                                      color: Colors.grey[500])),
                             ],
                           ),
                         ),
@@ -222,21 +245,19 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       ),
     );
   }
-}
 
-// ── Post card ─────────────────────────────────────────────────────────────────
-
-class _FeedPostCard extends ConsumerWidget {
-  final Announcement post;
-
-  const _FeedPostCard({required this.post});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  // ── Post card ───────────────────────────────────────────────────────────
+  Widget _buildPostCard({
+    required Announcement post,
+    required List<String> images,
+    required bool hasMore,
+    required int currentImageIndex,
+    required ValueChanged<int>? onPageChanged,
+  }) {
     final likeState = ref.watch(
-      announcementLikeProvider((id: post.id, initialCount: post.likesCount)),
+      announcementLikeProvider(
+          (id: post.id, initialCount: post.likesCount)),
     );
-    final hasImage = post.imageUrl != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,16 +287,16 @@ class _FeedPostCard extends ConsumerWidget {
                       children: [
                         Text(
                           post.authorName ?? 'Campus Admin',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
-                            color: context.textPrimary,
+                            color: Colors.black,
                           ),
                         ),
                         if (post.authorIsVerifiedLeader) ...[
                           const SizedBox(width: 4),
                           Icon(Icons.verified,
-                              size: 13, color: context.primary),
+                              size: 13, color: Colors.blue[400]),
                         ],
                       ],
                     ),
@@ -283,30 +304,72 @@ class _FeedPostCard extends ConsumerWidget {
                       Text(
                         post.authorLeadershipRole!,
                         style: TextStyle(
-                            fontSize: 11, color: context.textSecondary),
+                            fontSize: 11, color: Colors.grey[600]),
                       ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.more_horiz,
-                size: 20,
-                color: context.textSecondary,
+              IconButton(
+                icon: const Icon(Icons.more_horiz,
+                    size: 20, color: Colors.black),
+                onPressed: () {},
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
             ],
           ),
         ),
 
-        // Image
-        if (hasImage)
+        // Image(s) with PageView
+        if (images.isNotEmpty)
           SizedBox(
             height: 375,
-            child: CachedNetworkImage(
-              imageUrl: post.imageUrl!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              errorWidget: (_, __, ___) => const SizedBox.shrink(),
-            ),
+            child: images.length == 1
+                ? CachedNetworkImage(
+                    imageUrl: images[0],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                  )
+                : Stack(
+                    children: [
+                      PageView.builder(
+                        itemCount: images.length,
+                        onPageChanged: onPageChanged,
+                        itemBuilder: (context, i) => CachedNetworkImage(
+                          imageUrl: images[i],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                        ),
+                      ),
+                      if (hasMore)
+                        Positioned(
+                          bottom: 16,
+                          left: 0,
+                          right: 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              images.length,
+                              (i) => AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: currentImageIndex == i ? 8 : 6,
+                                height: currentImageIndex == i ? 8 : 6,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: currentImageIndex == i
+                                      ? const Color(0xFF2563EB)
+                                      : Colors.white.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
           ),
 
         // Action buttons
@@ -334,15 +397,15 @@ class _FeedPostCard extends ConsumerWidget {
                     size: 28,
                     color: likeState.isLiked
                         ? Colors.red
-                        : context.textPrimary,
+                        : Colors.black,
                   ),
                 ),
               ),
               const SizedBox(width: 16),
               GestureDetector(
                 onTap: () => CommentSheet.show(context, post.id),
-                child: Icon(Icons.chat_bubble_outline,
-                    size: 26, color: context.textPrimary),
+                child: const Icon(Icons.chat_bubble_outline,
+                    size: 26, color: Colors.black),
               ),
               const SizedBox(width: 16),
               GestureDetector(
@@ -353,12 +416,12 @@ class _FeedPostCard extends ConsumerWidget {
                       .read(announcementSocialRepoProvider)
                       .recordShare(post.id);
                 },
-                child: Icon(Icons.send_outlined,
-                    size: 26, color: context.textPrimary),
+                child: const Icon(Icons.send_outlined,
+                    size: 26, color: Colors.black),
               ),
               const Spacer(),
-              Icon(Icons.bookmark_border,
-                  size: 26, color: context.textPrimary),
+              const Icon(Icons.bookmark_border,
+                  size: 26, color: Colors.black),
             ],
           ),
         ),
@@ -369,10 +432,10 @@ class _FeedPostCard extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               '${_fmtNum(likeState.count)} likes',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: context.textPrimary,
+                color: Colors.black,
               ),
             ),
           ),
@@ -384,8 +447,8 @@ class _FeedPostCard extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: RichText(
             text: TextSpan(
-              style: TextStyle(
-                color: context.textPrimary,
+              style: const TextStyle(
+                color: Colors.black,
                 fontSize: 13,
                 height: 1.4,
               ),
@@ -409,7 +472,7 @@ class _FeedPostCard extends ConsumerWidget {
               child: Text(
                 'View all ${_fmtNum(post.commentsCount)} ${post.commentsCount == 1 ? 'comment' : 'comments'}',
                 style: TextStyle(
-                  color: context.textSecondary,
+                  color: Colors.grey[600],
                   fontSize: 13,
                 ),
               ),
@@ -424,7 +487,7 @@ class _FeedPostCard extends ConsumerWidget {
           child: Text(
             _timeAgo(post.createdAt),
             style: TextStyle(
-              color: context.textDisabled,
+              color: Colors.grey[500],
               fontSize: 10,
               fontWeight: FontWeight.w400,
             ),
@@ -452,7 +515,7 @@ class _FeedPostCard extends ConsumerWidget {
   }
 }
 
-// ── Notification badge icon ───────────────────────────────────────────────────
+// ── Notification badge icon ────────────────────────────────────────────────
 
 class _NotifBadgeIcon extends ConsumerWidget {
   @override
@@ -461,7 +524,8 @@ class _NotifBadgeIcon extends ConsumerWidget {
     return Stack(
       children: [
         IconButton(
-          icon: Icon(Icons.favorite_border, size: 28, color: context.textPrimary),
+          icon: const Icon(Icons.favorite_border,
+              size: 28, color: Colors.black),
           onPressed: () => context.push('/notifications'),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
@@ -484,7 +548,7 @@ class _NotifBadgeIcon extends ConsumerWidget {
   }
 }
 
-// ── Stories row ───────────────────────────────────────────────────────────────
+// ── Stories row ────────────────────────────────────────────────────────────
 
 class _StoriesRow extends ConsumerWidget {
   final String? avatarUrl;
@@ -537,7 +601,7 @@ class _StoriesRow extends ConsumerWidget {
           return _buildStoryItem(
             name: g.authorName ?? 'User',
             initial: g.initials ?? 'U',
-            color: context.primary,
+            color: const Color(0xFF2563EB),
             viewed: !g.hasUnseen,
             onTap: () {
               final allGroups = myGroup != null
@@ -716,12 +780,13 @@ class _StoryAvatar extends StatelessWidget {
   }
 }
 
-// ── Shimmer loading card ──────────────────────────────────────────────────────
+// ── Shimmer loading card ───────────────────────────────────────────────────
 
 class _ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final shimmer = context.isDark
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmer = isDark
         ? Colors.white.withValues(alpha: 0.05)
         : Colors.grey.withValues(alpha: 0.08);
 
