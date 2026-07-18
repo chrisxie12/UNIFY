@@ -79,50 +79,31 @@ class _SplashScreenState extends State<SplashScreen>
     final loadAnim = _stage(0.6, 1.0);
 
     return Scaffold(
-      backgroundColor: UnifyColors.surfaceWhite,
+      backgroundColor: UnifyColors.primaryBlue,
       body: Stack(
-        // overflow-hidden: clip the off-screen ring
         clipBehavior: Clip.hardEdge,
         children: [
-          // ── Top gradient wash (blue-50 → transparent over top half) ──
-          Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              height: size.height * 0.5,
-              width: double.infinity,
-              child: const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0x80EFF6FF), Color(0x00EFF6FF)],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // ── Subtle geometric ring accent ──
+          // ── Subtle pulse ring ──
           AnimatedBuilder(
             animation: _pulseCtrl,
             builder: (_, child) {
               final v = _pulseCtrl.value;
               return Positioned(
-                top: size.height * 0.10,
-                right: -80,
+                top: size.height * 0.08,
+                right: -60,
                 child: Opacity(
-                  opacity: 0.4 + 0.4 * v,
-                  child: Transform.scale(scale: 1.0 + 0.05 * v, child: child),
+                  opacity: 0.15 + 0.1 * v,
+                  child: Transform.scale(scale: 1.0 + 0.04 * v, child: child),
                 ),
               );
             },
             child: Container(
-              width: 400,
-              height: 400,
+              width: 350,
+              height: 350,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: UnifyColors.divider.withValues(alpha: 0.5),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -137,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Hero logo — float + fade in
+                    // Hero logo — white circle on brand blue
                     Opacity(
                       opacity: logoAnim.value,
                       child: Transform.translate(
@@ -145,26 +126,25 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Transform.scale(
                           scale: 0.9 + 0.1 * logoAnim.value,
                           child: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: UnifyColors.primaryBlue,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: UnifyColors.primaryBlue
-                                        .withValues(alpha: 0.15),
-                                    blurRadius: 24,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                              ),
-                              child: const UnifyLogo(size: 80),
+                            width: 90,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
                             ),
+                            child: const UnifyLogo(size: 90),
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
 
                     // Brand title
                     Opacity(
@@ -175,15 +155,16 @@ class _SplashScreenState extends State<SplashScreen>
                           'UNIFY',
                           style: GoogleFonts.spaceGrotesk(
                             fontSize: 40,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -1.5,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 4,
                             height: 1,
-                            color: UnifyColors.primaryBlue,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
 
                     // Tagline
                     Opacity(
@@ -193,23 +174,36 @@ class _SplashScreenState extends State<SplashScreen>
                         style: GoogleFonts.spaceGrotesk(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          letterSpacing: -0.2,
-                          color: UnifyColors.textSecondary,
+                          letterSpacing: 2,
+                          color: Colors.white.withValues(alpha: 0.7),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 64),
+                    const SizedBox(height: 80),
 
-                    // Loading hint
+                    // Loading indicator
                     Opacity(
                       opacity: loadAnim.value,
-                      child: Text(
-                        'Loading experience...',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: UnifyColors.textSecondary.withValues(alpha: 0.4),
-                        ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Colors.white.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Loading experience...',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withValues(alpha: 0.4),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
