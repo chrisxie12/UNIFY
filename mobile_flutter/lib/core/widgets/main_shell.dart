@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,9 +21,18 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell> {
   bool _visible = true;
 
+  void _onNavTap(int index) {
+    HapticFeedback.selectionClick();
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final navigationShell = widget.navigationShell;
+    final currentIndex = navigationShell.currentIndex;
     final msgBadge = ref.watch(msg.unreadCountProvider).valueOrNull ?? 0;
 
     ref.listen<bool>(adminAccessDeniedProvider, (_, denied) {
@@ -85,116 +93,222 @@ class _MainShellState extends ConsumerState<MainShell> {
         duration: const Duration(milliseconds: 200),
         offset: _visible ? Offset.zero : const Offset(0, 1),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             border: Border(
-              top: BorderSide(color: context.borderCol, width: 0.5),
+              top: BorderSide(color: Color(0xFFE5E7EB), width: 0.5),
+            ),
+            color: Colors.white,
+          ),
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _NavItem(
+                    icon: currentIndex == 0
+                        ? Icons.home_filled
+                        : Icons.home_outlined,
+                    label: 'Feed',
+                    isActive: currentIndex == 0,
+                    onTap: () => _onNavTap(0),
+                  ),
+                  _NavItem(
+                    icon: currentIndex == 1
+                        ? Icons.hub
+                        : Icons.hub_outlined,
+                    label: 'Hubs',
+                    isActive: currentIndex == 1,
+                    onTap: () => _onNavTap(1),
+                  ),
+                  _NavItemWithBadge(
+                    icon: currentIndex == 2
+                        ? Icons.send
+                        : Icons.send_outlined,
+                    label: 'Messages',
+                    isActive: currentIndex == 2,
+                    badgeCount: msgBadge,
+                    onTap: () => _onNavTap(2),
+                  ),
+                  _NavItem(
+                    icon: currentIndex == 3
+                        ? Icons.calendar_today
+                        : Icons.calendar_today_outlined,
+                    label: 'Events',
+                    isActive: currentIndex == 3,
+                    onTap: () => _onNavTap(3),
+                  ),
+                  _NavItem(
+                    icon: currentIndex == 4
+                        ? Icons.menu_book
+                        : Icons.menu_book_outlined,
+                    label: 'Study',
+                    isActive: currentIndex == 4,
+                    onTap: () => _onNavTap(4),
+                  ),
+                  _ProfileNavItem(
+                    isActive: currentIndex == 5,
+                    onTap: () => _onNavTap(5),
+                  ),
+                ],
+              ),
             ),
           ),
-          child: NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
-            onDestinationSelected: (index) {
-              HapticFeedback.selectionClick();
-              navigationShell.goBranch(
-                index,
-                initialLocation: index == navigationShell.currentIndex,
-              );
-            },
-            height: 64,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            backgroundColor: context.surfaceCard,
-            indicatorColor: context.primary.withValues(alpha: 0.12),
-            surfaceTintColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            destinations: [
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.house,
-                badge: 0,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.house_fill,
-                badge: 0,
-              ),
-              label: 'Feed',
-            ),
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.square_grid_2x2,
-                badge: 0,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.square_grid_2x2_fill,
-                badge: 0,
-              ),
-              label: 'Hubs',
-            ),
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.chat_bubble,
-                badge: msgBadge,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.chat_bubble_fill,
-                badge: msgBadge,
-              ),
-              label: 'Messages',
-            ),
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.calendar,
-                badge: 0,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.calendar,
-                badge: 0,
-              ),
-              label: 'Events',
-            ),
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.book,
-                badge: 0,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.book_fill,
-                badge: 0,
-              ),
-              label: 'Study',
-            ),
-            NavigationDestination(
-              icon: _BadgeIcon(
-                icon: CupertinoIcons.person,
-                badge: 0,
-              ),
-              selectedIcon: _BadgeIcon(
-                icon: CupertinoIcons.person_fill,
-                badge: 0,
-              ),
-              label: 'Profile',
-            ),
-          ],
         ),
-      ),
       ),
     );
   }
 }
 
-class _BadgeIcon extends StatelessWidget {
+class _NavItem extends StatelessWidget {
   final IconData icon;
-  final int badge;
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
 
-  const _BadgeIcon({required this.icon, required this.badge});
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (badge <= 0) return Icon(icon);
-    return Badge(
-      isLabelVisible: badge > 0,
-      label: Text(badge > 9 ? '9+' : '$badge'),
-      child: Icon(icon),
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 22,
+            color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
+class _NavItemWithBadge extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+  final int badgeCount;
+  final VoidCallback onTap;
 
+  const _NavItemWithBadge({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+    required this.badgeCount,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Icon(
+                icon,
+                size: 22,
+                color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+              ),
+              if (badgeCount > 0)
+                Positioned(
+                  right: -4,
+                  top: -2,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileNavItem extends StatelessWidget {
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _ProfileNavItem({
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 26,
+            height: 26,
+            decoration: BoxDecoration(
+              color: const Color(0xFF2563EB),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isActive ? Colors.red : Colors.transparent,
+                width: 2,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'U',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Profile',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
