@@ -70,7 +70,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             children: [
               Text(
                 "Enter your email and we'll send a password reset link.",
-                style: GoogleFonts.spaceGrotesk(color: ctx.textSecondary),
+                style: GoogleFonts.spaceGrotesk(color: UnifyColors.textSecondary),
               ),
               const SizedBox(height: 16),
               TextField(
