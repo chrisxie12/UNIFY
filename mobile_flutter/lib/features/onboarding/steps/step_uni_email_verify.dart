@@ -1,5 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../onboarding_screen.dart';
 
 class StepUniEmailVerify extends StatefulWidget {
@@ -22,7 +22,8 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
   final _emailCtrl = TextEditingController();
   final _otpCtrl = TextEditingController();
   bool _codeSent = false;
-  String? _sentCode;
+  bool _sending = false;
+  bool _verifying = false;
   String? _error;
 
   final _validDomains = [
@@ -51,25 +52,50 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
     return null;
   }
 
-  void _sendCode() {
-    final err = _validateEmail(_emailCtrl.text.trim());
+  Future<void> _sendCode() async {
+    final email = _emailCtrl.text.trim();
+    final err = _validateEmail(email);
     if (err != null) {
       setState(() => _error = err);
       return;
     }
-    widget.data.uniEmail = _emailCtrl.text.trim();
-    _sentCode = (100000 + Random().nextInt(900000)).toString();
-    debugPrint('[OTP] Sent code $_sentCode to ${_emailCtrl.text.trim()}');
-    setState(() { _codeSent = true; _error = null; });
+
+    setState(() { _sending = true; _error = null; });
+
+    try {
+      final res = await Supabase.instance.client.functions.invoke(
+        'send-verification-code',
+        body: {'email': email},
+      );
+      if (res.status != 200) {
+        throw (res.data?['error'] ?? 'Failed to send code');
+      }
+      widget.data.uniEmail = email;
+      setState(() => _codeSent = true);
+    } catch (e) {
+      setState(() => _error = 'Could not send code. Please try again.');
+    } finally {
+      setState(() => _sending = false);
+    }
   }
 
-  void _verifyCode() {
-    if (_otpCtrl.text.trim() == _sentCode) {
+  Future<void> _verifyCode() async {
+    setState(() { _verifying = true; _error = null; });
+
+    try {
+      final res = await Supabase.instance.client.functions.invoke(
+        'verify-code',
+        body: {'code': _otpCtrl.text.trim()},
+      );
+      if (res.status != 200) {
+        throw (res.data?['error'] ?? 'Invalid code');
+      }
       widget.data.uniEmailVerified = true;
       widget.onChanged?.call();
-      setState(() => _error = null);
-    } else {
-      setState(() => _error = 'Invalid code. Please try again.');
+    } catch (e) {
+      setState(() => _error = 'Invalid or expired code. Please try again.');
+    } finally {
+      setState(() => _verifying = false);
     }
   }
 
@@ -185,7 +211,7 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: _sendCode,
+                onPressed: _sending ? null : _sendCode,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primary,
                   foregroundColor: Colors.white,
@@ -199,7 +225,16 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                child: const Text('Send Verification Code'),
+                child: _sending
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Send Verification Code'),
               ),
             ),
           ] else ...[
@@ -278,7 +313,7 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: _verifyCode,
+                onPressed: _verifying ? null : _verifyCode,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primary,
                   foregroundColor: Colors.white,
@@ -292,7 +327,16 @@ class _StepUniEmailVerifyState extends State<StepUniEmailVerify> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                child: const Text('Verify & Continue'),
+                child: _verifying
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Verify & Continue'),
               ),
             ),
           ],

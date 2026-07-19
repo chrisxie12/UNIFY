@@ -161,8 +161,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
           loc == '/welcome' ||
-          loc.startsWith('/auth') ||
-          loc.startsWith('/onboarding');
+          loc.startsWith('/auth');
+          // Onboarding now requires a session for Edge Function calls.
 
       if (!loggedIn && !isAuthPage) return '/get-started';
       if (loggedIn && isAuthPage && loc != '/onboarding') {
