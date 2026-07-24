@@ -50,6 +50,7 @@ dependencies:
   file_picker: ^8.1.6
 
   cupertino_icons: ^1.0.8
+  iconsax_flutter: ^1.0.1
 
   path_provider: any
 dev_dependencies:

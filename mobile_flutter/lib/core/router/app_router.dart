@@ -12,7 +12,7 @@ import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
-import '../../features/communities/presentation/screens/communities_screen.dart';
+import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
@@ -53,7 +53,6 @@ import '../../features/posts/presentation/screens/create_post_screen.dart';
 import '../../features/posts/presentation/screens/post_detail_screen.dart';
 import '../../features/polls/presentation/screens/create_poll_screen.dart';
 import '../../features/events/presentation/screens/event_detail_screen.dart';
-import '../../features/events/presentation/screens/events_screen.dart';
 import '../../features/events/presentation/screens/create_event_screen.dart';
 import '../../features/events/presentation/screens/my_tickets_screen.dart';
 import '../../features/events/presentation/screens/ticket_screen.dart';
@@ -66,7 +65,6 @@ import '../../features/events/presentation/screens/student_event_profile_screen.
 import '../../features/events/presentation/screens/event_search_screen.dart';
 import '../../features/resources/presentation/screens/resource_upload_screen.dart';
 import '../../features/admin/presentation/screens/admin_notification_center_screen.dart';
-import '../../features/academic/presentation/screens/academic_hub_screen.dart';
 import '../../features/academic/presentation/screens/course_list_screen.dart';
 import '../../features/academic/presentation/screens/course_page_screen.dart';
 import '../../features/academic/presentation/screens/notes_repository_screen.dart';
@@ -381,18 +379,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-              path: '/app/communities',
-              builder: (_, __) => const CommunitiesScreen(),
+              path: '/app/explore',
+              builder: (_, __) => const ExploreScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/app/academic', builder: (_, __) => const AcademicHubScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
