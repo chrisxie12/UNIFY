@@ -1,0 +1,65 @@
+workflows:
+  android-release:
+    name: UNIFY Android Release
+    instance_type: ubuntu
+    max_build_duration: 60
+    working_directory: mobile_flutter
+
+    environment:
+      flutter: stable
+      vars:
+        APP_ID: com.gctu.unify
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+      cancel_previous_builds: true
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Run flutter analyze
+        script: flutter analyze
+
+      - name: Run flutter test
+        script: |
+          if [ -d "test" ] && [ "$(ls -A test 2>/dev/null)" ]; then
+            flutter test
+          else
+            echo "No tests found — skipping test step"
+          fi
+
+      - name: Build Android APK
+        script: |
+          flutter build apk --release \
+            --build-name=1.0.0 \
+            --build-number=$(($(git rev-list --count HEAD)))
+
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+
+    publishing:
+      email:
+        recipients:
+          - chrisxie12@example.com
+        notify:
+          success: true
+          failure: true
+
+      github_releases:
+        release_name: UNIFY v1.0.0
+        tag: v1.0.0
+        description: |
+          UNIFY — build $(date +%Y%m%d-%H%M)
+          Commit: $CM_COMMIT
+        artifacts: true
+        draft: true

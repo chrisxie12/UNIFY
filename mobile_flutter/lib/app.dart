@@ -6,6 +6,7 @@ import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'core/providers/supabase_provider.dart';
+import 'core/services/analytics_service.dart';
 import 'features/system/presentation/widgets/update_gate.dart';
 import 'features/notifications/presentation/providers/push_notification_provider.dart';
 import 'features/notifications/domain/services/push_notification_service.dart';
@@ -26,7 +27,12 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _startAuthListener());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAuthListener();
+      try {
+        ref.read(analyticsServiceProvider).log('app_launched', feature: 'app');
+      } catch (_) {}
+    });
   }
 
   void _startAuthListener() {
@@ -39,8 +45,6 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
           pushService.init(userId, onTap: (data) {
             final route = PushNotificationService.routeFromData(data);
             if (route != null) {
-              // Set the pending route — build() listener navigates safely
-              // from within the widget tree, avoiding Navigator key conflicts.
               ref.read(pendingPushRouteProvider.notifier).state = route;
             }
           });
@@ -62,9 +66,13 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      final session = Supabase.instance.client.auth.currentSession;
-      if (session != null) {
-        Supabase.instance.client.auth.refreshSession();
+      try {
+        final session = Supabase.instance.client.auth.currentSession;
+        if (session != null) {
+          Supabase.instance.client.auth.refreshSession();
+        }
+      } catch (_) {
+        // Supabase not initialized — nothing to refresh.
       }
     }
   }
@@ -75,8 +83,6 @@ class _UnifyAppState extends ConsumerState<UnifyApp>
     final theme = ref.watch(themeNotifierProvider);
     final mode = ref.watch(themeModeProvider);
 
-    // Navigate when a push notification tap sets a pending route.
-    // Running from build() ensures we're always inside the widget tree.
     ref.listen(pendingPushRouteProvider, (_, route) {
       if (route != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

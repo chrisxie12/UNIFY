@@ -43,7 +43,8 @@ class PollRepositoryImpl implements PollRepository {
       final voteResponse = await _client
           .from('poll_votes')
           .select('poll_id, option_id')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final voteMap = voteResponse
           .cast<Map<String, dynamic>>()
           .fold<Map<String, String>>({}, (map, v) {

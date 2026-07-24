@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
 import '../../../../features/auth/presentation/providers/auth_provider.dart';
 import '../../../../features/leadership/presentation/providers/leadership_provider.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
@@ -29,7 +31,7 @@ class CommunitiesScreen extends ConsumerWidget {
         ],
       ),
       body: communitiesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 3),
         error: (e, _) => AppErrorWidget(e),
         data: (communities) {
           final isVerified = isVerifiedAsync.valueOrNull ?? false;
@@ -68,19 +70,10 @@ class CommunitiesScreen extends ConsumerWidget {
           }
 
           if (communities.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.groups, size: 64, color: context.textSecondary),
-                  const SizedBox(height: USpacing.md),
-                  Text('No communities yet', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: context.textSecondary)),
-                  const SizedBox(height: USpacing.xs),
-                  Text('Join or create a community', style: UText.bodyS.copyWith(color: context.textSecondary)),
-                  const SizedBox(height: USpacing.xl),
-                  requestButton(),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.groups_rounded,
+              title: 'No communities yet',
+              subtitle: 'Join or create a community',
             );
           }
 

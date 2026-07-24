@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -524,7 +526,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         body: Stack(
           children: [
             profileAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.card(),
               error: (e, _) => AppErrorWidget(e),
               data: (_) => _buildForm(currentAvatarUrl, currentCoverUrl, initials),
             ),
@@ -823,8 +825,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
             clipBehavior: Clip.antiAlias,
             child: coverUrl != null && coverUrl.isNotEmpty
-                ? Image.network(coverUrl, fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const SizedBox())
+                ? CachedNetworkImage(imageUrl: coverUrl, fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) => const SizedBox())
                 : null,
           ),
           Positioned.fill(
@@ -873,10 +875,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               ),
               child: ClipOval(
                 child: avatarUrl != null && avatarUrl.isNotEmpty
-                    ? Image.network(
-                        avatarUrl,
+                    ? CachedNetworkImage(
+                        imageUrl: avatarUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _AvatarInitials(initials: initials),
+                        errorWidget: (_, __, ___) => _AvatarInitials(initials: initials),
                       )
                     : _AvatarInitials(initials: initials),
               ),

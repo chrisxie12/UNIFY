@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/post_model.dart';
 import '../../data/models/post_comment_model.dart';
 import '../providers/post_provider.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
@@ -50,7 +53,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
               } else if (value == 'delete') {
                 final repo = ref.read(postRepositoryProvider);
                 await repo.deletePost(widget.postId);
-                if (mounted) context.pop();
+                if (context.mounted) context.pop();
               }
             },
             itemBuilder: (context) => [
@@ -61,7 +64,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         ],
       ),
       body: postAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (e, _) => AppErrorWidget(e),
         data: (post) => Column(
           children: [
@@ -113,27 +116,19 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   commentsAsync.when(
                     loading: () => const Padding(
                       padding: EdgeInsets.all(32),
-                      child: Center(child: CircularProgressIndicator()),
+                      child: AppLoadingWidget.list(itemCount: 3),
                     ),
                     error: (e, _) => const Padding(
                       padding: EdgeInsets.all(32),
                       child: Center(child: Text('Error loading comments')),
                     ),
                     data: (comments) {
-                      if (comments.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(32),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Icon(Icons.chat_bubble_outline, size: 40, color: context.textSecondary),
-                                const SizedBox(height: 8),
-                                Text('No comments yet', style: TextStyle(color: context.textSecondary)),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
+                        if (comments.isEmpty) {
+                          return const AppEmptyWidget(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            title: 'No comments yet',
+                          );
+                        }
                       return Column(
                         children: comments.map((comment) => _CommentTile(
                           comment: comment,
@@ -388,23 +383,20 @@ class _PostContent extends ConsumerWidget {
             const SizedBox(height: 16),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                post.mediaUrl!,
+              child: CachedNetworkImage(
+                imageUrl: post.mediaUrl!,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorWidget: (_, __, ___) => Container(
                   height: 200,
                   color: context.textSecondary,
                   child: Center(child: Icon(Icons.broken_image, color: context.textSecondary)),
                 ),
-                loadingBuilder: (_, child, progress) {
-                  if (progress == null) return child;
-                  return Container(
-                    height: 200,
-                    color: context.textSecondary,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                },
+                placeholder: (_, __) => Container(
+                  height: 200,
+                  color: context.textSecondary,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
               ),
             ),
           ],

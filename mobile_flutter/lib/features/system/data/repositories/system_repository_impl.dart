@@ -19,7 +19,8 @@ class SystemRepositoryImpl {
         .from('system_announcements')
         .select('*')
         .eq('is_active', true)
-        .order('starts_at', ascending: false) as List;
+        .order('starts_at', ascending: false)
+        .limit(50) as List;
 
     final now = DateTime.now();
     return response
@@ -36,7 +37,8 @@ class SystemRepositoryImpl {
     final response = await _client
         .from('announcement_dismissals')
         .select('announcement_id')
-        .eq('user_id', userId) as List;
+        .eq('user_id', userId)
+        .limit(500) as List;
 
     return response
         .map((row) => (row as Map<String, dynamic>)['announcement_id'] as String)

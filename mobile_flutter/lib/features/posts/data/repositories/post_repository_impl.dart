@@ -41,7 +41,8 @@ class PostRepositoryImpl implements PostRepository {
       final votesResponse = await _client
           .from('post_votes')
           .select('post_id, vote_type')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final voteMap = votesResponse
           .cast<Map<String, dynamic>>()
           .fold<Map<String, String>>({}, (map, v) {
@@ -52,7 +53,8 @@ class PostRepositoryImpl implements PostRepository {
       final bookmarksResponse = await _client
           .from('post_bookmarks')
           .select('post_id')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final bookmarkedIds = bookmarksResponse
           .cast<Map<String, dynamic>>()
           .map((b) => b['post_id'] as String)
@@ -259,7 +261,8 @@ class PostRepositoryImpl implements PostRepository {
       final likeResponse = await _client
           .from('comment_likes')
           .select('comment_id')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final likedIds = likeResponse.cast<Map<String, dynamic>>().map((l) => l['comment_id'] as String).toSet();
 
       void applyLikes(List<PostCommentModel> comments) {

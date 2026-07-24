@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,9 @@ class PushNotificationService {
   final SupabaseClient _supabase;
   bool _initialized = false;
   String? _currentToken;
+  StreamSubscription<RemoteMessage>? _onMessageSub;
+  StreamSubscription<RemoteMessage>? _onMessageOpenedSub;
+  StreamSubscription<String>? _onTokenRefreshSub;
 
   PushNotificationService(this._supabase);
 
@@ -23,6 +27,10 @@ class PushNotificationService {
     String userId, {
     void Function(Map<String, dynamic> data)? onTap,
   }) async {
+    if (kIsWeb) {
+      debugPrint('[PushNotificationService] Not available on web');
+      return;
+    }
     try {
       await _configure(userId, onTap: onTap);
       _initialized = true;
@@ -63,17 +71,17 @@ class PushNotificationService {
       await _saveToken(userId, token);
     }
 
-    messaging.onTokenRefresh.listen((newToken) {
+    _onTokenRefreshSub = messaging.onTokenRefresh.listen((newToken) {
       _currentToken = newToken;
       _saveToken(userId, newToken);
     });
 
-    FirebaseMessaging.onMessage.listen((message) {
+    _onMessageSub = FirebaseMessaging.onMessage.listen((message) {
       debugPrint('[PushNotificationService] Foreground: ${message.notification?.title}');
     });
 
     // App in background — user tapped the notification.
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    _onMessageOpenedSub = FirebaseMessaging.onMessageOpenedApp.listen((message) {
       onTap?.call(message.data);
     });
 
@@ -91,7 +99,7 @@ class PushNotificationService {
       await _supabase.from('device_tokens').upsert({
         'user_id': userId,
         'token': token,
-        'platform': Platform.isIOS ? 'ios' : 'android',
+        'platform': kIsWeb ? 'web' : (Platform.isIOS ? 'ios' : 'android'),
         'is_active': true,
       }, onConflict: 'token');
       debugPrint('[PushNotificationService] Token saved');
@@ -101,8 +109,13 @@ class PushNotificationService {
   }
 
   Future<void> dispose() async {
-    // Deactivate only the current device's token, not all tokens for the user.
-    // This way logging out of one device doesn't silence other devices.
+    await _onTokenRefreshSub?.cancel();
+    await _onMessageSub?.cancel();
+    await _onMessageOpenedSub?.cancel();
+    _onTokenRefreshSub = null;
+    _onMessageSub = null;
+    _onMessageOpenedSub = null;
+    if (kIsWeb) return;
     if (_currentToken != null) {
       try {
         await _supabase
@@ -123,7 +136,7 @@ class PushNotificationService {
     switch (type) {
       case 'new_message':
         final convId = data['conversation_id'];
-        return convId != null ? '/messages/chat/$convId' : '/messages';
+        return convId != null ? '/messaging/chat/$convId' : '/app/messaging';
       case 'admin_broadcast':
       case 'community_announcement':
       case 'announcement_posted':
@@ -134,34 +147,34 @@ class PushNotificationService {
       case 'event_approved':
       case 'event_rejected':
         final eventId = data['event_id'];
-        return eventId != null ? '/events/$eventId' : '/app/events';
+        return eventId != null ? '/event/$eventId' : '/app/events';
       case 'marketplace_report_resolved':
-        return '/marketplace';
+        return '/app/feed';
       case 'announcement_approved':
         return '/app/feed';
       case 'announcement_rejected':
-        return '/profile';
+        return '/app/profile';
       case 'admin_removed':
-        return '/profile';
+        return '/app/profile';
       case 'community_approval':
       case 'community_approved':
       case 'community_join_request':
       case 'community_changes_requested':
         final communityId = data['community_id'];
-        return communityId != null ? '/app/communities/$communityId' : '/app/communities';
+        return communityId != null ? '/community/$communityId' : '/app/communities';
       case 'community_rejected':
         return '/app/communities';
       case 'marketplace_inquiry':
       case 'marketplace_sale':
-        return '/marketplace';
+        return '/app/feed';
       case 'opportunity_deadline_reminder':
       case 'scholarship_alert':
-        return '/opportunities';
+        return '/app/feed';
       case 'academic_resource_upload':
         return '/academic/resources';
       case 'verification_approved':
       case 'verification_rejected':
-        return '/profile';
+        return '/app/profile';
       case 'role_assigned':
       case 'leadership_approved':
         return '/reputation';
@@ -169,7 +182,7 @@ class PushNotificationService {
         return '/admin';
       case 'leadership_request_submitted':
       case 'leadership_rejected':
-        return '/profile';
+        return '/app/profile';
       default:
         return null;
     }

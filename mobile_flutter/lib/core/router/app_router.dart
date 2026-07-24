@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 import '../widgets/main_shell.dart';
+import '../widgets/not_found_screen.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/domain/entities/app_user.dart';
 import '../guards/admin_guard.dart';
-import '../../features/auth/presentation/screens/splash_screen.dart';
-import '../../features/auth/presentation/screens/get_started_screen.dart';
-import '../../screens/welcome_screen.dart';
+import '../../features/splash/splash_screen.dart';
+import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
-import '../../features/auth/presentation/screens/onboarding_screen.dart';
-import '../../features/auth/presentation/screens/onboarding_flow_screen.dart';
+import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/communities/presentation/screens/communities_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
@@ -98,6 +97,9 @@ import '../../features/ambassadors/presentation/screens/ambassador_profile_scree
 import '../../features/snapshots/presentation/screens/story_viewer_screen.dart';
 import '../../features/snapshots/presentation/screens/story_create_screen.dart';
 import '../../features/snapshots/data/models/snapshot_models.dart';
+import '../../features/settings/presentation/screens/beta_info_screen.dart';
+import '../../features/settings/presentation/screens/privacy_policy_screen.dart';
+import '../../features/settings/presentation/screens/terms_of_service_screen.dart';
 
 // ── Admin path detection ──────────────────────────────────────────────────────
 //
@@ -115,19 +117,23 @@ bool _isAdminPath(String loc) =>
 // Notifies GoRouter on auth state changes AND when the user profile loads.
 class _GoRouterRefreshStream extends ChangeNotifier {
   _GoRouterRefreshStream(Ref ref) {
-    _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
-      notifyListeners();
-    });
+    try {
+      _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+        notifyListeners();
+      });
+    } catch (_) {
+      _authSub = null;
+    }
     ref.listen<AsyncValue<AppUser?>>(currentAppUserProvider, (_, __) {
       notifyListeners();
     });
   }
 
-  late final dynamic _authSub;
+  dynamic _authSub;
 
   @override
   void dispose() {
-    _authSub.cancel();
+    _authSub?.cancel();
     super.dispose();
   }
 }
@@ -139,17 +145,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     refreshListenable: refreshListenable,
+    errorBuilder: (context, state) => NotFoundScreen(
+      message: state.error?.toString(),
+    ),
     redirect: (context, state) {
-      final session = Supabase.instance.client.auth.currentSession;
-      final loggedIn = session != null;
+      bool loggedIn = false;
+      try {
+        loggedIn = Supabase.instance.client.auth.currentSession != null;
+      } catch (_) {
+        // Supabase not initialized — treat as logged-out.
+      }
       final loc = state.matchedLocation;
 
       // ── Auth guard ──────────────────────────────────────────────────────
       final isAuthPage = loc == '/' ||
           loc == '/get-started' ||
           loc == '/welcome' ||
-          loc.startsWith('/auth') ||
-          loc.startsWith('/onboarding');
+          loc.startsWith('/auth');
+          // Onboarding now requires a session for Edge Function calls.
 
       if (!loggedIn && !isAuthPage) return '/get-started';
       if (loggedIn && isAuthPage && loc != '/onboarding') {
@@ -178,7 +191,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
       GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: '/get-started', builder: (_, __) => const GetStartedScreen()),
+      GoRoute(path: '/get-started', builder: (_, __) => const AuthScreen(mode: 'signup')),
       GoRoute(
         path: '/auth',
         builder: (_, state) {
@@ -187,7 +200,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-      GoRoute(path: '/onboarding-flow', builder: (_, __) => const OnboardingFlowScreen()),
       GoRoute(path: '/admin', builder: (_, __) => const MultiUniversityAdminScreen()),
       GoRoute(path: '/admin/legacy', builder: (_, __) => const AdminScreen()),
       GoRoute(path: '/admin/analytics', builder: (_, __) => const AnalyticsDashboardScreen()),
@@ -350,6 +362,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ── Launch — student facing ──────────────────────────────
       GoRoute(path: '/referrals', builder: (_, __) => const MyReferralsScreen()),
       GoRoute(path: '/feedback', builder: (_, __) => const FeedbackScreen()),
+      GoRoute(path: '/beta-info', builder: (_, __) => const BetaInfoScreen()),
+      GoRoute(path: '/privacy', builder: (_, __) => const PrivacyPolicyScreen()),
+      GoRoute(path: '/terms', builder: (_, __) => const TermsOfServiceScreen()),
       GoRoute(path: '/support', builder: (_, __) => const SupportCenterScreen()),
       GoRoute(path: '/ambassador', builder: (_, __) => const AmbassadorProfileScreen()),
       GoRoute(
@@ -382,7 +397,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/app/profile',
-              builder: (_, __) => const ProfileScreen(),
+              builder: (_, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                return ProfileScreen(viewUserId: extra?['viewUserId'] as String?);
+              },
               routes: [
                 GoRoute(
                   path: 'edit',

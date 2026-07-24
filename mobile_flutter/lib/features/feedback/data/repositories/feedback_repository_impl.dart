@@ -56,7 +56,8 @@ class FeedbackRepositoryImpl {
         .from('feedback_items')
         .select(_select)
         .eq('user_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
     return (data as List)
         .map((r) => FeedbackItem.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -65,7 +66,7 @@ class FeedbackRepositoryImpl {
   Future<List<FeedbackItem>> getAll({String? status}) async {
     var q = _client.from('feedback_items').select(_select);
     if (status != null) q = q.eq('status', status);
-    final data = await q.order('created_at', ascending: false);
+    final data = await q.order('created_at', ascending: false).limit(200);
     return (data as List)
         .map((r) => FeedbackItem.fromJson(r as Map<String, dynamic>))
         .toList();

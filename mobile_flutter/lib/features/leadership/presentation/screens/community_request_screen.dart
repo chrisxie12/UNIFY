@@ -90,12 +90,7 @@ class _CommunityRequestScreenState extends ConsumerState<CommunityRequestScreen>
       ref.invalidate(myCommunityRequestsProvider);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Request submitted! An admin will review it shortly.'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        UnifySnackbar.success(context, 'Request submitted! An admin will review it shortly.');
         context.pop();
       }
     } catch (e) {

@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../providers/notification_provider.dart';
 import '../../data/models/notification_model.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -35,7 +37,7 @@ class NotificationsScreen extends ConsumerWidget {
         ],
       ),
       body: notificationsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (e, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -95,14 +97,14 @@ class NotificationsScreen extends ConsumerWidget {
       context.push('/app/feed');
     } else if (type == 'new_message' && data != null) {
       final convId = data['conversation_id'];
-      if (convId != null) context.push('/messages/chat/$convId');
+      if (convId != null) context.push('/messaging/chat/$convId');
     } else if (type == 'community_approval' ||
                type == 'community_approved' ||
                type == 'community_join_request' ||
                type == 'community_changes_requested') {
       final communityId = data?['community_id'];
       if (communityId != null) {
-        context.push('/app/communities/$communityId');
+        context.push('/community/$communityId');
       } else {
         context.push('/app/communities');
       }
@@ -115,52 +117,39 @@ class NotificationsScreen extends ConsumerWidget {
                type == 'event_rejected') {
       final eventId = data?['event_id'];
       if (eventId != null) {
-        context.push('/events/$eventId');
+        context.push('/event/$eventId');
       } else {
         context.push('/app/events');
       }
-    } else if (type == 'marketplace_report_resolved') {
-      context.push('/marketplace');
     } else if (type == 'announcement_approved') {
       context.push('/app/feed');
     } else if (type == 'announcement_rejected') {
-      context.push('/profile');
+      context.push('/app/profile');
     } else if (type == 'admin_removed') {
-      context.push('/profile');
-    } else if (type == 'opportunity_deadline_reminder' || type == 'scholarship_alert') {
-      context.push('/opportunities');
+      context.push('/app/profile');
     } else if (type == 'academic_resource_upload') {
       context.push('/academic/resources');
     } else if (type == 'verification_approved' || type == 'verification_rejected') {
-      context.push('/profile');
+      context.push('/app/profile');
     } else if (type == 'role_assigned') {
       context.push('/reputation');
-    } else if (type == 'marketplace_inquiry' || type == 'marketplace_sale') {
-      context.push('/marketplace');
     } else if (type == 'admin_request') {
       context.push('/admin');
     } else if (type == 'leadership_request_submitted' ||
                type == 'leadership_rejected') {
-      context.push('/profile');
+      context.push('/app/profile');
     } else if (type == 'leadership_approved') {
       context.push('/reputation');
     } else {
-      context.push('/profile');
+      context.push('/app/profile');
     }
   }
 
   Widget _emptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.notifications_none, size: 64, color: context.textDisabled),
-          const SizedBox(height: 12),
-          Text('No notifications yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: context.textPrimary)),
-          const SizedBox(height: 4),
-          Text('We\'ll let you know when something happens', style: TextStyle(fontSize: 13, color: context.textSecondary)),
-        ],
-      ),
+    return const AppEmptyWidget(
+      icon: Icons.notifications_none_rounded,
+      title: 'No notifications yet',
+      subtitle: 'We\'ll let you know when something happens',
     );
   }
 }

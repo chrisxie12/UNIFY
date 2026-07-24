@@ -9,6 +9,7 @@ import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
@@ -107,7 +108,7 @@ class _WaitlistTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return waitlistAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (entries) {
         if (entries.isEmpty) {
@@ -453,7 +454,7 @@ class _BetaTestersTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return testersAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
       error: (e, _) => AppErrorWidget(e),
       data: (testers) {
         if (testers.isEmpty) {

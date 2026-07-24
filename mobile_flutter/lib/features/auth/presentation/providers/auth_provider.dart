@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/app_user.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -24,23 +25,35 @@ class AuthNotifier extends AsyncNotifier<void> {
   Future<void> signUp({required String email, required String password}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => _repo.signUp(email: email, password: password).then((_) {}),
+      () => _repo.signUp(email: email, password: password).then((_) {
+        ref.read(analyticsServiceProvider).log('user_signed_up', feature: 'auth');
+      }),
     );
   }
 
   Future<void> signIn({required String email, required String password}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => _repo.signIn(email: email, password: password).then((_) {}),
+      () => _repo.signIn(email: email, password: password).then((_) {
+        ref.read(analyticsServiceProvider).log('user_logged_in', feature: 'auth');
+      }),
     );
+  }
+
+  Future<void> signInWithGoogle() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(_repo.signInWithGoogle);
   }
 
   Future<void> signOut() async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(_repo.signOut);
+    state = await AsyncValue.guard(() => _repo.signOut().then((_) {
+      ref.read(analyticsServiceProvider).log('user_logged_out', feature: 'auth');
+    }));
   }
 
   Future<void> resetPassword(String email) async {
+    ref.read(analyticsServiceProvider).log('password_reset', feature: 'auth');
     await _repo.resetPassword(email);
   }
 
@@ -57,7 +70,9 @@ class AuthNotifier extends AsyncNotifier<void> {
         school: school,
         programme: programme,
         yearOfStudy: yearOfStudy,
-      ),
+      ).then((_) {
+        ref.read(analyticsServiceProvider).log('profile_completed', feature: 'onboarding');
+      }),
     );
   }
 }

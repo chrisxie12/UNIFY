@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../data/models/community_content_models.dart';
 import '../../data/repositories/communities_repository_impl.dart';
@@ -146,6 +147,9 @@ class CommunityMembershipNotifier
           .joinCommunity(arg, user.id);
       return 'member';
     });
+    if (state.hasValue) {
+      ref.read(analyticsServiceProvider).log('community_joined', feature: 'communities');
+    }
     ref.invalidate(communityDetailProvider(arg));
     ref.invalidate(myCommunitiesProvider);
   }
@@ -161,6 +165,9 @@ class CommunityMembershipNotifier
           .leaveCommunity(arg, user.id);
       return null;
     });
+    if (state.hasValue) {
+      ref.read(analyticsServiceProvider).log('community_left', feature: 'communities');
+    }
     ref.invalidate(communityDetailProvider(arg));
     ref.invalidate(myCommunitiesProvider);
   }

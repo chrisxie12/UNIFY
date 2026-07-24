@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
 
@@ -35,13 +37,13 @@ class AppVersionAdminScreen extends ConsumerWidget {
         label: const Text('New version'),
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (e, _) => AppErrorWidget(e),
         data: (versions) {
           if (versions.isEmpty) {
-            return Center(
-              child: Text('No versions yet',
-                  style: TextStyle(color: context.textDisabled)),
+            return const AppEmptyWidget(
+              icon: Icons.inbox_rounded,
+              title: 'No versions yet',
             );
           }
           // Group by platform.

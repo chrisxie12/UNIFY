@@ -1,7 +1,4 @@
-# Supabase project configuration
-# Reference: https://supabase.com/docs/guides/local-development/cli/config
-
-[project]
+# A string used to distinguish different Supabase projects on the same host.
 project_id = "unify-b92fd"
 
 [api]

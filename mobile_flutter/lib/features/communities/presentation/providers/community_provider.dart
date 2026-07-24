@@ -35,7 +35,8 @@ final communityMembersProvider = FutureProvider.family<List<Map<String, dynamic>
   final response = await supabase
       .from('community_members')
       .select('*, profiles(display_name, avatar_url, is_verified_leader, leadership_role, programme, level)')
-      .filter('community_id', 'eq', communityId) as List;
+      .filter('community_id', 'eq', communityId)
+      .limit(500) as List;
   return response.cast<Map<String, dynamic>>();
 });
 

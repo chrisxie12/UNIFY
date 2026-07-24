@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/community_provider.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
 import 'package:unify/core/extensions/theme_extensions.dart';
@@ -34,7 +35,7 @@ class _CommunityMembersScreenState extends ConsumerState<CommunityMembersScreen>
         title: const Text('Members'),
       ),
       body: membersAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (e, _) => AppErrorWidget(e),
         data: (members) {
           final searchQuery = _searchController.text;
@@ -235,7 +236,7 @@ class _MemberListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             )
           : null,
-      onTap: () => context.push('/app/profile'),
+      onTap: () => context.push('/app/profile', extra: {'viewUserId': member['user_id']}),
     );
   }
 }

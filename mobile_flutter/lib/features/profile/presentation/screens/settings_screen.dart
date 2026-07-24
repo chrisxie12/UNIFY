@@ -122,6 +122,23 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(height: 22),
+          _sectionLabel(context, 'About'),
+          _card(
+            context,
+            child: Column(
+              children: [
+                _LinkRow(
+                  icon: Icons.info_outline_rounded,
+                  iconColor: const Color(0xFF6366F1),
+                  label: 'About UNIFY',
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      color: scheme.onSurface.withValues(alpha: 0.4)),
+                  onTap: () => context.push('/beta-info'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

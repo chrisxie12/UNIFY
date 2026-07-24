@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNIFY — Create Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: #E8ECEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  /* iPhone 15 Pro frame */
+  .phone {
+    width: 393px;
+    height: 852px;
+    background: #FFFFFF;
+    border-radius: 48px;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.06),
+      0 20px 60px rgba(0,0,0,0.12),
+      0 8px 24px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Dynamic Island */
+  .dynamic-island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 34px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 10;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+
+  /* ── Safe area top spacer ── */
+  .safe-top { height: 64px; flex-shrink: 0; }
+
+  /* ── Progress indicator ── */
+  .progress-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 48px;
+    flex-shrink: 0;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: #E5E7EB;
+  }
+  .progress-bar.active { background: #2563EB; }
+
+  /* ── Logo ── */
+  .logo-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-shrink: 0;
+  }
+  .logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* NO shadow, NO glow, NO halo — flat and crisp */
+  }
+  .logo svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* ── Typography ── */
+  .headline {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.5px;
+    text-align: center;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6B7280;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 280px;
+    margin: 0 auto 24px;
+    flex-shrink: 0;
+  }
+
+  /* ── Trust pills ── */
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-shrink: 0;
+  }
+  .trust-pill {
+    font-size: 12px;
+    color: #6B7280;
+    font-weight: 500;
+    padding: 6px 12px;
+    background: #F9FAFB;
+    border-radius: 20px;
+    border: 1px solid #F3F4F6;
+    white-space: nowrap;
+  }
+
+  /* ── Google button ── */
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 52px;
+    background: #FFFFFF;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    font-family: inherit;
+    flex-shrink: 0;
+    margin-bottom: 24px;
+  }
+  .google-btn:hover { background: #F9FAFB; }
+  .google-btn:active { background: #F3F4F6; }
+  .google-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── Divider ── */
+  .divider-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+  }
+  .divider-line {
+    flex: 1;
+    height: 0.5px;
+    background: #E5E7EB;
+  }
+  .divider-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9CA3AF;
+    white-space: nowrap;
+  }
+
+  /* ── Form ── */
+  .field-group {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    padding-left: 4px;
+    margin-bottom: 6px;
+  }
+  .field-wrapper {
+    position: relative;
+  }
+  .field-input {
+    width: 100%;
+    height: 52px;
+    background: #FFFFFF;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #111827;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field-input::placeholder {
+    color: #9CA3AF;
+  }
+  .field-input:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+  }
+  .field-input.error {
+    border-color: #EF4444;
+  }
+  .field-input.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
+  }
+  .eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9CA3AF;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .eye-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── Password strength ── */
+  .strength-section {
+    margin-bottom: 28px;
+    flex-shrink: 0;
+  }
+  .strength-bars {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .strength-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: #E5E7EB;
+    transition: background 0.2s;
+  }
+  .strength-bar.fill-red { background: #EF4444; }
+  .strength-bar.fill-amber { background: #F59E0B; }
+  .strength-bar.fill-green { background: #10B981; }
+
+  .checklist {
+    display: flex;
+    gap: 16px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #9CA3AF;
+    font-weight: 500;
+  }
+  .check-item .icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .check-item .icon circle { fill: #E5E7EB; }
+  .check-item.done .icon circle { fill: #10B981; }
+  .check-item.done { color: #374151; }
+
+  /* ── Primary CTA ── */
+  .create-btn {
+    width: 100%;
+    height: 52px;
+    background: #2563EB;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+    flex-shrink: 0;
+    margin-bottom: 24px;
+  }
+  .create-btn:hover {
+    background: #1D4ED8;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.30);
+  }
+  .create-btn:active {
+    background: #1E3A8A;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.20);
+  }
+  .create-btn:disabled {
+    background: #93C5FD;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding-bottom: 36px;
+    flex-shrink: 0;
+  }
+  .footer-text {
+    font-size: 14px;
+    color: #6B7280;
+  }
+  .footer-link {
+    color: #2563EB;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Spacer to fill remaining ── */
+  .spacer { flex: 1; min-height: 24px; }
+
+  /* ── Dark mode ── */
+  @media (prefers-color-scheme: dark) {
+    .phone { background: #0A0A0A; }
+    .dynamic-island { background: #1A1A1A; }
+    .headline { color: #FFFFFF; }
+    .subtitle { color: #9CA3AF; }
+    .trust-pill {
+      background: #1A1A1A;
+      border-color: #333;
+      color: #9CA3AF;
+    }
+    .google-btn {
+      background: #0A0A0A;
+      border-color: #333;
+      color: #E5E7EB;
+    }
+    .google-btn:hover { background: #1A1A1A; }
+    .divider-line { background: #333; }
+    .divider-text { color: #6B7280; }
+    .field-label { color: #D1D5DB; }
+    .field-input {
+      background: #1A1A1A;
+      border-color: #333;
+      color: #FFFFFF;
+    }
+    .field-input::placeholder { color: #6B7280; }
+    .field-input:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .progress-bar { background: #333; }
+    .progress-bar.active { background: #2563EB; }
+    .strength-bar { background: #333; }
+    .check-item { color: #6B7280; }
+    .check-item .icon circle { fill: #333; }
+    .check-item.done { color: #D1D5DB; }
+    .check-item.done .icon circle { fill: #10B981; }
+    .footer-text { color: #9CA3AF; }
+  }
+
+  /* ── Toggle demo interaction ── */
+  .demo-controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+  }
+  .demo-controls button {
+    padding: 8px 16px;
+    background: #2563EB;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .demo-controls button:hover { background: #1D4ED8; }
+  .demo-controls button.outline {
+    background: transparent;
+    color: #2563EB;
+    border: 1.5px solid #2563EB;
+  }
+  .demo-controls button.outline:hover { background: rgba(37,99,235,0.06); }
+
+  /* Password toggle interaction */
+  .password-hidden .eye-open { display: none; }
+  .password-hidden .eye-closed { display: block; }
+  .password-visible .eye-open { display: block; }
+  .password-visible .eye-closed { display: none; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phoneFrame">
+  <div class="dynamic-island"></div>
+
+  <div class="screen">
+    <div class="safe-top"></div>
+
+    <!-- Progress -->
+    <div class="progress-row">
+      <div class="progress-bar active"></div>
+      <div class="progress-bar"></div>
+      <div class="progress-bar"></div>
+    </div>
+
+    <!-- Logo — NO shadow, NO glow, flat and crisp -->
+    <div class="logo-section">
+      <div class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="27" r="10" fill="white"/>
+          <circle cx="68" cy="27" r="10" fill="white"/>
+          <path fill="white" fill-rule="evenodd" d="M 14 38 C 14 26 50 26 50 38 L 50 70 C 50 82 43 90 32 90 C 21 90 14 82 14 70 Z M 24 49 C 24 38 44 38 44 49 L 44 70 C 44 76 39 81 32 81 C 25 81 24 76 24 70 Z"/>
+          <path fill="white" fill-rule="evenodd" d="M 86 38 C 86 26 50 26 50 38 L 50 70 C 50 82 57 90 68 90 C 79 90 86 82 86 70 Z M 76 49 C 76 38 56 38 56 49 L 56 70 C 56 76 61 81 68 81 C 75 81 76 76 76 70 Z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="headline">Create Account</h1>
+
+    <!-- Subtitle -->
+    <p class="subtitle">Join 2,000+ GCTU students. One app for events, study groups, and campus news.</p>
+
+    <!-- Trust pills -->
+    <div class="trust-row">
+      <span class="trust-pill">&#x1F512; Student-verified</span>
+      <span class="trust-pill">&#x1F393; Campus-only</span>
+      <span class="trust-pill">&#x26A1; Instant access</span>
+    </div>
+
+    <!-- Google button -->
+    <button class="google-btn" id="googleBtn">
+      <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#EA4335" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#34A853" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <!-- Divider -->
+    <div class="divider-row">
+      <div class="divider-line"></div>
+      <span class="divider-text">or sign up with email</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Email field -->
+    <div class="field-group">
+      <label class="field-label" for="emailInput">Student email</label>
+      <div class="field-wrapper">
+        <input class="field-input" id="emailInput" type="email" placeholder="your.name@gctu.edu.gh" autocomplete="email">
+      </div>
+    </div>
+
+    <!-- Password field -->
+    <div class="field-group">
+      <label class="field-label" for="passInput">Password</label>
+      <div class="field-wrapper">
+        <input class="field-input" id="passInput" type="password" placeholder="Create a secure password" autocomplete="new-password">
+        <button class="eye-btn" id="eyeBtn" aria-label="Toggle password visibility">
+          <!-- Eye open -->
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <!-- Eye closed (hidden by default) -->
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Password strength -->
+    <div class="strength-section">
+      <div class="strength-bars" id="strengthBars">
+        <div class="strength-bar" data-idx="0"></div>
+        <div class="strength-bar" data-idx="1"></div>
+        <div class="strength-bar" data-idx="2"></div>
+        <div class="strength-bar" data-idx="3"></div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" data-check="length">
+          <svg class="icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/></svg>
+          8+ characters
+        </div>
+        <div class="check-item" data-check="number">
+          <svg class="icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/></svg>
+          1 number
+        </div>
+        <div class="check-item" data-check="symbol">
+          <svg class="icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/></svg>
+          1 symbol
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Account CTA -->
+    <button class="create-btn" id="createBtn" disabled>Create Account</button>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span class="footer-text">Already on UNIFY? <a class="footer-link" href="#">Sign In</a></span>
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- Demo controls -->
+<div class="demo-controls">
+  <button onclick="toggleDark()">Toggle Dark Mode</button>
+  <button class="outline" onclick="togglePassword()">Toggle Password</button>
+  <button class="outline" onclick="simulateTyping()">Demo Typing</button>
+</div>
+
+<script>
+  // ── Password visibility toggle ──
+  const passInput = document.getElementById('passInput');
+  const eyeBtn = document.getElementById('eyeBtn');
+
+  function togglePassword() {
+    const hidden = passInput.type === 'password';
+    passInput.type = hidden ? 'text' : 'password';
+    document.querySelector('.eye-open').style.display = hidden ? 'none' : 'block';
+    document.querySelector('.eye-closed').style.display = hidden ? 'block' : 'none';
+  }
+  eyeBtn.addEventListener('click', togglePassword);
+
+  // ── Password strength (demo) ──
+  const strengthBars = document.querySelectorAll('.strength-bar');
+  const checkItems = document.querySelectorAll('.check-item');
+  const createBtn = document.getElementById('createBtn');
+  const emailInput = document.getElementById('emailInput');
+
+  function updateStrength(pass) {
+    const len = pass.length >= 8;
+    const hasNum = /\d/.test(pass);
+    const hasSym = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+
+    const checks = [len, hasNum, hasSym];
+    const filled = checks.filter(Boolean).length;
+
+    const colors = ['#E5E7EB', '#EF4444', '#F59E0B', '#10B981'];
+    strengthBars.forEach((bar, i) => {
+      bar.className = 'strength-bar';
+      if (i < filled) bar.classList.add('fill-' + (filled === 1 ? 'red' : filled === 2 ? 'amber' : 'green'));
+    });
+
+    checkItems.forEach((item, i) => {
+      item.classList.toggle('done', checks[i]);
+    });
+
+    // Enable button only if email non-empty + pass meets all checks
+    const emailVal = emailInput.value.trim();
+    createBtn.disabled = !(emailVal && len && hasNum && hasSym);
+  }
+
+  passInput.addEventListener('input', (e) => updateStrength(e.target.value));
+
+  // Simulate demo typing
+  function simulateTyping() {
+    const demoPass = 'Campus@2026';
+    let i = 0;
+    passInput.value = '';
+    passInput.focus();
+    const interval = setInterval(() => {
+      if (i < demoPass.length) {
+        passInput.value += demoPass[i];
+        updateStrength(passInput.value);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+
+  // ── Dark mode toggle ──
+  let isDark = false;
+  const phone = document.getElementById('phoneFrame');
+
+  function toggleDark() {
+    isDark = !isDark;
+    if (isDark) {
+      phone.style.background = '#0A0A0A';
+      document.querySelectorAll('.field-input').forEach(el => {
+        el.style.background = '#1A1A1A';
+        el.style.borderColor = '#333';
+        el.style.color = '#FFFFFF';
+      });
+      document.querySelectorAll('.field-label').forEach(el => el.style.color = '#D1D5DB');
+      document.querySelector('.headline').style.color = '#FFFFFF';
+      document.querySelector('.subtitle').style.color = '#9CA3AF';
+      document.querySelectorAll('.trust-pill').forEach(el => {
+        el.style.background = '#1A1A1A';
+        el.style.borderColor = '#333';
+        el.style.color = '#9CA3AF';
+      });
+      document.querySelector('.google-btn').style.background = '#0A0A0A';
+      document.querySelector('.google-btn').style.borderColor = '#333';
+      document.querySelector('.google-btn').style.color = '#E5E7EB';
+      document.querySelectorAll('.divider-line').forEach(el => el.style.background = '#333');
+      document.querySelector('.divider-text').style.color = '#6B7280';
+      document.querySelectorAll('.progress-bar').forEach(el => {
+        if (!el.classList.contains('active')) el.style.background = '#333';
+      });
+      document.querySelectorAll('.strength-bar').forEach(el => {
+        if (el.style.background === 'rgb(229, 231, 235)' || !el.classList.contains('fill-red') && !el.classList.contains('fill-amber') && !el.classList.contains('fill-green')) {
+          el.style.background = '#333';
+        }
+      });
+      document.querySelectorAll('.check-item').forEach(el => {
+        if (!el.classList.contains('done')) el.style.color = '#6B7280';
+      });
+      document.querySelectorAll('.check-item .icon circle').forEach(el => {
+        const fill = getComputedStyle(el).fill;
+        if (fill === 'rgb(229, 231, 235)') el.setAttribute('fill', '#333');
+      });
+      document.querySelector('.footer-text').style.color = '#9CA3AF';
+    } else {
+      phone.style.background = '#FFFFFF';
+      document.querySelectorAll('.field-input').forEach(el => {
+        el.style.background = '#FFFFFF';
+        el.style.borderColor = '#E5E7EB';
+        el.style.color = '#111827';
+      });
+      document.querySelectorAll('.field-label').forEach(el => el.style.color = '#374151');
+      document.querySelector('.headline').style.color = '#111827';
+      document.querySelector('.subtitle').style.color = '#6B7280';
+      document.querySelectorAll('.trust-pill').forEach(el => {
+        el.style.background = '#F9FAFB';
+        el.style.borderColor = '#F3F4F6';
+        el.style.color = '#6B7280';
+      });
+      document.querySelector('.google-btn').style.background = '#FFFFFF';
+      document.querySelector('.google-btn').style.borderColor = '#E5E7EB';
+      document.querySelector('.google-btn').style.color = '#374151';
+      document.querySelectorAll('.divider-line').forEach(el => el.style.background = '#E5E7EB');
+      document.querySelector('.divider-text').style.color = '#9CA3AF';
+      document.querySelectorAll('.progress-bar').forEach(el => {
+        if (!el.classList.contains('active')) el.style.background = '#E5E7EB';
+      });
+      document.querySelectorAll('.strength-bar').forEach(el => {
+        if (!el.classList.contains('fill-red') && !el.classList.contains('fill-amber') && !el.classList.contains('fill-green')) {
+          el.style.background = '#E5E7EB';
+        }
+      });
+      document.querySelectorAll('.check-item').forEach(el => {
+        if (!el.classList.contains('done')) el.style.color = '#9CA3AF';
+      });
+      document.querySelectorAll('.check-item .icon circle').forEach(el => {
+        const fill = getComputedStyle(el).fill;
+        if (fill === 'rgb(51, 51, 51)') el.setAttribute('fill', '#E5E7EB');
+      });
+      document.querySelector('.footer-text').style.color = '#6B7280';
+    }
+  }
+
+  // Also update strength on email change
+  emailInput.addEventListener('input', () => updateStrength(passInput.value));
+</script>
+
+</body>
+</html>

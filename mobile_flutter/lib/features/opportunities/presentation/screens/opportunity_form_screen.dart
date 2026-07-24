@@ -299,13 +299,10 @@ class _OpportunityFormScreenState
       ref.invalidate(featuredOpportunitiesProvider);
       ref.invalidate(opportunityStatsProvider);
       if (mounted) {
+        UnifySnackbar.success(context, widget.existing != null
+            ? 'Opportunity updated'
+            : 'Opportunity published');
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(widget.existing != null
-              ? 'Opportunity updated'
-              : 'Opportunity published'),
-          behavior: SnackBarBehavior.floating,
-        ));
       }
     } catch (e) {
       if (mounted) {

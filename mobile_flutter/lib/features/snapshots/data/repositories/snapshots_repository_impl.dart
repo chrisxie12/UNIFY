@@ -22,7 +22,8 @@ class SnapshotsRepositoryImpl {
         .select('*, $_authorJoin, snapshot_poll_options(*)')
         .isFilter('community_id', null)
         .gt('expires_at', _nowIso)
-        .order('created_at', ascending: true);
+        .order('created_at', ascending: true)
+        .limit(100);
 
     final muted = await _mutedIds(userId);
     final viewed = await _viewedIds(userId);
@@ -46,7 +47,8 @@ class SnapshotsRepositoryImpl {
         .select('*, $_authorJoin, snapshot_poll_options(*)')
         .eq('community_id', communityId)
         .gt('expires_at', _nowIso)
-        .order('created_at', ascending: true);
+        .order('created_at', ascending: true)
+        .limit(100);
 
     final muted = await _mutedIds(userId);
     final viewed = await _viewedIds(userId);
@@ -81,7 +83,8 @@ class SnapshotsRepositoryImpl {
         .select('*, $_authorJoin, snapshot_poll_options(*)')
         .eq('author_id', userId)
         .gt('expires_at', _nowIso)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
     return (data as List)
         .map((r) => SnapshotModel.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -321,12 +324,14 @@ class SnapshotsRepositoryImpl {
         .from('snapshot_views')
         .select('viewer_id, viewed_at, profiles!snapshot_views_viewer_id_fkey(full_name, avatar_url)')
         .eq('snapshot_id', snapshotId)
-        .order('viewed_at', ascending: false);
+        .order('viewed_at', ascending: false)
+        .limit(200);
 
     final reactionsData = await _client
         .from('snapshot_reactions')
         .select('emoji')
-        .eq('snapshot_id', snapshotId);
+        .eq('snapshot_id', snapshotId)
+        .limit(500);
 
     final byEmoji = <String, int>{};
     for (final r in reactionsData as List) {
@@ -353,7 +358,8 @@ class SnapshotsRepositoryImpl {
     final data = await _client
         .from('snapshot_views')
         .select('snapshot_id')
-        .eq('viewer_id', userId);
+        .eq('viewer_id', userId)
+        .limit(500);
     return (data as List).map((r) => r['snapshot_id'] as String).toSet();
   }
 
@@ -361,7 +367,8 @@ class SnapshotsRepositoryImpl {
     final data = await _client
         .from('snapshot_mutes')
         .select('muted_id')
-        .eq('muter_id', userId);
+        .eq('muter_id', userId)
+        .limit(500);
     return (data as List).map((r) => r['muted_id'] as String).toSet();
   }
 

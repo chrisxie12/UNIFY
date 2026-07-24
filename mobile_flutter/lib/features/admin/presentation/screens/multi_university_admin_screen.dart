@@ -8,6 +8,18 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 
+/// Shows a lightweight "coming soon" notice for admin areas whose dedicated
+/// screens are not built yet — avoids navigating to a route that doesn't
+/// exist (which would drop the user on go_router's error page).
+void _comingSoon(BuildContext context, String feature) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('$feature is coming soon.'),
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
+}
+
 class MultiUniversityAdminScreen extends ConsumerWidget {
   const MultiUniversityAdminScreen({super.key});
 
@@ -214,7 +226,7 @@ class _UniversityTab extends ConsumerWidget {
               subtitle: 'Organize academic structure',
               icon: Icons.school_rounded,
               color: const Color(0xFF10B981),
-              onTap: () => context.push('/admin/faculties'),
+              onTap: () => _comingSoon(context, 'Faculties & Schools'),
             ),
             const SizedBox(height: 12),
             AdminActionCard(
@@ -222,7 +234,7 @@ class _UniversityTab extends ConsumerWidget {
               subtitle: 'Manage programmes & levels',
               icon: Icons.account_tree_rounded,
               color: const Color(0xFF8B5CF6),
-              onTap: () => context.push('/admin/departments'),
+              onTap: () => _comingSoon(context, 'Departments'),
             ),
             const SizedBox(height: 12),
             AdminActionCard(
@@ -230,7 +242,7 @@ class _UniversityTab extends ConsumerWidget {
               subtitle: 'Theme colors, logo, welcome screen',
               icon: Icons.palette_rounded,
               color: AppColors.warning,
-              onTap: () => context.push('/admin/branding'),
+              onTap: () => _comingSoon(context, 'Branding'),
             ),
             const SizedBox(height: 16),
             Text('Registered Universities', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
@@ -412,7 +424,7 @@ class _SettingsTab extends ConsumerWidget {
           subtitle: 'Theme colors, logo, welcome screen',
           icon: Icons.palette_rounded,
           color: AppColors.warning,
-          onTap: () => context.push('/admin/branding'),
+          onTap: () => _comingSoon(context, 'Branding'),
         ),
         const SizedBox(height: 12),
         AdminActionCard(
@@ -420,7 +432,7 @@ class _SettingsTab extends ConsumerWidget {
           subtitle: 'Configure verification rules',
           icon: Icons.verified_rounded,
           color: const Color(0xFF8B5CF6),
-          onTap: () => context.push('/admin/verification-requirements'),
+          onTap: () => _comingSoon(context, 'Verification Requirements'),
         ),
       ],
     );

@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/system_models.dart';
 import '../providers/system_provider.dart';
 import '../widgets/system_announcement_banner.dart';
@@ -151,7 +152,7 @@ class _AnnouncementsAdminScreenState
         ),
       ),
       body: async.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.list(itemCount: 5),
         error: (e, _) => AppErrorWidget(e),
         data: (list) {
           final activeCount = list.where((a) => a.isActive).length;

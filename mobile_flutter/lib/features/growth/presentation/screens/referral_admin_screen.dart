@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
 
@@ -25,9 +27,9 @@ class ReferralAdminScreen extends ConsumerWidget {
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: referralsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => AppErrorWidget(e),
-        data: (referrals) {
+      loading: () => const AppLoadingWidget.list(itemCount: 5),
+      error: (e, _) => AppErrorWidget(e),
+      data: (referrals) {
           final total = referrals.length;
           final accepted =
               referrals.where((r) => r.status == 'accepted').length;
@@ -62,19 +64,11 @@ class ReferralAdminScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 if (referrals.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 60),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Icon(Icons.group_off_rounded,
-                              size: 48, color: context.borderCol),
-                          const SizedBox(height: 12),
-                          Text('No referrals yet',
-                              style: TextStyle(
-                                  fontSize: 14, color: context.textDisabled)),
-                        ],
-                      ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: AppEmptyWidget(
+                      icon: Icons.share_outlined,
+                      title: 'No referrals yet',
                     ),
                   )
                 else

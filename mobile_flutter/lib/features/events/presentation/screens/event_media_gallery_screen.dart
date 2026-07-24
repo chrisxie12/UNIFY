@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/event_provider.dart';
@@ -79,7 +81,7 @@ class _PhotoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (photos.isEmpty) {
-      return Center(child: Text('No photos', style: UText.bodyS.copyWith(color: context.textSecondary)));
+      return const AppEmptyWidget(icon: Icons.photo_camera_outlined, title: 'No photos');
     }
     return GridView.builder(
       padding: const EdgeInsets.all(USpacing.sm),
@@ -95,7 +97,7 @@ class _PhotoGrid extends StatelessWidget {
           onTap: () => _showPhotoViewer(context, photo),
           child: ClipRRect(
             borderRadius: URadius.smAll,
-            child: Image.network(photo.url as String, fit: BoxFit.cover),
+            child: CachedNetworkImage(imageUrl: photo.url as String, fit: BoxFit.cover),
           ),
         );
       },
@@ -112,7 +114,7 @@ class _PhotoGrid extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: URadius.mdAll,
-              child: Image.network(photo.url as String, fit: BoxFit.contain),
+              child: CachedNetworkImage(imageUrl: photo.url as String, fit: BoxFit.contain),
             ),
             if (photo.caption != null) ...[
               const SizedBox(height: USpacing.sm),
@@ -132,7 +134,7 @@ class _VideoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (videos.isEmpty) {
-      return Center(child: Text('No videos', style: UText.bodyS.copyWith(color: context.textSecondary)));
+      return const AppEmptyWidget(icon: Icons.videocam_outlined, title: 'No videos');
     }
     return ListView.builder(
       padding: const EdgeInsets.all(USpacing.md),

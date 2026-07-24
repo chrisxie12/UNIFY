@@ -21,7 +21,7 @@ class MessageModel {
   final ChatPoll? poll;
   final bool isSending;
   final bool hasFailed;
-  bool _isExpanded;
+  bool isExpanded;
 
   MessageModel({
     required this.id,
@@ -44,16 +44,13 @@ class MessageModel {
     this.poll,
     this.isSending = false,
     this.hasFailed = false,
-    bool isExpanded = false,
-  }) : _isExpanded = isExpanded;
+    this.isExpanded = false,
+  });
 
-  bool get isExpanded => _isExpanded;
   bool get hasAttachments => attachments.isNotEmpty;
   bool get hasReactions => reactions.isNotEmpty;
   bool get hasPoll => poll != null;
   bool get isEdited => editedAt != null;
-
-  set isExpanded(bool v) => _isExpanded = v;
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(

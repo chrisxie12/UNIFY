@@ -4,6 +4,7 @@ import '../providers/admin_provider.dart';
 import '../widgets/admin_widgets.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/guards/admin_guard.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/audit_log_model.dart';
 
 class AuditLogsScreen extends ConsumerStatefulWidget {
@@ -198,7 +199,7 @@ class _AuditLogsScreenState extends ConsumerState<AuditLogsScreen> {
     }
 
     if (_loading && _logs.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const AppLoadingWidget.list(itemCount: 5);
     }
 
     if (_logs.isEmpty) {

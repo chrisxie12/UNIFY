@@ -9,6 +9,14 @@ final profileRepositoryProvider = Provider<ProfileRepositoryImpl>((ref) {
   return ProfileRepositoryImpl(ref.watch(supabaseProvider));
 });
 
+/// Fetches any user's profile by ID (for viewing other members' profiles).
+final viewProfileProvider = FutureProvider.autoDispose.family<Profile?, String>((ref, userId) async {
+  final client = ref.watch(supabaseProvider);
+  final data = await client.from('profiles').select().eq('id', userId).maybeSingle();
+  if (data == null) return null;
+  return ProfileModel.fromJson({...data, 'email': ''});
+});
+
 /// Fetches the authenticated user's full profile from Supabase.
 final profileProvider = FutureProvider.autoDispose<Profile?>((ref) async {
   ref.watch(authStateProvider);
@@ -37,7 +45,8 @@ final profileStatsProvider =
   final result = await client
       .from('announcements')
       .select('id')
-      .eq('author_id', user.id);
+      .eq('author_id', user.id)
+      .limit(5000);
 
   final postCount = (result as List).length;
   return _ProfileStats(postCount: postCount);

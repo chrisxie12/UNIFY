@@ -34,7 +34,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
       final likesResponse = await _client
           .from('discussion_likes')
           .select('discussion_id')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final likedIds = likesResponse
           .cast<Map<String, dynamic>>()
           .map((l) => l['discussion_id'] as String)
@@ -132,7 +133,8 @@ class DiscussionRepositoryImpl implements DiscussionRepository {
       final likeResponse = await _client
           .from('discussion_comment_likes')
           .select('comment_id')
-          .filter('user_id', 'eq', currentUserId) as List;
+          .filter('user_id', 'eq', currentUserId)
+          .limit(1000) as List;
       final likedIds = likeResponse.cast<Map<String, dynamic>>().map((l) => l['comment_id'] as String).toSet();
 
       void applyLikes(List<DiscussionCommentModel> comments) {

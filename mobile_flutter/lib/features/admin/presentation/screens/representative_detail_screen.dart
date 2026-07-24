@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 
@@ -117,25 +119,25 @@ class _RepresentativeDetailScreenState extends ConsumerState<RepresentativeDetai
                       verifReqsAsync.when(
                         data: (reqs) => _VerificationDocumentsSection(requests: reqs),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       verifLogAsync.when(
                         data: (logs) => _VerificationHistorySection(logs: logs),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       managedAsync.when(
                         data: (managers) => _ManagedCommunitiesSection(managers: managers),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       postsAsync.when(
                         data: (posts) => _RecentActivitySection(posts: posts),
                         error: (e, _) => _SectionError(message: ErrorMapper.toUserMessage(e)),
-                        loading: () => _SectionLoading(),
+                        loading: () => const _SectionLoading(),
                       ),
                       const SizedBox(height: 24),
                       if (status == 'pending') _ActionButtons(profile: profile, userId: widget.userId),
@@ -373,12 +375,9 @@ class _VerificationDocumentsSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (urls.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No documents submitted', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.inbox_rounded,
+              title: 'No documents submitted',
             )
           else
             ...urls.map((url) => Padding(
@@ -438,10 +437,10 @@ class _VerificationDocumentsSection extends StatelessWidget {
           height: 400,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              url,
+            child: CachedNetworkImage(
+              imageUrl: url,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Column(
+              errorWidget: (_, __, ___) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.link_rounded, size: 40, color: context.textDisabled),
@@ -454,10 +453,7 @@ class _VerificationDocumentsSection extends StatelessWidget {
                   ),
                 ],
               ),
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return const Center(child: CircularProgressIndicator());
-              },
+              placeholder: (_, __) => const Center(child: CircularProgressIndicator()),
             ),
           ),
         ),
@@ -498,12 +494,9 @@ class _VerificationHistorySection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (logs.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No verification history', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.history_rounded,
+              title: 'No verification history',
             )
           else
             ...logs.map((log) => _buildLogEntry(context, log)),
@@ -690,12 +683,9 @@ class _RecentActivitySection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (posts.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text('No recent activity', style: TextStyle(fontSize: 13, color: context.textDisabled)),
-              ),
+            const AppEmptyWidget(
+              icon: Icons.history_rounded,
+              title: 'No recent activity',
             )
           else
             ...posts.map((p) {
@@ -917,11 +907,13 @@ class _ActionButtons extends ConsumerWidget {
 }
 
 class _SectionLoading extends StatelessWidget {
+  const _SectionLoading();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      child: const AppLoadingWidget.card(),
     );
   }
 }

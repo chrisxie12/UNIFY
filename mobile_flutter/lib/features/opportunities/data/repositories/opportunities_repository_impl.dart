@@ -164,7 +164,8 @@ class OpportunitiesRepositoryImpl {
     final data = await _client
         .from('opportunity_saves')
         .select('opportunity_id')
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .limit(500);
     return (data as List).map((e) => e['opportunity_id'] as String).toSet();
   }
 
@@ -172,7 +173,8 @@ class OpportunitiesRepositoryImpl {
     final data = await _client
         .from('opportunity_applications')
         .select('opportunity_id, stage')
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .limit(500);
     return {
       for (final r in (data as List))
         r['opportunity_id'] as String: r['stage'] as String,
@@ -205,7 +207,8 @@ class OpportunitiesRepositoryImpl {
         .from('opportunity_saves')
         .select('opportunity_id, opportunities(*)')
         .eq('user_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     final stages = await _stages(userId);
     return (data as List)
         .map((e) => e['opportunities'])
@@ -222,7 +225,8 @@ class OpportunitiesRepositoryImpl {
         .from('opportunity_applications')
         .select('*, opportunities(*)')
         .eq('user_id', userId)
-        .order('updated_at', ascending: false);
+        .order('updated_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((r) => TrackedApplication.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -354,7 +358,8 @@ class OpportunitiesRepositoryImpl {
         .select('*, opportunities(id, title), '
             'profiles!opportunity_reports_reporter_id_fkey(full_name)')
         .eq('status', 'pending')
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(200);
     return (data as List)
         .map((r) => OpportunityReportItem.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -371,7 +376,8 @@ class OpportunitiesRepositoryImpl {
       final rows = await _client
           .from('opportunities')
           .select('id')
-          .eq(column, value);
+          .eq(column, value)
+          .limit(5000);
       return (rows as List).length;
     }
 
@@ -394,7 +400,8 @@ class OpportunitiesRepositoryImpl {
     final pendingReports = (await _client
             .from('opportunity_reports')
             .select('id')
-            .eq('status', 'pending') as List)
+            .eq('status', 'pending')
+            .limit(5000) as List)
         .length;
 
     // Closing within 7 days
@@ -404,7 +411,8 @@ class OpportunitiesRepositoryImpl {
             .select('id')
             .eq('status', 'published')
             .gte('deadline', DateTime.now().toIso8601String())
-            .lte('deadline', soon.toIso8601String()) as List)
+            .lte('deadline', soon.toIso8601String())
+            .limit(5000) as List)
         .length;
 
     return OpportunityStats(

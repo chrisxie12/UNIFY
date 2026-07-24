@@ -8,6 +8,7 @@ import '../providers/messaging_provider.dart';
 import '../../data/models/message_model.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/typing_indicator.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../widgets/chat_input_bar.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -111,7 +112,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           // Message list
           Expanded(
             child: messagesAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingWidget.list(itemCount: 5),
               error: (e, _) => AppErrorWidget(e),
               data: (messages) {
                 // Mark as read on first load
@@ -123,7 +124,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 }
 
                 if (messages.isEmpty) {
-                  return _EmptyState();
+                  return const _EmptyState();
                 }
 
                 return GestureDetector(
@@ -697,6 +698,8 @@ class _ReplyPreviewBar extends StatelessWidget {
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
     return Center(

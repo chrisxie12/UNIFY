@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../notifications/data/models/notification_model.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
-import '../../../../core/extensions/theme_extensions.dart';
 
 final _adminNotificationsProvider = FutureProvider.autoDispose<List<NotificationModel>>((ref) async {
   ref.watch(authStateProvider);
@@ -79,17 +79,10 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
           error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(_adminNotificationsProvider)),
           data: (notifications) {
             if (notifications.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.notifications_none_rounded, size: 64, color: context.borderCol),
-                    const SizedBox(height: 12),
-                    Text('No admin notifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 4),
-                    Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: context.textDisabled)),
-                  ],
-                ),
+              return const AppEmptyWidget(
+                icon: Icons.notifications_none_rounded,
+                title: 'No admin notifications',
+                subtitle: 'New community and verification requests will appear here',
               );
             }
 
@@ -108,7 +101,7 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                       ref.invalidate(_adminNotificationsProvider);
                       ref.invalidate(_adminUnreadNotificationsProvider);
                     }
-                    if (n.type == 'admin_request') {
+                    if (n.type == 'admin_request' && context.mounted) {
                       context.push('/admin');
                     }
                   },

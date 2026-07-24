@@ -208,7 +208,7 @@ class _ProfileSkeleton extends StatelessWidget {
           const SizedBox(height: USpacing.xl),
 
           // Stats row
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _StatBox(),
@@ -235,6 +235,8 @@ class _ProfileSkeleton extends StatelessWidget {
 }
 
 class _StatBox extends StatelessWidget {
+  const _StatBox();
+
   @override
   Widget build(BuildContext context) {
     return Column(

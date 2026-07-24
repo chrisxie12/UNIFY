@@ -18,7 +18,8 @@ class SupportRepositoryImpl {
         .from('faq_items')
         .select('*')
         .eq('is_published', true)
-        .order('order_index', ascending: true);
+        .order('order_index', ascending: true)
+        .limit(200);
     return (data as List)
         .map((r) => FaqItem.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -49,7 +50,8 @@ class SupportRepositoryImpl {
         .from('help_articles')
         .select('*')
         .eq('is_published', true)
-        .order('order_index', ascending: true);
+        .order('order_index', ascending: true)
+        .limit(200);
     return (data as List)
         .map((r) => HelpArticle.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -135,7 +137,8 @@ class SupportRepositoryImpl {
         .from('support_tickets')
         .select('*, $_ticketJoin')
         .eq('user_id', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .limit(100);
     return (data as List)
         .map((r) => SupportTicket.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -144,7 +147,7 @@ class SupportRepositoryImpl {
   Future<List<SupportTicket>> getAllTickets({String? status}) async {
     var q = _client.from('support_tickets').select('*, $_ticketJoin');
     if (status != null) q = q.eq('status', status);
-    final data = await q.order('created_at', ascending: false);
+    final data = await q.order('created_at', ascending: false).limit(200);
     return (data as List)
         .map((r) => SupportTicket.fromJson(r as Map<String, dynamic>))
         .toList();
@@ -189,7 +192,7 @@ class SupportRepositoryImpl {
   Future<List<AbuseReport>> getAbuseReports({String? status}) async {
     var q = _client.from('abuse_reports').select('*, $_abuseJoin');
     if (status != null) q = q.eq('status', status);
-    final data = await q.order('created_at', ascending: false);
+    final data = await q.order('created_at', ascending: false).limit(200);
     return (data as List)
         .map((r) => AbuseReport.fromJson(r as Map<String, dynamic>))
         .toList();

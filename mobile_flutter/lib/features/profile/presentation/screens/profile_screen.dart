@@ -13,6 +13,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
 import '../../../leadership/data/models/user_badge_model.dart';
 import '../../domain/entities/profile.dart';
+import '../../../../core/providers/supabase_provider.dart';
 import '../providers/profile_provider.dart';
 
 // ---------------------------------------------------------------------------
@@ -24,21 +25,27 @@ import '../providers/profile_provider.dart';
 // ---------------------------------------------------------------------------
 
 class ProfileScreen extends ConsumerWidget {
-  const ProfileScreen({super.key});
+  final String? viewUserId;
+  const ProfileScreen({super.key, this.viewUserId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsync = ref.watch(profileProvider);
-    final statsAsync   = ref.watch(profileStatsProvider);
-    final badgesAsync  = ref.watch(userBadgesProvider);
-    final leadershipAsync = ref.watch(userLeadershipProvider);
-    final isLeaderAsync = ref.watch(isVerifiedLeaderProvider);
+    final currentUserId = ref.read(supabaseProvider).auth.currentUser?.id;
+    final isOwnProfile = viewUserId == null || viewUserId == currentUserId;
+
+    final profileAsync = isOwnProfile
+        ? ref.watch(profileProvider)
+        : ref.watch(viewProfileProvider(viewUserId!));
+    final statsAsync = isOwnProfile ? ref.watch(profileStatsProvider) : const AsyncValue.data(null);
+    final badgesAsync = isOwnProfile ? ref.watch(userBadgesProvider) : const AsyncValue.data(<UserBadgeModel>[]);
+    final leadershipAsync = isOwnProfile ? ref.watch(userLeadershipProvider) : const AsyncValue.data(<UserLeadershipModel>[]);
+    final isLeaderAsync = isOwnProfile ? ref.watch(isVerifiedLeaderProvider) : const AsyncValue.data(false);
 
     return Scaffold(
       backgroundColor: context.bg,
       body: profileAsync.when(
         loading: () => const _Skeleton(),
-        error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(profileProvider)),
+        error: (e, _) => AppErrorWidget(e, onRetry: isOwnProfile ? () => ref.invalidate(profileProvider) : null),
         data: (profile) {
           if (profile == null) return const AppErrorWidget('Profile not found.');
           return _Body(
@@ -155,7 +162,7 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
 
               // Request Community Creation button (verified leaders only)
               if (widget.isLeader) ...[
-                s(idx++, _RequestCommunityCard()),
+                s(idx++, const _RequestCommunityCard()),
                 const SizedBox(height: 12),
               ],
 
@@ -534,9 +541,9 @@ class _StatsStrip extends StatelessWidget {
         Row(
           children: [
             _StatCell(value: postCount, label: 'Posts'),
-            _Divider(),
+            const _Divider(),
             const _StatCell(value: 0, label: 'Connections', cta: true),
-            _Divider(),
+            const _Divider(),
             _StatCell(value: 0, label: 'Communities', cta: true, onTap: () => context.go('/app/communities')),
           ],
         ),
@@ -593,6 +600,8 @@ class _StatCell extends StatelessWidget {
 }
 
 class _Divider extends StatelessWidget {
+  const _Divider();
+
   @override
   Widget build(BuildContext context) =>
       Container(width: 1, height: 36, color: context.borderCol);
@@ -1461,6 +1470,8 @@ class _VerificationStatusCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _RequestCommunityCard extends StatelessWidget {
+  const _RequestCommunityCard();
+
   @override
   Widget build(BuildContext context) {
     return _Card(
@@ -1552,7 +1563,7 @@ class _AccountCard extends StatelessWidget {
               );
               if (confirmed == true) {
                 await ref.read(authNotifierProvider.notifier).signOut();
-                if (context.mounted) context.go('/get-started');
+                if (context.mounted) context.go('/welcome');
               }
             },
           ),

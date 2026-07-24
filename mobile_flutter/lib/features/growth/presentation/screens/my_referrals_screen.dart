@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/growth_models.dart';
 import '../providers/growth_provider.dart';
 
@@ -79,7 +80,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
             style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: codeAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (e, _) => AppErrorWidget(e),
         data: (code) {
           if (code == null) {
@@ -113,7 +114,7 @@ class _MyReferralsScreenState extends ConsumerState<MyReferralsScreen> {
                 referralsAsync.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.all(24),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: AppLoadingWidget.list(itemCount: 3),
                   ),
                   error: (e, _) => AppErrorWidget(e),
                   data: (referrals) {

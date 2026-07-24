@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
 import 'package:unify/features/academic/presentation/providers/academic_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
@@ -53,21 +54,11 @@ class _StudyPlannerScreenState extends ConsumerState<StudyPlannerScreen> {
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(studyPlansProvider)),
         data: (plans) {
           if (plans.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.calendar_month, size: 64, color: context.borderCol),
-                  const SizedBox(height: 16),
-                  Text('No study plans yet', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextButton.icon(
-                    onPressed: () => _showCreateDialog(context),
-                    icon: const Icon(Icons.add),
-                    label: const Text('Create Study Plan'),
-                  ),
-                ],
-              ),
+            return AppEmptyWidget(
+              icon: Icons.calendar_month,
+              title: 'No study plans yet',
+              actionLabel: 'Create Study Plan',
+              onAction: () => _showCreateDialog(context),
             );
           }
           return ListView.builder(

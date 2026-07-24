@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -102,7 +104,7 @@ class _EventDetailContent extends ConsumerWidget {
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: event.coverUrl != null
-            ? Image.network(event.coverUrl!, fit: BoxFit.cover)
+            ? CachedNetworkImage(imageUrl: event.coverUrl!, fit: BoxFit.cover)
             : Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -148,15 +150,21 @@ class _EventDetailContent extends ConsumerWidget {
           children: [
             Expanded(
               child: FilledButton.icon(
-                onPressed: event.isCancelled || event.isPast ? null : () async {
-                  if (userId == null) return;
-                  if (event.registrationType == 'free') {
-                    final ticket = await ref.read(eventRepositoryProvider).registerForEvent(event.id, userId);
-                    if (ticket != null && context.mounted) {
-                      context.push('/events/ticket/${ticket.id}');
-                    }
-                  }
-                },
+                onPressed: (event.isCancelled || event.isPast) && event.myTicketId == null
+                    ? null
+                    : () async {
+                        if (userId == null) return;
+                        if (event.myTicketId != null) {
+                          if (context.mounted) context.push('/events/ticket/${event.myTicketId}');
+                          return;
+                        }
+                        if (event.registrationType == 'free') {
+                          final ticket = await ref.read(eventRepositoryProvider).registerForEvent(event.id, userId);
+                          if (ticket != null && context.mounted) {
+                            context.push('/events/ticket/${ticket.id}');
+                          }
+                        }
+                      },
                 icon: Icon(event.myTicketId != null ? Icons.confirmation_number : Icons.event),
                 label: Text(event.myTicketId != null ? 'View Ticket' : event.isPast ? 'Event Ended' : 'Register Now'),
               ),
@@ -363,23 +371,7 @@ class _ActionButtons extends StatelessWidget {
             } else {
               showModalBottomSheet(
                 context: context,
-                builder: (_) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ListTile(leading: const Icon(Icons.check, color: Colors.green), title: const Text('Going'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'going');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                  ListTile(leading: const Icon(Icons.help, color: Colors.orange), title: const Text('Maybe'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'maybe');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                  ListTile(leading: const Icon(Icons.close, color: Colors.red), title: const Text('Not Going'), onTap: () async {
-                    await ref.read(eventRepositoryProvider).rsvpEvent(event.id, userId, 'not_going');
-                    if (context.mounted) Navigator.pop(context);
-                    ref.invalidate(eventDetailProvider(eventId));
-                  }),
-                ])),
+                builder: (ctx) => _RsvpSheet(eventId: event.id, userId: userId),
               );
             }
           },
@@ -396,6 +388,71 @@ class _ActionButtons extends StatelessWidget {
         label: const Text('Calendar'),
       ),
     ]);
+  }
+}
+
+class _RsvpSheet extends ConsumerStatefulWidget {
+  final String eventId;
+  final String userId;
+  const _RsvpSheet({required this.eventId, required this.userId});
+
+  @override
+  ConsumerState<_RsvpSheet> createState() => _RsvpSheetState();
+}
+
+class _RsvpSheetState extends ConsumerState<_RsvpSheet> {
+  String? _loadingStatus;
+  String? _error;
+
+  Future<void> _rsvp(String status) async {
+    setState(() { _loadingStatus = status; _error = null; });
+    final ok = await ref.read(eventRepositoryProvider).rsvpEvent(widget.eventId, widget.userId, status);
+    if (!mounted) return;
+    if (ok) {
+      ref.read(analyticsServiceProvider).log('event_rsvp', feature: 'events');
+      ref.invalidate(eventDetailProvider(widget.eventId));
+      Navigator.pop(context);
+    } else {
+      setState(() {
+        _loadingStatus = null;
+        _error = 'RSVP failed. Please try again.';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        if (_error != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: Text(_error!, style: TextStyle(color: theme.colorScheme.error, fontSize: 13)),
+          ),
+        ListTile(
+          leading: _loadingStatus == 'going'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.check, color: Colors.green),
+          title: const Text('Going'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('going'),
+        ),
+        ListTile(
+          leading: _loadingStatus == 'maybe'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.help, color: Colors.orange),
+          title: const Text('Maybe'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('maybe'),
+        ),
+        ListTile(
+          leading: _loadingStatus == 'not_going'
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.close, color: Colors.red),
+          title: const Text('Not Going'),
+          onTap: _loadingStatus != null ? null : () => _rsvp('not_going'),
+        ),
+      ]),
+    );
   }
 }
 
@@ -465,19 +522,18 @@ class _AttendeesPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => context.push('/events/${event.id}/attendees'),
-      child: Row(children: [
-        SizedBox(
-          height: 28,
-          child: Stack(children: List.generate(3, (i) => Positioned(
-            left: i * 16.0,
-            child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: context.textSecondary)),
-          ))),
-        ),
-        const SizedBox(width: USpacing.sm),
-        Text('${event.attendeeCount} attending', style: UText.bodyXS.copyWith(color: context.textSecondary)),
-      ]),
-    );
+    // Static preview — there is no standalone attendees screen yet, so this
+    // row simply displays the count instead of navigating to a dead route.
+    return Row(children: [
+      SizedBox(
+        height: 28,
+        child: Stack(children: List.generate(3, (i) => Positioned(
+          left: i * 16.0,
+          child: CircleAvatar(radius: 14, backgroundColor: Colors.grey[300], child: Icon(Icons.person, size: 14, color: context.textSecondary)),
+        ))),
+      ),
+      const SizedBox(width: USpacing.sm),
+      Text('${event.attendeeCount} attending', style: UText.bodyXS.copyWith(color: context.textSecondary)),
+    ]);
   }
 }

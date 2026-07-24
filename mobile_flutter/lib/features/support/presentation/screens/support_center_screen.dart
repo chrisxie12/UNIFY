@@ -6,7 +6,9 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/support_models.dart';
 import '../providers/support_provider.dart';
 
@@ -61,7 +63,10 @@ class SupportCenterScreen extends ConsumerWidget {
             error: (e, _) => _ErrorText(e),
             data: (items) {
               if (items.isEmpty) {
-                return const _EmptyText('No FAQs yet.');
+                return const AppEmptyWidget(
+                  icon: Icons.help_outline_rounded,
+                  title: 'No FAQs yet.',
+                );
               }
               return Container(
                 decoration: BoxDecoration(
@@ -105,7 +110,10 @@ class SupportCenterScreen extends ConsumerWidget {
             error: (e, _) => _ErrorText(e),
             data: (items) {
               if (items.isEmpty) {
-                return const _EmptyText('No articles yet.');
+                return const AppEmptyWidget(
+                  icon: Icons.article_outlined,
+                  title: 'No articles yet.',
+                );
               }
               return Column(
                 children: [
@@ -606,10 +614,7 @@ class _SectionTitle extends StatelessWidget {
 class _LoadingBox extends StatelessWidget {
   const _LoadingBox();
   @override
-  Widget build(BuildContext context) => const Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(child: CircularProgressIndicator()),
-      );
+  Widget build(BuildContext context) => const AppLoadingWidget.list(itemCount: 5);
 }
 
 class _ErrorText extends StatelessWidget {
@@ -622,12 +627,3 @@ class _ErrorText extends StatelessWidget {
   );
 }
 
-class _EmptyText extends StatelessWidget {
-  const _EmptyText(this.text);
-  final String text;
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(text, style: TextStyle(color: context.textSecondary)),
-      );
-}

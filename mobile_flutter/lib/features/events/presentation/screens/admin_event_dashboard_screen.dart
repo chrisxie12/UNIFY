@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import 'package:unify/core/design_system/tokens.dart';
@@ -32,12 +33,11 @@ class AdminEventDashboardScreen extends ConsumerWidget {
                 Text('Pending Approval', style: UText.h4.copyWith(color: theme.colorScheme.primary)),
                 const SizedBox(height: USpacing.sm),
                 if (pending.isEmpty)
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(USpacing.xl),
-                      child: Center(
-                        child: Text('No pending events', style: UText.bodyS.copyWith(color: context.textSecondary)),
-                      ),
+                  const Padding(
+                    padding: EdgeInsets.all(USpacing.xl),
+                    child: AppEmptyWidget(
+                      icon: Icons.event_busy_rounded,
+                      title: 'No pending events',
                     ),
                   )
                 else

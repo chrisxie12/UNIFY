@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:unify/core/providers/supabase_provider.dart';
+import 'package:unify/core/services/analytics_service.dart';
 import 'package:unify/features/messaging/data/models/conversation_model.dart';
 import 'package:unify/features/messaging/data/models/message_model.dart';
 import 'package:unify/features/messaging/data/models/channel_model.dart';
@@ -18,7 +20,7 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return user?.id;
 });
 
-final conversationsProvider = StreamProvider<List<ConversationModel>>((ref) {
+final conversationsProvider = StreamProvider.autoDispose<List<ConversationModel>>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return Stream.value([]);
@@ -29,7 +31,7 @@ final selectedConversationProvider = StateProvider<String?>((ref) => null);
 
 final selectedChannelProvider = StateProvider<String?>((ref) => null);
 
-final messagesProvider = StreamProvider<List<MessageModel>>((ref) {
+final messagesProvider = StreamProvider.autoDispose<List<MessageModel>>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final conversationId = ref.watch(selectedConversationProvider);
   final channelId = ref.watch(selectedChannelProvider);
@@ -37,7 +39,7 @@ final messagesProvider = StreamProvider<List<MessageModel>>((ref) {
   return repo.messages(conversationId, channelId: channelId);
 });
 
-final channelsProvider = StreamProvider.family<List<ChannelModel>, String>((ref, conversationId) {
+final channelsProvider = StreamProvider.autoDispose.family<List<ChannelModel>, String>((ref, conversationId) {
   final repo = ref.watch(messagingRepositoryProvider);
   return repo.channels(conversationId);
 });
@@ -65,8 +67,9 @@ final searchUsersProvider = FutureProvider.family<List<Map<String, dynamic>>, St
 class MessagingNotifier extends StateNotifier<MessagingState> {
   final MessagingRepository _repo;
   final String? _userId;
+  final AnalyticsService _analytics;
 
-  MessagingNotifier(this._repo, this._userId) : super(MessagingState());
+  MessagingNotifier(this._repo, this._userId, this._analytics) : super(MessagingState());
 
   Future<void> sendMessage({
     required String conversationId,
@@ -79,7 +82,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
     if (_userId == null) return;
 
     final msg = MessageModel(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: const Uuid().v4(),
       conversationId: conversationId,
       channelId: channelId,
       senderId: _userId,
@@ -89,6 +92,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
       isSending: false,
     );
     await _repo.sendMessage(msg);
+    _analytics.log('message_sent', feature: 'messaging');
   }
 
   Future<bool> sendImageMessage({
@@ -102,13 +106,14 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
     final url = await _repo.uploadChatImage(imageFile);
     if (url == null) return false;
 
+    final id = const Uuid().v4();
     final attachment = MessageAttachment(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: id,
       type: 'image',
       url: url,
     );
     final msg = MessageModel(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: id,
       conversationId: conversationId,
       channelId: channelId,
       senderId: _userId,
@@ -118,6 +123,7 @@ class MessagingNotifier extends StateNotifier<MessagingState> {
       attachments: [attachment],
     );
     await _repo.sendMessage(msg);
+    _analytics.log('message_sent', feature: 'messaging');
     return true;
   }
 
@@ -172,7 +178,8 @@ class MessagingState {
 final messagingProvider = StateNotifierProvider<MessagingNotifier, MessagingState>((ref) {
   final repo = ref.watch(messagingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
-  return MessagingNotifier(repo, userId);
+  final analytics = ref.watch(analyticsServiceProvider);
+  return MessagingNotifier(repo, userId, analytics);
 });
 
 // ── Pinned conversations (client-side, session-scoped) ────────────────────
@@ -191,7 +198,7 @@ final pinnedConversationsProvider =
 
 // ── Per-conversation typing stream ────────────────────────────────────────
 final typingProvider =
-    StreamProvider.family<int, String>((ref, conversationId) {
+    StreamProvider.autoDispose.family<int, String>((ref, conversationId) {
   final repo = ref.watch(messagingRepositoryProvider);
   return repo.typingStatus(conversationId);
 });

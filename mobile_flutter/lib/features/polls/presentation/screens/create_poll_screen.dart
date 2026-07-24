@@ -24,6 +24,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
   String _pollType = 'single';
   bool _isAnonymous = false;
   DateTime? _expiryDate;
+  final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
 
   @override
@@ -43,12 +44,6 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
     super.dispose();
   }
 
-  bool get _isValid {
-    if (_questionController.text.trim().isEmpty) return false;
-    final filledOptions = _optionControllers.where((c) => c.text.trim().isNotEmpty).length;
-    return filledOptions >= 2;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +55,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
         title: const Text('Create Poll'),
         actions: [
           TextButton(
-            onPressed: _isValid && !_isSubmitting ? _submitPoll : null,
+            onPressed: !_isSubmitting ? _submitPoll : null,
             child: _isSubmitting
                 ? const SizedBox(
                     width: 20, height: 20,
@@ -69,7 +64,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                 : Text(
                     'Create',
                     style: TextStyle(
-                      color: _isValid ? Theme.of(context).colorScheme.primary : Colors.grey[400],
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -77,12 +72,15 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            TextFormField(
               controller: _questionController,
               decoration: InputDecoration(
                 hintText: 'Ask a question...',
@@ -101,6 +99,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
               ),
               style: const TextStyle(fontSize: 16),
               maxLines: 2,
+              validator: (v) => v == null || v.trim().isEmpty ? 'Question is required' : null,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 12),
@@ -174,7 +173,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: TextField(
+                      child: TextFormField(
                         controller: controller,
                         decoration: InputDecoration(
                           hintText: 'Option ${index + 1}',
@@ -191,6 +190,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                           ),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         ),
+                        validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
                         onChanged: (_) => setState(() {}),
                       ),
                     ),
@@ -296,6 +296,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -319,7 +320,7 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
   }
 
   Future<void> _submitPoll() async {
-    if (!_isValid || _isSubmitting) return;
+    if (!_formKey.currentState!.validate() || _isSubmitting) return;
 
     setState(() => _isSubmitting = true);
 

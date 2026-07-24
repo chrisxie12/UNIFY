@@ -5,6 +5,7 @@ import '../../presentation/providers/admin_provider.dart';
 import '../../presentation/widgets/admin_widgets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
@@ -34,21 +35,11 @@ class UniversityManagementScreen extends ConsumerWidget {
           child: universitiesAsync.when(
             data: (universities) {
               if (universities.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.account_balance_rounded, size: 64, color: context.borderCol),
-                      const SizedBox(height: 16),
-                      Text('No universities registered', style: TextStyle(fontSize: 16, color: context.textSecondary)),
-                      const SizedBox(height: 8),
-                      FilledButton.icon(
-                        onPressed: () => _showUniversityDialog(context, ref),
-                        icon: const Icon(Icons.add_rounded),
-                        label: const Text('Add University'),
-                      ),
-                    ],
-                  ),
+                return AppEmptyWidget(
+                  icon: Icons.inbox_rounded,
+                  title: 'No universities registered',
+                  actionLabel: 'Add University',
+                  onAction: () => _showUniversityDialog(context, ref),
                 );
               }
               return ListView.builder(

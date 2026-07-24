@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
@@ -74,15 +75,9 @@ class _ResourceTab extends StatelessWidget {
       data: (items) {
         final filtered = items.where((r) => r.type == type).toList();
         if (filtered.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.folder_open, size: 48, color: context.textSecondary),
-                const SizedBox(height: 12),
-                Text('No ${type}s yet', style: TextStyle(color: context.textSecondary)),
-              ],
-            ),
+          return AppEmptyWidget(
+            icon: Icons.menu_book_rounded,
+            title: 'No ${type}s yet',
           );
         }
         return ListView.builder(
@@ -145,15 +140,9 @@ class _AssignmentTab extends StatelessWidget {
       error: (e, _) => AppErrorWidget(e),
       data: (items) {
         if (items.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.assignment_outlined, size: 48, color: context.textSecondary),
-                const SizedBox(height: 12),
-                Text('No assignments yet', style: TextStyle(color: context.textSecondary)),
-              ],
-            ),
+          return const AppEmptyWidget(
+            icon: Icons.assignment_rounded,
+            title: 'No assignments yet',
           );
         }
         return ListView.builder(

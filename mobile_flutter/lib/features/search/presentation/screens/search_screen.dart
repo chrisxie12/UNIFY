@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_loading_widget.dart';
 import '../providers/search_provider.dart';
 
@@ -54,7 +55,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     super.initState();
     _tabCtrl = TabController(length: _kTabs.length, vsync: this);
     _tabCtrl.addListener(_onTabChanged);
-    for (final (cat, _, __) in _kTabs) {
+    for (final (cat, _, _) in _kTabs) {
       if (cat == SearchCategory.all) continue;
       _items[cat]    = [];
       _offsets[cat]  = 0;
@@ -91,7 +92,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       setState(() => _query = q);
       if (q.length >= 2) {
         if (changed) _resetAll();
-        final (cat, _, __) = _kTabs[_tabCtrl.index];
+        final (cat, _, _) = _kTabs[_tabCtrl.index];
         if (cat != SearchCategory.all) _load(cat);
         ref.read(recentSearchesProvider.notifier).add(q);
       }
@@ -118,7 +119,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   void _onTabChanged() {
     if (_tabCtrl.indexIsChanging) return;
-    final (cat, _, __) = _kTabs[_tabCtrl.index];
+    final (cat, _, _) = _kTabs[_tabCtrl.index];
     if (cat != SearchCategory.all && _query.length >= 2 && !(_loaded[cat] ?? false)) {
       _load(cat);
     }
@@ -128,7 +129,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   void _resetAll() {
     setState(() {
-      for (final (cat, _, __) in _kTabs) {
+    for (final (cat, _, _) in _kTabs) {
         if (cat == SearchCategory.all) continue;
         _items[cat]    = [];
         _offsets[cat]  = 0;
@@ -226,7 +227,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       body: TabBarView(
         controller: _tabCtrl,
         children: _kTabs.map((t) {
-          final (cat, _, __) = t;
+          final (cat, _, _) = t;
           if (cat == SearchCategory.all) {
             return _AllTab(
               query: _query,
@@ -652,24 +653,10 @@ class _EmptyState extends StatelessWidget {
       SearchCategory.marketplace => 'marketplace items',
       _                          => 'results',
     };
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.search_off_rounded, size: 56, color: context.textDisabled),
-          const SizedBox(height: 12),
-          Text('No $label found',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: context.textPrimary,
-                    fontWeight: FontWeight.w600,
-                  )),
-          const SizedBox(height: 6),
-          Text(
-            'Try different keywords for "$query"',
-            style: TextStyle(fontSize: 14, color: context.textSecondary),
-          ),
-        ],
-      ),
+    return AppEmptyWidget(
+      icon: Icons.search_off_rounded,
+      title: 'No $label found',
+      subtitle: 'Try different keywords for "$query"',
     );
   }
 }

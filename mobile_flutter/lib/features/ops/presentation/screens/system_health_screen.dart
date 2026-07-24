@@ -5,9 +5,11 @@ import '../../../../core/extensions/datetime_extensions.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/errors/error_mapper.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
 import '../widgets/ops_widgets.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class SystemHealthScreen extends ConsumerWidget {
   const SystemHealthScreen({super.key});
@@ -162,11 +164,11 @@ class SystemHealthScreen extends ConsumerWidget {
               error: (e, _) => _ErrorText(error: e),
               data: (errors) {
                 if (errors.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Center(
-                      child: Text('No recent errors logged',
-                          style: TextStyle(color: context.textSecondary)),
+                  return const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: AppEmptyWidget(
+                      icon: Icons.check_circle_outline_rounded,
+                      title: 'No recent errors logged',
                     ),
                   );
                 }
@@ -250,10 +252,7 @@ class _ErrorTile extends StatelessWidget {
 class _Loading extends StatelessWidget {
   const _Loading();
   @override
-  Widget build(BuildContext context) => const Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(child: CircularProgressIndicator()),
-      );
+  Widget build(BuildContext context) => const AppLoadingWidget.list(itemCount: 5);
 }
 
 class _ErrorText extends StatelessWidget {

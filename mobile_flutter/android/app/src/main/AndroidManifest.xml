@@ -27,6 +27,14 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Supabase OAuth (Google) deep-link callback:
+                 com.gctu.unify://auth/callback -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.gctu.unify" android:host="auth"/>
+            </intent-filter>
         </activity>
         <!-- FCM: use the custom channel for all notifications (console + API v1) -->
         <meta-data

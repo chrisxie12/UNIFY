@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unify/core/widgets/app_empty_widget.dart';
 import 'package:unify/core/widgets/app_error_widget.dart';
 import 'package:unify/core/widgets/app_loading_widget.dart';
 import 'package:unify/features/academic/data/models/academic_models.dart';
@@ -31,18 +32,10 @@ class CourseListScreen extends ConsumerWidget {
         error: (e, _) => AppErrorWidget(e, onRetry: () => ref.invalidate(coursesProvider)),
         data: (courses) {
           if (courses.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.school_outlined, size: 64, color: context.borderCol),
-                  const SizedBox(height: 16),
-                  Text('No courses available', style: TextStyle(color: context.textSecondary, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Text('Courses will appear when added by your department',
-                      style: TextStyle(color: context.textSecondary, fontSize: 13)),
-                ],
-              ),
+            return const AppEmptyWidget(
+              icon: Icons.menu_book_rounded,
+              title: 'No courses available',
+              subtitle: 'Courses will appear when added by your department',
             );
           }
           return ListView.builder(

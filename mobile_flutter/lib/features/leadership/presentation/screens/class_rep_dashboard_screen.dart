@@ -8,6 +8,7 @@ import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/leadership_provider.dart';
 import '../../data/models/announcement_request_model.dart';
 import '../../data/models/community_request_model.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/user_badge_model.dart';
 
 class ClassRepDashboardScreen extends ConsumerWidget {
@@ -97,7 +98,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
                 );
               },
               error: (_, __) => const SizedBox.shrink(),
-              loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+              loading: () => const Padding(padding: EdgeInsets.all(16), child: AppLoadingWidget.list(itemCount: 2)),
             ),
             const SizedBox(height: 20),
 
@@ -114,7 +115,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
                 );
               },
               error: (_, __) => const SizedBox.shrink(),
-              loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+              loading: () => const Padding(padding: EdgeInsets.all(16), child: AppLoadingWidget.list(itemCount: 2)),
             ),
             const SizedBox(height: 24),
 
@@ -129,7 +130,7 @@ class ClassRepDashboardScreen extends ConsumerWidget {
                 );
               },
               error: (_, __) => const SizedBox.shrink(),
-              loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+              loading: () => const Padding(padding: EdgeInsets.all(16), child: AppLoadingWidget.list(itemCount: 2)),
             ),
             const SizedBox(height: 32),
           ],

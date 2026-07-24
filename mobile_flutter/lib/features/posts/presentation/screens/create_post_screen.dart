@@ -24,6 +24,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   String _postType = 'text';
   File? _selectedImage;
   final _linkController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
 
   final List<_PostTypeOption> _postTypes = [
@@ -42,8 +43,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     super.dispose();
   }
 
-  bool get _hasContent => _bodyController.text.trim().isNotEmpty;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +54,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         title: const Text('Create Post'),
         actions: [
           TextButton(
-            onPressed: _hasContent && !_isSubmitting ? _submitPost : null,
+            onPressed: !_isSubmitting ? _submitPost : null,
             child: _isSubmitting
                 ? const SizedBox(
                     width: 20, height: 20,
@@ -64,7 +63,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 : Text(
                     'Post',
                     style: TextStyle(
-                      color: _hasContent ? Theme.of(context).colorScheme.primary : Colors.grey[400],
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -72,24 +71,28 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: 'Title (optional)',
+                hintText: 'Title',
                 hintStyle: TextStyle(color: context.textSecondary, fontSize: 18),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               maxLines: 1,
+              validator: (v) => v == null || v.trim().isEmpty ? 'Title is required' : null,
             ),
             const SizedBox(height: 8),
-            TextField(
+            TextFormField(
               controller: _bodyController,
               decoration: InputDecoration(
                 hintText: "What's on your mind?",
@@ -100,7 +103,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               style: const TextStyle(fontSize: 15, height: 1.5),
               maxLines: 8,
               minLines: 3,
-              onChanged: (_) => setState(() {}),
+              validator: (v) => v == null || v.trim().isEmpty ? 'Body is required' : null,
             ),
             const SizedBox(height: 20),
             Text(
@@ -122,7 +125,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     child: GestureDetector(
                       onTap: () {
                         if (type.id == 'poll') {
-                          context.push('/communities/${widget.communityId}/create-poll');
+                          context.push('/community/${widget.communityId}/create-poll');
                           return;
                         }
                         if (type.id == 'image') {
@@ -198,7 +201,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               ),
             ],
             if (_postType == 'link') ...[
-              TextField(
+              TextFormField(
                 controller: _linkController,
                 decoration: InputDecoration(
                   hintText: 'https://',
@@ -216,10 +219,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.url,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null;
+                  final uri = Uri.tryParse(v.trim());
+                  if (uri == null || !uri.hasScheme || !uri.hasAuthority) return 'Enter a valid URL';
+                  return null;
+                },
               ),
             ],
           ],
         ),
+      ),
       ),
     );
   }
@@ -233,7 +243,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }
 
   Future<void> _submitPost() async {
-    if (!_hasContent || _isSubmitting) return;
+    if (!_formKey.currentState!.validate() || _isSubmitting) return;
 
     setState(() => _isSubmitting = true);
 

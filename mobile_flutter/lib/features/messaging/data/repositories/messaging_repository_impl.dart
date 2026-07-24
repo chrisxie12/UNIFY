@@ -17,8 +17,8 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return _client
         .from('conversations')
         .stream(primaryKey: ['id'])
-        .eq('user_id', userId)
         .order('last_message_at', ascending: false)
+        .limit(50)
         .map((maps) =>
             maps.map((m) => ConversationModel.fromMap(m)).toList());
   }
@@ -30,7 +30,8 @@ class MessagingRepositoryImpl implements MessagingRepository {
         .from('messages')
         .stream(primaryKey: ['id'])
         .eq('conversation_id', conversationId)
-        .order('created_at', ascending: true)
+        .order('created_at', ascending: false)
+        .limit(100)
         .map((maps) => maps
             .where((m) {
               final exp = m['expires_at'];
@@ -48,6 +49,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
         .stream(primaryKey: ['id'])
         .eq('conversation_id', conversationId)
         .order('position', ascending: true)
+        .limit(50)
         .map((maps) =>
             maps.map((m) => ChannelModel.fromMap(m)).toList());
   }
@@ -181,7 +183,8 @@ class MessagingRepositoryImpl implements MessagingRepository {
     final myRows = await _client
         .from('conversation_participants')
         .select('conversation_id')
-        .eq('user_id', currentUserId);
+        .eq('user_id', currentUserId)
+        .limit(500);
     final myIds = (myRows as List).map((e) => e['conversation_id'] as String).toList();
 
     if (myIds.isNotEmpty) {
@@ -190,7 +193,8 @@ class MessagingRepositoryImpl implements MessagingRepository {
           .from('conversations')
           .select('id')
           .eq('type', 'direct')
-          .inFilter('id', myIds);
+          .inFilter('id', myIds)
+          .limit(500);
       final directIds = (directRows as List).map((e) => e['id'] as String).toList();
 
       if (directIds.isNotEmpty) {
@@ -199,7 +203,8 @@ class MessagingRepositoryImpl implements MessagingRepository {
             .from('conversation_participants')
             .select('conversation_id')
             .eq('user_id', targetUserId)
-            .inFilter('conversation_id', directIds);
+            .inFilter('conversation_id', directIds)
+            .limit(50);
         if ((sharedRows as List).isNotEmpty) {
           return sharedRows.first['conversation_id'] as String;
         }
@@ -346,12 +351,21 @@ class MessagingRepositoryImpl implements MessagingRepository {
     return result != null;
   }
 
+  String _escapeSearch(String s) {
+    return s
+        .replaceAll('\\', '\\\\')
+        .replaceAll('%', '\\%')
+        .replaceAll('_', '\\_')
+        .replaceAll(',', ' ');
+  }
+
   @override
   Future<List<Map<String, dynamic>>> searchUsers(String query) async {
+    final safe = _escapeSearch(query);
     final data = await _client
         .from('profiles')
-        .select('id, full_name, avatar_url, programme, level, department, community_name')
-        .or('full_name.ilike.%$query%,programme.ilike.%$query%,department.ilike.%$query%')
+        .select('id, full_name, avatar_url, programme, level, department')
+        .or('full_name.ilike.%$safe%,programme.ilike.%$safe%,department.ilike.%$safe%')
         .limit(20);
     return (data as List).cast<Map<String, dynamic>>();
   }
@@ -385,6 +399,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
         .stream(primaryKey: ['id'])
         .eq('conversation_id', conversationId)
         .order('created_at', ascending: false)
+        .limit(1)
         .map((maps) {
           if (maps.isEmpty) return null;
           return MessageModel.fromMap(maps.first);

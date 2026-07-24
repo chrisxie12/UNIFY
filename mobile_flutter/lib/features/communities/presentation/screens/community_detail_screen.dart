@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,9 +8,12 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/verified_badge.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/providers/supabase_provider.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
+import '../../../../features/leadership/data/models/community_request_model.dart';
 import '../../data/models/community_content_models.dart';
 import '../providers/communities_provider.dart';
 import '../../../snapshots/presentation/widgets/snapshot_tray.dart';
@@ -32,7 +36,7 @@ class CommunityDetailScreen extends ConsumerWidget {
         return _CommunityDetailView(community: community);
       },
       loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: AppLoadingWidget.card(),
       ),
       error: (e, _) => Scaffold(
         appBar: AppBar(),
@@ -45,7 +49,7 @@ class CommunityDetailScreen extends ConsumerWidget {
 // ── Main view ─────────────────────────────────────────────────
 
 class _CommunityDetailView extends ConsumerWidget {
-  final community;
+  final CommunityModel community;
   const _CommunityDetailView({required this.community});
 
   static const _tabs = [
@@ -59,7 +63,7 @@ class _CommunityDetailView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final membershipAsync =
-        ref.watch(communityMembershipProvider(community.id as String));
+        ref.watch(communityMembershipProvider(community.id));
     final role = membershipAsync.valueOrNull;
     final isMember = role != null;
     final primary = context.primary;
@@ -119,18 +123,18 @@ class _CommunityDetailView extends ConsumerWidget {
           ],
           body: TabBarView(
             children: [
-              _AnnouncementsTab(communityId: community.id as String),
+              _AnnouncementsTab(communityId: community.id),
               _DiscussionsTab(
-                communityId: community.id as String,
+                communityId: community.id,
                 isMember: isMember,
                 role: role,
               ),
               _ResourcesTab(
-                communityId: community.id as String,
+                communityId: community.id,
                 isMember: isMember,
               ),
-              _MediaTab(communityId: community.id as String),
-              _MembersTab(communityId: community.id as String),
+              _MediaTab(communityId: community.id),
+              _MembersTab(communityId: community.id),
             ],
           ),
         ),
@@ -142,7 +146,7 @@ class _CommunityDetailView extends ConsumerWidget {
 // ── Header ────────────────────────────────────────────────────
 
 class _CommunityHeader extends ConsumerWidget {
-  final community;
+  final CommunityModel community;
   final String? role;
   final bool isMember;
   final Color primary;
@@ -160,9 +164,9 @@ class _CommunityHeader extends ConsumerWidget {
       fit: StackFit.expand,
       children: [
         // Banner background
-        (community.coverUrl as String?) != null
-            ? Image.network(
-                community.coverUrl as String,
+        community.coverUrl != null
+            ? CachedNetworkImage(
+                imageUrl: community.coverUrl!,
                 fit: BoxFit.cover,
               )
             : Container(
@@ -215,31 +219,31 @@ class _CommunityHeader extends ConsumerWidget {
                       offset: const Offset(0, 4),
                     ),
                   ],
-                  image: (community.avatarUrl as String?) != null
-                      ? DecorationImage(
-                          image: NetworkImage(community.avatarUrl as String),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
-                child: (community.avatarUrl as String?) == null
-                    ? Center(
-                        child: Text(
-                          (community.name as String)
-                              .trim()
-                              .split(' ')
-                              .take(2)
-                              .map((w) => w.isNotEmpty ? w[0] : '')
-                              .join()
-                              .toUpperCase(),
-                          style: TextStyle(
-                            color: primary,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 22,
-                          ),
-                        ),
-                      )
-                    : null,
+              image: community.avatarUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage(community.avatarUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: community.avatarUrl == null
+                ? Center(
+                    child: Text(
+                      community.name
+                          .trim()
+                          .split(' ')
+                          .take(2)
+                          .map((w) => w.isNotEmpty ? w[0] : '')
+                          .join()
+                          .toUpperCase(),
+                      style: TextStyle(
+                        color: primary,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22,
+                      ),
+                    ),
+                  )
+                : null,
               ),
               const SizedBox(height: 10),
 
@@ -248,7 +252,7 @@ class _CommunityHeader extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      community.name as String,
+                      community.name,
                       style: UText.h1.copyWith(color: Colors.white, height: 1.2),
                     ),
                   ),
@@ -258,15 +262,15 @@ class _CommunityHeader extends ConsumerWidget {
               ),
 
               // Programme · Level
-              if ((community.programme as String?) != null ||
-                  (community.level as String?) != null) ...[
+              if (community.programme != null ||
+                  community.level != null) ...[
                 const SizedBox(height: USpacing.xs),
                 Text(
                   [
-                    if ((community.programme as String?) != null)
-                      community.programme as String,
-                    if ((community.level as String?) != null)
-                      community.level as String,
+                    if (community.programme != null)
+                      community.programme!,
+                    if (community.level != null)
+                      community.level!,
                   ].join(' · '),
                   style: UText.bodyXS.copyWith(color: Colors.white.withValues(alpha: 0.8)),
                 ),
@@ -287,7 +291,7 @@ class _CommunityHeader extends ConsumerWidget {
                   ),
                   const Spacer(),
                   _HeaderJoinButton(
-                    communityId: community.id as String,
+                    communityId: community.id,
                     role: role,
                     isMember: isMember,
                   ),
@@ -405,7 +409,7 @@ class _AnnouncementsTab extends ConsumerWidget {
           );
         },
         loading: () => const SliverFillRemaining(
-          child: Center(child: CircularProgressIndicator()),
+          child: AppLoadingWidget.list(itemCount: 3),
         ),
         error: (e, _) => SliverFillRemaining(
           child: AppErrorWidget(e),
@@ -583,13 +587,15 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
     setState(() => _submitting = true);
     try {
       final client = ref.read(supabaseProvider);
-      final user = client.auth.currentUser!;
+      final user = client.auth.currentUser;
+      if (user == null) return;
       await ref.read(communitiesRepositoryProvider).createPost(
         communityId: widget.communityId,
         authorId: user.id,
         body: _bodyCtrl.text.trim(),
         title: _titleCtrl.text.trim().isEmpty ? null : _titleCtrl.text.trim(),
       );
+      ref.read(analyticsServiceProvider).log('post_created', feature: 'posts');
       _bodyCtrl.clear();
       _titleCtrl.clear();
       setState(() => _composing = false);
@@ -635,15 +641,15 @@ class _DiscussionsTabState extends ConsumerState<_DiscussionsTab> {
                 ),
               );
             },
-            loading: () => const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+loading: () => const SliverFillRemaining(
+              child: AppLoadingWidget.list(itemCount: 3),
             ),
             error: (e, _) => SliverFillRemaining(
               child: AppErrorWidget(e),
             ),
           ),
         ),
- 
+        
         // Compose panel at bottom
         if (widget.isMember)
           Positioned(
@@ -941,7 +947,7 @@ class _ResourcesTab extends ConsumerWidget {
           );
         },
         loading: () => const SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator())),
+            child: AppLoadingWidget.list(itemCount: 3)),
         error: (e, _) =>
             SliverFillRemaining(child: AppErrorWidget(e)),
       ),
@@ -1108,7 +1114,7 @@ class _MembersTab extends ConsumerWidget {
           );
         },
         loading: () => const SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator())),
+            child: AppLoadingWidget.list(itemCount: 5)),
         error: (e, _) =>
             SliverFillRemaining(child: AppErrorWidget(e)),
       ),

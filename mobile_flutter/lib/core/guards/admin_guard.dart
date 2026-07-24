@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../extensions/theme_extensions.dart';
+import '../widgets/app_loading_widget.dart';
 import '../widgets/unify_wordmark.dart';
 
 // ── Access-denied signal ──────────────────────────────────────────────────────
@@ -30,7 +31,7 @@ class AdminGuard extends ConsumerWidget {
 
     return userAsync.when(
       loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: AppLoadingWidget.card(),
       ),
       error: (_, __) => Scaffold(
         body: Center(
@@ -48,7 +49,7 @@ class AdminGuard extends ConsumerWidget {
       ),
       data: (user) {
         if (user == null || !user.isAdmin) {
-          return _AccessDeniedScreen();
+          return const _AccessDeniedScreen();
         }
         return child;
       },
@@ -59,6 +60,8 @@ class AdminGuard extends ConsumerWidget {
 // ── Branded access-denied screen ──────────────────────────────────────────────
 
 class _AccessDeniedScreen extends StatelessWidget {
+  const _AccessDeniedScreen();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

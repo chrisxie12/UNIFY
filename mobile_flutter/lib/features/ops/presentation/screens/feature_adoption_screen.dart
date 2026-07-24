@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_widget.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 import '../../data/models/ops_models.dart';
 import '../providers/ops_provider.dart';
 
@@ -40,7 +41,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(featureAdoptionProvider),
         child: adoptionAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const AppLoadingWidget.list(itemCount: 5),
           error: (e, _) => AppErrorWidget(e),
           data: (features) {
             if (features.isEmpty) {

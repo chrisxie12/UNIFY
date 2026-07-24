@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/app_empty_widget.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../data/models/reputation_models.dart';
 import '../providers/reputation_provider.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 class ReputationDashboardScreen extends ConsumerWidget {
   final String? targetUserId;
@@ -30,7 +32,7 @@ class ReputationDashboardScreen extends ConsumerWidget {
       ),
       body: summaryAsync.when(
         data: (summary) => _DashboardContent(summary: summary, ref: ref, userId: userId),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingWidget.card(),
         error: (err, _) => AppErrorWidget(err),
       ),
     );
@@ -203,20 +205,10 @@ class _AchievementsSection extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         if (achievements.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Center(
-                child: Column(
-                  children: [
-                    Icon(Icons.emoji_events_outlined, size: 48, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
-                    const SizedBox(height: 8),
-                    Text('No achievements yet', style: theme.textTheme.bodyMedium),
-                    Text('Participate to earn badges', style: theme.textTheme.bodySmall),
-                  ],
-                ),
-              ),
-            ),
+          const AppEmptyWidget(
+            icon: Icons.emoji_events_outlined,
+            title: 'No achievements yet',
+            subtitle: 'Participate to earn badges',
           )
         else
           SizedBox(
@@ -277,14 +269,9 @@ class _SkillsPreview extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         if (skills.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Text('No skills added yet. Tap Manage to add your skills.',
-                    style: theme.textTheme.bodySmall),
-              ),
-            ),
+          const AppEmptyWidget(
+            icon: Icons.psychology_rounded,
+            title: 'No skills added yet. Tap Manage to add your skills.',
           )
         else
           Wrap(
@@ -316,11 +303,9 @@ class _ContributionsSection extends StatelessWidget {
         Text('Contributions', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         if (summary.contributionsByType.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text('No contributions yet', style: theme.textTheme.bodySmall),
-            ),
+          const AppEmptyWidget(
+            icon: Icons.history_rounded,
+            title: 'No contributions yet',
           )
         else
           Card(
@@ -388,11 +373,9 @@ class _ActivitySection extends ConsumerWidget {
         eventsAsync.when(
           data: (events) {
             if (events.isEmpty) {
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text('No activity yet', style: theme.textTheme.bodySmall),
-                ),
+              return const AppEmptyWidget(
+                icon: Icons.history_rounded,
+                title: 'No activity yet',
               );
             }
             return Column(
@@ -417,7 +400,7 @@ class _ActivitySection extends ConsumerWidget {
               )).toList(),
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const AppLoadingWidget.list(itemCount: 3),
           error: (_, __) => const SizedBox.shrink(),
         ),
       ],

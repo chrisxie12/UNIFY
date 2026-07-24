@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     projectId: 'unify-b92fd',
     storageBucket: 'unify-b92fd.firebasestorage.app',
     iosClientId: '752669005350-bfqtdv4q2arsut5084sinp3hr9h9o5ae.apps.googleusercontent.com',
-    iosBundleId: 'com.example.unify',
+    iosBundleId: 'com.gctu.unify',
   );
 }

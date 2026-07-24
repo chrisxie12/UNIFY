@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../providers/announcement_social_provider.dart';
 import '../../domain/entities/announcement_comment.dart';
 import '../../../../core/extensions/theme_extensions.dart';
+import '../../../../core/widgets/app_loading_widget.dart';
 
 /// Instagram-style bottom sheet for viewing and adding comments on an announcement.
 class CommentSheet extends ConsumerStatefulWidget {
@@ -105,7 +106,7 @@ class _CommentSheetState extends ConsumerState<CommentSheet> {
             // ── Comment list ─────────────────────────────────────────────
             Expanded(
               child: commentsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                loading: () => const AppLoadingWidget.list(itemCount: 3),
                 error: (_, __) => Center(
                   child: Text('Failed to load comments', style: TextStyle(color: context.textSecondary)),
                 ),
