@@ -21,46 +21,11 @@ class MainShell extends ConsumerStatefulWidget {
   ConsumerState<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends ConsumerState<MainShell>
-    with SingleTickerProviderStateMixin {
+class _MainShellState extends ConsumerState<MainShell> {
   bool _visible = true;
-  bool _fabOpen = false;
-  late AnimationController _fabAnimCtrl;
-  late Animation<double> _fabScale;
-  late Animation<double> _fabOpacity;
-
-  @override
-  void initState() {
-    super.initState();
-    _fabAnimCtrl = AnimationController(
-      vsync: this,
-      duration: UMotion.normal,
-    );
-    _fabScale = CurvedAnimation(parent: _fabAnimCtrl, curve: Curves.easeOutBack);
-    _fabOpacity = CurvedAnimation(parent: _fabAnimCtrl, curve: Curves.easeOut);
-  }
-
-  @override
-  void dispose() {
-    _fabAnimCtrl.dispose();
-    super.dispose();
-  }
-
-  void _toggleFab() {
-    HapticFeedback.mediumImpact();
-    setState(() {
-      _fabOpen = !_fabOpen;
-      if (_fabOpen) {
-        _fabAnimCtrl.forward();
-      } else {
-        _fabAnimCtrl.reverse();
-      }
-    });
-  }
 
   void _onNavTap(int index) {
     HapticFeedback.selectionClick();
-    if (_fabOpen) _toggleFab();
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
@@ -73,6 +38,7 @@ class _MainShellState extends ConsumerState<MainShell>
     final msgBadge = ref.watch(msg.unreadCountProvider).valueOrNull ?? 0;
     final userAsync = ref.watch(currentAppUserProvider);
     final user = userAsync.valueOrNull;
+    final current = navigationShell.currentIndex;
 
     ref.listen<bool>(adminAccessDeniedProvider, (_, denied) {
       if (!denied) return;
@@ -122,15 +88,6 @@ class _MainShellState extends ConsumerState<MainShell>
         child: OfflineBanner(child: navigationShell),
       ),
       extendBody: true,
-      floatingActionButton: _FabDial(
-        visible: _visible,
-        fabOpen: _fabOpen,
-        animCtrl: _fabAnimCtrl,
-        fabScale: _fabScale,
-        fabOpacity: _fabOpacity,
-        onToggle: _toggleFab,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedSlide(
         duration: UMotion.fast,
         offset: _visible ? Offset.zero : const Offset(0, 1.5),
@@ -154,41 +111,53 @@ class _MainShellState extends ConsumerState<MainShell>
               top: false,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: USpacing.sm,
+                  horizontal: USpacing.xs,
                   vertical: USpacing.xs,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _NavItem(
+                    Expanded(child: _NavItem(
                       icon: Iconsax.home_1,
                       activeIcon: Iconsax.home_1_copy,
                       label: 'Home',
-                      isActive: navigationShell.currentIndex == 0,
+                      isActive: current == 0,
                       onTap: () => _onNavTap(0),
-                    ),
-                    _NavItem(
+                    )),
+                    Expanded(child: _NavItem(
                       icon: Iconsax.search_normal_1,
                       activeIcon: Iconsax.search_normal_1_copy,
                       label: 'Explore',
-                      isActive: navigationShell.currentIndex == 1,
+                      isActive: current == 1,
                       onTap: () => _onNavTap(1),
-                    ),
-                    const SizedBox(width: UTouch.fab),
-                    _NavItem(
+                    )),
+                    Expanded(child: _NavItem(
+                      icon: Iconsax.calendar_1,
+                      activeIcon: Iconsax.calendar_1_copy,
+                      label: 'Events',
+                      isActive: current == 2,
+                      onTap: () => _onNavTap(2),
+                    )),
+                    Expanded(child: _NavItem(
+                      icon: Iconsax.book_1,
+                      activeIcon: Iconsax.book_1_copy,
+                      label: 'Study',
+                      isActive: current == 3,
+                      onTap: () => _onNavTap(3),
+                    )),
+                    Expanded(child: _NavItem(
                       icon: Iconsax.message_2,
                       activeIcon: Iconsax.message_2_copy,
-                      label: 'Messages',
+                      label: 'Chat',
                       badge: msgBadge,
-                      isActive: navigationShell.currentIndex == 2,
-                      onTap: () => _onNavTap(2),
-                    ),
-                    _ProfileNavItem(
-                      isActive: navigationShell.currentIndex == 3,
+                      isActive: current == 4,
+                      onTap: () => _onNavTap(4),
+                    )),
+                    Expanded(child: _ProfileNavItem(
+                      isActive: current == 5,
                       avatarUrl: user?.avatarUrl,
                       displayName: user?.displayName,
-                      onTap: () => _onNavTap(3),
-                    ),
+                      onTap: () => _onNavTap(5),
+                    )),
                   ],
                 ),
               ),
@@ -222,55 +191,54 @@ class _NavItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Icon(
-                  isActive ? activeIcon : icon,
-                  size: UIcon.lg,
-                  color: isActive ? context.primary : context.textSecondary,
-                ),
-                if (badge > 0)
-                  Positioned(
-                    right: -4,
-                    top: -2,
-                    child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFEF4444),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          badge > 9 ? '9+' : '$badge',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                          ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Icon(
+                isActive ? activeIcon : icon,
+                size: UIcon.base,
+                color: isActive ? context.primary : context.textSecondary,
+              ),
+              if (badge > 0)
+                Positioned(
+                  right: -4,
+                  top: -2,
+                  child: Container(
+                    width: 14,
+                    height: 14,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFEF4444),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        badge > 9 ? '9+' : '$badge',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ),
-              ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? context.primary : context.textSecondary,
             ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? context.primary : context.textSecondary,
-              ),
-            ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
@@ -294,50 +262,47 @@ class _ProfileNavItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: isActive
-                    ? Border.all(color: context.primary, width: 2)
-                    : Border.all(color: Colors.transparent, width: 2),
-              ),
-              child: CircleAvatar(
-                radius: 12,
-                backgroundColor: isActive
-                    ? context.primary.withValues(alpha: 0.15)
-                    : context.surfaceFill,
-                backgroundImage:
-                    avatarUrl != null ? NetworkImage(avatarUrl!) : null,
-                child: avatarUrl == null
-                    ? Text(
-                        _initials(displayName),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: isActive ? context.primary : context.textSecondary,
-                        ),
-                      )
-                    : null,
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: isActive
+                  ? Border.all(color: context.primary, width: 2)
+                  : Border.all(color: Colors.transparent, width: 2),
             ),
-            const SizedBox(height: 2),
-            Text(
-              'Profile',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? context.primary : context.textSecondary,
-              ),
+            child: CircleAvatar(
+              radius: 9,
+              backgroundColor: isActive
+                  ? context.primary.withValues(alpha: 0.15)
+                  : context.surfaceFill,
+              backgroundImage:
+                  avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+              child: avatarUrl == null
+                  ? Text(
+                      _initials(displayName),
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: isActive ? context.primary : context.textSecondary,
+                      ),
+                    )
+                  : null,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Profile',
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              color: isActive ? context.primary : context.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -349,144 +314,5 @@ class _ProfileNavItem extends StatelessWidget {
       return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
     }
     return name[0].toUpperCase();
-  }
-}
-
-class _FabDial extends StatelessWidget {
-  final bool visible;
-  final bool fabOpen;
-  final AnimationController animCtrl;
-  final Animation<double> fabScale;
-  final Animation<double> fabOpacity;
-  final VoidCallback onToggle;
-
-  const _FabDial({
-    required this.visible,
-    required this.fabOpen,
-    required this.animCtrl,
-    required this.fabScale,
-    required this.fabOpacity,
-    required this.onToggle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (fabOpen) ...[
-          _FabOption(
-            animCtrl: animCtrl,
-            delay: 0.0,
-            icon: Iconsax.add_square,
-            label: 'New post',
-            color: context.primary,
-            onTap: () => _navigateCreate(context, '/post'),
-          ),
-          const SizedBox(height: 12),
-          _FabOption(
-            animCtrl: animCtrl,
-            delay: 0.06,
-            icon: Iconsax.calendar_add,
-            label: 'Create event',
-            color: context.success,
-            onTap: () => _navigateCreate(context, '/events/create'),
-          ),
-          const SizedBox(height: 12),
-          _FabOption(
-            animCtrl: animCtrl,
-            delay: 0.12,
-            icon: Iconsax.book_1,
-            label: 'Academic hub',
-            color: const Color(0xFF8B5CF6),
-            onTap: () => _navigateCreate(context, '/app/academic'),
-          ),
-          const SizedBox(height: 16),
-        ],
-        FloatingActionButton(
-          heroTag: 'nav_fab',
-          onPressed: onToggle,
-          shape: const CircleBorder(),
-          backgroundColor: context.primary,
-          foregroundColor: context.onPrimary,
-          elevation: 4,
-          child: AnimatedRotation(
-            turns: fabOpen ? 0.125 : 0,
-            duration: UMotion.normal,
-            child: const Icon(Iconsax.add_circle_copy, size: 32),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _navigateCreate(BuildContext context, String route) {
-    context.push(route);
-  }
-}
-
-class _FabOption extends StatelessWidget {
-  final AnimationController animCtrl;
-  final double delay;
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _FabOption({
-    required this.animCtrl,
-    required this.delay,
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animCtrl,
-      builder: (context, child) {
-        final raw = ((animCtrl.value - delay) / (1 - delay)).clamp(0.0, 1.0);
-        final t = Curves.easeOutBack.transform(raw);
-        return Opacity(
-          opacity: t,
-          child: Transform.scale(
-            scale: t,
-            child: child,
-          ),
-        );
-      },
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(URadius.pill),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: context.surfaceCard,
-              borderRadius: BorderRadius.circular(URadius.pill),
-              boxShadow: context.shadowSm,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, size: 18, color: color),
-                const SizedBox(width: 8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: context.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

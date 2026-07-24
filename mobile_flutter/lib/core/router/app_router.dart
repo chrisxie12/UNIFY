@@ -13,6 +13,8 @@ import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
+import '../../features/events/presentation/screens/events_screen.dart';
+import '../../features/academic/presentation/screens/academic_hub_screen.dart';
 import '../../features/communities/presentation/screens/community_detail_screen.dart';
 import '../../features/messaging/presentation/screens/messaging_screen.dart';
 import '../../features/messaging/presentation/screens/message_requests_screen.dart';
@@ -382,6 +384,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               path: '/app/explore',
               builder: (_, __) => const ExploreScreen(),
             ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/app/academic', builder: (_, __) => const AcademicHubScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),

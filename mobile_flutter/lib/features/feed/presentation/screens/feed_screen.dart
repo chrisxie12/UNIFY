@@ -58,7 +58,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
     return Scaffold(
       backgroundColor: context.surfaceBg,
-      body: RefreshIndicator(
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(feedProvider.notifier).refresh();
           await ref.read(storyGroupsProvider.notifier).refresh();
@@ -67,10 +70,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
         strokeWidth: 2.5,
         displacement: 80,
         edgeOffset: 0,
-        child: SafeArea(
-          top: true,
-          bottom: false,
-          child: CustomScrollView(
+        child: CustomScrollView(
           controller: _scrollCtrl,
           slivers: [
             SliverToBoxAdapter(
@@ -638,6 +638,7 @@ class _ActionIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(4),

@@ -45,6 +45,17 @@ class NotificationsScreen extends ConsumerWidget {
               Icon(Icons.error_outline, size: 48, color: context.textDisabled),
               const SizedBox(height: 12),
               Text('Failed to load notifications', style: TextStyle(color: context.textSecondary)),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Text(
+                  e.toString(),
+                  style: TextStyle(fontSize: 11, color: context.textDisabled),
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(notificationsProvider),
