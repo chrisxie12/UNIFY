@@ -447,12 +447,8 @@ class _FabOption extends StatelessWidget {
     return AnimatedBuilder(
       animation: animCtrl,
       builder: (context, child) {
-        final t = CurvedAnimation(
-          parent: AlwaysStoppedAnimation(
-            ((animCtrl.value - delay) / (1 - delay)).clamp(0.0, 1.0),
-          ),
-          curve: Curves.easeOutBack,
-        ).value;
+        final raw = ((animCtrl.value - delay) / (1 - delay)).clamp(0.0, 1.0);
+        final t = Curves.easeOutBack.transform(raw);
         return Opacity(
           opacity: t,
           child: Transform.scale(
