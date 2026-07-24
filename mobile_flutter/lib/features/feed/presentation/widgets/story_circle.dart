@@ -157,7 +157,7 @@ class _InitialContent extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       label,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w700,
         color: Colors.white,

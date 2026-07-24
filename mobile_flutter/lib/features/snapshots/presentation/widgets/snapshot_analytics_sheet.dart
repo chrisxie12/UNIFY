@@ -26,7 +26,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
         return Container(
           decoration: BoxDecoration(
             color: context.cardBg,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: async.when(
             loading: () => const Center(
@@ -49,7 +49,7 @@ class SnapshotAnalyticsSheet extends ConsumerWidget {
                 if (a.viewers.isEmpty)
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(32),
                       child: Center(
                         child: Text('No views yet',
                             style: TextStyle(color: context.textDisabled)),

@@ -54,7 +54,7 @@ class AmbassadorAdminScreen extends ConsumerWidget {
                 ref.invalidate(ambassadorStatsProvider);
               },
               child: ListView(
-                padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
+                padding: const EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.md, 88),
                 children: [
                   Row(
                     children: [
@@ -80,8 +80,8 @@ class AmbassadorAdminScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: USpacing.md),
                   if (ambassadors.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 60),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 60),
                       child: UEmptyState(icon: Icons.campaign_rounded, title: 'No ambassadors yet'),
                     )
                   else

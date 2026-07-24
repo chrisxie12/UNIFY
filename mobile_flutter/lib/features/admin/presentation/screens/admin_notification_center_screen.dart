@@ -84,9 +84,9 @@ class AdminNotificationCenterScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.notifications_none_rounded, size: 64, color: context.borderCol),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text('No admin notifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text('New community and verification requests will appear here', style: TextStyle(fontSize: 12, color: context.textDisabled)),
                   ],
                 ),

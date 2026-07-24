@@ -55,7 +55,7 @@ class GetStartedScreen extends StatelessWidget {
                   'Your campus, connected.',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Color(0xFFFFFFFF).withValues(alpha: 0.80),
+                    color: const Color(0xFFFFFFFF).withValues(alpha: 0.80),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -72,7 +72,7 @@ class GetStartedScreen extends StatelessWidget {
               height: screenH * 0.46,
               decoration: BoxDecoration(
                 color: context.cardBg,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               ),
               padding: const EdgeInsets.fromLTRB(28, 36, 28, 32),
               child: Column(

@@ -53,7 +53,7 @@ class _EventSearchScreenState extends ConsumerState<EventSearchScreen> {
         ],
       ),
       body: _query.length < 2
-          ? UEmptyState(
+          ? const UEmptyState(
               icon: Icons.search,
               title: 'Search events',
               subtitle: 'Search by title, description, or location',

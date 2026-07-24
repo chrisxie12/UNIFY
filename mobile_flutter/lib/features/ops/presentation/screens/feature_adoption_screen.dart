@@ -46,10 +46,10 @@ class FeatureAdoptionScreen extends ConsumerWidget {
             if (features.isEmpty) {
               return ListView(
                 children: [
-                  SizedBox(height: 120),
+                  const SizedBox(height: 120),
                   Icon(Icons.insights_rounded,
                       size: 56, color: context.borderCol),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Center(
                     child: Text(
                       'No analytics yet',
@@ -59,9 +59,9 @@ class FeatureAdoptionScreen extends ConsumerWidget {
                           color: context.textPrimary),
                     ),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
                       'Feature usage will appear here once members start '
                       'interacting with the app over the last 30 days.',
@@ -87,7 +87,7 @@ class FeatureAdoptionScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
                   child: Text(
                     'Active users per feature (last 30 days)',
                     style: TextStyle(fontSize: 12.5, color: context.textSecondary),

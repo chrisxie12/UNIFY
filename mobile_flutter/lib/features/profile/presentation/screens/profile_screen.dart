@@ -869,7 +869,7 @@ class _SocialCard extends StatelessWidget {
       _SocialP('GitHub', profile.githubUrl,
         solid: const Color(0xFF181717), child: const _BrandSvg(_BrandPaths.github)),
       _SocialP('Portfolio', profile.portfolioUrl,
-        solid: context.primary, child: Icon(Icons.language_rounded, color: Colors.white, size: 22)),
+        solid: context.primary, child: const Icon(Icons.language_rounded, color: Colors.white, size: 22)),
     ];
     final active = platforms.where((p) => p.url?.isNotEmpty == true).toList();
 
@@ -1434,7 +1434,7 @@ class _VerificationStatusCard extends StatelessWidget {
                 color: context.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(Icons.verified_rounded, color: Colors.white, size: 22),
+              child: const Icon(Icons.verified_rounded, color: Colors.white, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(

@@ -11,7 +11,6 @@ import '../../../../core/extensions/theme_extensions.dart';
 import '../../../leadership/data/models/community_request_model.dart';
 import '../../../leadership/data/models/announcement_request_model.dart';
 import '../../../leadership/presentation/providers/leadership_provider.dart';
-import '../../../notifications/data/repositories/notification_repository.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../verification/data/models/verification_request_model.dart';
 import 'representative_detail_screen.dart';
@@ -202,14 +201,14 @@ class _PendingRequestsTab extends ConsumerWidget {
             data: (requests) {
               if (requests.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 48),
+                  padding: const EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
                         Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text('No pending requests to review.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
@@ -250,7 +249,7 @@ class _AllRequestsTab extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.inbox_rounded, size: 48, color: context.borderCol),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text('No requests yet', style: TextStyle(fontSize: 15, color: context.textSecondary)),
                 ],
               ),
@@ -719,14 +718,14 @@ class _AnnouncementRequestsTab extends ConsumerWidget {
             data: (requests) {
               if (requests.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 48),
+                  padding: const EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
                         Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Text('All caught up!', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text('No pending announcements.', style: TextStyle(fontSize: 13, color: context.textDisabled)),
                       ],
                     ),
@@ -989,12 +988,12 @@ class _VerificationTab extends ConsumerWidget {
             data: (requests) {
               if (requests.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 48),
+                  padding: const EdgeInsets.symmetric(vertical: 48),
                   child: Center(
                     child: Column(
                       children: [
                         Icon(Icons.check_circle_outline_rounded, size: 48, color: context.borderCol),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Text('No pending verifications', style: TextStyle(fontSize: 15, color: context.textSecondary, fontWeight: FontWeight.w600)),
                       ],
                     ),

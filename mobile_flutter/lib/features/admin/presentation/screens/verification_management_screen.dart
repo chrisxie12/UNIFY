@@ -61,7 +61,7 @@ class _VerificationList extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.verified_user_rounded, size: 48, color: context.borderCol),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text('No verification requests', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                 ],
               ),

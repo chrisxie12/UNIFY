@@ -462,7 +462,7 @@ class _SwipeableTile extends ConsumerWidget {
         color: context.error,
         icon: Icons.delete_outline_rounded,
         label: 'Delete',
-        padding: EdgeInsets.only(right: 24),
+        padding: const EdgeInsets.only(right: 24),
       ),
       // Start→End (left→right): pin/unpin — blue background
       secondaryBackground: _SwipeBg(

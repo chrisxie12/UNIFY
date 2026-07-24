@@ -104,7 +104,7 @@ class AppVersionAdminScreen extends ConsumerWidget {
               ),
               Switch(
                 value: v.isActive,
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
                 onChanged: (val) async {
                   await ref
                       .read(systemRepositoryProvider)
@@ -275,7 +275,7 @@ class _NewVersionDialogState extends ConsumerState<_NewVersionDialog> {
             const SizedBox(height: 12),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              activeColor: AppColors.primary,
+              activeThumbColor: AppColors.primary,
               title: Text('Mandatory',
                   style: TextStyle(fontSize: 14, color: context.textPrimary)),
               value: _mandatory,

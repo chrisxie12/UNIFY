@@ -1,5 +1,6 @@
 /// Data models for the SYSTEM module: in-app announcements and app-update
 /// gating. Both expose `fromJson` factories mirroring the Supabase schema.
+library;
 
 class SystemAnnouncement {
   final String id;

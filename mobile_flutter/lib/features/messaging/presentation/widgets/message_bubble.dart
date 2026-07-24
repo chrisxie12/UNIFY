@@ -66,29 +66,29 @@ class MessageBubble extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       items: [
         PopupMenuItem(
-          child: _MenuItem(icon: Icons.reply_rounded, label: 'Reply'),
           onTap: onReplyIconTap,
+          child: const _MenuItem(icon: Icons.reply_rounded, label: 'Reply'),
         ),
         if (message.content != null)
           PopupMenuItem(
-            child: _MenuItem(icon: Icons.copy_rounded, label: 'Copy'),
+            child: const _MenuItem(icon: Icons.copy_rounded, label: 'Copy'),
             onTap: () => Clipboard.setData(ClipboardData(text: message.content!)),
           ),
         PopupMenuItem(
+          onTap: onLongPress,
           child: _MenuItem(
             icon: message.isPinned ? Icons.push_pin_outlined : Icons.push_pin_rounded,
             label: message.isPinned ? 'Unpin' : 'Pin',
-          ),
-          onTap: onLongPress, // caller handles pin
+          ), // caller handles pin
         ),
         if (isOwn)
           PopupMenuItem(
-            child: _MenuItem(icon: Icons.delete_outline_rounded, label: 'Delete', isDestructive: true),
+            child: const _MenuItem(icon: Icons.delete_outline_rounded, label: 'Delete', isDestructive: true),
             onTap: () {}, // placeholder
           ),
         if (!isOwn)
           PopupMenuItem(
-            child: _MenuItem(icon: Icons.flag_outlined, label: 'Report', isDestructive: true),
+            child: const _MenuItem(icon: Icons.flag_outlined, label: 'Report', isDestructive: true),
             onTap: () {}, // placeholder
           ),
       ],

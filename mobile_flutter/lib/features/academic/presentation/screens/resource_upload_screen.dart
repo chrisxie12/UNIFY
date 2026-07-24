@@ -114,7 +114,7 @@ class _ResourceUploadScreenState
             _label('Course (optional)'),
             coursesAsync.maybeWhen(
               data: (courses) => DropdownButtonFormField<String>(
-                value: _courseId,
+                initialValue: _courseId,
                 isExpanded: true,
                 decoration: _dec('Link to a course'),
                 items: [
@@ -186,7 +186,7 @@ class _ResourceUploadScreenState
                     children: [
                       _label('Semester'),
                       DropdownButtonFormField<String>(
-                        value: _semester,
+                        initialValue: _semester,
                         decoration: _dec(),
                         items: const [
                           DropdownMenuItem(

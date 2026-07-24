@@ -34,7 +34,7 @@ class CommunityCard extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: context.cardBg,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
           boxShadow: AppColors.cardShadow,
         ),
         child: Row(

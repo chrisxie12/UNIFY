@@ -8,7 +8,6 @@ import '../../../../core/widgets/unify_snackbar.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../providers/leadership_provider.dart';
 import 'package:unify/core/design_system/tokens.dart';
-import 'package:unify/core/design_system/typography.dart';
 
 class AnnouncementRequestScreen extends ConsumerStatefulWidget {
   const AnnouncementRequestScreen({super.key});

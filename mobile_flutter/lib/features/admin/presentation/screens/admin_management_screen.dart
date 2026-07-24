@@ -39,7 +39,7 @@ class AdminManagementScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.admin_panel_settings_rounded, size: 48, color: context.borderCol),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text('No administrators assigned', style: TextStyle(fontSize: 16, color: context.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),

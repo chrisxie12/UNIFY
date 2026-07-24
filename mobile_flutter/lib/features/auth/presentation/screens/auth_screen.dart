@@ -157,7 +157,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   color: context.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'U',
                     style: TextStyle(
@@ -190,7 +190,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 32),
 
               // Email field
-              _Label('Email'),
+              const _Label('Email'),
               const SizedBox(height: 6),
               _InputField(
                 controller: _emailCtrl,
@@ -201,7 +201,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 16),
 
               // Password field
-              _Label('Password'),
+              const _Label('Password'),
               const SizedBox(height: 6),
               _InputField(
                 controller: _passCtrl,

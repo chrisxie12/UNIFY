@@ -10,7 +10,6 @@ import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
-import '../../../../core/design_system/components.dart';
 import '../../data/models/community_content_models.dart';
 import '../providers/communities_provider.dart';
 import '../../../snapshots/presentation/widgets/snapshot_tray.dart';

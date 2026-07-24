@@ -189,7 +189,7 @@ class _OnboardingPage extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               color: context.cardBg,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             ),
             padding: const EdgeInsets.fromLTRB(32, 36, 32, 120),
             child: Transform.translate(

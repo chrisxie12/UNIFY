@@ -7,7 +7,6 @@ import '../../../../core/widgets/app_loading_widget.dart';
 import '../../../../core/widgets/unify_snackbar.dart';
 import 'package:unify/core/design_system/tokens.dart';
 import 'package:unify/core/design_system/typography.dart';
-import 'package:unify/core/extensions/theme_extensions.dart';
 import '../../data/models/event_model.dart';
 import '../providers/event_provider.dart';
 
@@ -217,7 +216,7 @@ class _HeaderSection extends StatelessWidget {
                   const SizedBox(width: 6), const _Badge(text: 'Featured', color: Colors.amber),
                 ],
                 if (!event.isApproved && event.scope != 'community') ...[
-                  SizedBox(width: 6), _Badge(text: 'Pending', color: context.textSecondary),
+                  const SizedBox(width: 6), _Badge(text: 'Pending', color: context.textSecondary),
                 ],
               ]),
               if (event.isCancelled) ...[

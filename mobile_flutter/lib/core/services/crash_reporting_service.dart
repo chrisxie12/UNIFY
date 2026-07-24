@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class CrashReportingService {
-  bool _initialized = false;
+  final bool _initialized = false;
 
   bool get isInitialized => _initialized;
 

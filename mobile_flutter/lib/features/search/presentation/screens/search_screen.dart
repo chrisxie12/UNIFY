@@ -74,7 +74,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     _focus.dispose();
     _tabCtrl.dispose();
     _debounce?.cancel();
-    for (final s in _scrolls.values) s.dispose();
+    for (final s in _scrolls.values) {
+      s.dispose();
+    }
     super.dispose();
   }
 
@@ -844,7 +846,7 @@ class _ListingTile extends StatelessWidget {
     final sub = [priceStr, condition].where((s) => s != null && s.isNotEmpty).join(' · ');
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: _IconBox(icon: Icons.sell_rounded, color: Colors.orange),
+      leading: const _IconBox(icon: Icons.sell_rounded, color: Colors.orange),
       title: Text(data['title'] ?? '',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: context.textPrimary)),
       subtitle: sub.isNotEmpty
@@ -885,7 +887,7 @@ class _OpportunityTile extends StatelessWidget {
         .join(' · ');
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: _IconBox(icon: Icons.work_outline_rounded, color: Colors.green),
+      leading: const _IconBox(icon: Icons.work_outline_rounded, color: Colors.green),
       title: Text(data['title'] ?? '',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: context.textPrimary)),
       subtitle: sub.isNotEmpty

@@ -112,7 +112,7 @@ class SkillsManagementScreen extends ConsumerWidget {
                                       title: const Text('Remove skill'),
                                       content: Text('Are you sure you want to remove "${skill.skillName}"?'),
                                       actions: [
-                                        TextButton(onPressed: () => context.pop(), child: Text('Cancel')),
+                                        TextButton(onPressed: () => context.pop(), child: const Text('Cancel')),
                                         TextButton(
                                           onPressed: () {
                                             ref.read(reputationNotifierProvider.notifier).removeSkill(skill.id);
@@ -157,7 +157,7 @@ class SkillsManagementScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => context.pop(), child: Text('Cancel')),
+          TextButton(onPressed: () => context.pop(), child: const Text('Cancel')),
           FilledButton(
             onPressed: () {
               final skill = controller.text.trim();
