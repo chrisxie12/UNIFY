@@ -12,6 +12,7 @@ import '../../features/welcome/welcome_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
+import '../../features/feed/presentation/screens/saved_posts_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../features/events/presentation/screens/events_screen.dart';
 import '../../features/academic/presentation/screens/academic_hub_screen.dart';
@@ -413,6 +414,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'settings',
                   builder: (_, __) => const SettingsScreen(),
+                ),
+                GoRoute(
+                  path: 'saved',
+                  builder: (_, __) => const SavedPostsScreen(),
                 ),
               ],
             ),

@@ -6,6 +6,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/feed_repository.dart';
 import '../models/announcement_model.dart';
+import 'announcement_social_repository.dart';
 
 class FeedRepositoryImpl implements FeedRepository {
   final SupabaseClient _client;
@@ -47,11 +48,15 @@ class FeedRepositoryImpl implements FeedRepository {
   }) async {
     final userId = _client.auth.currentUser?.id;
 
-    // Build query: apply cursor filter BEFORE order/limit so types stay compatible
+    // Build query: exclude hidden posts
+    final socialRepo = AnnouncementSocialRepository(_client);
+    final hiddenIds = await socialRepo.getHiddenAnnouncementIds();
+
     final data = await _client
         .from('announcements')
         .select('*, profiles!author_id(full_name, avatar_url, is_verified_leader, leadership_role)')
         .filter('created_at', 'lt', cursor ?? '9999-12-31')
+        .filter('id', 'not.in', hiddenIds.isEmpty ? '(00000000-0000-0000-0000-000000000000)' : '(${hiddenIds.join(',')})')
         .order('is_pinned', ascending: false)
         .order('created_at', ascending: false)
         .limit(limit) as List<dynamic>;

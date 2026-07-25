@@ -10,6 +10,7 @@ import '../providers/feed_provider.dart';
 import '../providers/announcement_social_provider.dart';
 import '../../domain/entities/announcement.dart';
 import '../widgets/comment_sheet.dart';
+import '../widgets/post_options_sheet.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/widgets/app_empty_widget.dart';
@@ -427,6 +428,7 @@ class _PostCard extends ConsumerWidget {
     final likeState = ref.watch(
       announcementLikeProvider((id: post.id, initialCount: post.likesCount)),
     );
+    final saveState = ref.watch(announcementSaveProvider(post.id));
     final isDark = context.isDark;
 
     return Padding(
@@ -482,7 +484,7 @@ class _PostCard extends ConsumerWidget {
                     width: 32, height: 32,
                     child: IconButton(
                       icon: Icon(Iconsax.more, size: 18, color: context.textSecondary),
-                      onPressed: () {},
+                      onPressed: () => PostOptionsSheet.show(context, post),
                       padding: EdgeInsets.zero,
                     ),
                   ),
@@ -592,9 +594,9 @@ class _PostCard extends ConsumerWidget {
                   ),
                   const Spacer(),
                   _ActionIcon(
-                    icon: Iconsax.bookmark,
-                    color: context.textSecondary,
-                    onTap: () {},
+                    icon: saveState.isSaved ? Iconsax.bookmark_copy : Iconsax.bookmark,
+                    color: saveState.isSaved ? context.primary : context.textSecondary,
+                    onTap: () => ref.read(announcementSaveProvider(post.id).notifier).toggle(),
                   ),
                 ],
               ),

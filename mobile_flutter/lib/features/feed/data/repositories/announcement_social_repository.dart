@@ -138,4 +138,122 @@ class AnnouncementSocialRepository {
       debugPrint('[AnnouncementSocial] recordShare error: $e');
     }
   }
+
+  // ── Saves ────────────────────────────────────────────────────────────────
+
+  Future<bool> getSaveStatus(String announcementId) async {
+    final uid = _uid;
+    if (uid == null) return false;
+    try {
+      final row = await _client
+          .from('announcement_saves')
+          .select('id')
+          .eq('announcement_id', announcementId)
+          .eq('user_id', uid)
+          .maybeSingle();
+      return row != null;
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] getSaveStatus error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> toggleSave(String announcementId) async {
+    final uid = _uid;
+    if (uid == null) return false;
+    try {
+      final existing = await _client
+          .from('announcement_saves')
+          .select('id')
+          .eq('announcement_id', announcementId)
+          .eq('user_id', uid)
+          .maybeSingle();
+
+      if (existing != null) {
+        await _client
+            .from('announcement_saves')
+            .delete()
+            .eq('announcement_id', announcementId)
+            .eq('user_id', uid);
+        return false;
+      } else {
+        await _client.from('announcement_saves').insert({
+          'announcement_id': announcementId,
+          'user_id': uid,
+        });
+        return true;
+      }
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] toggleSave error: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<String>> getSavedAnnouncementIds() async {
+    final uid = _uid;
+    if (uid == null) return [];
+    try {
+      final rows = await _client
+          .from('announcement_saves')
+          .select('announcement_id')
+          .eq('user_id', uid)
+          .order('created_at', ascending: false) as List<dynamic>;
+      return rows.map((r) => r['announcement_id'] as String).toList();
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] getSavedAnnouncementIds error: $e');
+      return [];
+    }
+  }
+
+  // ── Hidden posts ─────────────────────────────────────────────────────────
+
+  Future<List<String>> getHiddenAnnouncementIds() async {
+    final uid = _uid;
+    if (uid == null) return [];
+    try {
+      final rows = await _client
+          .from('hidden_posts')
+          .select('announcement_id')
+          .eq('user_id', uid) as List<dynamic>;
+      return rows.map((r) => r['announcement_id'] as String).toList();
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] getHiddenAnnouncementIds error: $e');
+      return [];
+    }
+  }
+
+  Future<void> hidePost(String announcementId) async {
+    final uid = _uid;
+    if (uid == null) return;
+    try {
+      await _client.from('hidden_posts').insert({
+        'announcement_id': announcementId,
+        'user_id': uid,
+      });
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] hidePost error: $e');
+    }
+  }
+
+  // ── Reports ──────────────────────────────────────────────────────────────
+
+  Future<void> reportPost({
+    required String announcementId,
+    required String reason,
+    String? description,
+  }) async {
+    final uid = _uid;
+    if (uid == null) return;
+    try {
+      await _client.from('reports').insert({
+        'reporter_id': uid,
+        'report_type': 'announcement',
+        'target_id': announcementId,
+        'reason': reason,
+        'description': description,
+      });
+    } catch (e) {
+      debugPrint('[AnnouncementSocial] reportPost error: $e');
+    }
+  }
 }

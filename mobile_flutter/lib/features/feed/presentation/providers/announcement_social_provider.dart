@@ -88,3 +88,45 @@ final announcementCommentsProvider =
     AsyncNotifierProvider.autoDispose.family<AnnouncementCommentsNotifier, List<AnnouncementComment>, String>(
   AnnouncementCommentsNotifier.new,
 );
+
+// ── Save state per announcement ──────────────────────────────────────────────
+
+class SaveState {
+  final bool isSaved;
+  final bool isLoading;
+  const SaveState({required this.isSaved, this.isLoading = false});
+  SaveState copyWith({bool? isSaved, bool? isLoading}) => SaveState(
+        isSaved: isSaved ?? this.isSaved,
+        isLoading: isLoading ?? this.isLoading,
+      );
+}
+
+class AnnouncementSaveNotifier extends FamilyNotifier<SaveState, String> {
+  @override
+  SaveState build(String arg) {
+    Future.microtask(() async {
+      final repo = ref.read(announcementSocialRepoProvider);
+      final isSaved = await repo.getSaveStatus(arg);
+      state = SaveState(isSaved: isSaved);
+    });
+    return const SaveState(isSaved: false);
+  }
+
+  Future<void> toggle() async {
+    if (state.isLoading) return;
+    final prev = state;
+    state = SaveState(isSaved: !prev.isSaved, isLoading: true);
+    try {
+      final repo = ref.read(announcementSocialRepoProvider);
+      final isSaved = await repo.toggleSave(arg);
+      state = SaveState(isSaved: isSaved);
+    } catch (_) {
+      state = prev;
+    }
+  }
+}
+
+final announcementSaveProvider =
+    NotifierProvider.family<AnnouncementSaveNotifier, SaveState, String>(
+  AnnouncementSaveNotifier.new,
+);

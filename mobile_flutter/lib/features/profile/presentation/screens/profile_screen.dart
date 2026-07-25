@@ -172,6 +172,8 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
               const SizedBox(height: 12),
               s(idx++, _AchievementsCard(profile: p, badges: widget.badges)),
               const SizedBox(height: 12),
+              s(idx++, const _SavedPostsCard()),
+              const SizedBox(height: 12),
               s(idx, _AccountCard(ref: widget.ref)),
             ]),
           ),
@@ -1500,6 +1502,31 @@ class _RequestCommunityCard extends StatelessWidget {
           ),
           Icon(Icons.arrow_forward_ios_rounded, size: 13, color: context.textSecondary),
         ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Saved Posts card
+// ---------------------------------------------------------------------------
+
+class _SavedPostsCard extends StatelessWidget {
+  const _SavedPostsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.surfaceCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.borderSubtle),
+      ),
+      child: ListTile(
+        leading: Icon(Icons.bookmark, color: context.primary),
+        title: Text('Saved Posts', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: context.textPrimary)),
+        trailing: Icon(Icons.chevron_right, color: context.textDisabled),
+        onTap: () => context.push('/app/profile/saved'),
       ),
     );
   }
