@@ -57,7 +57,7 @@ export default function ExploreScreen() {
   }, [query, hubFilter]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       {/* Header */}
       <View className="px-5 pt-5 pb-3">
         <Text className="font-display text-2xl text-primary mb-4">Explore</Text>

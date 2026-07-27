@@ -65,7 +65,7 @@ export default function MatchScreen() {
   const second = deck[1];
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       <View className="px-5 pt-5 pb-2">
         <Text className="font-display text-2xl text-primary">Match</Text>
         <Text className="font-body text-sm text-secondary">

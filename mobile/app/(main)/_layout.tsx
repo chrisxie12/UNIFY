@@ -2,13 +2,15 @@ import { Tabs } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { COLORS } from '../../theme/tokens';
 
 const TABS = [
-  { name: 'home',    label: 'Home',    icon: '⌂' },
-  { name: 'explore', label: 'Explore', icon: '◎' },
-  { name: 'match',   label: 'Match',   icon: '♠' },
-  { name: 'chat',    label: 'Chat',    icon: '◻' },
-  { name: 'profile', label: 'Profile', icon: '◉' },
+  { name: 'home',    label: 'Home',    activeIcon: 'home',                    inactiveIcon: 'home-outline' },
+  { name: 'explore', label: 'Explore', activeIcon: 'compass',                 inactiveIcon: 'compass-outline' },
+  { name: 'match',   label: 'Match',   activeIcon: 'people',                  inactiveIcon: 'people-outline' },
+  { name: 'chat',    label: 'Chat',    activeIcon: 'chatbubble-ellipses',     inactiveIcon: 'chatbubble-ellipses-outline' },
+  { name: 'profile', label: 'Profile', activeIcon: 'person',                  inactiveIcon: 'person-outline' },
 ] as const;
 
 function MainTabBar({ state, navigation }: BottomTabBarProps) {
@@ -23,6 +25,7 @@ function MainTabBar({ state, navigation }: BottomTabBarProps) {
         const tab = TABS.find((t) => t.name === route.name);
         if (!tab) return null;
         const active = state.index === i;
+        const iconName = (active ? tab.activeIcon : tab.inactiveIcon) as keyof typeof Ionicons.glyphMap;
 
         return (
           <Pressable
@@ -35,12 +38,11 @@ function MainTabBar({ state, navigation }: BottomTabBarProps) {
                 active ? 'bg-blue' : 'bg-transparent'
               }`}
             >
-              <Text
-                className={`text-lg ${active ? 'text-white' : 'text-tertxt'}`}
-                style={{ fontFamily: 'System' }}
-              >
-                {tab.icon}
-              </Text>
+              <Ionicons
+                name={iconName}
+                size={22}
+                color={active ? COLORS.white : COLORS.tertxt}
+              />
             </View>
             <Text
               className={`text-[10px] mt-0.5 ${

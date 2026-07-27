@@ -25,7 +25,7 @@ export default function ChatListScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       <View className="px-5 pt-5 pb-3">
         <View className="flex-row items-center gap-2 mb-4">
           <Text className="font-display text-2xl text-primary">Chats</Text>

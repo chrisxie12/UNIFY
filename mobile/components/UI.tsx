@@ -10,7 +10,7 @@ interface CardProps { children: ReactNode; className?: string }
 
 export function Card({ children, className = '' }: CardProps) {
   return (
-    <View className={`bg-white rounded-2xl shadow-card ${className}`}>
+    <View className={`bg-white rounded-2xl border border-border/80 shadow-card ${className}`}>
       {children}
     </View>
   );
@@ -22,7 +22,7 @@ export function PressCard({
   return (
     <Pressable
       onPress={onPress}
-      className={`bg-white rounded-2xl shadow-card ${PRESS} ${className}`}
+      className={`bg-white rounded-2xl border border-border/80 shadow-card ${PRESS} ${className}`}
     >
       {children}
     </Pressable>
@@ -165,24 +165,24 @@ interface BadgeProps {
 }
 
 const BADGE_BG: Record<string, string> = {
-  blue:    'bg-[#EFF6FF]',
-  orange:  'bg-[#FFF4EE]',
-  green:   'bg-[#ECFDF5]',
-  red:     'bg-[#FEF2F2]',
-  default: 'bg-surface',
+  blue:    'bg-[#EBF3FF]',
+  orange:  'bg-[#FFF0E6]',
+  green:   'bg-[#E6F9F0]',
+  red:     'bg-[#FEE2E2]',
+  default: 'bg-surface border border-border/60',
 };
 const BADGE_FG: Record<string, string> = {
   blue:    'text-blue',
-  orange:  'text-orange',
-  green:   'text-green',
-  red:     'text-red',
+  orange:  'text-[#E55A22]',
+  green:   'text-[#059669]',
+  red:     'text-[#DC2626]',
   default: 'text-secondary',
 };
 
 export function Badge({ label, color = 'default', className = '' }: BadgeProps) {
   return (
     <View className={`${BADGE_BG[color]} rounded-full px-3 py-1 ${className}`}>
-      <Text className={`${BADGE_FG[color]} text-[11px] font-body-semi`}>{label}</Text>
+      <Text className={`${BADGE_FG[color]} text-[11px] font-body-bold`}>{label}</Text>
     </View>
   );
 }

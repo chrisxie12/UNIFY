@@ -82,7 +82,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
@@ -90,7 +90,7 @@ export default function HomeScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => { setRefreshing(true); loadData(); }}
-            tintColor="#003F8A"
+            tintColor="#0066FF"
           />
         }
       >
@@ -104,10 +104,10 @@ export default function HomeScreen() {
 
         {/* Verification badge */}
         {profile && !profile.is_verified && (
-          <View className="bg-[#FFFBEB] rounded-2xl px-4 py-3 mb-5 flex-row items-center gap-3">
+          <View className="bg-[#FFFBEB] rounded-2xl border border-[#FDE68A] px-4 py-3 mb-5 flex-row items-center gap-3">
             <Text style={{ fontSize: 20 }}>⏳</Text>
             <View className="flex-1">
-              <Text className="font-body-semi text-sm text-[#92400E]">Verification pending</Text>
+              <Text className="font-body-bold text-sm text-[#92400E]">Verification pending</Text>
               <Text className="font-body text-xs text-[#B45309]">Your student ID is being verified by admin.</Text>
             </View>
           </View>
@@ -116,7 +116,7 @@ export default function HomeScreen() {
         {/* Announcements */}
         <View className="flex-row items-center justify-between mb-3">
           <Text className="font-heading text-base text-primary">Announcements</Text>
-          <Text className="font-body text-xs text-tertxt">{announcements.length} total</Text>
+          <Text className="font-body text-xs text-secondary font-body-medium">{announcements.length} total</Text>
         </View>
 
         {announcements.length === 0 ? (
@@ -136,7 +136,7 @@ export default function HomeScreen() {
               >
                 <Card className="p-4">
                   <View className="flex-row items-start gap-3">
-                    <View className="w-10 h-10 rounded-xl bg-[#EFF6FF] items-center justify-center flex-shrink-0">
+                    <View className="w-10 h-10 rounded-xl bg-[#EBF3FF] items-center justify-center flex-shrink-0">
                       <Text style={{ fontSize: 20 }}>{CATEGORY_ICON[a.category] ?? '📢'}</Text>
                     </View>
                     <View className="flex-1">
@@ -145,11 +145,11 @@ export default function HomeScreen() {
                           label={a.category.charAt(0).toUpperCase() + a.category.slice(1)}
                           color={CATEGORY_COLOR[a.category] ?? 'default'}
                         />
-                        <Text className="font-body text-[10px] text-tertxt">
+                        <Text className="font-body text-xs text-tertxt font-body-medium">
                           {timeAgo(a.published_at)}
                         </Text>
                       </View>
-                      <Text className="font-body-medium text-sm text-primary leading-5 mb-1">
+                      <Text className="font-heading text-sm text-primary leading-5 mb-1">
                         {a.title}
                       </Text>
                       <Text className="font-body text-xs text-secondary leading-4" numberOfLines={2}>
