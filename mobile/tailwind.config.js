@@ -15,7 +15,7 @@ module.exports = {
         surface:  '#F8F9FA',
         tertiary: '#F0F7FF',
         // Text
-        primary:   '#FFFFFF',
+        primary:   '#111827',
         secondary: '#374151',
         tertxt:    '#9CA3AF',
         // Accents
