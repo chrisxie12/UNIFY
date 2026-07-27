@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/supabase_provider.dart';
 import '../../../../core/services/cache_service.dart';
 import '../../../../core/services/connectivity_service.dart';
-import '../../data/models/announcement_model.dart';
+import '../../data/models/feed_item_model.dart';
 import '../../data/repositories/feed_repository_impl.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/feed_repository.dart';
@@ -50,13 +50,13 @@ class FeedState {
 class FeedNotifier extends AutoDisposeAsyncNotifier<FeedState> {
   static const _pageSize = 20;
   static const _cacheBox = 'feed';
-  static const _cacheKey = 'announcements';
+  static const _cacheKey = 'feed_items';
 
   late final CacheService _cache;
 
   @override
   Future<FeedState> build() async {
-    _cache = CacheService();
+    _cache = CacheService(expiry: const Duration(minutes: 15));
     final repo = ref.watch(feedRepositoryProvider);
     final isOnline = await ref.watch(connectivityProvider.future).then((s) => s == ConnectivityStatus.online);
 
@@ -131,25 +131,16 @@ class FeedNotifier extends AutoDisposeAsyncNotifier<FeedState> {
   }
 
   Announcement _withRead(Announcement a) {
-    if (a is AnnouncementModel) return a.copyWithRead();
+    if (a is FeedItemModel) return a.copyWithRead();
     return a;
   }
 
   void _cacheFeed(List<Announcement> items) {
+    final feedItems = items.cast<FeedItemModel>();
     _cache.put(
       boxName: _cacheBox,
       key: _cacheKey,
-      data: items.map((a) => {
-        'id': a.id,
-        'title': a.title,
-        'body': a.body,
-        'category': a.category,
-        'created_at': a.createdAt.toIso8601String(),
-        'author_name': a.authorName,
-        'author_avatar': a.authorAvatar,
-        'is_pinned': a.isPinned,
-        'is_read': a.isRead,
-      }).toList(),
+      data: feedItems.map((a) => a.toCacheJson()).toList(),
     );
   }
 
@@ -158,7 +149,7 @@ class FeedNotifier extends AutoDisposeAsyncNotifier<FeedState> {
     if (raw == null) return [];
     try {
       final list = raw as List;
-      return list.map((j) => AnnouncementModel.fromJson(j as Map<String, dynamic>)).toList();
+      return list.map((j) => FeedItemModel.fromCacheJson(j as Map<String, dynamic>)).toList();
     } catch (e) {
       debugPrint('[FeedNotifier] Cache parse error: $e');
       return [];

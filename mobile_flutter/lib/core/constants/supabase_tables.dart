@@ -17,6 +17,9 @@ class SupabaseTables {
   static const String verificationLog       = 'verification_log';
   static const String announcementRequests  = 'announcement_requests';
 
+  // Phase 2a — Ranked Feed
+  static const String userFollows          = 'user_follows';
+
   // Multi-University Admin
   static const String faculties             = 'faculties';
   static const String departments           = 'departments';
@@ -105,6 +108,18 @@ class SupabaseColumns {
   // profile extensions
   static const String faculty       = 'faculty';
   static const String department    = 'department';
+
+  // user_follows
+  static const String followerId    = 'follower_id';
+  static const String followingId   = 'following_id';
+
+  // profile extensions (Phase 2a)
+  static const String departmentId  = 'department_id';
+  static const String isFaculty     = 'is_faculty';
+
+  // community_posts geo
+  static const String latitude      = 'latitude';
+  static const String longitude     = 'longitude';
 
   // verification requests
   static const String evidenceUrl   = 'evidence_url';

@@ -5,8 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../domain/entities/announcement.dart';
 import '../../domain/repositories/feed_repository.dart';
-import '../models/announcement_model.dart';
-import 'announcement_social_repository.dart';
+import '../models/feed_item_model.dart';
 
 class FeedRepositoryImpl implements FeedRepository {
   final SupabaseClient _client;
@@ -40,54 +39,37 @@ class FeedRepositoryImpl implements FeedRepository {
     await _saveCache(items);
   }
 
-  Future<List<AnnouncementModel>> _fetchFromNetwork({
+  Future<List<FeedItemModel>> _fetchFromNetwork({
     (double score, DateTime createdAt)? cursor,
     int limit = 20,
   }) async {
     final userId = _client.auth.currentUser?.id;
 
-    final socialRepo = AnnouncementSocialRepository(_client);
-    final hiddenIds = await socialRepo.getHiddenAnnouncementIds();
-
-    final data = await _client.rpc('get_feed_ranked', params: {
-      if (hiddenIds.isNotEmpty) 'p_hidden_ids': hiddenIds,
+    final data = await _client.rpc('get_personalized_feed', params: {
+      'p_user_id': userId,
+      'p_lat': null,
+      'p_lng': null,
+      'p_limit': limit,
       if (cursor != null) 'p_cursor_score': cursor.$1,
       if (cursor != null) 'p_cursor_created_at': cursor.$2.toIso8601String(),
-      'p_limit': limit,
     }) as List<dynamic>;
 
-    Set<String> readIds = {};
-    if (userId != null && data.isNotEmpty) {
-      final ids = data.map((e) => (e as Map)['id'] as String).toList();
-      final idList = ids.join(',');
-      final reads = await _client
-          .from('announcement_reads')
-          .select('announcement_id')
-          .eq('user_id', userId)
-          .filter('announcement_id', 'in', '($idList)');
-      readIds = (reads as List).map((r) => r['announcement_id'] as String).toSet();
-    }
-
     final items = data.map((json) {
-      final m = json as Map<String, dynamic>;
-      return AnnouncementModel.fromJson({
-        ...m,
-        'is_read': readIds.contains(m['id']),
-      });
+      return FeedItemModel.fromRpcJson(json as Map<String, dynamic>);
     }).toList();
 
     if (cursor == null) await _saveCache(items);
     return items;
   }
 
-  Future<List<AnnouncementModel>?> _loadCache() async {
+  Future<List<FeedItemModel>?> _loadCache() async {
     try {
       final box = await Hive.openBox(_boxName);
       final raw = box.get(_cacheKey) as String?;
       if (raw == null) return null;
       final list = jsonDecode(raw) as List<dynamic>;
       return list
-          .map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => FeedItemModel.fromCacheJson(e as Map<String, dynamic>))
           .toList();
     } catch (e) {
       debugPrint('[FeedRepositoryImpl] _loadCache error: $e');
@@ -95,32 +77,10 @@ class FeedRepositoryImpl implements FeedRepository {
     }
   }
 
-  Future<void> _saveCache(List<AnnouncementModel> items) async {
+  Future<void> _saveCache(List<FeedItemModel> items) async {
     try {
       final box = await Hive.openBox(_boxName);
-      final json = items.map((a) => {
-        'id': a.id,
-        'title': a.title,
-        'body': a.body,
-        'category': a.category,
-        'author_id': a.authorId,
-        'profiles': {
-          'full_name': a.authorName,
-          'avatar_url': a.authorAvatar,
-          'is_verified_leader': a.authorIsVerifiedLeader,
-          'leadership_role': a.authorLeadershipRole,
-        },
-        'university_id': a.universityId,
-        'is_pinned': a.isPinned,
-        'is_urgent': a.isUrgent,
-        'image_url': a.imageUrl,
-        'view_count': a.viewCount,
-        'likes_count': a.likesCount,
-        'comments_count': a.commentsCount,
-        'shares_count': a.sharesCount,
-        'created_at': a.createdAt.toIso8601String(),
-        'is_read': a.isRead,
-      }).toList();
+      final json = items.map((a) => a.toCacheJson()).toList();
       await box.put(_cacheKey, jsonEncode(json));
     } catch (e) {
       debugPrint('[FeedRepositoryImpl] _saveCache error: $e');
