@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/services/cache_service.dart';
 import '../../domain/entities/app_user.dart';
@@ -114,8 +115,25 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   Future<AppUser> _fetchProfileWithClient(SupabaseClient client, String userId, String email) async {
-    final data = await client.from('profiles').select().eq('id', userId).maybeSingle();
-    if (data == null) {
+    try {
+      final data = await client
+          .from('profiles')
+          .select()
+          .eq('id', userId)
+          .maybeSingle()
+          .timeout(const Duration(seconds: 5));
+      if (data == null) {
+        return AppUserModel(
+          id: userId,
+          email: email,
+          role: 'student',
+          onboardingComplete: false,
+          createdAt: DateTime.now(),
+        );
+      }
+      return AppUserModel.fromJson({...data, 'email': email, 'email_backup': data['email_backup']});
+    } on TimeoutException {
+      debugPrint('[AuthRepo] Profile fetch timed out (offline?) — falling back to basic user');
       return AppUserModel(
         id: userId,
         email: email,
@@ -124,6 +142,5 @@ class AuthRepositoryImpl implements AuthRepository {
         createdAt: DateTime.now(),
       );
     }
-    return AppUserModel.fromJson({...data, 'email': email, 'email_backup': data['email_backup']});
   }
 }

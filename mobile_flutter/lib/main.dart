@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,14 +13,23 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
 
   await bootstrap(() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ).timeout(const Duration(seconds: 5));
+    } catch (e) {
+      debugPrint('[main] Firebase init failed (offline?): $e');
+    }
 
-    await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
-    );
+    try {
+      await Supabase.initialize(
+        url: dotenv.env['SUPABASE_URL']!,
+        publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
+      ).timeout(const Duration(seconds: 5));
+    } catch (e) {
+      debugPrint('[main] Supabase init failed: $e');
+      rethrow;
+    }
 
     return const ProviderScope(child: UnifyApp());
   }, sentryDsn: dotenv.env['SENTRY_DSN']);
