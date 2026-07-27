@@ -6,7 +6,7 @@ const PRESS = 'active:opacity-70';
 
 // ─── Card ────────────────────────────────────────────────────────────────────
 
-interface CardProps { children: ReactNode; className?: string }
+interface CardProps { children?: ReactNode; className?: string }
 
 export function Card({ children, className = '' }: CardProps) {
   return (
