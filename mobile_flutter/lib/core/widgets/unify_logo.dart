@@ -22,14 +22,17 @@ class UnifyLogo extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: Image.asset(
-        'assets/images/logo.png',
-        width: size,
-        height: size,
-        errorBuilder: (_, __, ___) => _FallbackMark(
-          size: size,
-          backgroundColor: backgroundColor,
-          figureColor: figureColor,
+      child: ClipOval(
+        child: Image.asset(
+          'assets/images/logo.png',
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _FallbackMark(
+            size: size,
+            backgroundColor: backgroundColor,
+            figureColor: figureColor,
+          ),
         ),
       ),
     );
