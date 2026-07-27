@@ -85,7 +85,17 @@ class _MainShellState extends ConsumerState<MainShell> {
           }
           return false;
         },
-        child: OfflineBanner(child: navigationShell),
+        child: GestureDetector(
+          onHorizontalDragEnd: (details) {
+            const threshold = 200.0;
+            final v = details.primaryVelocity ?? 0;
+            if (v.abs() < threshold) return;
+            if (v < 0 && current < 5) _onNavTap(current + 1);
+            if (v > 0 && current > 0) _onNavTap(current - 1);
+          },
+          behavior: HitTestBehavior.translucent,
+          child: OfflineBanner(child: navigationShell),
+        ),
       ),
       extendBody: true,
       bottomNavigationBar: AnimatedSlide(

@@ -18,6 +18,7 @@ class Announcement extends Equatable {
   final int sharesCount;
   final DateTime createdAt;
   final bool isRead;
+  final double? hotScore;
   final bool authorIsVerifiedLeader;
   final String? authorLeadershipRole;
 
@@ -41,6 +42,7 @@ class Announcement extends Equatable {
     this.sharesCount = 0,
     required this.createdAt,
     this.isRead = false,
+    this.hotScore,
   });
 
   @override

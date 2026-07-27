@@ -17,6 +17,7 @@ class CommentSheet extends ConsumerStatefulWidget {
   static Future<void> show(BuildContext context, String announcementId) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => CommentSheet(announcementId: announcementId),

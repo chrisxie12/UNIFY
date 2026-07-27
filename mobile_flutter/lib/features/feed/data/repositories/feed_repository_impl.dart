@@ -16,13 +16,11 @@ class FeedRepositoryImpl implements FeedRepository {
   FeedRepositoryImpl(this._client);
 
   @override
-  Future<List<Announcement>> getFeed({String? cursor, int limit = 20}) async {
-    // Return cache for first page while network loads
+  Future<List<Announcement>> getFeed({(double score, DateTime createdAt)? cursor, int limit = 20}) async {
     if (cursor == null) {
       final cached = await _loadCache();
       if (cached != null) return cached;
     }
-
     return _fetchFromNetwork(cursor: cursor, limit: limit);
   }
 
@@ -43,28 +41,24 @@ class FeedRepositoryImpl implements FeedRepository {
   }
 
   Future<List<AnnouncementModel>> _fetchFromNetwork({
-    String? cursor,
+    (double score, DateTime createdAt)? cursor,
     int limit = 20,
   }) async {
     final userId = _client.auth.currentUser?.id;
 
-    // Build query: exclude hidden posts
     final socialRepo = AnnouncementSocialRepository(_client);
     final hiddenIds = await socialRepo.getHiddenAnnouncementIds();
 
-    final data = await _client
-        .from('announcements')
-        .select('*, profiles!author_id(full_name, avatar_url, is_verified_leader, leadership_role)')
-        .filter('created_at', 'lt', cursor ?? '9999-12-31')
-        .filter('id', 'not.in', hiddenIds.isEmpty ? '(00000000-0000-0000-0000-000000000000)' : '(${hiddenIds.join(',')})')
-        .order('is_pinned', ascending: false)
-        .order('created_at', ascending: false)
-        .limit(limit) as List<dynamic>;
+    final data = await _client.rpc('get_feed_ranked', params: {
+      if (hiddenIds.isNotEmpty) 'p_hidden_ids': hiddenIds,
+      if (cursor != null) 'p_cursor_score': cursor.$1,
+      if (cursor != null) 'p_cursor_created_at': cursor.$2.toIso8601String(),
+      'p_limit': limit,
+    }) as List<dynamic>;
 
-    // Batch fetch read status using raw filter (avoids .in_ naming issues)
     Set<String> readIds = {};
     if (userId != null && data.isNotEmpty) {
-      final ids = data.map((e) => e['id'] as String).toList();
+      final ids = data.map((e) => (e as Map)['id'] as String).toList();
       final idList = ids.join(',');
       final reads = await _client
           .from('announcement_reads')

@@ -102,7 +102,10 @@ class FeedNotifier extends AutoDisposeAsyncNotifier<FeedState> {
 
     try {
       final repo = ref.read(feedRepositoryProvider);
-      final cursor = current.items.last.createdAt.toIso8601String();
+      final last = current.items.last;
+      final cursor = last.hotScore != null
+          ? (last.hotScore!, last.createdAt)
+          : null;
       final more = await repo.getFeed(cursor: cursor, limit: _pageSize);
       final updated = [...current.items, ...more];
       state = AsyncData(current.copyWith(

@@ -21,6 +21,7 @@ class AnnouncementModel extends Announcement {
     super.sharesCount,
     required super.createdAt,
     super.isRead,
+    super.hotScore,
   });
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +46,7 @@ class AnnouncementModel extends Announcement {
       sharesCount: json['shares_count'] as int? ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
       isRead: json['is_read'] as bool? ?? false,
+      hotScore: (json['hot_score'] as num?)?.toDouble(),
     );
   }
 
@@ -68,5 +70,6 @@ class AnnouncementModel extends Announcement {
         sharesCount: sharesCount,
         createdAt: createdAt,
         isRead: true,
+        hotScore: hotScore,
       );
 }
