@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -111,7 +111,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 4),
                   child: IconButton(
-                    icon: Icon(Iconsax.heart, size: 22, color: cs.onSurface),
+                    icon: Icon(PhosphorIcons.heart, size: 22, color: cs.onSurface),
                     onPressed: () {},
                   ),
                 ),
@@ -119,7 +119,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   padding: const EdgeInsets.only(right: 4),
                   child: IconButton(
                     icon: Icon(
-                      Iconsax.message,
+                      PhosphorIcons.chatCircle,
                       size: 22,
                       color: cs.onSurface,
                     ),
@@ -158,7 +158,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   return SliverFillRemaining(
                     hasScrollBody: true,
                     child: AppEmptyWidget(
-                      icon: Iconsax.gallery,
+                      icon: PhosphorIcons.image,
                       title: 'No posts yet',
                       subtitle: 'Be the first to share something!',
                       actionLabel: 'Create Post',
@@ -257,7 +257,7 @@ class _StoriesRow extends StatelessWidget {
                                     : null,
                                 child: avatarUrl == null
                                     ? Icon(
-                                        Iconsax.user,
+                                        PhosphorIcons.user,
                                         size: 28,
                                         color: cs.onSurfaceVariant,
                                       )
@@ -279,7 +279,7 @@ class _StoriesRow extends StatelessWidget {
                                   ),
                                 ),
                                 child: const Icon(
-                                  Iconsax.add,
+                                  PhosphorIcons.plus,
                                   size: 14,
                                   color: Colors.white,
                                 ),
@@ -559,7 +559,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                 ),
                 IconButton(
                   icon: Icon(
-                    Iconsax.more,
+                    PhosphorIcons.dotsThreeOutline,
                     size: 18,
                     color: cs.onSurfaceVariant,
                   ),
@@ -585,7 +585,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                       errorWidget: (_, __, ___) => Container(
                         color: cs.surfaceContainerHighest,
                         child: Icon(
-                          Iconsax.gallery,
+                          PhosphorIcons.image,
                           size: 40,
                           color: cs.onSurfaceVariant,
                         ),
@@ -608,7 +608,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                       );
                     },
                     child: const Icon(
-                      Iconsax.heart_copy,
+                      PhosphorIcons.heartFill,
                       size: 80,
                       color: Colors.white,
                     ),
@@ -638,8 +638,8 @@ class _PostCardState extends ConsumerState<_PostCard>
               children: [
                 _ActionButton(
                   icon: likeState.isLiked
-                      ? Iconsax.heart_copy
-                      : Iconsax.heart,
+                      ? PhosphorIcons.heartFill
+                      : PhosphorIcons.heart,
                   color: likeState.isLiked
                       ? const Color(0xFFE1306C)
                       : cs.onSurfaceVariant,
@@ -655,13 +655,13 @@ class _PostCardState extends ConsumerState<_PostCard>
                 ),
                 const SizedBox(width: 12),
                 _ActionButton(
-                  icon: Iconsax.message_text,
+                  icon: PhosphorIcons.chatCircle,
                   color: cs.onSurfaceVariant,
                   onTap: () => CommentSheet.show(context, post.id),
                 ),
                 const SizedBox(width: 12),
                 _ActionButton(
-                  icon: Iconsax.send_2,
+                  icon: PhosphorIcons.paperPlaneRight,
                   color: cs.onSurfaceVariant,
                   onTap: () async {
                     await Share.share(
@@ -676,8 +676,8 @@ class _PostCardState extends ConsumerState<_PostCard>
                 const Spacer(),
                 _ActionButton(
                   icon: saveState.isSaved
-                      ? Iconsax.bookmark_copy
-                      : Iconsax.bookmark,
+                      ? PhosphorIcons.bookmarkFill
+                      : PhosphorIcons.bookmark,
                   color: saveState.isSaved
                       ? cs.primary
                       : cs.onSurfaceVariant,

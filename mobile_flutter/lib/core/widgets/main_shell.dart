@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/messaging/presentation/providers/messaging_provider.dart'
     as msg;
@@ -127,36 +127,36 @@ class _MainShellState extends ConsumerState<MainShell> {
                 child: Row(
                   children: [
                     Expanded(child: _NavItem(
-                      icon: Iconsax.home_1,
-                      activeIcon: Iconsax.home_1_copy,
+                      icon: PhosphorIcons.house,
+                      activeIcon: PhosphorIcons.houseFill,
                       label: 'Home',
                       isActive: current == 0,
                       onTap: () => _onNavTap(0),
                     )),
                     Expanded(child: _NavItem(
-                      icon: Iconsax.search_normal_1,
-                      activeIcon: Iconsax.search_normal_1_copy,
+                      icon: PhosphorIcons.magnifyingGlass,
+                      activeIcon: PhosphorIcons.magnifyingGlassFill,
                       label: 'Explore',
                       isActive: current == 1,
                       onTap: () => _onNavTap(1),
                     )),
                     Expanded(child: _NavItem(
-                      icon: Iconsax.calendar_1,
-                      activeIcon: Iconsax.calendar_1_copy,
+                      icon: PhosphorIcons.calendar,
+                      activeIcon: PhosphorIcons.calendarFill,
                       label: 'Events',
                       isActive: current == 2,
                       onTap: () => _onNavTap(2),
                     )),
                     Expanded(child: _NavItem(
-                      icon: Iconsax.book_1,
-                      activeIcon: Iconsax.book_1_copy,
+                      icon: PhosphorIcons.books,
+                      activeIcon: PhosphorIcons.booksFill,
                       label: 'Study',
                       isActive: current == 3,
                       onTap: () => _onNavTap(3),
                     )),
                     Expanded(child: _NavItem(
-                      icon: Iconsax.message_2,
-                      activeIcon: Iconsax.message_2_copy,
+                      icon: PhosphorIcons.chatCircle,
+                      activeIcon: PhosphorIcons.chatCircleFill,
                       label: 'Chat',
                       badge: msgBadge,
                       isActive: current == 4,

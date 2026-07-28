@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/announcement_social_provider.dart';
 import '../../domain/entities/announcement.dart';
@@ -59,7 +59,7 @@ class _SavedPostsScreenState extends ConsumerState<SavedPostsScreen> {
       appBar: AppBar(
         title: const Text('Saved Posts'),
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left_copy, size: 20),
+          icon: Icon(PhosphorIcons.arrowLeft, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -67,7 +67,7 @@ class _SavedPostsScreenState extends ConsumerState<SavedPostsScreen> {
           ? const AppLoadingWidget.list()
           : _items == null || _items!.isEmpty
               ? AppEmptyWidget(
-                  icon: Iconsax.bookmark_copy,
+                  icon: PhosphorIcons.bookmarkFill,
                   title: 'No saved posts',
                   subtitle: 'Tap the bookmark icon on any post to save it for later.',
                 )
@@ -109,7 +109,7 @@ class _SavedPostCard extends StatelessWidget {
           child: Text(post.body, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ),
         trailing: IconButton(
-          icon: Icon(Iconsax.bookmark_copy, size: 20, color: context.primary),
+          icon: Icon(PhosphorIcons.bookmarkFill, size: 20, color: context.primary),
           onPressed: () async {
             await repo.toggleSave(post.id);
             if (context.mounted) {

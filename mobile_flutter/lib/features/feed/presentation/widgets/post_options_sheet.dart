@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/announcement_social_provider.dart';
 import '../providers/feed_provider.dart';
@@ -43,7 +43,7 @@ class PostOptionsSheet extends ConsumerWidget {
           SizedBox(height: USpacing.sm),
           if (isAuthor) ...[
             _OptionTile(
-              icon: Iconsax.edit_2_copy,
+              icon: PhosphorIcons.pencilSimpleLine,
               label: 'Edit post',
               onTap: () {
                 Navigator.pop(context);
@@ -51,7 +51,7 @@ class PostOptionsSheet extends ConsumerWidget {
               },
             ),
             _OptionTile(
-              icon: Iconsax.trash_copy,
+              icon: PhosphorIcons.trash,
               label: 'Delete post',
               destructive: true,
               onTap: () {
@@ -62,7 +62,7 @@ class PostOptionsSheet extends ConsumerWidget {
             _divider(context),
           ],
           _OptionTile(
-            icon: Iconsax.shield_cross_copy,
+            icon: PhosphorIcons.shieldCheck,
             label: 'Report post',
             onTap: () {
               Navigator.pop(context);
@@ -70,7 +70,7 @@ class PostOptionsSheet extends ConsumerWidget {
             },
           ),
           _OptionTile(
-            icon: Iconsax.eye_slash_copy,
+            icon: PhosphorIcons.eyeSlash,
             label: 'Hide this post',
             onTap: () async {
               Navigator.pop(context);
@@ -82,7 +82,7 @@ class PostOptionsSheet extends ConsumerWidget {
             },
           ),
           _OptionTile(
-            icon: Iconsax.copy_copy,
+            icon: PhosphorIcons.copy,
             label: 'Copy link',
             onTap: () {
               Navigator.pop(context);
@@ -144,7 +144,7 @@ class PostOptionsSheet extends ConsumerWidget {
             Text('Report post', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
             SizedBox(height: USpacing.sm),
             ...reasons.map((r) => ListTile(
-                  leading: Icon(Iconsax.flag_copy, size: 20, color: context.textSecondary),
+                  leading: Icon(PhosphorIcons.flag, size: 20, color: context.textSecondary),
                   title: Text(r, style: TextStyle(color: context.textPrimary)),
                   onTap: () async {
                     Navigator.pop(ctx);
