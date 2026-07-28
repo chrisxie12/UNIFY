@@ -19,6 +19,7 @@ import '../../../../core/widgets/app_error_widget.dart';
 import '../../../system/presentation/widgets/system_announcement_banner.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../../../snapshots/presentation/providers/snapshot_provider.dart';
+import '../../../../core/widgets/unify_logo.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -58,7 +59,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final storyGroupsAsync = ref.watch(storyGroupsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.surfaceBg,
       body: Column(
         children: [
           _GlassHeader(fullName: fullName, avatarUrl: avatarUrl),
@@ -203,7 +204,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
           ),
         ],
       ),
-      floatingActionButton: const _FabButton(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 90),
+        child: const _FabButton(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -240,24 +245,7 @@ class _GlassHeader extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: context.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    'U',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ),
+              const UnifyLogo(size: 40),
               const SizedBox(width: USpacing.sm),
               Expanded(
                 child: Column(
@@ -271,16 +259,13 @@ class _GlassHeader extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: const Color(0xFF111827),
+                            color: context.textPrimary,
                             letterSpacing: -0.5,
                             height: 1.2,
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          '👋',
-                          style: TextStyle(fontSize: 18),
-                        ),
+                        const Text('👋', style: TextStyle(fontSize: 18)),
                       ],
                     ),
                     Text(
@@ -288,7 +273,7 @@ class _GlassHeader extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFF6B7280),
+                        color: context.textSecondary,
                       ),
                     ),
                   ],
@@ -322,7 +307,7 @@ class _NotifBadgeIcon extends ConsumerWidget {
           icon: Icon(
             Iconsax.notification,
             size: 24,
-            color: const Color(0xFF111827),
+            color: context.textPrimary,
           ),
           onPressed: () => context.push('/notifications'),
           padding: EdgeInsets.zero,
@@ -377,7 +362,7 @@ class _AvatarWithStatus extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: const Color(0xFFE5E7EB),
+              color: context.borderSubtle,
               width: 1.5,
             ),
           ),
@@ -460,7 +445,7 @@ class _StoriesRow extends ConsumerWidget {
     final otherGroups = groups.where((g) => g.authorId != uid).toList();
 
     return Container(
-      color: Colors.white,
+      color: context.surfaceCard,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
         height: 90,
@@ -545,7 +530,7 @@ class _StoryCircle extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFE5E7EB),
+                        color: context.borderSubtle,
                         width: 2,
                       ),
                     ),
@@ -574,7 +559,7 @@ class _StoryCircle extends StatelessWidget {
                     height: 72,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFFE5E7EB),
+                      color: context.borderSubtle,
                     ),
                   ),
                 Container(
@@ -583,7 +568,7 @@ class _StoryCircle extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white,
+                      color: context.surfaceCard,
                       width: 2.5,
                     ),
                   ),
@@ -599,16 +584,16 @@ class _StoryCircle extends StatelessWidget {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2563EB),
+                        color: context.primary,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.white,
+                          color: context.surfaceCard,
                           width: 2.5,
                         ),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Iconsax.add,
-                        color: Colors.white,
+                        color: context.onPrimary,
                         size: 12,
                       ),
                     ),
@@ -622,10 +607,10 @@ class _StoryCircle extends StatelessWidget {
                 fontSize: 11,
                 fontWeight: isOwn ? FontWeight.w600 : FontWeight.w500,
                 color: isOwn
-                    ? const Color(0xFF111827)
+                    ? context.textPrimary
                     : (hasUnseen
-                        ? const Color(0xFF111827)
-                        : const Color(0xFF6B7280)),
+                        ? context.textPrimary
+                        : context.textSecondary),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -646,27 +631,19 @@ class _StoryAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
-    final avatarUrl = ''; // Stories don't have avatars in current data model
-    if (avatarUrl.isNotEmpty) {
-      return CachedNetworkImage(
-        imageUrl: avatarUrl,
-        fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => _buildFallback(initial),
-      );
-    }
-    return _buildFallback(initial);
+    return _buildFallback(context, initial);
   }
 
-  Widget _buildFallback(String initial) {
+  Widget _buildFallback(BuildContext context, String initial) {
     return Container(
-      color: const Color(0xFFF3F4F6),
+      color: context.surfaceFill,
       child: Center(
         child: Text(
           initial,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF6B7280),
+            color: context.textSecondary,
           ),
         ),
       ),
@@ -688,22 +665,25 @@ class _PostCard extends ConsumerWidget {
       )),
     );
     final saveState = ref.watch(announcementSaveProvider(post.id));
+    final isDark = context.isDark;
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.surfaceCard,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 3,
-          ),
-        ],
+        boxShadow: isDark
+            ? [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 3,
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -795,10 +775,10 @@ class _PostHeader extends StatelessWidget {
                     Flexible(
                       child: Text(
                         post.authorName ?? 'Campus Admin',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF111827),
+                          color: context.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -820,9 +800,9 @@ class _PostHeader extends StatelessWidget {
                     if (post.authorLeadershipRole != null) ...[
                       Text(
                         post.authorLeadershipRole!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF6B7280),
+                          color: context.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -831,15 +811,15 @@ class _PostHeader extends StatelessWidget {
                         ' • ',
                         style: TextStyle(
                           fontSize: 12,
-                          color: const Color(0xFF6B7280),
+                          color: context.textSecondary,
                         ),
                       ),
                     ],
                     Text(
                       _timeAgo(post.createdAt),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF6B7280),
+                        color: context.textSecondary,
                       ),
                     ),
                   ],
@@ -851,7 +831,7 @@ class _PostHeader extends StatelessWidget {
             icon: Icon(
               Iconsax.more,
               size: 20,
-              color: const Color(0xFF9CA3AF),
+              color: context.textDisabled,
             ),
             onPressed: () => PostOptionsSheet.show(context, post),
             padding: const EdgeInsets.all(8),
@@ -905,7 +885,7 @@ class _PostMedia extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: context.surfaceCard.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -948,10 +928,12 @@ class _PostBody extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(USpacing.base),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0F5FF),
+                color: context.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFDBEAFE),
+                  color: context.isDark
+                      ? context.primary.withValues(alpha: 0.2)
+                      : const Color(0xFFDBEAFE),
                 ),
               ),
               child: Column(
@@ -959,19 +941,19 @@ class _PostBody extends StatelessWidget {
                 children: [
                   Text(
                     post.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827),
+                      color: context.textPrimary,
                     ),
                   ),
                   if (body.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
                       body,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF4B5563),
+                        color: context.textSecondary,
                         height: 1.5,
                       ),
                     ),
@@ -984,10 +966,10 @@ class _PostBody extends StatelessWidget {
               children: [
                 Text(
                   post.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF111827),
+                    color: context.textPrimary,
                   ),
                 ),
                 if (body.isNotEmpty) ...[
@@ -996,7 +978,7 @@ class _PostBody extends StatelessWidget {
                     body,
                     style: TextStyle(
                       fontSize: 14,
-                      color: const Color(0xFF111827),
+                      color: context.textPrimary,
                       height: 1.45,
                     ),
                   ),
@@ -1038,21 +1020,21 @@ class _ActionRow extends StatelessWidget {
             icon: likeState.isLiked ? Iconsax.heart_copy : Iconsax.heart,
             color: likeState.isLiked
                 ? const Color(0xFFE1306C)
-                : const Color(0xFF6B7280),
+                : context.textSecondary,
             label: _fmtNum(likeState.count),
             onTap: onLike,
           ),
           const SizedBox(width: USpacing.lg),
           _ActionButton(
             icon: Iconsax.message_text,
-            color: const Color(0xFF6B7280),
+            color: context.textSecondary,
             label: _fmtNum(post.commentsCount),
             onTap: onComment,
           ),
           const SizedBox(width: USpacing.lg),
           _ActionButton(
             icon: Iconsax.send_2,
-            color: const Color(0xFF6B7280),
+            color: context.textSecondary,
             onTap: onShare,
           ),
           const Spacer(),
@@ -1060,7 +1042,7 @@ class _ActionRow extends StatelessWidget {
             icon: saveState.isSaved ? Iconsax.bookmark_copy : Iconsax.bookmark,
             color: saveState.isSaved
                 ? context.primary
-                : const Color(0xFF6B7280),
+                : context.textSecondary,
             onTap: onSave,
           ),
         ],
@@ -1131,10 +1113,10 @@ class _PostFooter extends StatelessWidget {
           if (likeState.count > 0)
             Text(
               '${_fmtNum(likeState.count)} likes',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF111827),
+                color: context.textPrimary,
               ),
             ),
           if (likeState.count > 0 && post.commentsCount > 0)
@@ -1144,10 +1126,10 @@ class _PostFooter extends StatelessWidget {
               onTap: () => CommentSheet.show(context, post.id),
               child: Text(
                 '${_fmtNum(post.commentsCount)} ${post.commentsCount == 1 ? 'comment' : 'comments'}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFF6B7280),
+                  color: context.textSecondary,
                 ),
               ),
             ),
@@ -1166,11 +1148,11 @@ class _FabButton extends StatelessWidget {
       width: 56,
       height: 56,
       decoration: BoxDecoration(
-        color: const Color(0xFF2563EB),
+        color: context.primary,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2563EB).withValues(alpha: 0.4),
+            color: context.primary.withValues(alpha: 0.4),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -1193,20 +1175,23 @@ class _ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.shimmerBase;
+    final isDark = context.isDark;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.surfaceCard,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: isDark
+              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
