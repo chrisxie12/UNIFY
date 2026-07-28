@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +29,6 @@ class FeedScreen extends ConsumerStatefulWidget {
 
 class _FeedScreenState extends ConsumerState<FeedScreen> {
   final _scrollCtrl = ScrollController();
-  final Map<String, int> _postImageIndices = {};
 
   @override
   void initState() {
@@ -58,190 +58,252 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     final storyGroupsAsync = ref.watch(storyGroupsProvider);
 
     return Scaffold(
-      backgroundColor: context.surfaceBg,
-      body: SafeArea(
-        top: true,
-        bottom: false,
-        child: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(feedProvider.notifier).refresh();
-          await ref.read(storyGroupsProvider.notifier).refresh();
-        },
-        color: context.primary,
-        strokeWidth: 2.5,
-        displacement: 80,
-        edgeOffset: 0,
-        child: CustomScrollView(
-          controller: _scrollCtrl,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(USpacing.base, USpacing.md, USpacing.base, USpacing.xs),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.push('/stories/create'),
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: context.borderSubtle, width: 1.5),
-                        ),
-                        child: Icon(Iconsax.gallery_add, size: 18, color: context.textSecondary),
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: Column(
+        children: [
+          _GlassHeader(fullName: fullName, avatarUrl: avatarUrl),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(feedProvider.notifier).refresh();
+                await ref.read(storyGroupsProvider.notifier).refresh();
+              },
+              color: context.primary,
+              strokeWidth: 2.5,
+              displacement: 80,
+              child: CustomScrollView(
+                controller: _scrollCtrl,
+                slivers: [
+                  const SliverToBoxAdapter(
+                    child: SystemAnnouncementBanner(),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _StoriesRow(
+                      avatarUrl: avatarUrl,
+                      firstName: fullName.split(' ').first,
+                      groups: storyGroupsAsync.valueOrNull ?? [],
+                    ),
+                  ),
+                  feedAsync.when(
+                    loading: () => SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, i) => const _ShimmerCard(),
+                        childCount: 3,
                       ),
                     ),
-                    const Spacer(),
+                    error: (e, _) => SliverFillRemaining(
+                      child: AppErrorWidget(
+                        e,
+                        customMessage: "Couldn't load feed",
+                        onRetry: () => ref.invalidate(feedProvider),
+                      ),
+                    ),
+                    data: (feedState) {
+                      if (feedState.items.isEmpty) {
+                        return SliverFillRemaining(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: USpacing.x4),
+                            child: AppEmptyWidget(
+                              icon: Iconsax.element_3_copy,
+                              title: 'Nothing here yet',
+                              subtitle: 'Check back soon for campus updates.',
+                            ),
+                          ),
+                        );
+                      }
+
+                      return SliverMainAxisGroup(
+                        slivers: [
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(
+                              USpacing.sm, 0, USpacing.sm, USpacing.base,
+                            ),
+                            sliver: SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final post = feedState.items[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      top: USpacing.sm,
+                                    ),
+                                    child: _PostCard(post: post),
+                                  );
+                                },
+                                childCount: feedState.items.length,
+                              ),
+                            ),
+                          ),
+                          if (feedState.isLoadingMore)
+                            const SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 24, height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          else if (!feedState.hasMore)
+                            SliverToBoxAdapter(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  24, 40, 24, 96,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 56, height: 56,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: context.primary
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                      child: Icon(
+                                        Iconsax.tick_circle_copy,
+                                        size: 28,
+                                        color: context.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    Text(
+                                      "You're all caught up",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: context.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Pull down to refresh',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: context.textSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          else
+                            const SliverToBoxAdapter(
+                              child: SizedBox(height: 32),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: const _FabButton(),
+    );
+  }
+}
+
+class _GlassHeader extends StatelessWidget {
+  final String fullName;
+  final String? avatarUrl;
+
+  const _GlassHeader({required this.fullName, this.avatarUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + 8,
+            bottom: USpacing.sm,
+            left: USpacing.base,
+            right: USpacing.base,
+          ),
+          decoration: BoxDecoration(
+            color: context.isDark
+                ? Colors.black.withValues(alpha: 0.7)
+                : Colors.white.withValues(alpha: 0.9),
+            border: Border(
+              bottom: BorderSide(
+                color: context.isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: context.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    'U',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: USpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Iconsax.crown_1_copy, size: 22, color: context.primary),
-                        const SizedBox(width: 6),
                         Text(
                           'UNIFY',
                           style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w900,
-                            fontStyle: FontStyle.italic,
-                            color: context.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF111827),
                             letterSpacing: -0.5,
+                            height: 1.2,
                           ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '👋',
+                          style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        _NotifBadgeIcon(),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => context.go('/app/messaging'),
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: context.surfaceFill,
-                            ),
-                            child: Icon(Iconsax.message_2, size: 18, color: context.textPrimary),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "What's happening on campus today?",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF6B7280),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(height: 0.5, color: context.borderSubtle.withValues(alpha: 0.5)),
-            ),
-
-            const SliverToBoxAdapter(child: SystemAnnouncementBanner()),
-
-            SliverToBoxAdapter(
-              child: _StoriesRow(
+              const SizedBox(width: USpacing.sm),
+              _NotifBadgeIcon(),
+              const SizedBox(width: USpacing.md),
+              _AvatarWithStatus(
                 avatarUrl: avatarUrl,
-                firstName: fullName.split(' ').first,
-                groups: storyGroupsAsync.valueOrNull ?? [],
+                name: fullName,
+                size: 32,
+                hasGreenDot: true,
               ),
-            ),
-
-            feedAsync.when(
-              loading: () => SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, i) => _ShimmerCard(),
-                  childCount: 3,
-                ),
-              ),
-              error: (e, _) => SliverFillRemaining(
-                child: AppErrorWidget(
-                  e,
-                  customMessage: "Couldn't load feed",
-                  onRetry: () => ref.invalidate(feedProvider),
-                ),
-              ),
-              data: (feedState) {
-                if (feedState.items.isEmpty) {
-                  return SliverFillRemaining(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: USpacing.x4),
-                      child: AppEmptyWidget(
-                        icon: Iconsax.element_3_copy,
-                        title: 'Nothing here yet',
-                        subtitle: 'Check back soon for campus updates.',
-                      ),
-                    ),
-                  );
-                }
-
-                return SliverMainAxisGroup(
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final post = feedState.items[index];
-                          final images = post.imageUrl != null
-                              ? [post.imageUrl!]
-                              : <String>[];
-                          final hasMore = images.length > 1;
-                          final currentIdx = _postImageIndices[post.id] ?? 0;
-
-                          return _PostCard(
-                            post: post,
-                            images: images,
-                            hasMore: hasMore,
-                            currentImageIndex: currentIdx,
-                            onPageChanged: hasMore
-                                ? (i) => setState(() => _postImageIndices[post.id] = i)
-                                : null,
-                          );
-                        },
-                        childCount: feedState.items.length,
-                      ),
-                    ),
-                    if (feedState.isLoadingMore)
-                      const SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Center(
-                            child: SizedBox(
-                              width: 24, height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2.5),
-                            ),
-                          ),
-                        ),
-                      )
-                    else if (!feedState.hasMore)
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 40, 24, 96),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 56, height: 56,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: context.primary.withValues(alpha: 0.1),
-                                ),
-                                child: Icon(Iconsax.tick_circle_copy, size: 28, color: context.primary),
-                              ),
-                              const SizedBox(height: 14),
-                              Text("You're all caught up",
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: context.textPrimary)),
-                              const SizedBox(height: 4),
-                              Text('Pull down to refresh',
-                                style: TextStyle(fontSize: 12, color: context.textSecondary)),
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      const SliverToBoxAdapter(child: SizedBox(height: 32)),
-                  ],
-                );
-              },
-            ),
-          ],
+            ],
           ),
         ),
       ),
@@ -254,29 +316,128 @@ class _NotifBadgeIcon extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final unread = ref.watch(unreadCountProvider).valueOrNull ?? 0;
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        Container(
-          width: 36, height: 36,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.surfaceFill,
+        IconButton(
+          icon: Icon(
+            Iconsax.notification,
+            size: 24,
+            color: const Color(0xFF111827),
           ),
-          child: IconButton(
-            icon: Icon(Iconsax.notification, size: 18, color: context.textPrimary),
-            onPressed: () => context.push('/notifications'),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
+          onPressed: () => context.push('/notifications'),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
         ),
         if (unread > 0)
           Positioned(
-            right: 6, top: 6,
+            right: -1,
+            top: -1,
             child: Container(
-              width: 8, height: 8,
-              decoration: BoxDecoration(color: context.error, shape: BoxShape.circle, border: Border.all(color: context.surfaceBg, width: 1.5)),
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEF4444),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.isDark
+                      ? Colors.black
+                      : Colors.white,
+                  width: 2,
+                ),
+              ),
             ),
           ),
       ],
+    );
+  }
+}
+
+class _AvatarWithStatus extends StatelessWidget {
+  final String? avatarUrl;
+  final String? name;
+  final double size;
+  final bool hasGreenDot;
+
+  const _AvatarWithStatus({
+    this.avatarUrl,
+    this.name,
+    required this.size,
+    this.hasGreenDot = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final label = name?.isNotEmpty == true ? name![0].toUpperCase() : 'U';
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFFE5E7EB),
+              width: 1.5,
+            ),
+          ),
+          child: ClipOval(
+            child: avatarUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: avatarUrl!,
+                    fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) => _AvatarFallback(
+                      label: label,
+                      size: size,
+                    ),
+                  )
+                : _AvatarFallback(label: label, size: size),
+          ),
+        ),
+        if (hasGreenDot)
+          Positioned(
+            right: -1,
+            bottom: -1,
+            child: Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.isDark
+                      ? Colors.black
+                      : Colors.white,
+                  width: 2,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _AvatarFallback extends StatelessWidget {
+  final String label;
+  final double size;
+
+  const _AvatarFallback({required this.label, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: context.surfaceFill,
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: size * 0.45,
+            fontWeight: FontWeight.w700,
+            color: context.textSecondary,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -286,7 +447,11 @@ class _StoriesRow extends ConsumerWidget {
   final String firstName;
   final List<dynamic> groups;
 
-  const _StoriesRow({this.avatarUrl, required this.firstName, required this.groups});
+  const _StoriesRow({
+    this.avatarUrl,
+    required this.firstName,
+    required this.groups,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -295,42 +460,51 @@ class _StoriesRow extends ConsumerWidget {
     final otherGroups = groups.where((g) => g.authorId != uid).toList();
 
     return Container(
-      height: 100,
-      padding: const EdgeInsets.symmetric(vertical: USpacing.sm),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: USpacing.base),
-        itemCount: 1 + otherGroups.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: SizedBox(
+        height: 90,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: USpacing.base),
+          itemCount: 1 + otherGroups.length,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _StoryCircle(
+                name: firstName.isNotEmpty ? firstName : 'You',
+                label: 'Your Story',
+                isOwn: true,
+                onTap: () {
+                  if (myGroup != null) {
+                    final allGroups = [myGroup, ...otherGroups];
+                    context.push(
+                      '/stories/view',
+                      extra: {'groups': allGroups, 'index': 0},
+                    );
+                  } else {
+                    context.push('/stories/create');
+                  }
+                },
+              );
+            }
+            final g = otherGroups[index - 1];
             return _StoryCircle(
-              name: firstName.isNotEmpty ? firstName : 'You',
-              initial: firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
-              color: context.primary,
-              isUser: true,
+              name: g.authorName ?? 'User',
+              label: g.authorName?.split(' ').first ?? 'User',
+              hasUnseen: g.hasUnseen ?? true,
               onTap: () {
-                if (myGroup != null) {
-                  final allGroups = [myGroup, ...otherGroups];
-                  context.push('/stories/view', extra: {'groups': allGroups, 'index': 0});
-                } else {
-                  context.push('/stories/create');
-                }
+                final allGroups = myGroup != null
+                    ? [myGroup, ...otherGroups]
+                    : otherGroups;
+                final viewIndex = myGroup != null ? index : index + 1;
+                context.push(
+                  '/stories/view',
+                  extra: {'groups': allGroups, 'index': viewIndex},
+                );
               },
             );
-          }
-          final g = otherGroups[index - 1];
-          return _StoryCircle(
-            name: g.authorName ?? 'User',
-            initial: g.initials ?? 'U',
-            color: context.primary,
-            viewed: !g.hasUnseen,
-            onTap: () {
-              final allGroups = myGroup != null ? [myGroup, ...otherGroups] : otherGroups;
-              final viewIndex = myGroup != null ? index : index + 1;
-              context.push('/stories/view', extra: {'groups': allGroups, 'index': viewIndex});
-            },
-          );
-        },
+          },
+        ),
       ),
     );
   }
@@ -338,15 +512,17 @@ class _StoriesRow extends ConsumerWidget {
 
 class _StoryCircle extends StatelessWidget {
   final String name;
-  final String initial;
-  final Color color;
-  final bool isUser;
-  final bool viewed;
+  final String label;
+  final bool isOwn;
+  final bool hasUnseen;
   final VoidCallback onTap;
 
   const _StoryCircle({
-    required this.name, required this.initial, required this.color,
-    this.isUser = false, this.viewed = false, required this.onTap,
+    required this.name,
+    required this.label,
+    this.isOwn = false,
+    this.hasUnseen = true,
+    required this.onTap,
   });
 
   @override
@@ -357,54 +533,141 @@ class _StoryCircle extends StatelessWidget {
         width: 72,
         margin: const EdgeInsets.only(right: USpacing.md),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(
-                  width: 64, height: 64,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: viewed ? null : LinearGradient(
-                      colors: [const Color(0xFFF97316), const Color(0xFFEC4899)],
-                      begin: Alignment.topLeft, end: Alignment.bottomRight,
-                    ),
-                    border: viewed ? Border.all(color: context.borderSubtle, width: 2.5) : null,
-                  ),
-                ),
-                Container(
-                  width: 56, height: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: context.surfaceFill,
-                    border: Border.all(color: context.surfaceBg, width: 3),
-                  ),
-                  child: Center(
-                    child: Text(initial, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: context.textSecondary)),
-                  ),
-                ),
-                if (isUser)
-                  Positioned(
-                    right: 1, bottom: 1,
-                    child: Container(
-                      width: 20, height: 20,
-                      decoration: BoxDecoration(
-                        color: context.primary,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: context.surfaceBg, width: 2.5),
+                if (isOwn)
+                  Container(
+                    width: 68,
+                    height: 68,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFE5E7EB),
+                        width: 2,
                       ),
-                      child: Icon(Iconsax.add, color: context.onPrimary, size: 12),
+                    ),
+                    child: const SizedBox(),
+                  )
+                else if (hasUnseen)
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF2563EB),
+                          Color(0xFF7C3AED),
+                          Color(0xFF14B8A6),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                  )
+                else
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFE5E7EB),
+                    ),
+                  ),
+                Container(
+                  width: isOwn ? 60 : 64,
+                  height: isOwn ? 60 : 64,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2.5,
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: _StoryAvatar(name: name),
+                  ),
+                ),
+                if (isOwn)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2563EB),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2.5,
+                        ),
+                      ),
+                      child: const Icon(
+                        Iconsax.add,
+                        color: Colors.white,
+                        size: 12,
+                      ),
                     ),
                   ),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              isUser ? 'Your Story' : name.split(' ').first,
-              style: TextStyle(fontSize: 11, color: context.textSecondary, fontWeight: FontWeight.w400),
-              maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+              isOwn ? 'Your Story' : label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: isOwn ? FontWeight.w600 : FontWeight.w500,
+                color: isOwn
+                    ? const Color(0xFF111827)
+                    : (hasUnseen
+                        ? const Color(0xFF111827)
+                        : const Color(0xFF6B7280)),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryAvatar extends StatelessWidget {
+  final String name;
+
+  const _StoryAvatar({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
+    final avatarUrl = ''; // Stories don't have avatars in current data model
+    if (avatarUrl.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: avatarUrl,
+        fit: BoxFit.cover,
+        errorWidget: (_, __, ___) => _buildFallback(initial),
+      );
+    }
+    return _buildFallback(initial);
+  }
+
+  Widget _buildFallback(String initial) {
+    return Container(
+      color: const Color(0xFFF3F4F6),
+      child: Center(
+        child: Text(
+          initial,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF6B7280),
+          ),
         ),
       ),
     );
@@ -413,327 +676,631 @@ class _StoryCircle extends StatelessWidget {
 
 class _PostCard extends ConsumerWidget {
   final Announcement post;
-  final List<String> images;
-  final bool hasMore;
-  final int currentImageIndex;
-  final ValueChanged<int>? onPageChanged;
 
-  const _PostCard({
-    required this.post, required this.images, required this.hasMore,
-    required this.currentImageIndex, this.onPageChanged,
-  });
+  const _PostCard({required this.post});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final likeState = ref.watch(
-      announcementLikeProvider((id: post.id, initialCount: post.likesCount)),
+      announcementLikeProvider((
+        id: post.id,
+        initialCount: post.likesCount,
+      )),
     );
     final saveState = ref.watch(announcementSaveProvider(post.id));
-    final isDark = context.isDark;
 
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 3,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _PostHeader(post: post),
+          if (post.imageUrl != null)
+            _PostMedia(imageUrl: post.imageUrl!, category: post.category),
+          _PostBody(post: post),
+          if (post.isUrgent)
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                USpacing.base, 0, USpacing.base, USpacing.xs,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Iconsax.danger_copy,
+                    size: 12,
+                    color: context.error,
+                  ),
+                  const SizedBox(width: 3),
+                  Text(
+                    'Urgent',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: context.error,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          _ActionRow(
+            post: post,
+            likeState: likeState,
+            saveState: saveState,
+            onLike: () => ref
+                .read(announcementLikeProvider((
+                  id: post.id,
+                  initialCount: post.likesCount,
+                )).notifier)
+                .toggle(),
+            onComment: () => CommentSheet.show(context, post.id),
+            onShare: () async {
+              await Share.share(
+                '${post.title}\n\n${post.body}',
+                subject: post.title,
+              );
+              ref
+                  .read(announcementSocialRepoProvider)
+                  .recordShare(post.id);
+            },
+            onSave: () => ref
+                .read(announcementSaveProvider(post.id).notifier)
+                .toggle(),
+          ),
+          _PostFooter(post: post, likeState: likeState),
+        ],
+      ),
+    );
+  }
+}
+
+class _PostHeader extends StatelessWidget {
+  final Announcement post;
+
+  const _PostHeader({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(USpacing.base, 0, USpacing.base, USpacing.base),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.surfaceCard,
-          borderRadius: BorderRadius.circular(URadius.base),
-          border: Border.all(color: context.borderSubtle.withValues(alpha: isDark ? 0.3 : 0.5)),
-          boxShadow: isDark ? [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 12, offset: const Offset(0, 4))] : context.shadowSm,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(USpacing.md, USpacing.md, USpacing.sm, USpacing.sm),
-              child: Row(
-                children: [
-                  _Avatar(avatarUrl: post.authorAvatar, name: post.authorName, size: 36),
-                  SizedBox(width: USpacing.sm),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                post.authorName ?? 'Campus Admin',
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: context.textPrimary),
-                                maxLines: 1, overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if (post.authorIsVerifiedLeader) ...[
-                              SizedBox(width: 3),
-                              Icon(Icons.verified_rounded, size: 13, color: context.primary),
-                            ],
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            if (post.authorLeadershipRole != null) ...[
-                              Text(post.authorLeadershipRole!, style: TextStyle(fontSize: 11, color: context.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
-                              Text(' · ', style: TextStyle(fontSize: 11, color: context.textSecondary)),
-                            ],
-                            Text(_timeAgo(post.createdAt), style: TextStyle(fontSize: 11, color: context.textSecondary)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 32, height: 32,
-                    child: IconButton(
-                      icon: Icon(Iconsax.more, size: 18, color: context.textSecondary),
-                      onPressed: () => PostOptionsSheet.show(context, post),
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            if (images.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(URadius.md),
-                child: SizedBox(
-                  height: 360,
-                  child: images.length == 1
-                      ? CachedNetworkImage(
-                          imageUrl: images[0],
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
-                        )
-                      : Stack(
-                          children: [
-                            PageView.builder(
-                              itemCount: images.length,
-                              onPageChanged: onPageChanged,
-                              itemBuilder: (context, i) => CachedNetworkImage(
-                                imageUrl: images[i],
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                errorWidget: (_, __, ___) => const SizedBox.shrink(),
-                              ),
-                            ),
-                            if (hasMore)
-                              Positioned(
-                                bottom: 16, left: 0, right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    images.length,
-                                    (i) => AnimatedContainer(
-                                      duration: const Duration(milliseconds: 200),
-                                      width: currentImageIndex == i ? 8 : 6,
-                                      height: currentImageIndex == i ? 8 : 6,
-                                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: currentImageIndex == i ? context.primary : Colors.white.withValues(alpha: 0.7),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                ),
-              ),
-
-            Padding(
-              padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.sm, USpacing.md, 0),
-              child: RichText(
-                text: TextSpan(
-                  style: TextStyle(color: context.textPrimary, fontSize: 13, height: 1.45),
+      padding: const EdgeInsets.fromLTRB(
+        USpacing.base, USpacing.base, USpacing.sm, USpacing.sm,
+      ),
+      child: Row(
+        children: [
+          _AvatarWithStatus(
+            avatarUrl: post.authorAvatar,
+            name: post.authorName,
+            size: 40,
+          ),
+          const SizedBox(width: USpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    TextSpan(text: '${post.title}  ', style: const TextStyle(fontWeight: FontWeight.w700)),
-                    TextSpan(text: post.body, style: const TextStyle(fontWeight: FontWeight.w400)),
-                  ],
-                ),
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-
-            if (post.isUrgent)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(USpacing.md, USpacing.xs, 0, 0),
-                child: Row(
-                  children: [
-                    Icon(Iconsax.danger_copy, size: 12, color: context.error),
-                    SizedBox(width: 3),
-                    Text('Urgent', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: context.error)),
-                  ],
-                ),
-              ),
-
-            Padding(
-              padding: EdgeInsets.fromLTRB(USpacing.md, USpacing.sm, USpacing.md, USpacing.xs),
-              child: Row(
-                children: [
-                  _ActionIcon(
-                    icon: likeState.isLiked ? Iconsax.heart_copy : Iconsax.heart,
-                    color: likeState.isLiked ? const Color(0xFFE1306C) : context.textSecondary,
-                    onTap: () => ref.read(announcementLikeProvider((id: post.id, initialCount: post.likesCount)).notifier).toggle(),
-                  ),
-                  SizedBox(width: USpacing.lg),
-                  _ActionIcon(
-                    icon: Iconsax.message_text,
-                    color: context.textSecondary,
-                    onTap: () => CommentSheet.show(context, post.id),
-                  ),
-                  SizedBox(width: USpacing.lg),
-                  _ActionIcon(
-                    icon: Iconsax.export_3,
-                    color: context.textSecondary,
-                    onTap: () async {
-                      await Share.share('${post.title}\n\n${post.body}', subject: post.title);
-                      ref.read(announcementSocialRepoProvider).recordShare(post.id);
-                    },
-                  ),
-                  const Spacer(),
-                  _ActionIcon(
-                    icon: saveState.isSaved ? Iconsax.bookmark_copy : Iconsax.bookmark,
-                    color: saveState.isSaved ? context.primary : context.textSecondary,
-                    onTap: () => ref.read(announcementSaveProvider(post.id).notifier).toggle(),
-                  ),
-                ],
-              ),
-            ),
-
-            if (likeState.count > 0 || post.commentsCount > 0)
-              Padding(
-                padding: EdgeInsets.fromLTRB(USpacing.md, 0, USpacing.md, USpacing.sm),
-                child: Row(
-                  children: [
-                    if (likeState.count > 0)
-                      Text('${_fmtNum(likeState.count)} likes', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.textPrimary)),
-                    if (likeState.count > 0 && post.commentsCount > 0) SizedBox(width: USpacing.xs),
-                    if (post.commentsCount > 0)
-                      GestureDetector(
-                        onTap: () => CommentSheet.show(context, post.id),
-                        child: Text('${_fmtNum(post.commentsCount)} ${post.commentsCount == 1 ? 'comment' : 'comments'}', style: TextStyle(fontSize: 12, color: context.textSecondary)),
+                    Flexible(
+                      child: Text(
+                        post.authorName ?? 'Campus Admin',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    if (post.authorIsVerifiedLeader) ...[
+                      const SizedBox(width: 3),
+                      Icon(
+                        Icons.verified_rounded,
+                        size: 14,
+                        color: context.primary,
+                      ),
+                    ],
                   ],
                 ),
-              ),
-
-            Padding(
-              padding: EdgeInsets.fromLTRB(USpacing.md, 0, USpacing.md, USpacing.md),
-              child: Text(_timeAgo(post.createdAt), style: TextStyle(fontSize: 10, color: context.textDisabled)),
+                const SizedBox(height: 1),
+                Row(
+                  children: [
+                    if (post.authorLeadershipRole != null) ...[
+                      Text(
+                        post.authorLeadershipRole!,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        ' • ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: const Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
+                    Text(
+                      _timeAgo(post.createdAt),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
+          IconButton(
+            icon: Icon(
+              Iconsax.more,
+              size: 20,
+              color: const Color(0xFF9CA3AF),
+            ),
+            onPressed: () => PostOptionsSheet.show(context, post),
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PostMedia extends StatelessWidget {
+  final String imageUrl;
+  final String category;
+
+  const _PostMedia({
+    required this.imageUrl,
+    required this.category,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: USpacing.sm),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) => Container(
+                  color: context.surfaceFill,
+                  child: Icon(
+                    Iconsax.gallery,
+                    size: 32,
+                    color: context.textDisabled,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                left: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Text(
+                    category == 'events' ? 'Campus Event' : 'Campus',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: context.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _ActionIcon extends StatelessWidget {
+class _PostBody extends StatelessWidget {
+  final Announcement post;
+
+  const _PostBody({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    final isAcademic = post.category == 'academic';
+    final body = post.body;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        USpacing.base,
+        post.imageUrl != null ? USpacing.sm : USpacing.xs,
+        USpacing.base,
+        USpacing.xs,
+      ),
+      child: isAcademic
+          ? Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(USpacing.base),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F5FF),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: const Color(0xFFDBEAFE),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post.title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
+                  if (body.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      body,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF4B5563),
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post.title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF111827),
+                  ),
+                ),
+                if (body.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    body,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: const Color(0xFF111827),
+                      height: 1.45,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+    );
+  }
+}
+
+class _ActionRow extends StatelessWidget {
+  final Announcement post;
+  final LikeState likeState;
+  final SaveState saveState;
+  final VoidCallback onLike;
+  final VoidCallback onComment;
+  final VoidCallback onShare;
+  final VoidCallback onSave;
+
+  const _ActionRow({
+    required this.post,
+    required this.likeState,
+    required this.saveState,
+    required this.onLike,
+    required this.onComment,
+    required this.onShare,
+    required this.onSave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        USpacing.base, USpacing.sm, USpacing.base, 0,
+      ),
+      child: Row(
+        children: [
+          _ActionButton(
+            icon: likeState.isLiked ? Iconsax.heart_copy : Iconsax.heart,
+            color: likeState.isLiked
+                ? const Color(0xFFE1306C)
+                : const Color(0xFF6B7280),
+            label: _fmtNum(likeState.count),
+            onTap: onLike,
+          ),
+          const SizedBox(width: USpacing.lg),
+          _ActionButton(
+            icon: Iconsax.message_text,
+            color: const Color(0xFF6B7280),
+            label: _fmtNum(post.commentsCount),
+            onTap: onComment,
+          ),
+          const SizedBox(width: USpacing.lg),
+          _ActionButton(
+            icon: Iconsax.send_2,
+            color: const Color(0xFF6B7280),
+            onTap: onShare,
+          ),
+          const Spacer(),
+          _ActionButton(
+            icon: saveState.isSaved ? Iconsax.bookmark_copy : Iconsax.bookmark,
+            color: saveState.isSaved
+                ? context.primary
+                : const Color(0xFF6B7280),
+            onTap: onSave,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
   final IconData icon;
   final Color color;
+  final String? label;
   final VoidCallback onTap;
 
-  const _ActionIcon({required this.icon, required this.color, required this.onTap});
+  const _ActionButton({
+    required this.icon,
+    required this.color,
+    this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        child: Icon(icon, size: 22, color: color),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 22, color: color),
+          if (label != null) ...[
+            const SizedBox(width: 5),
+            Text(
+              label!,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
 }
 
-class _Avatar extends StatelessWidget {
-  final String? avatarUrl;
-  final String? name;
-  final double size;
+class _PostFooter extends StatelessWidget {
+  final Announcement post;
+  final LikeState likeState;
 
-  const _Avatar({this.avatarUrl, this.name, required this.size});
+  const _PostFooter({
+    required this.post,
+    required this.likeState,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final label = name?.isNotEmpty == true ? name![0].toUpperCase() : 'U';
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: context.surfaceFill,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        USpacing.base,
+        USpacing.xs,
+        USpacing.base,
+        USpacing.base,
       ),
-      child: ClipOval(
-        child: avatarUrl != null
-            ? CachedNetworkImage(
-                imageUrl: avatarUrl!,
-                fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => Center(
-                  child: Text(label, style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: context.textSecondary)),
-                ),
-              )
-            : Center(
-                child: Text(label, style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: context.textSecondary)),
+      child: Row(
+        children: [
+          if (likeState.count > 0)
+            Text(
+              '${_fmtNum(likeState.count)} likes',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF111827),
               ),
+            ),
+          if (likeState.count > 0 && post.commentsCount > 0)
+            const SizedBox(width: 4),
+          if (post.commentsCount > 0)
+            GestureDetector(
+              onTap: () => CommentSheet.show(context, post.id),
+              child: Text(
+                '${_fmtNum(post.commentsCount)} ${post.commentsCount == 1 ? 'comment' : 'comments'}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FabButton extends StatelessWidget {
+  const _FabButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: const Color(0xFF2563EB),
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2563EB).withValues(alpha: 0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: const Icon(Iconsax.add, color: Colors.white, size: 28),
+        onPressed: () {
+          // TODO: navigate to create post screen
+        },
+        padding: EdgeInsets.zero,
       ),
     );
   }
 }
 
 class _ShimmerCard extends StatelessWidget {
+  const _ShimmerCard();
+
   @override
   Widget build(BuildContext context) {
     final s = context.shimmerBase;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(USpacing.base, 0, USpacing.base, USpacing.base),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: context.surfaceCard,
-          borderRadius: BorderRadius.circular(URadius.base),
-          border: Border.all(color: context.borderSubtle.withValues(alpha: 0.3)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(USpacing.md),
+              padding: const EdgeInsets.all(USpacing.base),
               child: Row(
                 children: [
-                  Container(width: 36, height: 36, decoration: BoxDecoration(color: s, shape: BoxShape.circle)),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: s,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(width: 100, height: 12, decoration: BoxDecoration(color: s, borderRadius: BorderRadius.circular(4))),
+                      Container(
+                        width: 100,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: s,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                       const SizedBox(height: 6),
-                      Container(width: 60, height: 10, decoration: BoxDecoration(color: s, borderRadius: BorderRadius.circular(4))),
+                      Container(
+                        width: 60,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: s,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-            Container(height: 360, color: s),
             Padding(
-              padding: const EdgeInsets.all(USpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: USpacing.sm),
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: s,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(USpacing.base),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(width: double.infinity, height: 10, decoration: BoxDecoration(color: s, borderRadius: BorderRadius.circular(4))),
+                  Container(
+                    width: double.infinity,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: s,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                   const SizedBox(height: 6),
-                  Container(width: 160, height: 10, decoration: BoxDecoration(color: s, borderRadius: BorderRadius.circular(4))),
-                  const SizedBox(height: USpacing.md),
+                  Container(
+                    width: 160,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: s,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
-                      Container(width: 22, height: 22, decoration: BoxDecoration(color: s, shape: BoxShape.circle)),
-                      SizedBox(width: USpacing.lg),
-                      Container(width: 22, height: 22, decoration: BoxDecoration(color: s, shape: BoxShape.circle)),
-                      SizedBox(width: USpacing.lg),
-                      Container(width: 22, height: 22, decoration: BoxDecoration(color: s, shape: BoxShape.circle)),
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: s,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: USpacing.lg),
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: s,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -757,6 +1324,8 @@ String _timeAgo(DateTime dt) {
 
 String _fmtNum(int n) {
   if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
-  if (n >= 1000) return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}k';
+  if (n >= 1000) {
+    return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}k';
+  }
   return '$n';
 }
