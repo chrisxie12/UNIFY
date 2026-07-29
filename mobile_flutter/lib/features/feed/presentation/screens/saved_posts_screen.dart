@@ -59,7 +59,7 @@ class _SavedPostsScreenState extends ConsumerState<SavedPostsScreen> {
       appBar: AppBar(
         title: const Text('Saved Posts'),
         leading: IconButton(
-          icon: Icon(PhosphorIcons.arrowLeft, size: 20),
+          icon: Icon(PhosphorIconsBold.arrowLeft, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -67,7 +67,7 @@ class _SavedPostsScreenState extends ConsumerState<SavedPostsScreen> {
           ? const AppLoadingWidget.list()
           : _items == null || _items!.isEmpty
               ? AppEmptyWidget(
-                  icon: PhosphorIcons.bookmarkFill,
+                  icon: PhosphorIconsFill.bookmark,
                   title: 'No saved posts',
                   subtitle: 'Tap the bookmark icon on any post to save it for later.',
                 )
@@ -109,7 +109,7 @@ class _SavedPostCard extends StatelessWidget {
           child: Text(post.body, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: context.textSecondary)),
         ),
         trailing: IconButton(
-          icon: Icon(PhosphorIcons.bookmarkFill, size: 20, color: context.primary),
+          icon: Icon(PhosphorIconsFill.bookmark, size: 20, color: context.primary),
           onPressed: () async {
             await repo.toggleSave(post.id);
             if (context.mounted) {

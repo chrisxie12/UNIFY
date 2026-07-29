@@ -111,7 +111,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 4),
                   child: IconButton(
-                    icon: Icon(PhosphorIcons.heart, size: 22, color: cs.onSurface),
+                    icon: Icon(PhosphorIconsBold.heart, size: 22, color: cs.onSurface),
                     onPressed: () {},
                   ),
                 ),
@@ -119,7 +119,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   padding: const EdgeInsets.only(right: 4),
                   child: IconButton(
                     icon: Icon(
-                      PhosphorIcons.chatCircle,
+                      PhosphorIconsBold.chatCircle,
                       size: 22,
                       color: cs.onSurface,
                     ),
@@ -158,7 +158,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   return SliverFillRemaining(
                     hasScrollBody: true,
                     child: AppEmptyWidget(
-                      icon: PhosphorIcons.image,
+                      icon: PhosphorIconsBold.image,
                       title: 'No posts yet',
                       subtitle: 'Be the first to share something!',
                       actionLabel: 'Create Post',
@@ -257,7 +257,7 @@ class _StoriesRow extends StatelessWidget {
                                     : null,
                                 child: avatarUrl == null
                                     ? Icon(
-                                        PhosphorIcons.user,
+                                        PhosphorIconsBold.user,
                                         size: 28,
                                         color: cs.onSurfaceVariant,
                                       )
@@ -279,7 +279,7 @@ class _StoriesRow extends StatelessWidget {
                                   ),
                                 ),
                                 child: const Icon(
-                                  PhosphorIcons.plus,
+                                  PhosphorIconsBold.plus,
                                   size: 14,
                                   color: Colors.white,
                                 ),
@@ -559,7 +559,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                 ),
                 IconButton(
                   icon: Icon(
-                    PhosphorIcons.dotsThreeOutline,
+                    PhosphorIconsBold.dotsThreeOutline,
                     size: 18,
                     color: cs.onSurfaceVariant,
                   ),
@@ -585,7 +585,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                       errorWidget: (_, __, ___) => Container(
                         color: cs.surfaceContainerHighest,
                         child: Icon(
-                          PhosphorIcons.image,
+                          PhosphorIconsBold.image,
                           size: 40,
                           color: cs.onSurfaceVariant,
                         ),
@@ -608,7 +608,7 @@ class _PostCardState extends ConsumerState<_PostCard>
                       );
                     },
                     child: const Icon(
-                      PhosphorIcons.heartFill,
+                      PhosphorIconsFill.heart,
                       size: 80,
                       color: Colors.white,
                     ),
@@ -638,8 +638,8 @@ class _PostCardState extends ConsumerState<_PostCard>
               children: [
                 _ActionButton(
                   icon: likeState.isLiked
-                      ? PhosphorIcons.heartFill
-                      : PhosphorIcons.heart,
+                      ? PhosphorIconsFill.heart
+                      : PhosphorIconsBold.heart,
                   color: likeState.isLiked
                       ? const Color(0xFFE1306C)
                       : cs.onSurfaceVariant,
@@ -655,13 +655,13 @@ class _PostCardState extends ConsumerState<_PostCard>
                 ),
                 const SizedBox(width: 12),
                 _ActionButton(
-                  icon: PhosphorIcons.chatCircle,
+                  icon: PhosphorIconsBold.chatCircle,
                   color: cs.onSurfaceVariant,
                   onTap: () => CommentSheet.show(context, post.id),
                 ),
                 const SizedBox(width: 12),
                 _ActionButton(
-                  icon: PhosphorIcons.paperPlaneRight,
+                  icon: PhosphorIconsBold.paperPlaneRight,
                   color: cs.onSurfaceVariant,
                   onTap: () async {
                     await Share.share(
@@ -676,8 +676,8 @@ class _PostCardState extends ConsumerState<_PostCard>
                 const Spacer(),
                 _ActionButton(
                   icon: saveState.isSaved
-                      ? PhosphorIcons.bookmarkFill
-                      : PhosphorIcons.bookmark,
+                      ? PhosphorIconsFill.bookmark
+                      : PhosphorIconsBold.bookmark,
                   color: saveState.isSaved
                       ? cs.primary
                       : cs.onSurfaceVariant,

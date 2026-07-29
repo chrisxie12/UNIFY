@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../../../../core/extensions/theme_extensions.dart';
 import '../../../../core/design_system/tokens.dart';
 import '../../../../core/design_system/typography.dart';
+import '../widgets/job_card.dart';
 
 class AcademicHubScreen extends ConsumerWidget {
   const AcademicHubScreen({super.key});
@@ -27,36 +29,43 @@ class AcademicHubScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(USpacing.base, USpacing.sm, USpacing.base, USpacing.x3),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                children: [
-                  left[0],
-                  const SizedBox(height: USpacing.md),
-                  left[1],
-                  const SizedBox(height: USpacing.md),
-                  left[2],
-                  const SizedBox(height: USpacing.md),
-                  left[3],
-                ],
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      left[0],
+                      const SizedBox(height: USpacing.md),
+                      left[1],
+                      const SizedBox(height: USpacing.md),
+                      left[2],
+                      const SizedBox(height: USpacing.md),
+                      left[3],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: USpacing.md),
+                Expanded(
+                  child: Column(
+                    children: [
+                      right[0],
+                      const SizedBox(height: USpacing.md),
+                      right[1],
+                      const SizedBox(height: USpacing.md),
+                      right[2],
+                      const SizedBox(height: USpacing.md),
+                      right[3],
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: USpacing.md),
-            Expanded(
-              child: Column(
-                children: [
-                  right[0],
-                  const SizedBox(height: USpacing.md),
-                  right[1],
-                  const SizedBox(height: USpacing.md),
-                  right[2],
-                  const SizedBox(height: USpacing.md),
-                  right[3],
-                ],
-              ),
-            ),
+            const SizedBox(height: USpacing.xl),
+            const _JobsSection(),
           ],
         ),
       ),
@@ -335,6 +344,114 @@ class _ShortBody extends StatelessWidget {
 }
 
 // ── GPA mini ring ────────────────────────────────────────────────────────────────
+
+// ── Nickelfox-style job listing cards ──────────────────────────────────────────
+
+class _JobsSection extends StatelessWidget {
+  const _JobsSection();
+
+  static const _jobs = [
+    JobCardData(
+      title: 'Flutter Developer',
+      company: 'TechStartup',
+      location: 'Remote',
+      salary: '\$80k',
+      jobType: 'Full-time',
+      urgency: 'Urgent',
+      color: Color(0xFF3B82F6),
+    ),
+    JobCardData(
+      title: 'UI/UX Designer',
+      company: 'CreativeLab',
+      location: 'Accra',
+      salary: '\$65k',
+      jobType: 'Hybrid',
+      urgency: '',
+      color: Color(0xFF8B5CF6),
+    ),
+    JobCardData(
+      title: 'Data Analyst',
+      company: 'FinCorp',
+      location: 'Kumasi',
+      salary: '\$72k',
+      jobType: 'On-site',
+      urgency: '',
+      color: Color(0xFF10B981),
+    ),
+    JobCardData(
+      title: 'Product Manager',
+      company: 'MegaCorp',
+      location: 'Remote',
+      salary: '\$95k',
+      jobType: 'Full-time',
+      urgency: 'Featured',
+      color: Color(0xFFF59E0B),
+    ),
+    JobCardData(
+      title: 'Graphic Designer',
+      company: 'StudioX',
+      location: 'Tema',
+      salary: '\$55k',
+      jobType: 'Hybrid',
+      urgency: '',
+      color: Color(0xFFEC4899),
+    ),
+    JobCardData(
+      title: 'Backend Engineer',
+      company: 'CloudBase',
+      location: 'Remote',
+      salary: '\$90k',
+      jobType: 'Full-time',
+      urgency: 'New',
+      color: Color(0xFF14B8A6),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(PhosphorIconsBold.briefcase, size: 18, color: context.textPrimary),
+            const SizedBox(width: USpacing.sm),
+            Text(
+              'Featured Jobs',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: context.textPrimary,
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () {},
+              child: Text(
+                'See all',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: context.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: USpacing.md),
+        SizedBox(
+          height: 168,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _jobs.length,
+            separatorBuilder: (_, __) => const SizedBox(width: USpacing.md),
+            itemBuilder: (context, index) => JobCard(job: _jobs[index]),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class _GpaRing extends StatelessWidget {
   @override

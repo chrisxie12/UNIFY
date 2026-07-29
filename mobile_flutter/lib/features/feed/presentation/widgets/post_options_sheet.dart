@@ -43,7 +43,7 @@ class PostOptionsSheet extends ConsumerWidget {
           SizedBox(height: USpacing.sm),
           if (isAuthor) ...[
             _OptionTile(
-              icon: PhosphorIcons.pencilSimpleLine,
+              icon: PhosphorIconsBold.pencilSimpleLine,
               label: 'Edit post',
               onTap: () {
                 Navigator.pop(context);
@@ -51,7 +51,7 @@ class PostOptionsSheet extends ConsumerWidget {
               },
             ),
             _OptionTile(
-              icon: PhosphorIcons.trash,
+              icon: PhosphorIconsBold.trash,
               label: 'Delete post',
               destructive: true,
               onTap: () {
@@ -62,7 +62,7 @@ class PostOptionsSheet extends ConsumerWidget {
             _divider(context),
           ],
           _OptionTile(
-            icon: PhosphorIcons.shieldCheck,
+            icon: PhosphorIconsBold.shieldCheck,
             label: 'Report post',
             onTap: () {
               Navigator.pop(context);
@@ -70,7 +70,7 @@ class PostOptionsSheet extends ConsumerWidget {
             },
           ),
           _OptionTile(
-            icon: PhosphorIcons.eyeSlash,
+            icon: PhosphorIconsBold.eyeSlash,
             label: 'Hide this post',
             onTap: () async {
               Navigator.pop(context);
@@ -82,7 +82,7 @@ class PostOptionsSheet extends ConsumerWidget {
             },
           ),
           _OptionTile(
-            icon: PhosphorIcons.copy,
+            icon: PhosphorIconsBold.copy,
             label: 'Copy link',
             onTap: () {
               Navigator.pop(context);
@@ -144,7 +144,7 @@ class PostOptionsSheet extends ConsumerWidget {
             Text('Report post', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.textPrimary)),
             SizedBox(height: USpacing.sm),
             ...reasons.map((r) => ListTile(
-                  leading: Icon(PhosphorIcons.flag, size: 20, color: context.textSecondary),
+                  leading: Icon(PhosphorIconsBold.flag, size: 20, color: context.textSecondary),
                   title: Text(r, style: TextStyle(color: context.textPrimary)),
                   onTap: () async {
                     Navigator.pop(ctx);
