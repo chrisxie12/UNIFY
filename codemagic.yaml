@@ -50,7 +50,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - chrisxie12@example.com
+          - chrisxie@example.com
         notify:
           success: true
           failure: true
