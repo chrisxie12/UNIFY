@@ -63,22 +63,29 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigate() async {
-    if (!mounted) return;
     try {
-      final session = Supabase.instance.client.auth.currentSession;
       if (!mounted) return;
-      if (session != null) {
-        context.go('/');
-        return;
+      try {
+        final session = Supabase.instance.client.auth.currentSession;
+        if (!mounted) return;
+        if (session != null) {
+          context.go('/');
+          return;
+        }
+      } catch (e) {
+        debugPrint('[Splash] Supabase not available, showing welcome: $e');
       }
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final seen = prefs.getBool('seen_welcome') ?? false;
+      if (!mounted) return;
+      context.go(seen ? '/auth' : '/welcome');
     } catch (e) {
-      debugPrint('[Splash] Supabase not available, showing welcome: $e');
+      debugPrint('[Splash] Navigation failed: $e');
+      if (mounted) {
+        context.go('/welcome');
+      }
     }
-    if (!mounted) return;
-    final prefs = await SharedPreferences.getInstance();
-    final seen = prefs.getBool('seen_welcome') ?? false;
-    if (!mounted) return;
-    context.go(seen ? '/auth' : '/welcome');
   }
 
   @override

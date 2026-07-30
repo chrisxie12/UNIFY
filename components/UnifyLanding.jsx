@@ -294,8 +294,7 @@ export default function UnifyLanding() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Wordmark */}
           <div className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-icon.png" alt="UNIFY" width={32} height={32} className="rounded-xl" />
+            <div className="w-8 h-8 rounded-xl bg-[#0055FF] flex items-center justify-center text-white text-xs font-bold">U</div>
             <span className="font-bold text-lg text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
 
@@ -344,8 +343,7 @@ export default function UnifyLanding() {
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           {/* Label */}
           <div className="hero-label inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold px-2 pr-3.5 py-1.5 rounded-full mb-8 tracking-wide uppercase">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logos/gctu.png" alt="GCTU" width={22} height={22} className="rounded" style={{ objectFit: 'contain' }} />
+            <span className="w-5 h-5 rounded bg-blue-600 text-white flex items-center justify-center text-[9px] font-bold">G</span>
             Now launching at GCTU
           </div>
 
@@ -384,8 +382,7 @@ export default function UnifyLanding() {
           {/* GCTU launch badge */}
           <div className="hero-trust mt-10 flex justify-center">
             <div className="inline-flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-6 py-4 shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logos/gctu.png" alt="GCTU" style={{ width: 64, height: 64, objectFit: 'contain' }} />
+              <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">GCTU</div>
               <div className="text-left">
                 <p className="font-bold text-gray-900 text-sm">Ghana Communication Technology University</p>
                 <p className="text-gray-400 text-xs mt-0.5">GCTU · Accra, Ghana</p>
@@ -694,9 +691,7 @@ export default function UnifyLanding() {
       <footer className="border-t border-gray-100 py-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-icon.png" alt="UNIFY" width={28} height={28} className="rounded-xl" />
+            <div className="w-7 h-7 rounded-xl bg-[#0055FF] flex items-center justify-center text-white text-[10px] font-bold">U</div>
             <span className="font-bold text-gray-900" style={{ letterSpacing: '-0.02em' }}>UNIFY</span>
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} UNIFY. Built in Ghana 🇬🇭</p>
