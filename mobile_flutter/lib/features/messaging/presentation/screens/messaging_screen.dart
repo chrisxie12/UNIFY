@@ -33,74 +33,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
         _searchController.clear();
       });
 
-  void _openFab() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: context.cardBg,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 8),
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.borderCol,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: context.primary.withValues(alpha: 0.12),
-                child: Icon(Icons.person_add_rounded, color: context.primary),
-              ),
-              title: Text(
-                'New Message',
-                style: TextStyle(
-                  color: context.textPrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              subtitle: Text(
-                'Start a direct conversation',
-                style: TextStyle(color: context.textSecondary, fontSize: 12),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/messaging/search');
-              },
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: context.primary.withValues(alpha: 0.12),
-                child: Icon(Icons.group_add_rounded, color: context.primary),
-              ),
-              title: Text(
-                'New Group',
-                style: TextStyle(
-                  color: context.textPrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              subtitle: Text(
-                'Create a group conversation',
-                style: TextStyle(color: context.textSecondary, fontSize: 12),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/messaging/create-group');
-              },
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   void _showConversationOptions(
     ConversationModel conversation,
@@ -310,14 +243,6 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
             onShowOptions: _showConversationOptions,
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openFab,
-        backgroundColor: context.primary,
-        foregroundColor: Colors.white,
-        elevation: 4,
-        tooltip: 'New conversation',
-        child: const Icon(Icons.edit_rounded),
       ),
     );
   }

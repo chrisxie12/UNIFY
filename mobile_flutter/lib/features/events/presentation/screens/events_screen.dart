@@ -88,10 +88,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/events/create'),
-        child: const Icon(Icons.add),
-      ),
     );
   }
 

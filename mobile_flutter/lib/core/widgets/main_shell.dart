@@ -76,6 +76,7 @@ class _MainShellState extends ConsumerState<MainShell> {
     });
 
     return Scaffold(
+      extendBody: true,
       body: NotificationListener<UserScrollNotification>(
         onNotification: (n) {
           if (n.direction == ScrollDirection.reverse) {
@@ -97,7 +98,6 @@ class _MainShellState extends ConsumerState<MainShell> {
           child: OfflineBanner(child: navigationShell),
         ),
       ),
-      extendBody: true,
       bottomNavigationBar: AnimatedSlide(
         duration: UMotion.fast,
         offset: _visible ? Offset.zero : const Offset(0, 1.5),
@@ -172,6 +172,247 @@ class _MainShellState extends ConsumerState<MainShell> {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+      floatingActionButton: _fabForIndex(context, current),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  void _onCreatePost() {
+    final shell = widget.navigationShell;
+    HapticFeedback.heavyImpact();
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: context.textDisabled,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              _CreateOption(
+                icon: PhosphorIconsBold.fileText,
+                title: 'Create Post',
+                subtitle: 'Share your thoughts with the community',
+                color: context.primary,
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  shell.goBranch(1);
+                },
+              ),
+              const SizedBox(height: 4),
+              _CreateOption(
+                icon: PhosphorIconsBold.chartBar,
+                title: 'Create Poll',
+                subtitle: 'Gather opinions and feedback',
+                color: context.info,
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  shell.goBranch(1);
+                },
+              ),
+              const SizedBox(height: 4),
+              _CreateOption(
+                icon: PhosphorIconsBold.camera,
+                title: 'Create Story',
+                subtitle: 'Share a moment that disappears in 24h',
+                color: context.warning,
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  context.push('/stories/create');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget? _fabForIndex(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        return FloatingActionButton(
+          onPressed: _onCreatePost,
+          backgroundColor: context.primary,
+          foregroundColor: context.onPrimary,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(URadius.base),
+          ),
+          child: const Icon(PhosphorIconsBold.plus, size: 28),
+        );
+      case 2:
+        return FloatingActionButton(
+          onPressed: () => context.push('/events/create'),
+          backgroundColor: context.primary,
+          foregroundColor: context.onPrimary,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(URadius.base),
+          ),
+          child: const Icon(PhosphorIconsBold.calendarPlus, size: 26),
+        );
+      case 4:
+        return FloatingActionButton(
+          onPressed: _onNewChat,
+          backgroundColor: context.primary,
+          foregroundColor: context.onPrimary,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(URadius.base),
+          ),
+          child: const Icon(PhosphorIconsBold.pencilSimple, size: 26),
+        );
+      default:
+        return null;
+    }
+  }
+
+  void _onNewChat() {
+    HapticFeedback.heavyImpact();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: context.cardBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 8),
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: context.borderCol,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: context.primary.withValues(alpha: 0.12),
+                child: Icon(PhosphorIconsBold.paperPlaneTilt, color: context.primary),
+              ),
+              title: Text(
+                'New Message',
+                style: TextStyle(
+                  color: context.textPrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              subtitle: Text(
+                'Start a direct conversation',
+                style: TextStyle(fontSize: 12, color: context.textSecondary),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/messaging/search');
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: context.info.withValues(alpha: 0.12),
+                child: Icon(PhosphorIconsBold.usersThree, color: context.info),
+              ),
+              title: Text(
+                'New Group',
+                style: TextStyle(
+                  color: context.textPrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              subtitle: Text(
+                'Create a group conversation',
+                style: TextStyle(fontSize: 12, color: context.textSecondary),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/messaging/create-group');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CreateOption extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _CreateOption({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(URadius.md),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(URadius.md),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: context.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: context.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(PhosphorIconsBold.caretRight, size: 18, color: context.textDisabled),
+            ],
           ),
         ),
       ),
