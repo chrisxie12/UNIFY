@@ -387,12 +387,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/app/events', builder: (_, __) => const EventsScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/app/academic', builder: (_, __) => const AcademicHubScreen()),
-          ]),
-          StatefulShellBranch(routes: [
             GoRoute(path: '/app/messaging', builder: (_, __) => const MessagingScreen()),
           ]),
           StatefulShellBranch(routes: [

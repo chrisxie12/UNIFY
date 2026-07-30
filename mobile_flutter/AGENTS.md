@@ -361,3 +361,10 @@ Make UNIFY fully reproducible from a fresh Supabase project. Compete canonical `
 - **Android APK distribution** — Pivoted from TestFlight to free sideloading. Debug APK builds successfully (167 MB). Release build blocked (no internet for Flutter engine JARs).
 - **`codemagic.yaml`** — Updated to build Android release APK on Linux, publish to GitHub Releases.
 - **`flutter analyze`** — **0 errors, 0 warnings, 7 infos** (all cosmetic `prefer_const_constructors`).
+
+### Done — Session 2026-07-30 (UI/UX Polish — Feed, FAB, Glass Nav, Card Animations)
+- **`feed_page.dart`** — Rewritten with mixed feed builder interleaving posts with smart sections (suggested users, trending clubs, etc.) and campus widgets row (classes, exams, cafeteria, library). Added `_AnimatedFeedItem` with staggered fade+slide per card. Removed unused `_tryInsertSmartSection` stub. Cleaned up dead imports/functions (`dart:math`, `intl`, `_greeting*`, `greeting`/`firstName` locals).
+- **`expandable_fab.dart`** — Upgraded from 4→6 items (added Group, Feedback). Spring scale+slide animations per item (staggered `Interval` + `easeOutBack`/`easeOutCubic`). Semi-transparent overlay background dims feed. Tooltip pill with border+shadow. Larger icon containers (44×44, 14px radius). 400ms duration.
+- **`main_shell.dart`** — Glass bottom nav: `BackdropFilter` + `ImageFilter.blur(sigmaX:16, sigmaY:16)` + 85% opacity container + subtle border + 24px spread shadow. `_NavItem` and `_ProfileNavItem` now `StatefulWidget` with spring-scale animation on activation (`didUpdateWidget` detects active tab change → forward/reverse spring). Removed dead `_onCreatePost()` method + `_CreateOption` class (replaced by `ExpandableFab`). Added `dart:ui` import for `ImageFilter`.
+- **Code hygiene** — Removed unused imports: `dart:math`, `flutter/services`, `intl`, `announcement_social_provider`, `comment_sheet`, `post_options_sheet`. Fixed `maxLines`/`overflow`/`textAlign` placement (were on `GoogleFonts.inter()` instead of `Text` widget). Fixed `unnecessary_type_check` (`w is double` → `w.isFinite`).
+- **`flutter analyze`** — **0 errors, 0 warnings, 38 infos** (all `prefer_const_constructors`).

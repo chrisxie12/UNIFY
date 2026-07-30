@@ -129,6 +129,7 @@ class _StudentDirectoryScreenState extends ConsumerState<StudentDirectoryScreen>
                             context.push('/messaging/chat/$convId');
                           }
                         } catch (e) {
+                          debugPrint('[StudentDirectory] Failed to open chat: $e');
                           if (context.mounted) {
                             UnifySnackbar.error(context, 'Could not open chat');
                           }

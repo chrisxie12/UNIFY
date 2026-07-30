@@ -27,8 +27,7 @@ Future<void> main() async {
         publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
       ).timeout(const Duration(seconds: 5));
     } catch (e) {
-      debugPrint('[main] Supabase init failed: $e');
-      rethrow;
+      debugPrint('[main] Supabase init failed (offline?): $e');
     }
 
     return const ProviderScope(child: UnifyApp());
